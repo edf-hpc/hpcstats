@@ -6,10 +6,12 @@ from optparse import OptionParser
 import ConfigParser
 
 from HPCStats.CLI.Config import Config
-from HPCStats.DB.Jobs import DBJobs
-from HPCStats.DB.Connexion import DBConnexion
-from HPCStats.Parsers.Jobs.Torque import Torque
-from HPCStats.Parsers.Jobs.Slurm import Slurm
+#from HPCStats.DB.Jobs import DBJobs
+#from HPCStats.DB.Connexion import DBConnexion
+#from HPCStats.Parsers.Jobs.Torque import Torque
+#from HPCStats.Parsers.Jobs.Slurm import Slurm
+
+DEBUG=1
 
 def main(args=sys.argv):
 
@@ -20,7 +22,14 @@ def main(args=sys.argv):
     (options, args) = parser.parse_args(args[1:])
 
     config = ConfigParser.ConfigParser()
-    config.read("/home/sgorget/ccn-hpc-svn/supervision/v2/conf/hpcstats.conf")
+    config.read("./conf/hpcstats.conf")
+
+    if DEBUG:
+        # dump entire config file
+        for section in config.sections():
+            print section
+            for option in config.options(section):
+                print " ", option, "=", config.get(section, option)
    
     # Pour le cluster choisi 
 
