@@ -4,7 +4,7 @@
 hpcstats command-line tool
 """
 
-from HPCStats.CLI.HPCStats import main
+from HPCStats.CLI.Stats import main
 
 if __name__ == '__main__':
     main()

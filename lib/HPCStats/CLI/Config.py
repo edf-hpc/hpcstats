@@ -1,8 +1,7 @@
+class Config:
+    def __init__(self, filename):
+        self._f = filename
 
-class Config():
-    
-    def __init__(self,configfile):
-        self.configfile = configfile
+    def donnetonfichier(self):
+        print self._f
 
-    def toto(self):
-        print "toto"
