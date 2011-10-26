@@ -1,11 +1,24 @@
 class HPCStatsdb:
 
-    def __init__(self, hostname, port, dbname, dbuser, dbpass):
-        self._hostname = hostname
-        self._port = port
-        self._dbname = dbname
-        self._dbuser = dbuser
-        self._dbpass = dbpass
+    def __init__(self, dbhostname, dbport, dbname, dbuser, dbpassword):
+        """ This object is a singleton class, this means only one instance will be created """
+        self.database = {
+            'dbhostname': dbhostname,
+            'dbport':     dbport,
+            'dbname':     dbname,
+            'dbuser':     dbuser,
+            'dbpassword': dbpassword,
+        }
+        self.cur = False
+        self.conn = False
 
     def infos(self):
-        return self._hostname, self._port, self._dbname, self._dbuser, self._dbpass
+        return self.database["dbhostname"], self.database["dbport"], self.database["dbname"],self.database["dbuser"], self.database["dbpassword"]
+
+    def bind(self):
+        """ Connection to the database """
+        self.conn = psycopg2.connect("host = %(dbhostname)s dbname= %(dbname)s user= %(dbuser)s password= %(dbpassword)s" % self.database)
+        self.cur = conn.cursor()
+        return self.cur, self.conn
+
+
