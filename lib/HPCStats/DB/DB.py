@@ -22,3 +22,7 @@ class HPCStatsdb:
         return self.cur, self.conn
 
 
+    def unbind(self):
+        """ Disconnect from the database """
+        self.conn.close()
+

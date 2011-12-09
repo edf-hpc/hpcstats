@@ -42,19 +42,20 @@ def main(args=sys.argv):
     dbuser = config.get(db_section,"user")
     dbpass = config.get(db_section,"port")
     db = HPCStatsdb(dbhostname, dbport, dbname, dbuser, dbpass)
+    db.bind()
     
     if DEBUG:
         print "db information %s %s %s %s %s" % db.infos()
 
 
-    # Pour le cluster choisi 
+    if (# JOB)
+    # Should define what is the last complete job inserted for this 
+    # Should retrieve how many jobs have to be forwaded/updated from log to db and the job list
+    # Should split it in multiple job list
+    # Iterate over the job list
+    # Populate the DB
 
-#    user = Users
-    # Recupere la liste des utilisateurs
-    # Complete la bd
+    if (# USER)
+        # TO BE DEFINED
 
-    # Défini le dernier job inséré
-    # Va chercher tous les jobs fini depuis le dernier jobs inséré
-    # Ajoute les jobs suivant dans la DB
-
-
+    db.unbind()
