@@ -7,10 +7,6 @@ import ConfigParser
 
 from HPCStats.CLI.Config import Config
 from HPCStats.DB.DB import HPCStatsdb
-#from HPCStats.DB.Jobs import DBJobs
-#from HPCStats.DB.Connexion import DBConnexion
-#from HPCStats.Parsers.Jobs.Torque import Torque
-#from HPCStats.Parsers.Jobs.Slurm import Slurm
 
 DEBUG=1
 
