@@ -1,19 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import JobImporter
-# ADD MYSQL Connector for Slurm
+class JobImporterSlurm(object):
 
-class JobImporterSlurm(JobImporter):
-
-    def __init__(self, db, conf)
+    def __init__(self, db, conf, cluster_name):
         self._db = db
         self._conf = conf
+        self._cluster_name = cluster_name
    
     def list_jobs(self, last_complete_job_id = 0):
         jobs_id = []
         # Find the list of the job that need to be updated or push into supervision
-        return jobs_id[]
+        return jobs_id
 
     def get_jobs(self, jobs_id):
         jobs = []
@@ -25,8 +23,8 @@ class JobImporterSlurm(JobImporter):
             jobs.append(j)
         return jobs
 
-    def retrieve_job_information(jobid)
+    def retrieve_job_information(jobid):
             # Using conf
             # Connect to SlurmDBD
             # Extract all info for jobid
-            return Job(#All infos)
+            return 1

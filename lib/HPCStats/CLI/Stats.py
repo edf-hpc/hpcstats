@@ -27,6 +27,7 @@ import sys
 from HPCStats.CLI.OptionParser import OptionParser
 from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
+from HPCStats.Importer.Jobs.JobImporter import JobImporter
 
 DEBUG=1
 
@@ -61,6 +62,8 @@ def main(args=sys.argv):
         print "db information %s %s %s %s %s" % db.infos()
 
 
+    job_importer = JobImporter(db, config, "ivanoe")
+    
     #if (# JOB)
     # Should define what is the last complete job inserted for this 
     # Should retrieve how many jobs have to be forwaded/updated from log to db and the job list
