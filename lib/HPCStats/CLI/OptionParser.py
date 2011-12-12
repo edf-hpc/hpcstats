@@ -21,19 +21,17 @@
 
 ###############################################################
 
-import ConfigParser
-import os
+import optparse
 
-class HPCStatsConfig(ConfigParser.ConfigParser, object):
+class OptionParser(optparse.OptionParser):
+    
+    def __init__(self, usage, **kwargs):
+        optparse.OptionParser.__init__(self, usage)
 
-    def __init__(self, options, filename=None):
-        ConfigParser.ConfigParser.__init__(self)
+        self.disable_interspersed_args()
 
-        if filename:
-            files = [filename]
-        else:
-            files = ['/etc/hpcstats/hpcstats.conf',
-                     os.path.expanduser('~/.hpcstats.conf')]
+        self.add_option("-n", "--name", action="store", type="string", dest="clustername")
+        self.add_option("-j", "--jobs", action="store_true", dest="jobs")
+        self.add_option("-u", "--users", action="store_true", dest="users")
 
-        self.read(files)
 
