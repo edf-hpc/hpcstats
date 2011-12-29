@@ -23,8 +23,14 @@ class JobImporterSlurm(object):
             jobs.append(j)
         return jobs
 
-    def retrieve_job_information(jobid):
+    def retrieve_job_information(self, jobid):
             # Using conf
             # Connect to SlurmDBD
             # Extract all info for jobid
             return 1
+
+    def request_since_job(self, job_id):
+        return "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition from  ivanoe_job_table where id_job > %s" % (job_id)
+
+    def request_job(self, job_id):
+        return "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition from  ivanoe_job_table where id_job = %s" % (job_id)
