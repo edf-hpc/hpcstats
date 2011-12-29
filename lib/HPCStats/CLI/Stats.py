@@ -28,8 +28,7 @@ from HPCStats.CLI.OptionParser import OptionParser
 from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
-
-DEBUG=1
+from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
 
 def main(args=sys.argv):
 
@@ -62,16 +61,20 @@ def main(args=sys.argv):
     db = HPCStatsdb(dbhostname, dbport, dbname, dbuser, dbpass)
     db.bind()
     
-    if DEBUG:
+    if (options.debug):
         print "db information %s %s %s %s %s" % db.infos()
 
 
-    job_importer = JobImporter(db, config, "ivanoe")
+    #job_importer = JobImporter(db, config, "ivanoe")
+    job_importer = JobImporterSlurm(db, config, "ivanoe")
   
     if (options.jobs):
         print "=> Mise à jour des jobs pour %s" % (options.clustername)
-        # Trouver la date de derniere mise à jour
-        # Trouver les ids des jobs nécessitants une mise à jour antérieur (jobs non fini antérieur à cette date)
+        # The last updated job
+        last_id = job_importer.get_last_job_id()
+        # The unfinished jobs
+        ids = job_importer.get_unfinished_job_id()
+        
         # Découper la liste en sous liste et pour chacune de ces listes
             # Récupérer les informations sur les jobs concernés
             # Générer un objet pour chacun des jobs

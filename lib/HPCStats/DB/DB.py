@@ -51,3 +51,5 @@ class HPCStatsdb:
         """ Disconnect from the database """
         self._conn.close()
 
+    def get_cur(self):
+        return self._cur

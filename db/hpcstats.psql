@@ -2,7 +2,7 @@
 CREATE TABLE clusters (name character varying(30) NOT NULL);
 CREATE TABLE filesystem (id integer NOT NULL,mount_point character varying(30),cluster character varying(30),type character varying(30));
 CREATE TABLE filesystem_usage (fs_id integer NOT NULL,"timestamp" timestamp without time zone NOT NULL,usage real);
-CREATE TABLE jobs (id serial NOT NULL, id_job integer NOT NULL, uid character varying(30), submission_datetime timestamp without time zone, running_datetime timestamp without time zone, end_datetime timestamp without time zone, nb_nodes integer, nb_cpus integer, running_queue character varying(30));
+CREATE TABLE jobs (id serial NOT NULL, id_job integer NOT NULL, uid character varying(30), gid character varying(30),submission_datetime timestamp without time zone, running_datetime timestamp without time zone, end_datetime timestamp without time zone, nb_nodes integer, nb_cpus integer, running_queue character varying(30), clustername character varying(30));
 CREATE TABLE unavailability (node character varying(30) NOT NULL,t_start timestamp without time zone NOT NULL,t_end timestamp without time zone NOT NULL,type character varying(20));
 CREATE TABLE nodes (name character varying(30) NOT NULL,cluster character varying(30),cpus integer,machine character varying(50),flops bigint);
 CREATE TABLE job_nodes (job integer NOT NULL,node character varying(30) NOT NULL,cpu_id character varying(30) NOT NULL);
