@@ -45,7 +45,7 @@ def main(args=sys.argv):
     # Config file argument parser
     config = HPCStatsConfig(options)
 
-    if DEBUG:
+    if (options.debug):
         # dump entire config file
         for section in config.sections():
             print section
