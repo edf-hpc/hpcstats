@@ -38,6 +38,10 @@ def main(args=sys.argv):
     parser = OptionParser(usage)
     (options, args) = parser.parse_args(args[1:])
 
+    if ( not options.clustername ):
+        print "Le nom du cluster de travail n'est pas défini"
+        print "ALERTE A FAIRE !"
+
     # Config file argument parser
     config = HPCStatsConfig(options)
 
@@ -63,15 +67,17 @@ def main(args=sys.argv):
 
 
     job_importer = JobImporter(db, config, "ivanoe")
-    
-    #if (# JOB)
-    # Should define what is the last complete job inserted for this 
-    # Should retrieve how many jobs have to be forwaded/updated from log to db and the job list
-    # Should split it in multiple job list
-    # Iterate over the job list
-    # Populate the DB
+  
+    if (options.jobs):
+        print "=> Mise à jour des jobs pour %s" % (options.clustername)
+        # Trouver la date de derniere mise à jour
+        # Trouver les ids des jobs nécessitants une mise à jour antérieur (jobs non fini antérieur à cette date)
+        # Découper la liste en sous liste et pour chacune de ces listes
+            # Récupérer les informations sur les jobs concernés
+            # Générer un objet pour chacun des jobs
+            # Injecter les objets dans la base de donnée supervision
 
-    #if (# USER)
-        # TO BE DEFINED
+    if (options.users):
+        print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
 
     db.unbind()
