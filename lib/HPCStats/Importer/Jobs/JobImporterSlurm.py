@@ -4,6 +4,7 @@
 #from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Model.Job import Job
 import MySQLdb
+from datetime import datetime
 
 #class JobImporterSlurm(JobImporter):
 class JobImporterSlurm(object):
@@ -25,7 +26,7 @@ class JobImporterSlurm(object):
 
    
     def request_jobs_since_job_id(self, job_id):
-        req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where id_job > %s LIMIT 0,30" % (self._cluster_name, job_id)
+        req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where id_job > %s" % (self._cluster_name, job_id)
         self._cur.execute(req)
         results = self._cur.fetchall()
         return results
@@ -54,15 +55,49 @@ class JobImporterSlurm(object):
         job = Job(  id_job = res["id_job"],
                     uid = res["id_user"],
                     gid = res["id_group"],
-                    submission_datetime = res["time_submit"],
-                    running_datetime = res["time_start"],
-                    end_datetime = res["time_end"],
+                    submission_datetime = datetime.fromtimestamp(res["time_submit"]),
+                    running_datetime = datetime.fromtimestamp(res["time_start"]),
+                    end_datetime = datetime.fromtimestamp(res["time_end"]),
                     nb_procs = res["cpus_alloc"],
                     nb_hosts =  res["nodes_alloc"],
                     running_queue = res["partition"],
                     nodes = res["nodelist"],
-                    state = res["state"] )
+                    state = self.get_job_state_from_slurm_state(res["state"]),
+                    clustername = self._cluster_name)
         return job
+
+
+    """
+        From slurm.h.inc
+            enum job_states {
+            JOB_PENDING, /* queued waiting for initiation */
+            JOB_RUNNING, /* allocated resources and executing */
+            JOB_SUSPENDED, /* allocated resources, execution suspended */
+            JOB_COMPLETE, /* completed execution successfully */
+            JOB_CANCELLED, /* cancelled by user */
+            JOB_FAILED, /* completed execution unsuccessfully */
+            JOB_TIMEOUT, /* terminated on reaching time limit */
+            JOB_NODE_FAIL, /* terminated on node failure */
+            JOB_PREEMPTED, /* terminated due to preemption */
+            JOB_END /* not a real state, last entry in table */
+            };
+    """
+    def get_job_state_from_slurm_state(self, state):
+        slurm_state = {
+            0:"PENDING", # queued waiting for initiation 
+            1:"RUNNING", # allocated resources and executing 
+            2:"SUSPENDED", # allocated resources, execution suspended 
+            3:"COMPLETE", # completed execution successfully 
+            4:"CANCELLED", # cancelled by user 
+            5:"FAILED", # completed execution unsuccessfully 
+            6:"TIMEOUT", # terminated on reaching time limit 
+            7:"NODE_FAIL", # terminated on node failure 
+            8:"PREEMPTED", # terminated due to preemption 
+            9:"END" # not a real state, last entry in table 
+        }
+        return slurm_state[state]
+
+            
 
 # TO BE MOVED IN ABSTRACT FUNCTION
     def get_last_job_id(self):
@@ -72,7 +107,8 @@ class JobImporterSlurm(object):
         cur.execute(req)
         results = cur.fetchall()
         for job in results:
-            last_job_id = job[0]
+            if last_job_id < job[0]:
+                last_job_id = job[0]
         return last_job_id
 
     def get_unfinished_job_id(self):

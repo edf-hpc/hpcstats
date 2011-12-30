@@ -53,3 +53,9 @@ class HPCStatsdb:
 
     def get_cur(self):
         return self._cur
+
+    def get_conn(self):
+        return self._conn
+
+    def commit(self):
+        self._conn.commit()

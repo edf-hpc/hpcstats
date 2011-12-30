@@ -80,6 +80,7 @@ def main(args=sys.argv):
             job.save(db)
         for job in jobs2:
             job.save(db)
+        db.commit()
 
     if (options.users):
         print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
