@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 #from HPCStats.Importer.Jobs.JobImporter import JobImporter
+from HPCStats.Model.Job import Job
+import MySQLdb
 
 #class JobImporterSlurm(JobImporter):
 class JobImporterSlurm(object):
@@ -10,47 +12,66 @@ class JobImporterSlurm(object):
         self._db = db
         self._conf = config
         self._cluster_name = cluster_name
+
+        db_section = "ivanoe/slurm"
+
+        self._dbhost = config.get(db_section,"host")
+        self._dbport = int(config.get(db_section,"port"))
+        self._dbname = config.get(db_section,"name")
+        self._dbuser = config.get(db_section,"user")
+        self._dbpass = config.get(db_section,"password")
+        self._conn = MySQLdb.connect(host = self._dbhost, user = self._dbuser, passwd = self._dbpass, db = self._dbname, port = self._dbport)
+        self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
+
    
-    def list_jobs(self, last_complete_job_id = 0):
-        jobs_id = []
-        # Find the list of the job that need to be updated or push into supervision
-        return jobs_id
-
-    def get_jobs(self, jobs_id):
-        jobs = []
-        for i in jobs():
-            j = Job()
-            self.retrieve_job_information(i)
-            #retrieve all information about i
-            #j.populate()
-            jobs.append(j)
-        return jobs
-
-    def retrieve_job_information(self, jobid):
-            # Using conf
-            # Connect to SlurmDBD
-            # Extract all info for jobid
-            return 1
-
-    def request_since_job(self, job_id):
-        req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition FROM %s_job_table where id_job > %s" % (self._cluster_name, job_id)
-        jobs = []
-        return jobs
+    def request_jobs_since_job_id(self, job_id):
+        req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition FROM %s_job_table where id_job > %s LIMIT 0,30" % (self._cluster_name, job_id)
+        self._cur.execute(req)
+        results = self._cur.fetchall()
+        return results
 
     def request_job(self, job_id):
         req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition FROM %s_job_table where id_job = %s" % (self._cluster_name, job_id)
-        job = []
+        self._cur.execute(req)
+        results = self._cur.fetchall()
+        return results
+
+    def get_job_information_from_id_job_list(self,ids_job):
+        jobs = []
+        for id_job in ids_job:
+            result = self.request_job(id_job)
+            jobs.append(self.job_from_information(result[0]))
+        return jobs
+
+    def get_job_for_id_above(self, id_job):
+        jobs = []
+        results = self.request_jobs_since_job_id(id_job)
+        for result in results:
+            jobs.append(self.job_from_information(result))
+        return jobs
+   
+    def job_from_information(self, res):
+        job = Job(res["id_job"])
         return job
 
+# TO BE MOVED IN ABSTRACT FUNCTION
     def get_last_job_id(self):
         last_job_id = 0
-        req = "SELECT MAX(id_job) FROM jobs WHERE clustername = '%s'" % (self._cluster_name)
+        req = "SELECT MAX(id_job) AS last_id FROM jobs WHERE clustername = '%s'" % (self._cluster_name)
         cur = self._db.get_cur()
         cur.execute(req)
-        if cur.fetchone()[0] > last_job_id:
-            last_job_id = cur.fetchone()[0]
+        results = cur.fetchall()
+        for job in results:
+            last_job_id = job[0]
         return last_job_id
 
     def get_unfinished_job_id(self):
-        unfinished_job_id = 0
+        unfinished_job_id = []
+        req = "SELECT id_job FROM jobs WHERE state = 'unfinished'" 
+        cur = self._db.get_cur()
+        cur.execute(req)
+        results = cur.fetchall()
+        for job in results:
+            unfinished_job_id.append(job[0])
         return unfinished_job_id
+

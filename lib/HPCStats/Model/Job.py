@@ -16,6 +16,7 @@ class Job:
         self._nb_hosts = 0
         self._running_queue = ""
         self._nodes = ""
+        self._state = ""
 
     def __str__(self):
         if self._running_datetime == 0:
@@ -26,7 +27,11 @@ class Job:
            end_datetime = "notyet"
         else:
            end_datetime = self._end_datetime.strftime('%Y-%m-%d %H:%M:%S')
-        return self._id_job + " (" + self._uid+"|"+self._gid + "): " + self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S') + " / " + running_datetime + " / " + end_datetime + " -> " + str(self._nb_hosts) + "/"  + str(self._nb_procs) + " [" + ",".self._nodes + "]"
+        return self._id_job
+#        return self._id_job + " (" + self._uid+"|"+self._gid + "): " + self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S') + " / " + running_datetime + " / " + end_datetime + " -> " + str(self._nb_hosts) + "/"  + str(self._nb_procs) + " [" + ",".self._nodes + "]"+.self._state
 
     def jobs_query(self):
-        return 'INSERT INTO jobs_tmp (id_job, uid, gid, running_queue, submission_datetime, running_datetime, end_datetime, nb_nodes, nb_cpus) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (self._id_job, self._uid, self._gid, self._running_queue, self._submission_datetime, self._running_datetime, self._end_datetime, self._nb_procs, self._nb_hosts)
+        return 'INSERT INTO jobs_tmp (id_job, uid, gid, running_queue, submission_datetime, running_datetime, end_datetime, nb_nodes, nb_cpus, state) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (self._id_job, self._uid, self._gid, self._running_queue, self._submission_datetime, self._running_datetime, self._end_datetime, self._nb_procs, self._nb_hosts, self._state)
+
+    def save(self):
+        print self._id_job

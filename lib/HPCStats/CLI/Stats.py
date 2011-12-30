@@ -69,11 +69,17 @@ def main(args=sys.argv):
     job_importer = JobImporterSlurm(db, config, "ivanoe")
   
     if (options.jobs):
-        print "=> Mise à jour des jobs pour %s" % (options.clustername)
-        # The last updated job
-        last_id = job_importer.get_last_job_id()
-        # The unfinished jobs
+        # The last updated job in hpcstatsdb for this cluster
+        last_updated_id = job_importer.get_last_job_id()
+        # The unfinished jobs in hpcstatsdb for this cluster
         ids = job_importer.get_unfinished_job_id()
+        # 
+        jobs1 = job_importer.get_job_information_from_id_job_list(ids)
+        jobs2 = job_importer.get_job_for_id_above(last_updated_id)
+        for job in jobs1:
+            job.save()
+        for job in jobs2:
+            job.save()
         
         # Découper la liste en sous liste et pour chacune de ces listes
             # Récupérer les informations sur les jobs concernés
