@@ -73,18 +73,13 @@ def main(args=sys.argv):
         last_updated_id = job_importer.get_last_job_id()
         # The unfinished jobs in hpcstatsdb for this cluster
         ids = job_importer.get_unfinished_job_id()
-        # 
+
         jobs1 = job_importer.get_job_information_from_id_job_list(ids)
         jobs2 = job_importer.get_job_for_id_above(last_updated_id)
         for job in jobs1:
-            job.save()
+            job.save(db)
         for job in jobs2:
-            job.save()
-        
-        # Découper la liste en sous liste et pour chacune de ces listes
-            # Récupérer les informations sur les jobs concernés
-            # Générer un objet pour chacun des jobs
-            # Injecter les objets dans la base de donnée supervision
+            job.save(db)
 
     if (options.users):
         print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)

@@ -25,13 +25,13 @@ class JobImporterSlurm(object):
 
    
     def request_jobs_since_job_id(self, job_id):
-        req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition FROM %s_job_table where id_job > %s LIMIT 0,30" % (self._cluster_name, job_id)
+        req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where id_job > %s LIMIT 0,30" % (self._cluster_name, job_id)
         self._cur.execute(req)
         results = self._cur.fetchall()
         return results
 
     def request_job(self, job_id):
-        req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition FROM %s_job_table where id_job = %s" % (self._cluster_name, job_id)
+        req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where id_job = %s" % (self._cluster_name, job_id)
         self._cur.execute(req)
         results = self._cur.fetchall()
         return results
@@ -51,7 +51,17 @@ class JobImporterSlurm(object):
         return jobs
    
     def job_from_information(self, res):
-        job = Job(res["id_job"])
+        job = Job(  id_job = res["id_job"],
+                    uid = res["id_user"],
+                    gid = res["id_group"],
+                    submission_datetime = res["time_submit"],
+                    running_datetime = res["time_start"],
+                    end_datetime = res["time_end"],
+                    nb_procs = res["cpus_alloc"],
+                    nb_hosts =  res["nodes_alloc"],
+                    running_queue = res["partition"],
+                    nodes = res["nodelist"],
+                    state = res["state"] )
         return job
 
 # TO BE MOVED IN ABSTRACT FUNCTION
