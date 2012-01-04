@@ -74,11 +74,18 @@ def main(args=sys.argv):
         # The unfinished jobs in hpcstatsdb for this cluster
         ids = job_importer.get_unfinished_job_id()
 
-        jobs1 = job_importer.get_job_information_from_id_job_list(ids)
-        jobs2 = job_importer.get_job_for_id_above(last_updated_id)
-        for job in jobs1:
-            job.save(db)
-        for job in jobs2:
+        jobs_to_update = job_importer.get_job_information_from_dbid_job_list(ids)
+        new_jobs = job_importer.get_job_for_id_above(last_updated_id)
+        index = 0
+        for job in jobs_to_update:
+            index = index + 1
+            if not index % 100000:
+                print "update job push %d" % index
+            job.update(db)
+        for job in new_jobs:
+            index = index + 1
+            if not index % 100000:
+                print "create job push %d" % index
             job.save(db)
         db.commit()
 
@@ -86,3 +93,4 @@ def main(args=sys.argv):
         print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
 
     db.unbind()
+

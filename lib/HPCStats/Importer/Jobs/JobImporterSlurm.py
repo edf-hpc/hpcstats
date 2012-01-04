@@ -26,33 +26,39 @@ class JobImporterSlurm(object):
 
    
     def request_jobs_since_job_id(self, job_id):
-        req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where id_job > %s" % (self._cluster_name, job_id)
+        #req = "SELECT id_job, job_db_inx, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where id_job > %s LIMIT 0,30" % (self._cluster_name, job_id)
+        req = "SELECT id_job, job_db_inx, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where id_job > %s" % (self._cluster_name, job_id)
         self._cur.execute(req)
         results = self._cur.fetchall()
         return results
 
-    def request_job(self, job_id):
-        req = "SELECT id_job, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where id_job = %s" % (self._cluster_name, job_id)
+    def request_job_from_dbid(self, job_dbid):
+        req = "SELECT id_job, job_db_inx, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where job_db_inx = %s" % (self._cluster_name, job_dbid)
         self._cur.execute(req)
         results = self._cur.fetchall()
         return results
 
-    def get_job_information_from_id_job_list(self,ids_job):
+    def get_job_information_from_dbid_job_list(self,ids_job):
         jobs = []
         for id_job in ids_job:
-            result = self.request_job(id_job)
+            result = self.request_job_from_dbid(id_job)
             jobs.append(self.job_from_information(result[0]))
         return jobs
 
     def get_job_for_id_above(self, id_job):
         jobs = []
         results = self.request_jobs_since_job_id(id_job)
+        index = 0
         for result in results:
+            index = index + 1
+            if not index % 100000:
+                print "job fetch %d" % index
             jobs.append(self.job_from_information(result))
         return jobs
    
     def job_from_information(self, res):
         job = Job(  id_job = res["id_job"],
+                    sched_id = res["job_db_inx"],
                     uid = res["id_user"],
                     gid = res["id_group"],
                     submission_datetime = datetime.fromtimestamp(res["time_submit"]),
@@ -112,12 +118,12 @@ class JobImporterSlurm(object):
         return last_job_id
 
     def get_unfinished_job_id(self):
-        unfinished_job_id = []
-        req = "SELECT id_job FROM jobs WHERE state = 'unfinished'" 
+        unfinished_job_dbid = []
+        req = "SELECT sched_id FROM jobs WHERE state = 'PENDING' OR state = 'RUNNING'" 
         cur = self._db.get_cur()
         cur.execute(req)
         results = cur.fetchall()
         for job in results:
-            unfinished_job_id.append(job[0])
-        return unfinished_job_id
+            unfinished_job_dbid.append(job[0])
+        return unfinished_job_dbid
 
