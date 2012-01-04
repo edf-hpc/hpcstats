@@ -22,7 +22,7 @@ ALTER TABLE ONLY filesystem ADD CONSTRAINT filesystem_cluster_fkey FOREIGN KEY (
 ALTER TABLE ONLY filesystem_usage ADD CONSTRAINT filesystem_usage_fs_id_fkey FOREIGN KEY (fs_id) REFERENCES filesystem(id);
 ALTER TABLE ONLY job_nodes ADD CONSTRAINT job_nodes_job_fkey FOREIGN KEY (job) REFERENCES jobs(id);
 ALTER TABLE ONLY job_nodes ADD CONSTRAINT job_nodes_node_fkey FOREIGN KEY (node) REFERENCES nodes(name);
-ALTER TABLE ONLY jobs ADD CONSTRAINT jobs_username_fkey FOREIGN KEY (username) REFERENCES users(name);
+--ALTER TABLE ONLY jobs ADD CONSTRAINT jobs_username_fkey FOREIGN KEY (username) REFERENCES users(name);
 ALTER TABLE ONLY nodes ADD CONSTRAINT nodes_cluster_fkey FOREIGN KEY (cluster) REFERENCES clusters(name);
 ALTER TABLE ONLY unavailability ADD CONSTRAINT unavailability_node_fkey FOREIGN KEY (node) REFERENCES nodes(name);
 ALTER TABLE ONLY users ADD CONSTRAINT users_cluster_fkey FOREIGN KEY (cluster) REFERENCES clusters(name);
