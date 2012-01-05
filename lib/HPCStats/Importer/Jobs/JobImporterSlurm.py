@@ -14,27 +14,60 @@ class JobImporterSlurm(object):
         self._conf = config
         self._cluster_name = cluster_name
 
-        db_section = "ivanoe/slurm"
+        db_section = self._cluster_name + "/slurm"
 
         self._dbhost = config.get(db_section,"host")
         self._dbport = int(config.get(db_section,"port"))
         self._dbname = config.get(db_section,"name")
         self._dbuser = config.get(db_section,"user")
         self._dbpass = config.get(db_section,"password")
-        self._conn = MySQLdb.connect(host = self._dbhost, user = self._dbuser, passwd = self._dbpass, db = self._dbname, port = self._dbport)
+        self._conn = MySQLdb.connect( host = self._dbhost,
+                                      user = self._dbuser,
+                                      passwd = self._dbpass,
+                                      db = self._dbname,
+                                      port = self._dbport )
         self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
 
    
     def request_jobs_since_job_id(self, job_id):
-        #req = "SELECT id_job, job_db_inx, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where id_job > %s LIMIT 0,30" % (self._cluster_name, job_id)
-        req = "SELECT id_job, job_db_inx, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where id_job > %s" % (self._cluster_name, job_id)
-        self._cur.execute(req)
+        req = """
+            SELECT id_job,
+                   job_db_inx,
+                   id_user,
+                   id_group,
+                   time_submit,
+                   time_start,
+                   time_end,
+                   nodes_alloc,
+                   cpus_alloc,
+                   partition,
+                   state,
+                   nodelist
+             FROM %s_job_table
+             WHERE id_job > %%s; """ % (self._cluster_name)
+        datas = (job_id,)
+        self._cur.execute(req, datas)
         results = self._cur.fetchall()
         return results
 
     def request_job_from_dbid(self, job_dbid):
-        req = "SELECT id_job, job_db_inx, id_user, id_group, time_submit, time_start, time_end, nodes_alloc, cpus_alloc, partition, state, nodelist FROM %s_job_table where job_db_inx = %s" % (self._cluster_name, job_dbid)
-        self._cur.execute(req)
+        req = """
+            SELECT id_job,
+                   job_db_inx,
+                   id_user,
+                   id_group,
+                   time_submit,
+                   time_start,
+                   time_end,
+                   nodes_alloc,
+                   cpus_alloc,
+                   partition,
+                   state,
+                   nodelist
+            FROM %s_job_table
+            WHERE job_db_inx = %%s; """ % (self._cluster_name)
+        datas = (job_dbid,)
+        self._cur.execute(req, datas)
         results = self._cur.fetchall()
         return results
 
@@ -101,16 +134,18 @@ class JobImporterSlurm(object):
             8:"PREEMPTED", # terminated due to preemption 
             9:"END" # not a real state, last entry in table 
         }
-        return slurm_state[state]
-
-            
+        return slurm_state[state]            
 
 # TO BE MOVED IN ABSTRACT FUNCTION
     def get_last_job_id(self):
         last_job_id = 0
-        req = "SELECT MAX(id_job) AS last_id FROM jobs WHERE clustername = '%s'" % (self._cluster_name)
+        req = """
+            SELECT MAX(id_job) AS last_id
+            FROM jobs
+            WHERE clustername = %s; """
+        datas = (self._cluster_name,)
         cur = self._db.get_cur()
-        cur.execute(req)
+        cur.execute(req, datas)
         results = cur.fetchall()
         for job in results:
             if last_job_id < job[0]:
@@ -119,7 +154,11 @@ class JobImporterSlurm(object):
 
     def get_unfinished_job_id(self):
         unfinished_job_dbid = []
-        req = "SELECT sched_id FROM jobs WHERE state = 'PENDING' OR state = 'RUNNING'" 
+        req = """
+            SELECT sched_id
+            FROM jobs
+            WHERE state = 'PENDING'
+               OR state = 'RUNNING'; """
         cur = self._db.get_cur()
         cur.execute(req)
         results = cur.fetchall()
