@@ -29,6 +29,8 @@ from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
+from HPCStats.Importer.Users.UserImporter import UserImporter
+from HPCStats.Importer.Users.UserImporterXLSLdap import UserImporterXLSLdap
 
 def main(args=sys.argv):
 
@@ -91,6 +93,18 @@ def main(args=sys.argv):
 
     if (options.users):
         print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
+        user_importer = UserImporterXLSLdap(db, config, options.clustername)
+        users = user_importer.get_all_users()
+        for user in users:
+            if user.exists_in_db(db):
+                if (options.debug):
+                    print "updating user", user
+                user.update(db)
+            else:
+                if (options.debug):
+                    print "creating user", user
+                user.save(db)
+        db.commit()
 
     db.unbind()
 

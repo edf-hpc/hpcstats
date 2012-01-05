@@ -6,7 +6,14 @@ CREATE TABLE jobs (id serial NOT NULL, id_job integer NOT NULL, uid character va
 CREATE TABLE unavailability (node character varying(30) NOT NULL,t_start timestamp without time zone NOT NULL,t_end timestamp without time zone NOT NULL,type character varying(20));
 CREATE TABLE nodes (name character varying(30) NOT NULL,cluster character varying(30),cpus integer,machine character varying(50),flops bigint);
 CREATE TABLE job_nodes (job integer NOT NULL,node character varying(30) NOT NULL,cpu_id character varying(30) NOT NULL);
-CREATE TABLE users (name character varying(30) NOT NULL,cluster character varying(30) NOT NULL, groupe character varying(30), creation date,deletion date,uidNumber character varying(30),uid character varying(30));
+CREATE TABLE users ( name character varying(50) NOT NULL,
+                     login character varying(30) NOT NULL,
+                     cluster character varying(30) NOT NULL,
+                     department character varying(30),
+                     creation date,
+                     deletion date,
+                     uid integer,
+                     gid integer);
 
 ALTER TABLE ONLY clusters ADD CONSTRAINT clusters_pkey PRIMARY KEY (name);
 ALTER TABLE ONLY filesystem ADD CONSTRAINT filesystem_pkey PRIMARY KEY (id);
