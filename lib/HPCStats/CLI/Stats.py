@@ -106,5 +106,8 @@ def main(args=sys.argv):
                 user.save(db)
         db.commit()
 
+    if (options.arch):
+        print "=> Updating architecture for cluster %s" % (options.clustername)
+
     db.unbind()
 

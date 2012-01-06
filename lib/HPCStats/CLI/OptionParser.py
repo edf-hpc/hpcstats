@@ -33,6 +33,7 @@ class OptionParser(optparse.OptionParser):
         self.add_option("-n", "--name", action="store", type="string", dest="clustername")
         self.add_option("-j", "--jobs", action="store_true", dest="jobs")
         self.add_option("-u", "--users", action="store_true", dest="users")
+        self.add_option("-a", "--arch", action="store_true", dest="arch")
         self.add_option("-d", "--debug", action="store_true", dest="debug", default=False)
 
 
