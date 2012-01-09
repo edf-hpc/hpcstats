@@ -31,6 +31,8 @@ from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
 from HPCStats.Importer.Users.UserImporter import UserImporter
 from HPCStats.Importer.Users.UserImporterXLSLdap import UserImporterXLSLdap
+from HPCStats.Importer.Architectures.ArchitectureImporter import ArchitectureImporter
+from HPCStats.Importer.Architectures.ArchitectureImporterArchfile import ArchitectureImporterArchfile
 
 def main(args=sys.argv):
 
@@ -66,11 +68,50 @@ def main(args=sys.argv):
     if (options.debug):
         print "db information %s %s %s %s %s" % db.infos()
 
+    if (options.arch):
+        print "=> Updating architecture for cluster %s" % (options.clustername)
+        arch_importer = ArchitectureImporterArchfile(db, config, options.clustername)
+        (cluster, nodes) = arch_importer.get_cluster_nodes()
+        # insert or update cluster
+        if cluster.exists_in_db(db):
+            if (options.debug):
+                print "updating", cluster
+            cluster.update(db)
+        else:
+            if (options.debug):
+                print "creating", cluster
+            cluster.save(db)
 
-    #job_importer = JobImporter(db, config, "ivanoe")
-    job_importer = JobImporterSlurm(db, config, "ivanoe")
+        # insert or update nodes
+        for node in nodes:
+            if node.exists_in_db(db):
+                if (options.debug):
+                    print "updating node", node
+                node.update(db)
+            else:
+                if (options.debug):
+                    print "creating node", node
+                node.save(db)
+        db.commit()
+
+    if (options.users):
+        print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
+        user_importer = UserImporterXLSLdap(db, config, options.clustername)
+        users = user_importer.get_all_users()
+        for user in users:
+            if user.exists_in_db(db):
+                if (options.debug):
+                    print "updating user", user
+                user.update(db)
+            else:
+                if (options.debug):
+                    print "creating user", user
+                user.save(db)
+        db.commit()
   
     if (options.jobs):
+        #job_importer = JobImporter(db, config, "ivanoe")
+        job_importer = JobImporterSlurm(db, config, options.clustername)
         # The last updated job in hpcstatsdb for this cluster
         last_updated_id = job_importer.get_last_job_id()
         # The unfinished jobs in hpcstatsdb for this cluster
@@ -90,24 +131,6 @@ def main(args=sys.argv):
                 print "create job push %d" % index
             job.save(db)
         db.commit()
-
-    if (options.users):
-        print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
-        user_importer = UserImporterXLSLdap(db, config, options.clustername)
-        users = user_importer.get_all_users()
-        for user in users:
-            if user.exists_in_db(db):
-                if (options.debug):
-                    print "updating user", user
-                user.update(db)
-            else:
-                if (options.debug):
-                    print "creating user", user
-                user.save(db)
-        db.commit()
-
-    if (options.arch):
-        print "=> Updating architecture for cluster %s" % (options.clustername)
-
+        
     db.unbind()
 

@@ -18,7 +18,13 @@ CREATE TABLE jobs (  id serial NOT NULL,
                      sched_id character varying(30));
 
 CREATE TABLE unavailability (node character varying(30) NOT NULL,t_start timestamp without time zone NOT NULL,t_end timestamp without time zone NOT NULL,type character varying(20));
-CREATE TABLE nodes (name character varying(30) NOT NULL,cluster character varying(30),cpus integer,machine character varying(50),flops bigint);
+
+CREATE TABLE nodes ( name character varying(30) NOT NULL,
+                     cluster character varying(30),
+                     cpu integer,
+                     model character varying(50),
+                     flops bigint);
+
 CREATE TABLE job_nodes (job integer NOT NULL,node character varying(30) NOT NULL,cpu_id character varying(30) NOT NULL);
 CREATE TABLE users ( name character varying(50) NOT NULL,
                      login character varying(30) NOT NULL,
