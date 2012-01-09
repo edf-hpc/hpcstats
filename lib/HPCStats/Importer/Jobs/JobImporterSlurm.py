@@ -91,7 +91,7 @@ class JobImporterSlurm(object):
    
     def job_from_information(self, res):
         job = Job(  id_job = res["id_job"],
-                    sched_id = res["job_db_inx"],
+                    sched_id = str(res["job_db_inx"]),
                     uid = int(res["id_user"]),
                     gid = int(res["id_group"]),
                     submission_datetime = datetime.fromtimestamp(res["time_submit"]),
