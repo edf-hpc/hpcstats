@@ -34,8 +34,8 @@ class HPCStatsdb:
             'dbuser':     dbuser,
             'dbpassword': dbpassword,
         }
-        self._cur = False
-        self._conn = False
+        self._cur = None
+        self._conn = None
 
     def infos(self):
         return self.database["dbhostname"], self.database["dbport"], self.database["dbname"],self.database["dbuser"], self.database["dbpassword"]
@@ -45,7 +45,6 @@ class HPCStatsdb:
         self._conn = psycopg2.connect("host = %(dbhostname)s dbname= %(dbname)s user= %(dbuser)s password= %(dbpassword)s" % self.database)
         self._cur = self._conn.cursor()
         return self._cur, self._conn
-
 
     def unbind(self):
         """ Disconnect from the database """
