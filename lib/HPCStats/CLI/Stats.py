@@ -119,12 +119,12 @@ def main(args=sys.argv):
         index = 0
         for job in jobs_to_update:
             index = index + 1
-            if not index % 100000:
+            if not index % 10 and options.debug:
                 print "update job push %d" % index
             job.update(db)
         for job in new_jobs:
             index = index + 1
-            if not index % 100000:
+            if not index % 100000 and options.debug:
                 print "create job push %d" % index
             job.save(db)
         db.commit()
