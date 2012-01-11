@@ -1,12 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-#from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Model.Job import Job
 import MySQLdb
 from datetime import datetime
 
-#class JobImporterSlurm(JobImporter):
 class JobImporterSlurm(object):
 
     def __init__(self, db, config, cluster_name):

@@ -28,7 +28,6 @@ from HPCStats.CLI.OptionParser import OptionParser
 from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
-from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
 from HPCStats.Importer.Users.UserImporter import UserImporter
 from HPCStats.Importer.Users.UserImporterXLSLdap import UserImporterXLSLdap
 from HPCStats.Importer.Architectures.ArchitectureImporter import ArchitectureImporter
@@ -111,7 +110,7 @@ def main(args=sys.argv):
   
     if (options.jobs):
         #job_importer = JobImporter(db, config, "ivanoe")
-        job_importer = JobImporterSlurm(db, config, options.clustername)
+        job_importer = JobImporter().factory(db, config, options.clustername)
         # The last updated job in hpcstatsdb for this cluster
         last_updated_id = job_importer.get_last_job_id()
         # The unfinished jobs in hpcstatsdb for this cluster
