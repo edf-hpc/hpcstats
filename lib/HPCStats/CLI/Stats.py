@@ -29,9 +29,7 @@ from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Importer.Users.UserImporter import UserImporter
-from HPCStats.Importer.Users.UserImporterXLSLdap import UserImporterXLSLdap
 from HPCStats.Importer.Architectures.ArchitectureImporter import ArchitectureImporter
-from HPCStats.Importer.Architectures.ArchitectureImporterArchfile import ArchitectureImporterArchfile
 
 def main(args=sys.argv):
 
@@ -69,7 +67,7 @@ def main(args=sys.argv):
 
     if (options.arch):
         print "=> Updating architecture for cluster %s" % (options.clustername)
-        arch_importer = ArchitectureImporterArchfile(db, config, options.clustername)
+        arch_importer = ArchitectureImporter().factory(db, config, options.clustername)
         (cluster, nodes) = arch_importer.get_cluster_nodes()
         # insert or update cluster
         if cluster.exists_in_db(db):
@@ -95,7 +93,7 @@ def main(args=sys.argv):
 
     if (options.users):
         print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
-        user_importer = UserImporterXLSLdap(db, config, options.clustername)
+        user_importer = UserImporter().factory(db, config, options.clustername)
         users = user_importer.get_all_users()
         for user in users:
             if user.exists_in_db(db):
