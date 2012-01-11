@@ -23,7 +23,7 @@
 
 import optparse
 
-class OptionParser(optparse.OptionParser):
+class StatsOptionParser(optparse.OptionParser):
     
     def __init__(self, usage, **kwargs):
         optparse.OptionParser.__init__(self, usage)

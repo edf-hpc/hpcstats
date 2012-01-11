@@ -3,6 +3,8 @@
 
 from datetime import datetime
 
+from HPCStats.Model.User import User
+
 class Job:
 
     def __init__( self,
@@ -44,7 +46,18 @@ class Job:
            end_datetime = "notyet"
         else:
            end_datetime = self._end_datetime.strftime('%Y-%m-%d %H:%M:%S')
-        return self._id_job + " (" + self._uid+"|"+self._gid + "): " + self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S') + " / " + self._running_datetime.strftime('%Y-%m-%d %H:%M:%S') + " / " + self._end_datetime.strftime('%Y-%m-%d %H:%M:%S') + " -> " + str(self._nb_hosts) + "/"  + str(self._nb_procs) + " [" + self._nodes + "]"+ self._state
+        return "%s/%s (%d|%d) %s / %s / %s -> %d / %d [%s] %s" % \
+               ( self._clustername,
+                 self._id_job,
+                 self._uid,
+                 self._gid,
+                 self._submission_datetime,
+                 self._running_datetime,
+                 self._end_datetime,
+                 self._nb_hosts,
+                 self._nb_procs,
+                 self._nodes,
+                 self._state )
 
     def save(self, db):
         req = """
@@ -110,4 +123,19 @@ class Job:
 
         #print db.get_cur().mogrify(req, datas)
         db.get_cur().execute(req, datas)
+
+
+    """ accessors """
+
+    def get_running_datetime(self):
+        return self._running_datetime
+
+    def get_end_datetime(self):
+        return self._end_datetime
+
+    def get_nb_procs(self):
+        return self._nb_procs
+
+    def get_user(self, db):
+        return User(db = db, uid = self._uid, cluster = self._clustername)
 

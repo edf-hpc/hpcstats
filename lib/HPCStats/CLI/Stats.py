@@ -24,7 +24,7 @@
 
 
 import sys
-from HPCStats.CLI.OptionParser import OptionParser
+from HPCStats.CLI.StatsOptionParser import StatsOptionParser
 from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
@@ -35,7 +35,7 @@ def main(args=sys.argv):
 
     # Command line argument parser
     usage = "%prog [options] command"
-    parser = OptionParser(usage)
+    parser = StatsOptionParser(usage)
     (options, args) = parser.parse_args(args[1:])
 
     if ( not options.clustername ):
