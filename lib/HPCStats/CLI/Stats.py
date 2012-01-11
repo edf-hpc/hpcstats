@@ -72,11 +72,11 @@ def main(args=sys.argv):
         # insert or update cluster
         if cluster.exists_in_db(db):
             if (options.debug):
-                print "updating", cluster
+                print "updating cluster", cluster
             cluster.update(db)
         else:
             if (options.debug):
-                print "creating", cluster
+                print "creating cluster", cluster
             cluster.save(db)
 
         # insert or update nodes

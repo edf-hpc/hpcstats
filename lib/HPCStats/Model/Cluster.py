@@ -9,7 +9,7 @@ class Cluster:
         self._name = name
     
     def __str__(self):
-        return "cluster %s" % (self._name)
+        return self._name
 
     def exists_in_db(self, db):
         print "db:", db, type(db)
