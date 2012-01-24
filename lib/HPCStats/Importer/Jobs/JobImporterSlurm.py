@@ -79,11 +79,7 @@ class JobImporterSlurm(object):
     def get_job_for_id_above(self, id_job):
         jobs = []
         results = self.request_jobs_since_job_id(id_job)
-        index = 0
         for result in results:
-            index = index + 1
-            if not index % 100000:
-                print "job fetch %d" % index
             jobs.append(self.job_from_information(result))
         return jobs
    

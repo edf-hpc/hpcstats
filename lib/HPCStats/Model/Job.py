@@ -75,7 +75,8 @@ class Job:
                             nb_nodes,
                             nb_cpus,
                             state)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id ; """
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s )
+            RETURNING id; """
         datas = (
             self._id_job,
             self._sched_id,
@@ -91,13 +92,11 @@ class Job:
             self._state )
  
         dbcursor = db.get_cur()
-        #print dbcursor.mogrify(req, datas)
+
         dbcursor.execute(req, datas)
         self._db_id = dbcursor.fetchone()[0]
 
-
-        print self._db_id
-
+        
         for node in NodeSet(self._nodes):
             if node != "None assigned":
                 req = """
@@ -110,8 +109,7 @@ class Job:
                 datas = (
                     self._db_id,
                     node,
-                    "unkown")
-                print req % datas
+                    "unknown")
                 db.get_cur().execute(req, datas)
         
     def update(self, db):
@@ -128,7 +126,8 @@ class Job:
                        nb_nodes = %s,
                        nb_cpus = %s,
                        state = %s
-            WHERE sched_id = %s; """
+            WHERE sched_id = %s
+            RETURNING id; """
         datas = (
             self._id_job,
             self._uid,
@@ -143,8 +142,31 @@ class Job:
             self._state,
             self._sched_id )
 
-        #print db.get_cur().mogrify(req, datas)
-        db.get_cur().execute(req, datas)
+        dbcursor = db.get_cur()
+        dbcursor.execute(req, datas)
+        self._db_id = dbcursor.fetchone()[0]
+
+        # Add nodes to job_nodes if not defined already
+        req = """ SELECT count(job) FROM job_nodes WHERE job = %s; """
+        datas = ( self._db_id, )
+        dbcursor.execute(req, datas)
+        nodecount = dbcursor.fetchone()[0]
+
+        if nodecount == 0:
+            for node in NodeSet(self._nodes):
+                if node != "None assigned":
+                    req = """
+                        INSERT INTO job_nodes (
+                                        job,
+                                        node,
+                                        cpu_id
+                                        )
+                        VALUES (%s, %s, %s); """
+                    datas = (
+                        self._db_id,
+                        node,
+                        "unknown")
+                    db.get_cur().execute(req, datas)
 
 
     """ accessors """
