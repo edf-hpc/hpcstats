@@ -3,6 +3,7 @@
 
 from datetime import datetime
 
+from ClusterShell.NodeSet import NodeSet
 from HPCStats.Model.User import User
 
 class Job:
@@ -74,7 +75,7 @@ class Job:
                             nb_nodes,
                             nb_cpus,
                             state)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id ; """
         datas = (
             self._id_job,
             self._sched_id,
@@ -89,8 +90,29 @@ class Job:
             self._nb_procs,
             self._state )
  
-        #print db.get_cur().mogrify(req, datas)
-        db.get_cur().execute(req, datas)
+        dbcursor = db.get_cur()
+        #print dbcursor.mogrify(req, datas)
+        dbcursor.execute(req, datas)
+        self._db_id = dbcursor.fetchone()[0]
+
+
+        print self._db_id
+
+        for node in NodeSet(self._nodes):
+            if node != "None assigned":
+                req = """
+                    INSERT INTO job_nodes (
+                                    job,
+                                    node,
+                                    cpu_id
+                                    )
+                    VALUES (%s, %s, %s); """
+                datas = (
+                    self._db_id,
+                    node,
+                    "unkown")
+                print req % datas
+                db.get_cur().execute(req, datas)
         
     def update(self, db):
         req = """
