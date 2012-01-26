@@ -12,7 +12,6 @@ class Cluster:
         return self._name
 
     def exists_in_db(self, db):
-        print "db:", db, type(db)
         cur = db.get_cur()
         cur.execute("SELECT name FROM clusters WHERE name = %s;", (self._name,) )
         nb_rows = cur.rowcount

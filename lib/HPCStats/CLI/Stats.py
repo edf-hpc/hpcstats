@@ -66,7 +66,8 @@ def main(args=sys.argv):
         print "db information %s %s %s %s %s" % db.infos()
 
     if (options.arch):
-        print "=> Updating architecture for cluster %s" % (options.clustername)
+        if (options.debug):
+            print "=> Updating architecture for cluster %s" % (options.clustername)
         arch_importer = ArchitectureImporter().factory(db, config, options.clustername)
         (cluster, nodes) = arch_importer.get_cluster_nodes()
         # insert or update cluster
@@ -92,7 +93,8 @@ def main(args=sys.argv):
         db.commit()
 
     if (options.users):
-        print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
+        if (options.debug):
+            print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
         user_importer = UserImporter().factory(db, config, options.clustername)
         users = user_importer.get_all_users()
         for user in users:
