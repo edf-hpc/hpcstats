@@ -39,7 +39,7 @@ class UserImporterXLSLdap(object):
                 
                 if user.get_cluster() == self._cluster_name and (not previous_user or not user == previous_user):
                     
-                    [uid, gid] = self.get_ids_from_ldap(user.get_login())
+                    [uid, gid] = self.get_ids_from_ldap(user)
                     user.set_uid(uid)
                     user.set_gid(gid)
                     
@@ -52,16 +52,29 @@ class UserImporterXLSLdap(object):
 
         return users;
 
-    def get_ids_from_ldap(self, login):
-        r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"uid="+login,["uidNumber","gidNumber"])
+    def get_ids_from_ldap(self, user):
+        r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"uid="+user.get_login(),["uidNumber","gidNumber"])
         try:
             attrib_dict = r[0][1]
             uid = int(attrib_dict['uidNumber'][0])
             gid = int(attrib_dict['gidNumber'][0])
             return [uid, gid]
         except IndexError:
-            print "Error in %s: login %s not in LDAP" % \
+            print "Error in %s: login %s (%s) not in LDAP" % \
                    ( self.__class__.__name__,
+                     user.get_login(),
+                     user.get_name() )
+            # loosely search for user with the same name in LDAP
+            r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"cn="+user.get_name(),["uid","uidNumber","gidNumber"])
+            if len(r) > 0:
+                attrib_dict = r[0][1]
+                login = attrib_dict['uid'][0]
+                uid = int(attrib_dict['uidNumber'][0])
+                gid = int(attrib_dict['gidNumber'][0])
+                print "Info in %s: login %s not in LDAP but found user %s with login %s" % \
+                   ( self.__class__.__name__,
+                     user.get_login(),
+                     user.get_name(),
                      login )
             return [-1, -1]
 
