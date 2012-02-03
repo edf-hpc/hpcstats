@@ -4,9 +4,10 @@
 from HPCStats.Model.User import User
 import ldap
 import xlrd
+import MySQLdb
 from datetime import date
 
-class UserImporterXLSLdap(object):
+class UserImporterXLSLdapSlurm(object):
 
     def __init__(self, db, config, cluster_name):
         self._db = db
@@ -15,6 +16,7 @@ class UserImporterXLSLdap(object):
 
         ldap_section = self._cluster_name + "/ldap"
         xls_section = self._cluster_name + "/xls"
+        db_section = self._cluster_name + "/slurm"
 
         self._ldapurl = config.get(ldap_section,"url")
         self._ldapbase = config.get(ldap_section,"basedn")
@@ -27,6 +29,18 @@ class UserImporterXLSLdap(object):
         self._xlssheetname = config.get(xls_section,"sheet")
         self._xlsworkbook = xlrd.open_workbook(self._xlsfile)
         self._xlssheet = self._xlsworkbook.sheet_by_name(self._xlssheetname)
+
+        self._dbhost = config.get(db_section,"host")
+        self._dbport = int(config.get(db_section,"port"))
+        self._dbname = config.get(db_section,"name")
+        self._dbuser = config.get(db_section,"user")
+        self._dbpass = config.get(db_section,"password")
+        self._conn = MySQLdb.connect( host = self._dbhost,
+                                      user = self._dbuser,
+                                      passwd = self._dbpass,
+                                      db = self._dbname,
+                                      port = self._dbport )
+        self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
         
     def get_all_users(self):
         users = []
@@ -76,6 +90,30 @@ class UserImporterXLSLdap(object):
                      user.get_login(),
                      user.get_name(),
                      login )
+            # try in Slurm Database
+            else:
+                req = """
+                    SELECT DISTINCT(id_user) AS uid,
+                           id_group AS gid
+                     FROM %s_job_table
+                     WHERE account = %%s; """ % (self._cluster_name)
+                datas = (user.get_login().lower(),)
+                nb_rows = self._cur.execute(req, datas)
+                if nb_rows == 1:
+                    row = self._cur.fetchone()
+                    uid = int(row['uid'])
+                    gid = int(row['gid'])
+                    print "Info in %s: found login %s in SlurmDBD with %d/%d" % \
+                       ( self.__class__.__name__,
+                         user.get_login(),
+                         uid,
+                         gid )
+                elif nb_rows > 1:
+                    print "Info in %s: found login %s in SlurmDBD with incorrect (%d) number of UID/GID" % \
+                       ( self.__class__.__name__,
+                         user.get_login(),
+                         nb_rows )
+
             return [-1, -1]
 
     def user_from_xls_row(self, xls_row):

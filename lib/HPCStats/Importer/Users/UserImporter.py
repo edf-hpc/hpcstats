@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from HPCStats.Importer.Users.UserImporterXLSLdap import UserImporterXLSLdap
+from HPCStats.Importer.Users.UserImporterXLSLdapSlurm import UserImporterXLSLdapSlurm
 
 class UserImporter(object):
 
@@ -9,8 +9,8 @@ class UserImporter(object):
         pass
 
     def factory(self, db, config, cluster_name):
-        if config.get(cluster_name,"users") == "xls+ldap":
-            return UserImporterXLSLdap(db, config, cluster_name)
+        if config.get(cluster_name,"users") == "xls+ldap+slurm":
+            return UserImporterXLSLdapSlurm(db, config, cluster_name)
         else:
             print "FATAL : TO BE CODED"
             # Throw Exception
