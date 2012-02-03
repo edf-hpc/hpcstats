@@ -13,8 +13,8 @@ class UserImporterXLSLdap(object):
         self._conf = config
         self._cluster_name = cluster_name
 
-        ldap_section = "ivanoe/ldap"
-        xls_section = "ivanoe/xls"
+        ldap_section = self._cluster_name + "/ldap"
+        xls_section = self._cluster_name + "/xls"
 
         self._ldapurl = config.get(ldap_section,"url")
         self._ldapbase = config.get(ldap_section,"basedn")
