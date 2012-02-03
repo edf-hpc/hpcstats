@@ -31,18 +31,20 @@ class UserImporterXLSLdap(object):
     def get_all_users(self):
         users = []
         # start from row 6 in xls file
+        previous_user = None
         for rownum in range(6,self._xlssheet.nrows):
             try:
                 xls_row = self._xlssheet.row_values(rownum)
                 user = self.user_from_xls_row(xls_row) 
-    
-                if user.get_cluster() == self._cluster_name:
-             
+                
+                if user.get_cluster() == self._cluster_name and (not previous_user or not user == previous_user):
+                    
                     [uid, gid] = self.get_ids_from_ldap(user.get_login())
                     user.set_uid(uid)
                     user.set_gid(gid)
                     
                     users.append(user)
+                    previous_user = user
 
             except TypeError as e:
                 #print "Error in %s: %s" % (self.__class__.__name__, e)

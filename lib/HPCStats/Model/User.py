@@ -62,6 +62,9 @@ class User:
            deletion_date = self._deletion_date.strftime('%Y-%m-%d')
         return self._name + " [" + self._department + "] " + self._login + " - " + self._cluster + " (" + str(self._uid) + "|" + str(self._gid) + "): " + creation_date + "/" + deletion_date
 
+    def __eq__(self, other):
+        return self._cluster == other._cluster and self._login == other._login
+
     def set_uid(self, uid):
         self._uid = uid
 
