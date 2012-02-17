@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from HPCStats.Model.Cluster import Cluster
+from HPCStats.Model.User import User
 from HPCStats.Importer.Users.UserImporterXLSLdapSlurm import UserImporterXLSLdapSlurm
 from HPCStats.Importer.Users.UserImporterLdap import UserImporterLdap
 

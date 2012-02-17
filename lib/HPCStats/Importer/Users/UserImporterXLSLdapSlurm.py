@@ -74,7 +74,7 @@ class UserImporterXLSLdapSlurm(object):
             gid = int(attrib_dict['gidNumber'][0])
             return [uid, gid]
         except IndexError:
-            print "Error in %s: login %s (%s) not in LDAP" % \
+            print "Error in %s: login %s (%s) not found in LDAP" % \
                    ( self.__class__.__name__,
                      user.get_login(),
                      user.get_name() )
@@ -85,11 +85,12 @@ class UserImporterXLSLdapSlurm(object):
                 login = attrib_dict['uid'][0]
                 uid = int(attrib_dict['uidNumber'][0])
                 gid = int(attrib_dict['gidNumber'][0])
-                print "Info in %s: login %s not in LDAP but found user %s with login %s" % \
+                print "Info in %s: login %s not found in LDAP but found user %s with login %s" % \
                    ( self.__class__.__name__,
                      user.get_login(),
                      user.get_name(),
                      login )
+                return [uid, gid]
             # try in Slurm Database
             else:
                 req = """
@@ -108,6 +109,8 @@ class UserImporterXLSLdapSlurm(object):
                          user.get_login(),
                          uid,
                          gid )
+                    return [uid, gid]
+
                 elif nb_rows > 1:
                     print "Info in %s: found login %s in SlurmDBD with incorrect (%d) number of UID/GID" % \
                        ( self.__class__.__name__,
@@ -154,3 +157,67 @@ class UserImporterXLSLdapSlurm(object):
                      deletion_date = deletion_date )
         return user
 
+    def user_from_ldap_row(self, ldap_row):
+        login = ldap_row['uid'][0]
+        uid = ldap_row['uidNumber'][0]
+        gid = ldap_row['gidNumber'][0]
+        name = ldap_row['cn'][0]
+        if ldap_row.has_key('mail'):    
+            email = ldap_row['mail'][0]
+        else:
+            email = None
+        cluster = self._cluster_name
+        user = User( name = name,
+                     login = login,
+                     uid = uid,
+                     gid = gid,
+                     cluster = cluster )
+        return user
+
+    def user_from_slurm_row(self, slurm_row):
+        login = slurm_row['login']
+        uid = int(slurm_row['uid'])
+        gid = int(slurm_row['gid'])
+        cluster = self._cluster_name
+        user = User( login = login,
+                     uid = uid,
+                     gid = gid,
+                     cluster = cluster )
+        return user
+
+    def find_with_uid(self, uid):
+        user = None
+        # search in LDAP
+        r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"uidNumber="+str(uid),["uid","cn","mail","uidNumber","gidNumber"])
+        if len(r) > 0:
+            attrib_dict = r[0][1]
+            user = self.user_from_ldap_row(attrib_dict)
+            print "Info in %s: uid %d found in LDAP with user %s" % \
+                   ( self.__class__.__name__,
+                     uid,
+                     user )
+        # else search in SlurmDBD
+        else:
+            req = """
+                SELECT id_user uid,
+                       id_group gid,
+                       user login
+                  FROM %s_assoc_table AS assoc,
+                       %s_job_table AS jobs
+                 WHERE jobs.id_assoc = assoc.id_assoc
+                   AND jobs.id_user = %%s
+              GROUP BY login; """ % (self._cluster_name, self._cluster_name)
+            datas = (uid,)
+            nb_rows = self._cur.execute(req, datas)
+            if nb_rows == 1:
+                row = self._cur.fetchone()
+                user = self.user_from_slurmdbd_row(row)
+                print "Info in %s: uid %d found in SlurmDBD with user %s" % \
+                      ( self.__class__.__name__,
+                        uid,
+                        user )
+            elif nb_rows > 1:
+                print "Info in %s: uid %d found in too many times in SlurmDBD" % \
+                      ( self.__class__.__name__,
+                        uid )
+        return user

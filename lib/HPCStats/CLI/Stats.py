@@ -27,6 +27,7 @@ import sys
 from HPCStats.CLI.StatsOptionParser import StatsOptionParser
 from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
+from HPCStats.Model.Cluster import Cluster
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Importer.Users.UserImporter import UserImporter
 from HPCStats.Importer.Architectures.ArchitectureImporter import ArchitectureImporter
@@ -106,8 +107,27 @@ def main(args=sys.argv):
                 if (options.debug):
                     print "creating user", user
                 user.save(db)
+        
+        if (options.debug):
+            print "=> Trying to find missing users for cluster %s" % (options.clustername)
+        cluster = Cluster(options.clustername)
+        uids = cluster.get_unknown_users(db)
+        for unknown_uid in uids:
+            user = user_importer.find_with_uid(unknown_uid)
+            if user:
+                if user.exists_in_db(db):
+                    if (options.debug):
+                        print "updating user", user
+                    user.update(db)
+                else:
+                    if (options.debug):
+                        print "creating user", user
+                    user.save(db)
+            else:
+                print "WARNING: unknown user with uid %d" % (unknown_uid) 
+
         db.commit()
-  
+
     if (options.jobs):
         job_importer = JobImporter().factory(db, config, options.clustername)
         # The last updated job in hpcstatsdb for this cluster
