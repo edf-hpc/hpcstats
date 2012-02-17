@@ -37,7 +37,11 @@ class JobImporterTorque(object):
     def get_job_for_id_above(self, last_id_job):
         jobs = []
         filenames = self.account_files_to_check(last_id_job)
+        index = 0
+        nbfiles = len(filenames)
         for filename in filenames:
+            index =  index + 1
+            print " Filename : %s (%d / %d)" % (filename, index, nbfiles )
             accountfile = open( self._logfolder + "/" + filename,'r')
             for line in accountfile.readlines():
                 match = self._logpat.match(line)
