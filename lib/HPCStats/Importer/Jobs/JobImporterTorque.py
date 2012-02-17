@@ -13,6 +13,7 @@ class JobImporterTorque(object):
 
         db_section = self._cluster_name + "/torque"
         self._logfolder = "" #FIXME
+        self._dbhost = config.get(db_section,"logdir")
 
    
     def request_jobs_since_job_id(self, job_id):
@@ -22,20 +23,23 @@ class JobImporterTorque(object):
         return []
 
     def get_job_information_from_dbid_job_list(self,ids_job):
-        jobs = []
-        for id_job in ids_job:
-            result = self.request_job_from_dbid(id_job)
-            jobs.append(self.job_from_information(result[0]))
-        return jobs
+#        jobs = []
+#        for id_job in ids_job:
+#            result = self.request_job_from_dbid(id_job)
+#            jobs.append(self.job_from_information(result[0]))
+#        return jobs
+        return []
 
     def get_job_for_id_above(self, id_job):
-        jobs = []
-        results = self.request_jobs_since_job_id(id_job)
-        for result in results:
-            jobs.append(self.job_from_information(result))
-        return jobs
+#        jobs = []
+#        results = self.request_jobs_since_job_id(id_job)
+#        for result in results:
+#            jobs.append(self.job_from_information(result))
+#        return jobs
+        return []
    
     def job_from_information(self, res):
+        return []
         job = Job(  id_job = "id_job",
                     sched_id = "job_db_inx",
                     uid = "id_user",
@@ -53,6 +57,7 @@ class JobImporterTorque(object):
 
 # TO BE MOVED IN ABSTRACT FUNCTION
     def get_last_job_id(self):
+        return []
         last_job_id = 0
         req = """
             SELECT MAX(id_job) AS last_id
@@ -69,5 +74,5 @@ class JobImporterTorque(object):
 
 
     def get_unfinished_job_id(self):
-        return Null
+        return []
 
