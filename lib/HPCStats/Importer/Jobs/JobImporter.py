@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
+from HPCStats.Importer.Jobs.JobImporterTorque import JobImporterTorque
 
 class JobImporter(object):
 
@@ -12,8 +13,7 @@ class JobImporter(object):
         if config.get(cluster_name,"jobs") == "slurm": ## Slurm
             return JobImporterSlurm(db, config, cluster_name)
         elif config.get(cluster_name, "jobs") == "torque": ## Torque
-            print "FATAL : TO BE CODED"
-#            return JobImporterTorque(db, config, cluster_name):
+            return JobImporterTorque(db, config, cluster_name)
         else:
             print "FATAL : TO BE CODED"
             # Throw Exception

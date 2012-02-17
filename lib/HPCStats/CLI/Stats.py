@@ -109,7 +109,6 @@ def main(args=sys.argv):
         db.commit()
   
     if (options.jobs):
-        #job_importer = JobImporter(db, config, "ivanoe")
         job_importer = JobImporter().factory(db, config, options.clustername)
         # The last updated job in hpcstatsdb for this cluster
         last_updated_id = job_importer.get_last_job_id()
