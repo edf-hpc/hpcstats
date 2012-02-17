@@ -151,7 +151,10 @@ def run_interval(process_info):
 
         try:
             running_datetime = job.get_running_datetime()
-            end_datetime = job.get_end_datetime()
+            if job.get_state() == 'RUNNING':
+                end_datetime = datetime.now()
+            else:
+                end_datetime = job.get_end_datetime()
             nb_cpus = job.get_nb_procs()
             user = job.get_user(db)
             username = user.get_name()
@@ -199,7 +202,8 @@ def run_interval(process_info):
                 print "debug: (%s - %s) * %d -> %s" % (end_datetime, running_datetime, nb_cpus, cpu_time_job_seconds)
 
         except UserWarning as w:
-            print "Warning:", w
+            #print "Warning:", w
+            continue
 
     # nb accounts
     nb_accounts = cluster.get_nb_accounts(db, interval_beginning)

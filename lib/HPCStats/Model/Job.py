@@ -185,6 +185,9 @@ class Job:
     def get_nb_procs(self):
         return self._nb_procs
 
+    def get_state(self):
+        return self._state
+
     def get_user(self, db):
         return User(db = db, uid = self._uid, cluster = self._clustername)
 
