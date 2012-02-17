@@ -29,13 +29,12 @@ class JobImporterTorque(object):
         return []
 
     def account_files_to_check(self, last_id_job):
-#        last_filename = last_id_job
+#FIXME        last_filename = last_id_job
         filenames = os.listdir(self._logfolder)
         return filenames
         
 
     def get_job_for_id_above(self, last_id_job):
-        # BETA TEST !!
         jobs = []
         filenames = self.account_files_to_check(last_id_job)
         for filename in filenames:
@@ -49,10 +48,11 @@ class JobImporterTorque(object):
    
     def job_from_information(self, res, filename):
         nbprocs, nbnodes, nodelist = self.torque_job_nodelist(res[10])
+        uuid, ugid = self.get_uid_gid_from_login(res[3])
         job = Job(  id_job = int(res[1]),
                     sched_id = filename,
-                    uid = 0, # Fonction a écrire
-                    gid = 0, # Fonction à écrire
+                    uid = uuid,
+                    gid = ugid,
                     submission_datetime = datetime.fromtimestamp(int(res[7])),
                     running_datetime = datetime.fromtimestamp(int(res[8])),
                     end_datetime = datetime.fromtimestamp(int(res[9])),
@@ -72,7 +72,6 @@ class JobImporterTorque(object):
 
 # TO BE MOVED IN ABSTRACT FUNCTION
     def get_last_job_id(self):
-        return 0
         last_job_id = 0
         req = """
             SELECT MAX(id_job) AS last_id
@@ -104,3 +103,19 @@ class JobImporterTorque(object):
         nbnodes = len(nodelist)
         return nbprocs, nbnodes, nodelist
         
+    def get_uid_gid_from_login(self, login):
+        req = """
+            SELECT uid, gid
+            FROM users
+            WHERE cluster = %s AND login = %s; """
+        datas = (self._cluster_name, login)
+        cur = self._db.get_cur()
+        #print cur.mogrify(req, datas)
+        cur.execute(req, datas)
+        results = cur.fetchall()
+        if len(results) > 0:
+            (uid, gid) = results[0]
+        else :
+            (uid, gid) = 0, 0
+        return uid, gid
+
