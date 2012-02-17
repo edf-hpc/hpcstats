@@ -116,7 +116,7 @@ class User:
             self._uid,
             self._gid )
  
-        print db.get_cur().mogrify(req, datas)
+        #print db.get_cur().mogrify(req, datas)
         db.get_cur().execute(req, datas)
 
     def update(self, db):
