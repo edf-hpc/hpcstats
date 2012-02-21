@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Model.Job import Job
 from ClusterShell.NodeSet import NodeSet
 from datetime import datetime
@@ -10,9 +11,12 @@ import re, os
 
 # ('02/01/2012 18:56:28', '5802977', None, 'martin', None, 'lnhe', 'parall_64', '1328114089', '1328114089', '1328114090', 'cla1a184/7+cla1a184/6+cla1a184/5+cla1a184/4+cla1a184/3+cla1a184/2+cla1a184/1+cla1a184/0+cla1a185/7+cla1a185/6+cla1a185/5+cla1a185/4+cla1a185/3+cla1a185/2+cla1a185/1+cla1a185/0+cla1b003/7+cla1b003/6+cla1b003/5+cla1b003/4+cla1b003/3+cla1b003/2+cla1b003/1+cla1b003/0+cla1b004/7+cla1b004/6+cla1b004/5+cla1b004/4+cla1b004/3+cla1b004/2+cla1b004/1+cla1b004/0', '06:00:00')
 
-class JobImporterTorque(object):
+class JobImporterTorque(JobImporter):
 
     def __init__(self, db, config, cluster_name):
+
+        JobImporter.__init__(self)
+
         self._db = db
         self._conf = config
         self._cluster_name = cluster_name

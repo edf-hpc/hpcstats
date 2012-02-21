@@ -3,7 +3,7 @@
 
 from HPCStats.Importer.Architectures.ArchitectureImporterArchfile import ArchitectureImporterArchfile
 
-class ArchitectureImporter(object):
+class ArchitectureImporterFactory(object):
 
     def __init__(self):
         pass

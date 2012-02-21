@@ -1,14 +1,18 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from HPCStats.Importer.Architectures.ArchitectureImporter import ArchitectureImporter
 from HPCStats.Model.Node import Node
 from HPCStats.Model.Cluster import Cluster
 from ClusterShell.NodeSet import NodeSet
 import ConfigParser
 
-class ArchitectureImporterArchfile(object):
+class ArchitectureImporterArchfile(ArchitectureImporter):
 
     def __init__(self, db, config, cluster_name):
+
+        ArchitectureImporter.__init__(self)
+
         self._db = db
         self._conf = config
         self._cluster_name = cluster_name

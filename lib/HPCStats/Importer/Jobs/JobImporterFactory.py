@@ -4,7 +4,7 @@
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
 from HPCStats.Importer.Jobs.JobImporterTorque import JobImporterTorque
 
-class JobImporter(object):
+class JobImporterFactory(object):
 
     def __init__(self):
         pass

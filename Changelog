@@ -1,3 +1,7 @@
+2012-02-21 Rémi Palancher <remi.palancher@edf.fr>
+
+	* Separate factories and metaclasses for all importers
+
 2012-02-20 Stéphan Gorget <stephan.gorget@edf.fr>
 
 	* Supports users import from LDAP and XLS+LDAP+SLURM

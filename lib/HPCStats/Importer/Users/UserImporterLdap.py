@@ -1,13 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from HPCStats.Importer.Users.UserImporter import UserImporter
 from HPCStats.Model.User import User
 import ldap
 from datetime import datetime
 
-class UserImporterLdap(object):
+class UserImporterLdap(UserImporter):
 
     def __init__(self, db, config, cluster_name):
+
+        UserImporter.__init__(self)
+
         self._db = db
         self._conf = config
         self._cluster_name = cluster_name

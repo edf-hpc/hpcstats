@@ -6,7 +6,7 @@ from HPCStats.Model.User import User
 from HPCStats.Importer.Users.UserImporterXLSLdapSlurm import UserImporterXLSLdapSlurm
 from HPCStats.Importer.Users.UserImporterLdap import UserImporterLdap
 
-class UserImporter(object):
+class UserImporterFactory(object):
 
     def __init__(self):
         pass
