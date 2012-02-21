@@ -1,3 +1,4 @@
 TODO:
 - add parameters for start and end for reporting
 - use contract end datetime to avoid errors in UserImporterXLSLdapSlurm
+- add filters to clean imported jobs, esp. from Slurm
