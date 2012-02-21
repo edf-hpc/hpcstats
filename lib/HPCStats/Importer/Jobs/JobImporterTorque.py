@@ -15,11 +15,7 @@ class JobImporterTorque(JobImporter):
 
     def __init__(self, db, config, cluster_name):
 
-        JobImporter.__init__(self)
-
-        self._db = db
-        self._conf = config
-        self._cluster_name = cluster_name
+        JobImporter.__init__(self, db, config, cluster_name)
 
         self._logpat = re.compile('(.{19});E;(\d+)(?:-(\d+))?\..*;user=(\S+) (?:account=(\S+))?.*group=(\S+).*queue=(\S+) ctime=\d+ qtime=(\d+) etime=(\d+) start=(\d+) .* exec_host=(\S+) .* Exit_status=(\d+) .*\n')
         self._exechostpat = re.compile('/\d+')
@@ -78,28 +74,12 @@ class JobImporterTorque(JobImporter):
         else :
             return "UNKNOWN"
 
-# TO BE MOVED IN ABSTRACT FUNCTION
-    def get_last_job_id(self):
-        last_job_id = 0
-        req = """
-            SELECT MAX(id_job) AS last_id
-            FROM jobs
-            WHERE clustername = %s; """
-        datas = (self._cluster_name,)
-        cur = self._db.get_cur()
-        cur.execute(req, datas)
-        results = cur.fetchall()
-        for job in results:
-            if last_job_id < job[0]:
-                last_job_id = job[0]
-        return last_job_id
-
-
+    # override parent class
     def get_unfinished_job_id(self):
         # Torque always put in DB finished jobs
         return []
 
-# Useful function
+    # useful functions
     def torque_job_status_converter(self):
         return ""
 
