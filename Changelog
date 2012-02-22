@@ -5,6 +5,7 @@
 	  * deletion of inter model objects references
 	  * deletion of unecessary module importations
 	* Added Finders classes to find objects in database
+	* Added a filter to clean jobs from Slurm with no start time
 
 2012-02-21 Rémi Palancher <remi.palancher@edf.fr>
 

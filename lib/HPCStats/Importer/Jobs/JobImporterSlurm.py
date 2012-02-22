@@ -73,6 +73,7 @@ class JobImporterSlurm(JobImporter):
         for id_job in ids_job:
             result = self.request_job_from_dbid(id_job)
             jobs.append(self.job_from_information(result[0]))
+        self._filter(jobs)
         return jobs
 
     def get_job_for_id_above(self, id_job):
@@ -80,6 +81,7 @@ class JobImporterSlurm(JobImporter):
         results = self.request_jobs_since_job_id(id_job)
         for result in results:
             jobs.append(self.job_from_information(result))
+        self._filter(jobs)
         return jobs
    
     def job_from_information(self, res):
@@ -97,7 +99,6 @@ class JobImporterSlurm(JobImporter):
                     state = self.get_job_state_from_slurm_state(res["state"]),
                     cluster_name = self._cluster_name)
         return job
-
 
     """
         From slurm.h.inc
@@ -128,3 +129,60 @@ class JobImporterSlurm(JobImporter):
             9:"END" # not a real state, last entry in table 
         }
         return slurm_state[state]            
+
+    def _filter(self, jobs):
+        job_filter = JobFilterSlurmNoStartTime(self._cur, jobs)
+        job_filter.run()
+
+class JobFilterSlurmNoStartTime:
+
+    def __init__(self, slurmdbd_cur, jobs):
+
+        self._name = "SlurmNoStartTime"
+        self._description = "Filter job imported from SlurmDBD with no time_start"   
+        self._slurmdbd_cur = slurmdbd_cur
+        self._jobs = jobs
+        
+    def __str__(self):
+        return "JobFilter %s (%d jobs)" % (self._name, len(self._jobs))
+
+    def run(self):
+        for job in self._jobs:
+            if not self._filter_job(job):
+                self._jobs.remove(job)
+                print "Info %s: job %s removed from import" % \
+                         ( self,
+                           job )
+                return None
+
+    def _filter_job(self, job):
+
+        if job.get_state() != 'PENDING' and \
+           job.get_running_datetime() == datetime(1970,1,1,1,0,0):
+
+            sql = """
+                SELECT id_step,
+                       time_start
+                FROM %s_step_table
+                WHERE job_db_inx = %%s
+                ORDER BY id_step; """ % (job.get_cluster_name())
+    
+            data = (job.get_db_id(),)
+            self._slurmdbd_cur.execute(sql, data)
+            row = self._slurmdbd_cur.fetchone()
+            if row == None:
+                print "Info %s: job %s has no first step." % \
+                         ( self,
+                           job )
+                return None
+            else:
+                step_id = row[0]
+                step_start = datetime.fromtimestamp(row[1])
+                print "Info %s: job %s has first step started at %s" % \
+                         ( self,
+                           job,
+                           step_start )
+                job.set_running_datetime(step_start)
+                return job
+        else:
+            return job

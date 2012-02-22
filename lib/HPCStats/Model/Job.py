@@ -194,3 +194,6 @@ class Job:
 
     def get_state(self):
         return self._state
+
+    def get_cluster_name(self):
+        return self._cluster_name
