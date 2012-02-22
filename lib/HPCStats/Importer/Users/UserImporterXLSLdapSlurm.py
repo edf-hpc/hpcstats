@@ -55,7 +55,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                 xls_row = self._xlssheet.row_values(rownum)
                 user = self.user_from_xls_row(xls_row) 
                 
-                if user.get_cluster() == self._cluster_name and (not previous_user or not user == previous_user):
+                if user.get_cluster_name() == self._cluster_name and (not previous_user or not user == previous_user):
                     
                     [uid, gid] = self.get_ids_from_ldap(user)
                     user.set_uid(uid)
@@ -138,7 +138,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
             department = "UNKNOWN"
         project = xls_row[12].encode('utf-8').strip().upper()
         email = xls_row[14].encode('utf-8').strip().lower()
-        cluster = xls_row[16].encode('utf-8').strip().lower()
+        cluster_name = xls_row[16].encode('utf-8').strip().lower()
         creation = xls_row[5]
         if type(creation) == float and creation != 1.0:
             # see: https://secure.simplistix.co.uk/svn/xlrd/trunk/xlrd/doc/xlrd.html#xldate.xldate_as_tuple-function
@@ -155,7 +155,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
 
         user = User( name = firstname + " " + lastname,
                      login = login,
-                     cluster = cluster,
+                     cluster_name = cluster_name,
                      department = department,
                      creation_date = creation_date,
                      deletion_date = deletion_date )
@@ -170,23 +170,21 @@ class UserImporterXLSLdapSlurm(UserImporter):
             email = ldap_row['mail'][0]
         else:
             email = None
-        cluster = self._cluster_name
         user = User( name = name,
                      login = login,
                      uid = uid,
                      gid = gid,
-                     cluster = cluster )
+                     cluster_name = self._cluster_name )
         return user
 
     def user_from_slurm_row(self, slurm_row):
         login = slurm_row['login']
         uid = int(slurm_row['uid'])
         gid = int(slurm_row['gid'])
-        cluster = self._cluster_name
         user = User( login = login,
                      uid = uid,
                      gid = gid,
-                     cluster = cluster )
+                     cluster_name = self._cluster_name )
         return user
 
     def find_with_uid(self, uid):

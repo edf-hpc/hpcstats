@@ -65,7 +65,7 @@ class JobImporterTorque(JobImporter):
                     running_queue = res[6],
                     nodes = nodelist,
                     state = self.get_job_state_from_torque_state(res[11]),
-                    clustername = self._cluster_name)
+                    cluster_name = self._cluster_name)
         return job
 
     def get_job_state_from_torque_state(self, state):

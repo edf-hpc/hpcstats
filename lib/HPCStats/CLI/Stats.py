@@ -27,7 +27,7 @@ import sys
 from HPCStats.CLI.StatsOptionParser import StatsOptionParser
 from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
-from HPCStats.Model.Cluster import Cluster
+from HPCStats.Finder.ClusterFinder import ClusterFinder
 from HPCStats.Importer.Jobs.JobImporterFactory import JobImporterFactory
 from HPCStats.Importer.Users.UserImporterFactory import UserImporterFactory
 from HPCStats.Importer.Architectures.ArchitectureImporterFactory import ArchitectureImporterFactory
@@ -65,12 +65,15 @@ def main(args=sys.argv):
     
     if (options.debug):
         print "db information %s %s %s %s %s" % db.infos()
+    
+    cluster_finder = ClusterFinder(db)
+    cluster = cluster_finder.find(options.clustername)
 
     if (options.arch):
         if (options.debug):
             print "=> Updating architecture for cluster %s" % (options.clustername)
-        arch_importer = ArchitectureImporterFactory().factory(db, config, options.clustername)
-        (cluster, nodes) = arch_importer.get_cluster_nodes()
+        arch_importer = ArchitectureImporterFactory().factory(db, config, cluster.get_name())
+        nodes = arch_importer.get_cluster_nodes()
         # insert or update cluster
         if cluster.exists_in_db(db):
             if (options.debug):
@@ -96,7 +99,7 @@ def main(args=sys.argv):
     if (options.users):
         if (options.debug):
             print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
-        user_importer = UserImporterFactory().factory(db, config, options.clustername)
+        user_importer = UserImporterFactory().factory(db, config, cluster.get_name())
         users = user_importer.get_all_users()
         for user in users:
             if user.exists_in_db(db):
@@ -110,7 +113,6 @@ def main(args=sys.argv):
         
         if (options.debug):
             print "=> Trying to find missing users for cluster %s" % (options.clustername)
-        cluster = Cluster(options.clustername)
         uids = cluster.get_unknown_users(db)
         for unknown_uid in uids:
             user = user_importer.find_with_uid(unknown_uid)
@@ -129,7 +131,7 @@ def main(args=sys.argv):
         db.commit()
 
     if (options.jobs):
-        job_importer = JobImporterFactory().factory(db, config, options.clustername)
+        job_importer = JobImporterFactory().factory(db, config, cluster.get_name())
         # The last updated job in hpcstatsdb for this cluster
         last_updated_id = job_importer.get_last_job_id()
         # The unfinished jobs in hpcstatsdb for this cluster

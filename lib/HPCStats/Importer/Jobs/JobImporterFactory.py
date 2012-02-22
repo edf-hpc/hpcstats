@@ -10,7 +10,7 @@ class JobImporterFactory(object):
         pass
 
     def factory(self, db, config, cluster_name):
-        if config.get(cluster_name,"jobs") == "slurm": ## Slurm
+        if config.get(cluster_name, "jobs") == "slurm": ## Slurm
             return JobImporterSlurm(db, config, cluster_name)
         elif config.get(cluster_name, "jobs") == "torque": ## Torque
             return JobImporterTorque(db, config, cluster_name)

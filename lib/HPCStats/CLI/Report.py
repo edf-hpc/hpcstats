@@ -34,10 +34,9 @@ from multiprocessing import Pool
 from HPCStats.CLI.ReportOptionParser import ReportOptionParser
 from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
-from HPCStats.Model.Job import Job
-from HPCStats.Model.User import User
-from HPCStats.Model.Node import Node
-from HPCStats.Model.Cluster import Cluster
+from HPCStats.Finder.JobFinder import JobFinder
+from HPCStats.Finder.UserFinder import UserFinder
+from HPCStats.Finder.ClusterFinder import ClusterFinder
 
 # templates management
 def get_templates_dirname():
@@ -141,7 +140,8 @@ def run_interval(process_info):
     # calculate the number of hours during the interval
     nb_hours_interval = ((interval_end - interval_beginning).days + 1) * 24
 
-    interval_jobs = cluster.get_interval_jobs(db, interval_beginning, interval_end)
+    job_finder = JobFinder(db)
+    interval_jobs = job_finder.find_jobs_in_interval(cluster.get_name(), interval_beginning, interval_end)
 
     cpu_time_interval = 0
     nb_jobs = 0
@@ -156,7 +156,9 @@ def run_interval(process_info):
             else:
                 end_datetime = job.get_end_datetime()
             nb_cpus = job.get_nb_procs()
-            user = job.get_user(db)
+            uid = job.get_uid()
+            user_finder = UserFinder(db)
+            user = user_finder.find(cluster.get_name(), uid)
             username = user.get_name()
             group = user.get_department()
 
@@ -280,10 +282,12 @@ def main(args=sys.argv):
     # get parameters
     step = options.interval
     template = options.template
-    cluster = Cluster(options.cluster)
 
     db.bind()
-        
+    
+    cluster_finder = ClusterFinder(db)
+    cluster = cluster_finder.find(options.cluster)  
+      
     # check if cluster really exists
     if not cluster.exists_in_db(db):
         sys.exit("error: cluster %s does not exist in database. Available clusters are: %s."
@@ -303,8 +307,6 @@ def main(args=sys.argv):
     max_datetime = datetime.now()
     tmp_datetime = min_datetime
     db.unbind()
-       
-    pool = Pool(4)
     
     userstats_global = {}
     groupstats_global = {}
@@ -342,8 +344,16 @@ def main(args=sys.argv):
         print processes_args
 
     # launch processes with their corresponding arguments
-    processes_results = pool.map(run_interval, processes_args)
-        
+    parallel = True 
+    processes_results = []
+    if parallel:
+        pool = Pool(4)
+        processes_results = pool.map(run_interval, processes_args)
+    else:
+        for process_info in processes_args:
+            process_results = run_interval(process_info)    
+            processes_results.append(process_results)
+    
     # then get results
     for result in processes_results:
         str_date = result[0]

@@ -3,7 +3,6 @@
 
 from HPCStats.Importer.Architectures.ArchitectureImporter import ArchitectureImporter
 from HPCStats.Model.Node import Node
-from HPCStats.Model.Cluster import Cluster
 from ClusterShell.NodeSet import NodeSet
 import ConfigParser
 
@@ -19,13 +18,12 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
 
         archfile_section = self._cluster_name + "/archfile"
 
-        self._archfile = config.get(archfile_section,"file")
+        self._archfile = config.get(archfile_section, "file")
         
     def get_cluster_nodes(self):
         # [ivanoe]
         # nodes=nodes1,nodes2,nodes3
 
-        cluster = Cluster(self._cluster_name)
         nodes = []
 
         config = ConfigParser.ConfigParser()
@@ -49,4 +47,4 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                                    model = model,
                                    flops = flops ) )
 
-        return (cluster, nodes)
+        return nodes

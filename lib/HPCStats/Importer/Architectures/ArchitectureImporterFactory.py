@@ -9,7 +9,7 @@ class ArchitectureImporterFactory(object):
         pass
 
     def factory(self, db, config, cluster_name):
-        if config.get(cluster_name,"architecture") == "archfile":
+        if config.get(cluster_name, "architecture") == "archfile":
             return ArchitectureImporterArchfile(db, config, cluster_name)
         else:
             print "FATAL : TO BE CODED"

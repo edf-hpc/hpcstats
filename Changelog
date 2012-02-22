@@ -1,3 +1,11 @@
+2012-02-22 Rémi Palancher <remi.palancher@edf.fr>
+
+	* Large code cleaning with notably :
+	  * homegenisation of variable names (esp. cluster related)
+	  * deletion of inter model objects references
+	  * deletion of unecessary module importations
+	* Added Finders classes to find objects in database
+
 2012-02-21 Rémi Palancher <remi.palancher@edf.fr>
 
 	* Separate factories and metaclasses for all importers
@@ -5,8 +13,8 @@
 2012-02-20 Stéphan Gorget <stephan.gorget@edf.fr>
 
 	* Supports users import from LDAP and XLS+LDAP+SLURM
-        * Supports jobs import from Slurm and Torque
-        * Supports Architecture import from archfile
+	* Supports jobs import from Slurm and Torque
+	* Supports Architecture import from archfile
 
 2011-08-01 Stéphan Gorget <stephan.gorget@edf.fr>
 

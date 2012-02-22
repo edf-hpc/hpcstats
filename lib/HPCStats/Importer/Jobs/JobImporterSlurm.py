@@ -25,7 +25,6 @@ class JobImporterSlurm(JobImporter):
                                       db = self._dbname,
                                       port = self._dbport )
         self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
-
    
     def request_jobs_since_job_id(self, job_id):
         req = """
@@ -96,7 +95,7 @@ class JobImporterSlurm(JobImporter):
                     running_queue = res["partition"],
                     nodes = res["nodelist"],
                     state = self.get_job_state_from_slurm_state(res["state"]),
-                    clustername = self._cluster_name)
+                    cluster_name = self._cluster_name)
         return job
 
 
@@ -129,4 +128,3 @@ class JobImporterSlurm(JobImporter):
             9:"END" # not a real state, last entry in table 
         }
         return slurm_state[state]            
-

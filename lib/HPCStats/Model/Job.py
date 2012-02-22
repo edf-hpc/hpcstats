@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-
 from ClusterShell.NodeSet import NodeSet
-from HPCStats.Model.User import User
 
 class Job:
 
@@ -12,7 +10,7 @@ class Job:
                   db_id = 0,
                   id_job = 0,
                   sched_id = 0,
-                  clustername = "",
+                  cluster_name = "",
                   uid = -1,
                   gid = -1,
                   submission_datetime = 0,
@@ -26,7 +24,7 @@ class Job:
         self._db_id = db_id
         self._sched_id = sched_id
         self._id_job = id_job
-        self._clustername = clustername
+        self._cluster_name = cluster_name
         self._uid = uid
         self._gid = gid
         self._submission_datetime = submission_datetime
@@ -48,7 +46,7 @@ class Job:
         else:
            end_datetime = self._end_datetime.strftime('%Y-%m-%d %H:%M:%S')
         return "%s/%s (%d|%d) %s / %s / %s -> %d / %d [%s] %s" % \
-               ( self._clustername,
+               ( self._cluster_name,
                  self._id_job,
                  self._uid,
                  self._gid,
@@ -82,7 +80,7 @@ class Job:
             self._sched_id,
             self._uid,
             self._gid,
-            self._clustername,
+            self._cluster_name,
             self._running_queue,
             self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S'),
             self._running_datetime.strftime('%Y-%m-%d %H:%M:%S'),
@@ -134,7 +132,7 @@ class Job:
             self._id_job,
             self._uid,
             self._gid,
-            self._clustername,
+            self._cluster_name,
             self._running_queue,
             self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S'),
             self._running_datetime.strftime('%Y-%m-%d %H:%M:%S'),
@@ -176,8 +174,17 @@ class Job:
 
     """ accessors """
 
+    def get_db_id(self):
+        return self._db_id
+
+    def get_uid(self):
+        return self._uid
+
     def get_running_datetime(self):
         return self._running_datetime
+
+    def set_running_datetime(self, running_datetime):
+        self._running_datetime = running_datetime
 
     def get_end_datetime(self):
         return self._end_datetime
@@ -187,7 +194,3 @@ class Job:
 
     def get_state(self):
         return self._state
-
-    def get_user(self, db):
-        return User(db = db, uid = self._uid, cluster = self._clustername)
-

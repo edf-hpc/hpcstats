@@ -4,52 +4,16 @@
 from datetime import datetime
 
 class User:
-    def __init__(self, db = None, name = "", login = "", cluster = "", department = "", uid = -1, gid = -1, creation_date = None, deletion_date = None):
+    def __init__(self, name = "", login = "", cluster_name = "", department = "", uid = -1, gid = -1, creation_date = None, deletion_date = None):
 
-        if db == None:
-            self._name = name
-            self._login = login
-            self._cluster = cluster
-            self._department = department
-            self._uid = uid
-            self._gid = gid
-            self._creation_date = creation_date
-            self._deletion_date = deletion_date
-        else:
-            self._uid = uid
-            self._cluster = cluster
-            req = """
-                SELECT name,
-                       login,
-                       gid,
-                       department,
-                       creation,
-                       deletion
-                 FROM users
-                 WHERE uid = %s AND cluster = %s; """        
-            datas = (self._uid, self._cluster)
-            cur = db.get_cur()
-
-            cur.execute(req, datas)
-            nb_rows = cur.rowcount
-        
-            if nb_rows == 1:
-               row = cur.fetchone()
-               self._name = row[0]
-               self._login = row[1]
-               self._gid = row[2]
-               self._department = row[3]
-               self._creation_date = row[4]
-               self._deletion_date = row[5]
-            elif nb_rows == 0:
-                raise UserWarning, ("User not found for uid %d on cluster %s" % \
-                                     ( self._uid,
-                                       self._cluster ) )
-            else:
-                raise UserWarning, ("incorrect number of results (%d) for uid %d on cluster %s" % \
-                                     ( nb_rows,
-                                       self._uid,
-                                       self._cluster ) )
+        self._name = name
+        self._login = login
+        self._cluster_name = cluster_name
+        self._department = department
+        self._uid = uid
+        self._gid = gid
+        self._creation_date = creation_date
+        self._deletion_date = deletion_date
 
     def __str__(self):
         if self._creation_date == None:
@@ -60,13 +24,19 @@ class User:
            deletion_date = "unknown"
         else:
            deletion_date = self._deletion_date.strftime('%Y-%m-%d')
-        return self._name + " [" + self._department + "] " + self._login + " - " + self._cluster + " (" + str(self._uid) + "|" + str(self._gid) + "): " + creation_date + "/" + deletion_date
+        return self._name + " [" + self._department + "] " + self._login + " - " + self._cluster_name + " (" + str(self._uid) + "|" + str(self._gid) + "): " + creation_date + "/" + deletion_date
 
     def __eq__(self, other):
-        return self._cluster == other._cluster and self._login == other._login
+        return self._cluster_name == other._cluster_name and self._login == other._login
+
+    def get_uid(self):
+        return self._uid
 
     def set_uid(self, uid):
         self._uid = uid
+
+    def get_gid(self):
+        return self._gid
 
     def set_gid(self, gid):
         self._gid = gid
@@ -74,14 +44,14 @@ class User:
     def get_login(self):
         return self._login
 
-    def get_cluster(self):
-        return self._cluster
+    def get_cluster_name(self):
+        return self._cluster_name
 
     def exists_in_db(self, db):
         cur = db.get_cur()
         cur.execute("SELECT login FROM users WHERE login = %s AND cluster = %s",
                      (self._login,
-                      self._cluster) )
+                      self._cluster_name ) )
         nb_rows = cur.rowcount
         if nb_rows == 1:
            return True
@@ -92,7 +62,7 @@ class User:
                                 %s on cluster %s" % \
                                 ( nb_rows,
                                   self._login,
-                                  self._cluster ) )
+                                  self._cluster_name ) )
 
     def save(self, db):
         req = """
@@ -109,7 +79,7 @@ class User:
         datas = (
             self._name,
             self._login,
-            self._cluster,
+            self._cluster_name,
             self._department,
             self._creation_date,
             self._deletion_date,
@@ -133,14 +103,14 @@ class User:
               AND cluster = %s; """
         datas = (
             self._name,
-            self._cluster,
+            self._cluster_name,
             self._department,
             self._creation_date,
             self._deletion_date,
             self._uid,
             self._gid,
             self._login,
-            self._cluster )
+            self._cluster_name )
 
         #print db.get_cur().mogrify(req, datas)
         db.get_cur().execute(req, datas)
