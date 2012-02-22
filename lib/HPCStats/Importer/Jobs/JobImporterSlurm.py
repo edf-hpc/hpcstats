@@ -153,7 +153,6 @@ class JobFilterSlurmNoStartTime:
                 print "Info %s: job %s removed from import" % \
                          ( self,
                            job )
-                return None
 
     def _filter_job(self, job):
 
