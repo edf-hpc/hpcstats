@@ -87,8 +87,9 @@ class JobImporterTorque(JobImporter):
         nodelist = self._exechostpat.sub('',nodelist)
         nodelist = nodelist.split('+')
         nbprocs = len(nodelist)
-        nodelist = str(NodeSet.fromlist(nodelist))
+        nodelist = NodeSet.fromlist(nodelist)
         nbnodes = len(nodelist)
+        nodelist = str(nodelist)
         return nbprocs, nbnodes, nodelist
         
     def get_uid_gid_from_login(self, login):
