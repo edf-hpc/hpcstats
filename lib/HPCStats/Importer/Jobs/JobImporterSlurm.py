@@ -114,6 +114,10 @@ class JobImporterSlurm(JobImporter):
             JOB_PREEMPTED, /* terminated due to preemption */
             JOB_END /* not a real state, last entry in table */
             };
+            #define JOB_RESIZING    0x2000  /* Size of job about to change, flag set
+                                             * before calling accounting functions
+                                             * immediately before job changes size */
+
     """
     def get_job_state_from_slurm_state(self, state):
         slurm_state = {
@@ -126,7 +130,10 @@ class JobImporterSlurm(JobImporter):
             6:"TIMEOUT", # terminated on reaching time limit 
             7:"NODE_FAIL", # terminated on node failure 
             8:"PREEMPTED", # terminated due to preemption 
-            9:"END" # not a real state, last entry in table 
+            9:"END", # not a real state, last entry in table 
+            8192:"RESIZING" # Size of job about to change, flag set
+                            # before calling accounting functions
+                            # immediately before job changes size
         }
         return slurm_state[state]            
 
