@@ -85,6 +85,10 @@ class JobImporterSlurm(JobImporter):
         return jobs
    
     def job_from_information(self, res):
+        # manage a case where slurmdbd puts a weird value '(null)' in nodelist
+        if res["nodelist"] == "(null)" :
+            res["nodelist"] = None
+
         job = Job(  id_job = res["id_job"],
                     sched_id = str(res["job_db_inx"]),
                     uid = int(res["id_user"]),

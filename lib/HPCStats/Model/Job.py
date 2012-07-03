@@ -155,7 +155,7 @@ class Job:
         dbcursor.execute(req, datas)
         nodecount = dbcursor.fetchone()[0]
 
-        if nodecount == 0:
+        if nodecount == 0 and self._nodes is not None:
             for node in NodeSet(self._nodes):
                 if node != "None assigned":
                     req = """
