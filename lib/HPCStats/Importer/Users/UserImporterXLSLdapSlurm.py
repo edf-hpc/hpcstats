@@ -48,27 +48,34 @@ class UserImporterXLSLdapSlurm(UserImporter):
         
     def get_all_users(self):
         users = []
-        # start from row 6 in xls file
         previous_user = None
-        for rownum in range(6,self._xlssheet.nrows):
+
+        # start from row 8 in xls sheet which starts itself from 0 
+        for rownum in range(8,self._xlssheet.nrows):
             try:
                 xls_row = self._xlssheet.row_values(rownum)
-                user = self.user_from_xls_row(xls_row) 
+
+                if self._user_row(xls_row):
+                    user = self.user_from_xls_row(xls_row) 
                 
-                if user.get_cluster_name() == self._cluster_name and (not previous_user or not user == previous_user):
+                    if user.get_cluster_name() == self._cluster_name and (not previous_user or not user == previous_user):
                     
-                    [uid, gid] = self.get_ids_from_ldap(user)
-                    user.set_uid(uid)
-                    user.set_gid(gid)
+                        [uid, gid] = self.get_ids_from_ldap(user)
+                        user.set_uid(uid)
+                        user.set_gid(gid)
                     
-                    users.append(user)
-                    previous_user = user
+                        users.append(user)
+                        previous_user = user
 
             except TypeError as e:
                 #print "Error in %s: %s" % (self.__class__.__name__, e)
                 continue
 
         return users;
+
+    def _user_row(self, xls_row):
+        """ Return True is the XLS row refers to a user instead of a project """
+        return xls_row[1].encode('utf-8').strip() == "U"
 
     def get_ids_from_ldap(self, user):
         r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"uid="+user.get_login(),["uidNumber","gidNumber"])
@@ -125,28 +132,28 @@ class UserImporterXLSLdapSlurm(UserImporter):
 
     def user_from_xls_row(self, xls_row):
 
-        login = xls_row[1].encode('utf-8').strip()
+        login = xls_row[2].encode('utf-8').strip()
         if login == "":
             raise TypeError, "login is empty"
         # workaround for a problem on last row
-        if type(xls_row[2]) == int:
+        if type(xls_row[3]) == int:
             raise TypeError, "firstname box is an int instead of {str, unicode}"
-        firstname = xls_row[2].encode('utf-8').strip().capitalize()
-        lastname = xls_row[3].encode('utf-8').strip().upper()
-        department = xls_row[4].encode('utf-8').strip().upper()
+        firstname = xls_row[3].encode('utf-8').strip().capitalize()
+        lastname = xls_row[4].encode('utf-8').strip().upper()
+        department = xls_row[5].encode('utf-8').strip().upper()
         if department == "":
             department = "UNKNOWN"
-        project = xls_row[12].encode('utf-8').strip().upper()
-        email = xls_row[14].encode('utf-8').strip().lower()
-        cluster_name = xls_row[16].encode('utf-8').strip().lower()
-        creation = xls_row[5]
+        project = xls_row[16].encode('utf-8').strip().upper()
+        email = xls_row[13].encode('utf-8').strip().lower()
+        cluster_name = xls_row[15].encode('utf-8').strip().lower()
+        creation = xls_row[6]
         if type(creation) == float and creation != 1.0:
             # see: https://secure.simplistix.co.uk/svn/xlrd/trunk/xlrd/doc/xlrd.html#xldate.xldate_as_tuple-function
             (year,month,day,hour,minute,second) = xlrd.xldate_as_tuple(creation, 0)
             creation_date = date(year, month, day)
         else :
             creation_date = None
-        deletion = xls_row[6]
+        deletion = xls_row[7]
         if type(deletion) == float and deletion != 1.0:
             (year,month,day,hour,minute,second) = xlrd.xldate_as_tuple(deletion, 0)
             deletion_date = date(year, month, day)
