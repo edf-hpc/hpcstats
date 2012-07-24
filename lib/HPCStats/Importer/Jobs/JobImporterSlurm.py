@@ -26,7 +26,7 @@ class JobImporterSlurm(JobImporter):
                                       port = self._dbport )
         self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
    
-    def request_jobs_since_job_id(self, job_id):
+    def request_jobs_since_job_id(self, job_id, offset, max_jobs):
         req = """
             SELECT id_job,
                    job_db_inx,
@@ -41,8 +41,9 @@ class JobImporterSlurm(JobImporter):
                    state,
                    nodelist
              FROM %s_job_table
-             WHERE id_job > %%s; """ % (self._cluster_name)
-        datas = (job_id,)
+             WHERE id_job > %%s
+             LIMIT %%s, %%s; """ % (self._cluster_name)
+        datas = (job_id, offset, max_jobs)
         self._cur.execute(req, datas)
         results = self._cur.fetchall()
         return results
@@ -63,25 +64,25 @@ class JobImporterSlurm(JobImporter):
                    nodelist
             FROM %s_job_table
             WHERE job_db_inx = %%s; """ % (self._cluster_name)
-        datas = (job_dbid,)
+        datas = (job_dbid)
         self._cur.execute(req, datas)
         results = self._cur.fetchall()
         return results
 
-    def get_job_information_from_dbid_job_list(self,ids_job):
+    def get_job_information_from_dbid_job_list(self, ids_job):
         jobs = []
         for id_job in ids_job:
             result = self.request_job_from_dbid(id_job)
             jobs.append(self.job_from_information(result[0]))
-        self._filter(jobs)
+        #self._filter(jobs)
         return jobs
 
-    def get_job_for_id_above(self, id_job):
+    def get_job_for_id_above(self, id_job, offset, max_jobs):
         jobs = []
-        results = self.request_jobs_since_job_id(id_job)
+        results = self.request_jobs_since_job_id(id_job, offset, max_jobs)
         for result in results:
             jobs.append(self.job_from_information(result))
-        self._filter(jobs)
+        #self._filter(jobs)
         return jobs
    
     def job_from_information(self, res):

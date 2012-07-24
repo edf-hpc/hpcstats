@@ -114,42 +114,64 @@ def main(args=sys.argv):
         if (options.debug):
             print "=> Trying to find missing users for cluster %s" % (options.clustername)
         uids = cluster.get_unknown_users(db)
-        for unknown_uid in uids:
-            user = user_importer.find_with_uid(unknown_uid)
-            if user:
-                if user.exists_in_db(db):
-                    if (options.debug):
-                        print "updating user", user
-                    user.update(db)
+        if not uids: 
+            if (options.debug):
+                print "No unknown users found"
+        else:
+            for unknown_uid in uids:
+                user = user_importer.find_with_uid(unknown_uid)
+                if user:
+                    if user.exists_in_db(db):
+                        if (options.debug):
+                            print "updating user", user
+                        user.update(db)
+                    else:
+                        if (options.debug):
+                            print "creating user", user
+                        user.save(db)
                 else:
-                    if (options.debug):
-                        print "creating user", user
-                    user.save(db)
-            else:
-                print "WARNING: unknown user with uid %d" % (unknown_uid) 
+                    print "WARNING: unknown user with uid %d" % (unknown_uid) 
 
         db.commit()
 
     if (options.jobs):
+        if (options.debug):
+            print "=> Update of jobs for cluster %s" % (options.clustername)
         job_importer = JobImporterFactory().factory(db, config, cluster.get_name())
         # The last updated job in hpcstatsdb for this cluster
         last_updated_id = job_importer.get_last_job_id()
         # The unfinished jobs in hpcstatsdb for this cluster
         ids = job_importer.get_unfinished_job_id()
 
+        jobs_to_update = ['not_empty']
+        new_jobs = ['not_empty']
+
+        nb_theads = 4
+
+        offset = 0
+        max_jobs = 100000
+
+        if (options.debug):
+            print "Get jobs to update"
         jobs_to_update = job_importer.get_job_information_from_dbid_job_list(ids)
-        new_jobs = job_importer.get_job_for_id_above(last_updated_id)
-        index = 0
         for job in jobs_to_update:
-            index = index + 1
-            if not index % 10 and options.debug:
-                print "update job push %d" % index
+            offset = offset + 1
+            if not offset % 10 and options.debug:
+                print "update job push %d" % offset
             job.update(db)
-        for job in new_jobs:
-            index = index + 1
-            if not index % 100000 and options.debug:
-                print "create job push %d" % index
-            job.save(db)
+
+        offset = 0
+
+        while new_jobs:
+            if (options.debug):
+                print "Get %d new jobs starting at offset %d" % (max_jobs, offset)
+            new_jobs = job_importer.get_job_for_id_above(last_updated_id, offset, max_jobs)
+            for job in new_jobs:
+                offset = offset + 1
+                if not offset % 10000 and options.debug:
+                    print "create job push %d" % offset
+                job.save(db)
+
         db.commit()
         
     db.unbind()
