@@ -98,19 +98,18 @@ class Job:
 
         
         for node in NodeSet(self._nodes):
-            if node != "None assigned":
-                req = """
-                    INSERT INTO job_nodes (
-                                    job,
-                                    node,
-                                    cpu_id
-                                    )
-                    VALUES (%s, %s, %s); """
-                datas = (
-                    self._db_id,
-                    node,
-                    "unknown")
-                db.get_cur().execute(req, datas)
+            req = """
+                INSERT INTO job_nodes (
+                                job,
+                                node,
+                                cpu_id
+                                )
+                VALUES (%s, %s, %s); """
+            datas = (
+                self._db_id,
+                node,
+                "unknown")
+            db.get_cur().execute(req, datas)
         
     def update(self, db):
         req = """
