@@ -31,6 +31,7 @@ from HPCStats.Finder.ClusterFinder import ClusterFinder
 from HPCStats.Importer.Jobs.JobImporterFactory import JobImporterFactory
 from HPCStats.Importer.Users.UserImporterFactory import UserImporterFactory
 from HPCStats.Importer.Architectures.ArchitectureImporterFactory import ArchitectureImporterFactory
+from HPCStats.Importer.Events.EventImporterFactory import EventImporterFactory
 
 def main(args=sys.argv):
 
@@ -94,6 +95,13 @@ def main(args=sys.argv):
                 if (options.debug):
                     print "creating node", node
                 node.save(db)
+        db.commit()
+
+    if (options.events):
+        if (options.debug):
+            print "=> Updating events for cluster %s" % (options.clustername)
+        event_importer = EventImporterFactory().factory(db, config, cluster.get_name())
+        event_importer.update_events()
         db.commit()
 
     if (options.users):

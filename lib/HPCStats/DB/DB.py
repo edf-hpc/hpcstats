@@ -50,6 +50,15 @@ class HPCStatsdb:
         """ Disconnect from the database """
         self._conn.close()
 
+    def execute(self, req, datas):
+        try:
+            self._cur.execute(req, datas)
+        except psycopg2.IntegrityError, exception_error_msg:
+            print "Error %s: integrity error %s" % \
+                      ( self.__class__.__name__,
+                        exception_error_msg )
+            print self._cur.mogrify(req, datas)
+
     def get_cur(self):
         return self._cur
 
