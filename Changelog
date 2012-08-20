@@ -1,3 +1,8 @@
+2012-07-27 Rémi Palancher <remi.palancher@edf.fr>
+
+	* Added the support of Slurm events
+	* Added the support of Slurm QOS
+
 2012-02-22 Rémi Palancher <remi.palancher@edf.fr>
 
 	* Large code cleaning with notably :
