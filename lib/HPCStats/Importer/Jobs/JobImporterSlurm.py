@@ -82,7 +82,7 @@ class JobImporterSlurm(JobImporter):
                    qos.name AS qos,
                    state,
                    nodelist
-            FROM %s_job_table,
+            FROM %s_job_table job,
                   qos_table qos
             WHERE job_db_inx = %%s
               AND qos.id = job.id_qos
