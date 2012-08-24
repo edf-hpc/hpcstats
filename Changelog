@@ -1,5 +1,7 @@
 2012-08-24 Rémi Palancher <remi.palancher@edf.fr>
 
+	* Improved checking of clustername parameter
+	* Give ability to give a configuration file as a parameter
 	* Use standard library logging for text output
 	* Bug fix in a SQL request in JobImporterSlurm
 
