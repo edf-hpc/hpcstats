@@ -31,6 +31,7 @@ class StatsOptionParser(optparse.OptionParser):
         self.disable_interspersed_args()
 
         self.add_option("-n", "--name", action="store", type="string", dest="clustername")
+        self.add_option("-c", "--config", action="store", type="string", dest="config")
         self.add_option("-j", "--jobs", action="store_true", dest="jobs")
         self.add_option("-u", "--users", action="store_true", dest="users")
         self.add_option("-a", "--arch", action="store_true", dest="arch")

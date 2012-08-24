@@ -26,11 +26,11 @@ import os
 
 class HPCStatsConfig(ConfigParser.ConfigParser, object):
 
-    def __init__(self, options, filename=None):
+    def __init__(self, options):
         ConfigParser.ConfigParser.__init__(self)
 
-        if filename:
-            files = [filename]
+        if options.config:
+            files = [options.config]
         else:
             files = ['/etc/hpcstats/hpcstats.conf',
                      os.path.expanduser('~/.hpcstats.conf')]
