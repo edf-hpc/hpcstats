@@ -45,15 +45,15 @@ def main(args=sys.argv):
     # validate options
     parser.validate(options)
 
-    # Config file argument parser
-    config = HPCStatsConfig(options)
- 
     # configure logging
     logging_level = logging.INFO
     if options.debug:
         logging_level = logging.DEBUG
     logging.basicConfig(format='%(levelname)s: %(filename)s: %(message)s',
                         level=logging_level)
+    
+    # Config file argument parser
+    config = HPCStatsConfig(options)
 
     # dump entire config file
     for section in config.sections():
