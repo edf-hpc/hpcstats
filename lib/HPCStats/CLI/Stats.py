@@ -24,6 +24,8 @@
 
 
 import sys
+import logging
+
 from HPCStats.CLI.StatsOptionParser import StatsOptionParser
 from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
@@ -40,19 +42,27 @@ def main(args=sys.argv):
     parser = StatsOptionParser(usage)
     (options, args) = parser.parse_args(args[1:])
 
-    if ( not options.clustername ):
-        print "Le nom du cluster de travail n'est pas défini"
-        print "ALERTE A FAIRE !"
-
     # Config file argument parser
     config = HPCStatsConfig(options)
+ 
+    # configure logging
+    logging_level = logging.INFO
+    if options.debug:
+        logging_level = logging.DEBUG
+    logging.basicConfig(format='%(levelname)s: %(filename)s: %(message)s',
+                        level=logging_level)
 
-    if (options.debug):
-        # dump entire config file
-        for section in config.sections():
-            print section
-            for option in config.options(section):
-                print " ", option, "=", config.get(section, option)
+    # verify cluster arg
+    if not options.clustername:
+        logging.error("Le nom du cluster de travail n'est pas défini")
+        logging.error("ALERTE A FAIRE !")
+        sys.exit(1)
+
+    # dump entire config file
+    for section in config.sections():
+        logging.debug(section)
+        for option in config.options(section):
+            logging.debug(" %s = %s", option, config.get(section, option))
 
     # Instantiate connexion to db
     db_section = "hpcstatsdb"
@@ -64,59 +74,47 @@ def main(args=sys.argv):
     db = HPCStatsdb(dbhostname, dbport, dbname, dbuser, dbpass)
     db.bind()
     
-    if (options.debug):
-        print "db information %s %s %s %s %s" % db.infos()
+    logging.debug("db information %s %s %s %s %s" % db.infos())
     
     cluster_finder = ClusterFinder(db)
     cluster = cluster_finder.find(options.clustername)
 
     if (options.arch):
-        if (options.debug):
-            print "=> Updating architecture for cluster %s" % (options.clustername)
+        logging.info("=> Updating architecture for cluster %s" % (options.clustername))
         arch_importer = ArchitectureImporterFactory().factory(db, config, cluster.get_name())
         nodes = arch_importer.get_cluster_nodes()
         # insert or update cluster
         if cluster.exists_in_db(db):
-            if (options.debug):
-                print "updating cluster", cluster
+            logging.debug("updating cluster %s", cluster)
             cluster.update(db)
         else:
-            if (options.debug):
-                print "creating cluster", cluster
+            logging.debug("creating cluster %s", cluster)
             cluster.save(db)
 
         # insert or update nodes
         for node in nodes:
             if node.exists_in_db(db):
-                if (options.debug):
-                    print "updating node", node
+                logging.debug("updating node %s", node)
                 node.update(db)
             else:
-                if (options.debug):
-                    print "creating node", node
+                logging.debug("creating node %s", node)
                 node.save(db)
         db.commit()
 
     if (options.events):
-        if (options.debug):
-            print "=> Updating events for cluster %s" % (options.clustername)
+        logging.info("=> Updating events for cluster %s" % (options.clustername))
         event_importer = EventImporterFactory().factory(db, config, cluster.get_name())
         event_importer.update_events()
         db.commit()
 
     if (options.users):
-        if (options.debug):
-            print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
+        logging.info("=> Updating users for cluster %s" % (options.clustername))
         user_importer = UserImporterFactory().factory(db, config, cluster.get_name())
         user_importer.update_users()
         db.commit()
 
-
-        db.commit()
-
     if (options.jobs):
-        if (options.debug):
-            print "=> Update of jobs for cluster %s" % (options.clustername)
+        logging.info("=> Update of jobs for cluster %s" % (options.clustername))
         job_importer = JobImporterFactory().factory(db, config, cluster.get_name())
         # The last updated job in hpcstatsdb for this cluster
         last_updated_id = job_importer.get_last_job_id()
@@ -131,25 +129,23 @@ def main(args=sys.argv):
         offset = 0
         max_jobs = 100000
 
-        if (options.debug):
-            print "Get jobs to update"
+        logging.debug("Get jobs to update")
         jobs_to_update = job_importer.get_job_information_from_dbid_job_list(ids)
         for job in jobs_to_update:
             offset = offset + 1
-            if not offset % 10 and options.debug:
-                print "update job push %d" % offset
+            if not offset % 10:
+                logging.debug("update job push %d" % offset)
             job.update(db)
 
         offset = 0
 
         while new_jobs:
-            if (options.debug):
-                print "Get %d new jobs starting at offset %d" % (max_jobs, offset)
+            logging.debug("Get %d new jobs starting at offset %d" % (max_jobs, offset))
             new_jobs = job_importer.get_job_for_id_above(last_updated_id, offset, max_jobs)
             for job in new_jobs:
                 offset = offset + 1
-                if not offset % 10000 and options.debug:
-                    print "create job push %d" % offset
+                if not offset % 10000:
+                    logging.debug("create job push %d" % offset)
                 job.save(db)
 
         db.commit()

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import logging
 from HPCStats.Importer.Architectures.ArchitectureImporterArchfile import ArchitectureImporterArchfile
 
 class ArchitectureImporterFactory(object):
@@ -12,6 +13,6 @@ class ArchitectureImporterFactory(object):
         if config.get(cluster_name, "architecture") == "archfile":
             return ArchitectureImporterArchfile(db, config, cluster_name)
         else:
-            print "FATAL : TO BE CODED"
+            logging.critical("TO BE CODED")
             # Throw Exception
         return None

@@ -1,11 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from HPCStats.Importer.Events.EventImporter import EventImporter
-from HPCStats.Model.Event import Event
 import MySQLdb
+import logging
 from datetime import datetime
 from ClusterShell.NodeSet import NodeSet
+from HPCStats.Importer.Events.EventImporter import EventImporter
+from HPCStats.Model.Event import Event
 
 class EventImporterSlurm(EventImporter):
 
@@ -29,21 +30,18 @@ class EventImporterSlurm(EventImporter):
 
     def update_events(self):
 
-        print "Debug %s: start updating events out of SlurmDBD" % \
-                  ( self.__class__.__name__ )
+        logging.debug("start updating events out of SlurmDBD")
 
         datetime_end_last_event = self._get_last_end_datetime()
         # if None set to 1970-01-01 the beginning of ages for SlurmDBD
         if not datetime_end_last_event:
             datetime_end_last_event = datetime.fromtimestamp(0)
 
-        print "Debug %s: getting the unfinished events" % \
-                  ( self.__class__.__name__ )
+        logging.debug("getting the unfinished events")
         self._get_unfinished_events()
 
-        print "Debug %s: start getting the new events out of SlurmDBD since %s" % \
-                  ( self.__class__.__name__,
-                    datetime_end_last_event )
+        logging.debug("start getting the new events out of SlurmDBD since %s",
+                       datetime_end_last_event )
 
         req = """
             SELECT time_start,
@@ -65,20 +63,18 @@ class EventImporterSlurm(EventImporter):
             if row == None: break
             self._new_events.extend( self._events_from_db_row(row) )
        
-        print "Debug %s: start detecting the multiple occurences of the same event (%d events in list)" % \
-                  ( self.__class__.__name__,
-                    len(self._new_events) )
+        logging.debug("start detecting the multiple occurences of the same event (%d events in list)",
+                       len(self._new_events) )
                 
         self._delete_merge_multiple_occurences()
 
-        print "Debug %s: finishing the previously known events" % \
-                  ( self.__class__.__name__ )
+        logging.debug("finishing the previously known events")
         self._finish_known_events()
-        print "Debug %s: updating the previously known events" % \
-                  ( self.__class__.__name__ )
+
+        logging.debug("updating the previously known events")
         self._update_unfinished_events()
-        print "Debug %s: saving in DB all the new events" % \
-                  ( self.__class__.__name__ )
+
+        logging.debug("saving in DB all the new events")
         self._save_new_events()
 
     def _events_from_db_row(self, db_row):
@@ -128,18 +124,16 @@ class EventImporterSlurm(EventImporter):
                       self._new_events[next_event_index].get_nodename() != event.get_nodename():
                     next_event_index += 1
             except IndexError:
-                print "Error %s: trying to access to index %d of list with %d items" % \
-                          ( self.__class__.__name__,
-                            next_event_index,
-                            nb_events )
+                logging.error("trying to access to index %d of list with %d items",
+                               next_event_index,
+                               nb_events )
                 
 
             # if search index is at the end of the list, next event has not been found
             if next_event_index == nb_events:
-                print "Debug %s: did not found the next event of %d (%s)" % \
-                          ( self.__class__.__name__,
-                            event_index,
-                            event.get_nodename() )
+                logging.debug("did not found the next event of %d (%s)",
+                               event_index,
+                               event.get_nodename )
             else:
                 #print "Debug %s: found the next event of %d (%s) at index %d" % \
                 #          ( self.__class__.__name__,
@@ -152,19 +146,17 @@ class EventImporterSlurm(EventImporter):
                 # if both events happened at the exact same time
                 if next_event.get_start_datetime() == event.get_start_datetime() and \
                    next_event.get_end_datetime() == event.get_end_datetime():
-                    print "Debug %s: will remove %s (%d) which conflict with %s (%d)" % \
-                              ( self.__class__.__name__,
-                                next_event,
-                                next_event_index,
-                                event,
-                                event_index )
+                    logging.debug("will remove %s (%d) which conflict with %s (%d)",
+                                   next_event,
+                                   next_event_index,
+                                   event,
+                                   event_index )
 
                     # if event type is unknown try loosely to get deleted event type
                     if event.get_event_type() == "UNKNOWN":
-                        print "Debug %s: event type for %s set to %s" % \
-                                  ( self.__class__.__name__,
-                                    event,
-                                    next_event.get_event_type() )
+                        logging.debug("event type for %s set to %s",
+                                       event,
+                                       next_event.get_event_type() )
                         event.set_event_type(next_event.get_event_type())
 
                     # remove the next event
@@ -174,12 +166,11 @@ class EventImporterSlurm(EventImporter):
 
                 elif event.get_end_datetime() == next_event.get_start_datetime() and \
                      event.get_event_type() == next_event.get_event_type():
-                    print "Debug %s: merging %s (%d) with %s (%d)" % \
-                              ( self.__class__.__name__,
-                                event,
-                                event_index,
-                                next_event,
-                                next_event_index )
+                    logging.debug("merging %s (%d) with %s (%d)",
+                                   event,
+                                   event_index,
+                                   next_event,
+                                   next_event_index )
                     event.set_end_datetime(next_event.get_end_datetime())
                     self._new_events.pop(next_event_index)
                     nb_events -= 1
@@ -189,11 +180,10 @@ class EventImporterSlurm(EventImporter):
                     previous_event_index = self._find_same_event_before(event_index)
                     # if we find one go back to it in the main loop
                     if previous_event_index:
-                        print "Debug %s: found previous same event for %s (%d) at index %d" % \
-                                  ( self.__class__.__name__,
-                                    event,
-                                    event_index,
-                                    previous_event_index )
+                        logging.debug("found previous same event for %s (%d) at index %d",
+                                       event,
+                                       event_index,
+                                       previous_event_index )
                         event_index = previous_event_index
 
                 #else:

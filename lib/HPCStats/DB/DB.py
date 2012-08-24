@@ -21,6 +21,7 @@
 
 ###############################################################
 
+import logging
 import psycopg2
 
 class HPCStatsdb:
@@ -54,10 +55,8 @@ class HPCStatsdb:
         try:
             self._cur.execute(req, datas)
         except psycopg2.IntegrityError, exception_error_msg:
-            print "Error %s: integrity error %s" % \
-                      ( self.__class__.__name__,
-                        exception_error_msg )
-            print self._cur.mogrify(req, datas)
+            logging.error("integrity error %s", exception_error_msg )
+            logging.error(self._cur.mogrify(req, datas))
 
     def get_cur(self):
         return self._cur

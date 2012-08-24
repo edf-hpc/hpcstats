@@ -91,7 +91,7 @@ class Job:
  
         dbcursor = db.get_cur()
 
-        # print dbcursor.mogrify(req, datas)
+        #print dbcursor.mogrify(req, datas)
 
         dbcursor.execute(req, datas)
         self._db_id = dbcursor.fetchone()[0]
@@ -149,7 +149,7 @@ class Job:
         req = """ SELECT count(job) FROM job_nodes WHERE job = %s; """
         datas = ( self._db_id, )
 
-        # print dbcursor.mogrify(req, datas)
+        #print dbcursor.mogrify(req, datas)
 
         dbcursor.execute(req, datas)
         nodecount = dbcursor.fetchone()[0]

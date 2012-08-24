@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import logging
 from HPCStats.Importer.Events.EventImporterSlurm import EventImporterSlurm
 
 class EventImporterFactory(object):
@@ -12,6 +13,6 @@ class EventImporterFactory(object):
         if config.get(cluster_name, "events") == "slurm": ## Slurm
             return EventImporterSlurm(db, config, cluster_name)
         else:
-            print "FATAL : TO BE CODED"
+            logging.critical("TO BE CODED")
             # Throw Exception
         return None

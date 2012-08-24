@@ -1,11 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from HPCStats.Importer.Jobs.JobImporter import JobImporter
-from HPCStats.Model.Job import Job
 import MySQLdb
 from datetime import datetime
 from ClusterShell.NodeSet import NodeSet
+import logging
+from HPCStats.Importer.Jobs.JobImporter import JobImporter
+from HPCStats.Model.Job import Job
 
 class JobImporterSlurm(JobImporter):
 
@@ -128,41 +129,37 @@ class JobImporterSlurm(JobImporter):
                 # look for the actual running partition of the job
                 # through self._partitions
                 ns_job = NodeSet(str_nodelist)
-                print "Info %s: trying to find the actual running partition for job %d with list %s and nodes %s (%d)" % \
-                          ( self.__class__.__name__,
-                            res["id_job"],
-                            str_partitions_lst,
-                            str_nodelist,
-                            len(ns_job) )
+                logging.info("trying to find the actual running partition for job %d with list %s and nodes %s (%d)",
+                              res["id_job"],
+                              str_partitions_lst,
+                              str_nodelist,
+                              len(ns_job) )
                 for str_part_nodeset in self._partitions.keys():
                     ns_part = NodeSet(str_part_nodeset)
                     if len(ns_job.intersection(ns_part)) == len(ns_job):
                         # iterate over job's partitions list
                         for str_tmp_partition in lst_partitions:
                             if str_tmp_partition in self._partitions[str_part_nodeset]:
-                                 print "Info %s: job %d found partition %s in list %s which intersect for nodes %s" % \
-                                         ( self.__class__.__name__,
-                                           res["id_job"],
-                                           str_tmp_partition,
-                                           str_partitions_lst,
-                                           str_nodelist )
+                                 logging.info("job %d found partition %s in list %s which intersect for nodes %s",
+                                               res["id_job"],
+                                               str_tmp_partition,
+                                               str_partitions_lst,
+                                               str_nodelist )
                                  # partition found
                                  str_partition = str_tmp_partition
                     else:
-                        print "Debug %s: job %d nodes %s do not entirely intersect with %s (%d != %d)" % \
-                                  ( self.__class__.__name__,
-                                    res["id_job"],
-                                    str_nodelist,
-                                    str_part_nodeset,
-                                    len(ns_job),
-                                    len(ns_job.intersection(ns_part)) )
+                        logging.debug("job %d nodes %s do not entirely intersect with %s (%d != %d)",
+                                       res["id_job"],
+                                       str_nodelist,
+                                       str_part_nodeset,
+                                       len(ns_job),
+                                       len(ns_job.intersection(ns_part)) )
                 
             if str_partition == None:
-                print "Error %s: job %d did not found partition in list %s which intersect for nodes %s" % \
-                          ( self.__class__.__name__,
-                            res["id_job"],
-                            str_partitions_lst,
-                            str_nodelist )
+                logging.error("job %d did not found partition in list %s which intersect for nodes %s",
+                               res["id_job"],
+                               str_partitions_lst,
+                               str_nodelist )
                 str_partition = "UNKNOWN"
 
 
@@ -238,9 +235,7 @@ class JobFilterSlurmNoStartTime:
         for job in self._jobs:
             if not self._filter_job(job):
                 self._jobs.remove(job)
-                print "Info %s: job %s removed from import" % \
-                         ( self,
-                           job )
+                logging.info("job %s removed from import", job)
 
     def _filter_job(self, job):
 
@@ -258,17 +253,14 @@ class JobFilterSlurmNoStartTime:
             self._slurmdbd_cur.execute(sql, data)
             row = self._slurmdbd_cur.fetchone()
             if row == None:
-                print "Info %s: job %s has no first step." % \
-                         ( self,
-                           job )
+                logging.info("job %s has no first step.", job)
                 return None
             else:
                 step_id = row[0]
                 step_start = datetime.fromtimestamp(row[1])
-                print "Info %s: job %s has first step started at %s" % \
-                         ( self,
-                           job,
-                           step_start )
+                logging.info("job %s has first step started at %s",
+                              job,
+                              step_start )
                 job.set_running_datetime(step_start)
                 return job
         else:

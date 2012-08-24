@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import logging
 from HPCStats.Importer.Users.UserImporterXLSLdapSlurm import UserImporterXLSLdapSlurm
 from HPCStats.Importer.Users.UserImporterLdap import UserImporterLdap
 
@@ -15,6 +16,6 @@ class UserImporterFactory(object):
         elif config.get(cluster_name, "users") == "ldap":
             return UserImporterLdap(db, config, cluster_name)
         else:
-            print "FATAL : TO BE CODED"
+            logging.critical("TO BE CODED")
             # Throw Exception
         return None

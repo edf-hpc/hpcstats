@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import logging
 from datetime import datetime
 from HPCStats.Model.Event import Event
 
@@ -64,20 +65,17 @@ class EventImporter(object):
                 new_event_index += 1
 
     def _update_unfinished_events(self):
-        print "Debug %s: launching the update of %d previously known events" % \
-                  ( self.__class__.__name__,
-                    len(self._unfinished_events) )
+        logging.debug("launching the update of %d previously known events",
+                       len(self._unfinished_events) )
 
         for unfinished_event in self._unfinished_events:
             if unfinished_event.get_end_datetime():
-                print "Debug %s: updating end datetime of event %s" % \
-                          ( self.__class__.__name__,
-                            unfinished_event )
+                logging.debug("updating end datetime of event %s",
+                               unfinished_event )
                 unfinished_event.update_end_datetime(self._db)
 
     def _save_new_events(self):
-        print "Debug %s: launching the save of %d new events" % \
-                  ( self.__class__.__name__,
-                    len(self._new_events) )
+        logging.debug("launching the save of %d new events",
+                       len(self._new_events) )
         for new_event in self._new_events:
             new_event.save(self._db)

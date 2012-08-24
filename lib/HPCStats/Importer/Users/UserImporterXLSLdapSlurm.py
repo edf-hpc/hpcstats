@@ -1,12 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from HPCStats.Importer.Users.UserImporter import UserImporter
-from HPCStats.Model.User import User
 import ldap
 import xlrd
 import MySQLdb
 from datetime import date
+import logging
+from HPCStats.Importer.Users.UserImporter import UserImporter
+from HPCStats.Model.User import User
 
 class UserImporterXLSLdapSlurm(UserImporter):
 
@@ -48,36 +49,27 @@ class UserImporterXLSLdapSlurm(UserImporter):
         users = self.get_all_users()
         for user in users:
             if user.exists_in_db(self._db):
-                print "Debug in %s: updating user %s" % \
-                          ( self.__class__.__name__,
-                            user )
+                logging.debug("updating user %s", user)
                 user.update(self._db)
             else:
-                print "Debug in %s: creating user %s" % \
-                          ( self.__class__.__name__,
-                            user )
+                logging.debug("creating user %s", user)
                 user.save(self._db)
         
         uids = self._get_unknown_users(self._db)
         if not uids: 
-                print "Debug in %s: no unknown users found" % \
-                          ( self.__class__.__name__ )
+                logging.debug("no unknown users found")
         else:
             for unknown_uid in uids:
                 user = self.find_with_uid(unknown_uid)
                 if user:
                     if user.exists_in_db(self._db):
-                        print "Debug in %s: updating user %s" % \
-                                  ( self.__class__.__name__,
-                                    user )
+                        logging.debug("updating user %s", user)
                         user.update(self._db)
                     else:
-                        print "Debug in %s: creating user %s" % \
-                                  ( self.__class__.__name__,
-                                    user )
+                        logging.debug("creating user %s", user)
                         user.save(self._db)
                 else:
-                    print "WARNING: unknown user with uid %d" % (unknown_uid) 
+                    logging.warning("unknown user with uid %d", unknown_uid) 
         
     def get_all_users(self):
         users = []
@@ -119,10 +111,9 @@ class UserImporterXLSLdapSlurm(UserImporter):
             gid = int(attrib_dict['gidNumber'][0])
             return [uid, gid]
         except IndexError:
-            print "Error in %s: login %s (%s) not found in LDAP" % \
-                   ( self.__class__.__name__,
-                     user.get_login(),
-                     user.get_name() )
+            logging.error("login %s (%s) not found in LDAP",
+                           user.get_login(),
+                           user.get_name() )
             # loosely search for user with the same name in LDAP
             r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"cn="+user.get_name(),["uid","uidNumber","gidNumber"])
             if len(r) > 0:
@@ -130,11 +121,10 @@ class UserImporterXLSLdapSlurm(UserImporter):
                 login = attrib_dict['uid'][0]
                 uid = int(attrib_dict['uidNumber'][0])
                 gid = int(attrib_dict['gidNumber'][0])
-                print "Info in %s: login %s not found in LDAP but found user %s with login %s" % \
-                   ( self.__class__.__name__,
-                     user.get_login(),
-                     user.get_name(),
-                     login )
+                logging.info("login %s not found in LDAP but found user %s with login %s",
+                              user.get_login(),
+                              user.get_name(),
+                              login )
                 return [uid, gid]
             # try in Slurm Database
             else:
@@ -149,18 +139,16 @@ class UserImporterXLSLdapSlurm(UserImporter):
                     row = self._cur.fetchone()
                     uid = int(row['uid'])
                     gid = int(row['gid'])
-                    print "Info in %s: found login %s in SlurmDBD with %d/%d" % \
-                       ( self.__class__.__name__,
-                         user.get_login(),
-                         uid,
-                         gid )
+                    logging.info("found login %s in SlurmDBD with %d/%d",
+                                  user.get_login(),
+                                  uid,
+                                  gid )
                     return [uid, gid]
 
                 elif nb_rows > 1:
-                    print "Info in %s: found login %s in SlurmDBD with incorrect (%d) number of UID/GID" % \
-                       ( self.__class__.__name__,
-                         user.get_login(),
-                         nb_rows )
+                    logging.info("found login %s in SlurmDBD with incorrect (%d) number of UID/GID",
+                                  user.get_login(),
+                                  nb_rows )
 
             return [-1, -1]
 
@@ -235,10 +223,9 @@ class UserImporterXLSLdapSlurm(UserImporter):
         if len(r) > 0:
             attrib_dict = r[0][1]
             user = self.user_from_ldap_row(attrib_dict)
-            print "Info in %s: uid %d found in LDAP with user %s" % \
-                   ( self.__class__.__name__,
-                     uid,
-                     user )
+            logging.info("uid %d found in LDAP with user %s",
+                          uid,
+                          user )
         # else search in SlurmDBD
         else:
             req = """
@@ -255,12 +242,10 @@ class UserImporterXLSLdapSlurm(UserImporter):
             if nb_rows == 1:
                 row = self._cur.fetchone()
                 user = self.user_from_slurmdbd_row(row)
-                print "Info in %s: uid %d found in SlurmDBD with user %s" % \
-                      ( self.__class__.__name__,
-                        uid,
-                        user )
+                logging.info("uid %d found in SlurmDBD with user %s",
+                              uid,
+                              user )
             elif nb_rows > 1:
-                print "Info in %s: uid %d found in too many times in SlurmDBD" % \
-                      ( self.__class__.__name__,
-                        uid )
+                logging.info("uid %d found in too many times in SlurmDBD",
+                              uid )
         return user

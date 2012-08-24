@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import logging
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
 from HPCStats.Importer.Jobs.JobImporterTorque import JobImporterTorque
 
@@ -15,6 +16,6 @@ class JobImporterFactory(object):
         elif config.get(cluster_name, "jobs") == "torque": ## Torque
             return JobImporterTorque(db, config, cluster_name)
         else:
-            print "FATAL : TO BE CODED"
+            logging.critical("TO BE CODED")
             # Throw Exception
         return None
