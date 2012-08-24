@@ -42,6 +42,9 @@ def main(args=sys.argv):
     parser = StatsOptionParser(usage)
     (options, args) = parser.parse_args(args[1:])
 
+    # validate options
+    parser.validate(options)
+
     # Config file argument parser
     config = HPCStatsConfig(options)
  
@@ -51,12 +54,6 @@ def main(args=sys.argv):
         logging_level = logging.DEBUG
     logging.basicConfig(format='%(levelname)s: %(filename)s: %(message)s',
                         level=logging_level)
-
-    # verify cluster arg
-    if not options.clustername:
-        logging.error("Le nom du cluster de travail n'est pas défini")
-        logging.error("ALERTE A FAIRE !")
-        sys.exit(1)
 
     # dump entire config file
     for section in config.sections():

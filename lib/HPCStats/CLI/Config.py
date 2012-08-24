@@ -23,6 +23,8 @@
 
 import ConfigParser
 import os
+import logging
+import sys
 
 class HPCStatsConfig(ConfigParser.ConfigParser, object):
 
@@ -37,3 +39,17 @@ class HPCStatsConfig(ConfigParser.ConfigParser, object):
 
         self.read(files)
 
+        # check that given cluster is present in config file
+        try:
+            cluster_list_str = self.get("clusters","clusters")
+        except ConfigParser.NoSectionError:
+            logging.critical("Section clusters has to be present in configuration file")
+            sys.exit(1)
+        except ConfigParser.NoOptionError:
+            logging.critical("Option clusters has to be present in configuration file")
+            sys.exit(1)
+        clusters = cluster_list_str.split(",")
+        if options.clustername not in clusters:
+            logging.critical("Cluster %s has to be present in configuration file",
+                              options.clustername )
+            sys.exit(1)

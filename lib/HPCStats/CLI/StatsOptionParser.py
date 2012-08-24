@@ -38,4 +38,8 @@ class StatsOptionParser(optparse.OptionParser):
         self.add_option("-e", "--events", action="store_true", dest="events")
         self.add_option("-d", "--debug", action="store_true", dest="debug", default=False)
 
-
+    def validate(self, options):
+        # verify cluster arg
+        if not options.clustername:
+            self.error("Cluster name has to given as a parameter")
+            sys.exit(1)
