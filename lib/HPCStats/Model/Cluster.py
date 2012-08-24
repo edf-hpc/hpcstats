@@ -82,30 +82,6 @@ class Cluster:
         
         return cur.fetchone()[0]
 
-    def get_unknown_users(self, db):
-        req = """
-            SELECT distinct(uid)
-              FROM jobs
-             WHERE clustername = %s
-               AND uid NOT IN (SELECT uid FROM users WHERE users.cluster = %s); """
-        datas = (self._name, self._name)
-
-        cur = db.get_cur()
-        #print cur.mogrify(req, datas)
-        cur.execute(req, datas)
-
-        unknown_users = []
-
-        while (1):
-
-            row = cur.fetchone()
-            if row == None: break
-            uid = int(row[0])
-            unknown_users.append(uid)
-
-        return unknown_users;
-        
-
     def save(self, db):
         req = """ INSERT INTO clusters ( name ) VALUES ( %s ); """
         datas = ( self._name, )

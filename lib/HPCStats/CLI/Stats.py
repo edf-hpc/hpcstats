@@ -108,37 +108,9 @@ def main(args=sys.argv):
         if (options.debug):
             print "=> Mise à jour des utilisateurs pour %s" % (options.clustername)
         user_importer = UserImporterFactory().factory(db, config, cluster.get_name())
-        users = user_importer.get_all_users()
-        for user in users:
-            if user.exists_in_db(db):
-                if (options.debug):
-                    print "updating user", user
-                user.update(db)
-            else:
-                if (options.debug):
-                    print "creating user", user
-                user.save(db)
-        
-        if (options.debug):
-            print "=> Trying to find missing users for cluster %s" % (options.clustername)
-        uids = cluster.get_unknown_users(db)
-        if not uids: 
-            if (options.debug):
-                print "No unknown users found"
-        else:
-            for unknown_uid in uids:
-                user = user_importer.find_with_uid(unknown_uid)
-                if user:
-                    if user.exists_in_db(db):
-                        if (options.debug):
-                            print "updating user", user
-                        user.update(db)
-                    else:
-                        if (options.debug):
-                            print "creating user", user
-                        user.save(db)
-                else:
-                    print "WARNING: unknown user with uid %d" % (unknown_uid) 
+        user_importer.update_users()
+        db.commit()
+
 
         db.commit()
 

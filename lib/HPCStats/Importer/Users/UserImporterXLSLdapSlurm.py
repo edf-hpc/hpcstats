@@ -12,11 +12,9 @@ class UserImporterXLSLdapSlurm(UserImporter):
 
     def __init__(self, db, config, cluster_name):
 
-        UserImporter.__init__(self)
+        UserImporter.__init__(self, db, cluster_name)
 
-        self._db = db
         self._conf = config
-        self._cluster_name = cluster_name
 
         ldap_section = self._cluster_name + "/ldap"
         xls_section = self._cluster_name + "/xls"
@@ -45,6 +43,41 @@ class UserImporterXLSLdapSlurm(UserImporter):
                                       db = self._dbname,
                                       port = self._dbport )
         self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
+
+    def update_users(self):
+        users = self.get_all_users()
+        for user in users:
+            if user.exists_in_db(self._db):
+                print "Debug in %s: updating user %s" % \
+                          ( self.__class__.__name__,
+                            user )
+                user.update(self._db)
+            else:
+                print "Debug in %s: creating user %s" % \
+                          ( self.__class__.__name__,
+                            user )
+                user.save(self._db)
+        
+        uids = self._get_unknown_users(self._db)
+        if not uids: 
+                print "Debug in %s: no unknown users found" % \
+                          ( self.__class__.__name__ )
+        else:
+            for unknown_uid in uids:
+                user = self.find_with_uid(unknown_uid)
+                if user:
+                    if user.exists_in_db(self._db):
+                        print "Debug in %s: updating user %s" % \
+                                  ( self.__class__.__name__,
+                                    user )
+                        user.update(self._db)
+                    else:
+                        print "Debug in %s: creating user %s" % \
+                                  ( self.__class__.__name__,
+                                    user )
+                        user.save(self._db)
+                else:
+                    print "WARNING: unknown user with uid %d" % (unknown_uid) 
         
     def get_all_users(self):
         users = []
@@ -72,6 +105,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                 continue
 
         return users;
+
 
     def _user_row(self, xls_row):
         """ Return True is the XLS row refers to a user instead of a project """
