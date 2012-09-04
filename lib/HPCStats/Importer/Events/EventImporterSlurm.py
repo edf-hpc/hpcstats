@@ -133,7 +133,7 @@ class EventImporterSlurm(EventImporter):
             if next_event_index == nb_events:
                 logging.debug("did not found the next event of %d (%s)",
                                event_index,
-                               event.get_nodename )
+                               event.get_nodename() )
             else:
                 #print "Debug %s: found the next event of %d (%s) at index %d" % \
                 #          ( self.__class__.__name__,
