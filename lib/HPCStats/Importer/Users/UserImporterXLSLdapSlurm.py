@@ -195,6 +195,9 @@ class UserImporterXLSLdapSlurm(UserImporter):
         uid = ldap_row['uidNumber'][0]
         gid = ldap_row['gidNumber'][0]
         name = ldap_row['cn'][0]
+        department = ldap_row['departmentNumber'][0]
+        if department == "":
+            department = "UNKNOWN"
         if ldap_row.has_key('mail'):    
             email = ldap_row['mail'][0]
         else:
@@ -203,7 +206,8 @@ class UserImporterXLSLdapSlurm(UserImporter):
                      login = login,
                      uid = uid,
                      gid = gid,
-                     cluster_name = self._cluster_name )
+                     cluster_name = self._cluster_name,
+                     department = department )
         return user
 
     def user_from_slurm_row(self, slurm_row):
@@ -219,7 +223,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
     def find_with_uid(self, uid):
         user = None
         # search in LDAP
-        r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"uidNumber="+str(uid),["uid","cn","mail","uidNumber","gidNumber"])
+        r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"uidNumber="+str(uid),["uid","cn","mail","uidNumber","gidNumber","departmentNumber"])
         if len(r) > 0:
             attrib_dict = r[0][1]
             user = self.user_from_ldap_row(attrib_dict)
