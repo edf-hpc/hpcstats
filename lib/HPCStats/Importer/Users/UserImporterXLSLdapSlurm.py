@@ -195,9 +195,18 @@ class UserImporterXLSLdapSlurm(UserImporter):
         uid = ldap_row['uidNumber'][0]
         gid = ldap_row['gidNumber'][0]
         name = ldap_row['cn'][0]
-        department = ldap_row['departmentNumber'][0]
-        if department == "":
-            department = "UNKNOWN"
+       
+        department = "UNKNOWN"
+        try:
+            department = ldap_row['departmentNumber'][0]
+            if department == "":
+                department = "UNKNOWN"
+        except KeyError:
+            logging.error("login %s %s (%s/%s) has no department in LDAP",
+                           login,
+                           name,
+                           uid,
+                           gid )
         if ldap_row.has_key('mail'):    
             email = ldap_row['mail'][0]
         else:
