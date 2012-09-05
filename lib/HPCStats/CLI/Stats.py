@@ -79,23 +79,7 @@ def main(args=sys.argv):
     if (options.arch):
         logging.info("=> Updating architecture for cluster %s" % (options.clustername))
         arch_importer = ArchitectureImporterFactory().factory(db, config, cluster.get_name())
-        nodes = arch_importer.get_cluster_nodes()
-        # insert or update cluster
-        if cluster.exists_in_db(db):
-            logging.debug("updating cluster %s", cluster)
-            cluster.update(db)
-        else:
-            logging.debug("creating cluster %s", cluster)
-            cluster.save(db)
-
-        # insert or update nodes
-        for node in nodes:
-            if node.exists_in_db(db):
-                logging.debug("updating node %s", node)
-                node.update(db)
-            else:
-                logging.debug("creating node %s", node)
-                node.save(db)
+        arch_importer.update_architecture()
         db.commit()
 
     if (options.events):

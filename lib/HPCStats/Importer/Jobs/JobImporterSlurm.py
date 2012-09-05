@@ -5,6 +5,7 @@ import MySQLdb
 from datetime import datetime
 from ClusterShell.NodeSet import NodeSet
 import logging
+import ConfigParser
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Model.Job import Job
 
@@ -29,19 +30,29 @@ class JobImporterSlurm(JobImporter):
         self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
 
         str_conf_partitions = config.get(slurm_section,"partitions")
-        # example of value:
-        # partitions=cn[0001-1382]:small,para,compute;bm|01-29]:bigmem;cg[01-34]:visu
-        lst_nodes_parts = str_conf_partitions.split(";")
+
+        # get it from archfile
         self._partitions = {}
-        for str_nodes_parts in lst_nodes_parts:
-            str_nodeset, str_partitions_lst = str_nodes_parts.split(":")
-            lst_partitions = str_partitions_lst.split(",")
-            self._partitions[str_nodeset] = lst_partitions
+        archfile_section = self._cluster_name + "/archfile"
+        archfile_name = config.get(archfile_section, "file")
+        archfile = ConfigParser.ConfigParser()
+        archfile.read(archfile_name)
+        partitions_list = archfile.get(self._cluster_name,"partitions").split(',')
+        for partition_name in partitions_list:
+            partition_section_name = self._cluster_name + "/" + partition_name
+            nodesets_list = archfile.get(partition_section_name, "nodesets").split(',')
+            slurm_partitions_list = archfile.get(partition_section_name, "slurm_partitions").split(',')
+            ns_nodeset = NodeSet()
+            for nodeset_name in nodesets_list:
+                nodeset_section_name = self._cluster_name + "/" + partition_name + "/" + nodeset_name
+                str_nodenames = archfile.get(nodeset_section_name, "names")
+                ns_nodeset.add(str_nodenames)
+            self._partitions[str(ns_nodeset)] = slurm_partitions_list 
         # As a result, we have here:
-        # { "cn[0001-1382]" => ["small","para","compute"],
-        #   "bm[01-29]"     => ["bigmem"],
-        #   "cg[01-24]"     => ["visu"]                    }
-   
+        # { "cn[0001-1382]": ["small","para","compute"],
+        #   "bm[01-29]"    : ["bigmem"],
+        #   "cg[01-24]"    : ["visu"]                    }
+
     def request_jobs_since_job_id(self, job_id, offset, max_jobs):
         req = """
             SELECT id_job,
@@ -115,7 +126,7 @@ class JobImporterSlurm(JobImporter):
         if str_nodelist == "(null)" or str_nodelist == "None assigned" :
             str_nodelist = None
 
-        # manage case where 
+        # manage case where partitions is a list
         str_partition = None
         str_partitions_lst = res["partition"]
         lst_partitions = str_partitions_lst.split(",")

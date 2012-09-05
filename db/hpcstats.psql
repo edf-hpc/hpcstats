@@ -25,7 +25,9 @@ CREATE TABLE events (id serial,
 
 CREATE TABLE nodes ( name character varying(30) NOT NULL,
                      cluster character varying(30),
+                     partition character varying(30),
                      cpu integer,
+                     memory bigint,
                      model character varying(50),
                      flops bigint);
 

@@ -1,3 +1,14 @@
+2012-09-05 Rémi Palancher <remi.palancher@edf.fr>
+
+	* Large refactoring of ArchitectureImporterArchFile
+	* Added new fields memory and partition in Node table
+	* Moved Slurm partition descriptions in ArchFile
+
+2012-09-04 Rémi Palancher <remi.palancher@edf.fr>
+
+	* Try to get departement when importing users from LDAP
+	  in UserImporterXLS
+
 2012-08-24 Rémi Palancher <remi.palancher@edf.fr>
 
 	* Improved checking of clustername parameter
