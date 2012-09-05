@@ -86,20 +86,11 @@ class EventImporterSlurm(EventImporter):
         else:
             end_datetime = datetime.fromtimestamp(db_row["time_end"])
 
-        if db_row["node_name"] != "":
-            event = Event(  nodename = db_row["node_name"],
-                            start_datetime = datetime.fromtimestamp(db_row["time_start"]),
-                            end_datetime = end_datetime,
-                            event_type = self._txt_slurm_reason(db_row["state"]))
-            events.append(event)
-        else:
-            ns_event = NodeSet(db_row["cluster_nodes"])
-            for node in ns_event:
-                event = Event(  nodename = node,
-                                start_datetime = datetime.fromtimestamp(db_row["time_start"]),
-                                end_datetime = end_datetime,
-                                event_type = self._txt_slurm_reason(db_row["state"]))
-                events.append(event)
+        event = Event(  nodename = db_row["node_name"],
+                        start_datetime = datetime.fromtimestamp(db_row["time_start"]),
+                        end_datetime = end_datetime,
+                        event_type = self._txt_slurm_reason(db_row["state"]))
+        events.append(event)
 
         return events
 
@@ -127,7 +118,6 @@ class EventImporterSlurm(EventImporter):
                 logging.error("trying to access to index %d of list with %d items",
                                next_event_index,
                                nb_events )
-                
 
             # if search index is at the end of the list, next event has not been found
             if next_event_index == nb_events:
@@ -143,28 +133,7 @@ class EventImporterSlurm(EventImporter):
 
                 next_event = self._new_events[next_event_index]
 
-                # if both events happened at the exact same time
-                if next_event.get_start_datetime() == event.get_start_datetime() and \
-                   next_event.get_end_datetime() == event.get_end_datetime():
-                    logging.debug("will remove %s (%d) which conflict with %s (%d)",
-                                   next_event,
-                                   next_event_index,
-                                   event,
-                                   event_index )
-
-                    # if event type is unknown try loosely to get deleted event type
-                    if event.get_event_type() == "UNKNOWN":
-                        logging.debug("event type for %s set to %s",
-                                       event,
-                                       next_event.get_event_type() )
-                        event.set_event_type(next_event.get_event_type())
-
-                    # remove the next event
-                    self._new_events.pop(next_event_index)
-                    nb_events -= 1
-                    goto_next_event = False
-
-                elif event.get_end_datetime() == next_event.get_start_datetime() and \
+                if event.get_end_datetime() == next_event.get_start_datetime() and \
                      event.get_event_type() == next_event.get_event_type():
                     logging.debug("merging %s (%d) with %s (%d)",
                                    event,
@@ -176,43 +145,8 @@ class EventImporterSlurm(EventImporter):
                     nb_events -= 1
                     goto_next_event = False
 
-                    # we may have created a copy of another event here
-                    previous_event_index = self._find_same_event_before(event_index)
-                    # if we find one go back to it in the main loop
-                    if previous_event_index:
-                        logging.debug("found previous same event for %s (%d) at index %d",
-                                       event,
-                                       event_index,
-                                       previous_event_index )
-                        event_index = previous_event_index
-
-                #else:
-                #    print "Debug %s: next %s (%d) is different of %s (%d)" % \
-                #              ( self.__class__.__name__,
-                #                next_event,
-                #                next_event_index,
-                #                event,
-                #                event_index )
-                
             if goto_next_event:
                 event_index += 1
-
-    def _find_same_event_before(self, event_index):
-
-        event = self._new_events[event_index]
-
-        previous_event_index = event_index - 1
-
-        while previous_event_index > 0 and \
-              self._new_events[previous_event_index].get_start_datetime() == event.get_start_datetime():
-
-            if self._new_events[previous_event_index].get_nodename() == event.get_nodename() and \
-               self._new_events[previous_event_index].get_end_datetime() == event.get_end_datetime():
-                return previous_event_index
-            else:
-                previous_event_index -= 1
-
-        return None        
 
     def _txt_slurm_reason(self, reason_uid):
 
