@@ -199,7 +199,8 @@ class EventImporterSlurm(EventImporter):
         #+-------+
         slurm_node_state = {
             0:"UNKNOWN",
-            1:"DOWN", 
+            1:"DOWN",
+            4:"ERROR",
             512:"DRAIN", 
             513:"DRAIN+DOWN", 
             514:"DRAIN+IDLE", 
