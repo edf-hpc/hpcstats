@@ -32,6 +32,7 @@ class JobImporterSlurm(JobImporter):
         except _mysql_exceptions.OperationalError as e:
             logging.error("connection to Slurm DBD MySQL failed: %s", e)
             raise RuntimeError
+        self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor) 
 
         # get it from archfile
         self._partitions = {}
