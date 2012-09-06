@@ -4,6 +4,7 @@
 import ldap
 import xlrd
 import MySQLdb
+import _mysql_exceptions
 from datetime import date
 import logging
 from HPCStats.Importer.Users.UserImporter import UserImporter
@@ -38,11 +39,15 @@ class UserImporterXLSLdapSlurm(UserImporter):
         self._dbname = config.get(db_section,"name")
         self._dbuser = config.get(db_section,"user")
         self._dbpass = config.get(db_section,"password")
-        self._conn = MySQLdb.connect( host = self._dbhost,
-                                      user = self._dbuser,
-                                      passwd = self._dbpass,
-                                      db = self._dbname,
-                                      port = self._dbport )
+        try:
+            self._conn = MySQLdb.connect( host = self._dbhost,
+                                          user = self._dbuser,
+                                          passwd = self._dbpass,
+                                          db = self._dbname,
+                                          port = self._dbport )
+        except _mysql_exceptions.OperationalError as e:
+            logging.error("connection to Slurm DBD MySQL failed: %s", e)
+            raise RuntimeError
         self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
 
     def update_users(self):

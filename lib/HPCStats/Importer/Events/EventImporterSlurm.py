@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import MySQLdb
+import _mysql_exceptions
 import logging
 from datetime import datetime
 from ClusterShell.NodeSet import NodeSet
@@ -21,11 +22,15 @@ class EventImporterSlurm(EventImporter):
         self._dbname = config.get(slurm_section,"name")
         self._dbuser = config.get(slurm_section,"user")
         self._dbpass = config.get(slurm_section,"password")
-        self._conn = MySQLdb.connect( host = self._dbhost,
-                                      user = self._dbuser,
-                                      passwd = self._dbpass,
-                                      db = self._dbname,
-                                      port = self._dbport )
+        try:
+            self._conn = MySQLdb.connect( host = self._dbhost,
+                                          user = self._dbuser,
+                                          passwd = self._dbpass,
+                                          db = self._dbname,
+                                          port = self._dbport )
+        except _mysql_exceptions.OperationalError as e:
+            logging.error("connection to Slurm DBD MySQL failed: %s", e)
+            raise RuntimeError
         self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
 
     def update_events(self):
