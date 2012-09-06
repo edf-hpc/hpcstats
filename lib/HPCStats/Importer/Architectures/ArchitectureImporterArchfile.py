@@ -104,7 +104,7 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                                    nodeset_name,
                                    nodenames,
                                    memory_str )
-
+                    memory = 0
                 model = config.get(nodeset_section_name, "model")
             
                 # expand nodeset using clustershell
