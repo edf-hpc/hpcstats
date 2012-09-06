@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from ClusterShell.NodeSet import NodeSet
+import logging
+from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 
 class Job:
 
@@ -96,20 +97,22 @@ class Job:
         dbcursor.execute(req, datas)
         self._db_id = dbcursor.fetchone()[0]
 
-        
-        for node in NodeSet(self._nodes):
-            req = """
-                INSERT INTO job_nodes (
-                                job,
-                                node,
-                                cpu_id
-                                )
-                VALUES (%s, %s, %s); """
-            datas = (
-                self._db_id,
-                node,
-                "unknown")
-            db.get_cur().execute(req, datas)
+        try:
+            for node in NodeSet(self._nodes):
+                req = """
+                    INSERT INTO job_nodes (
+                                    job,
+                                    node,
+                                    cpu_id
+                                    )
+                    VALUES (%s, %s, %s); """
+                datas = (
+                    self._db_id,
+                    node,
+                    "unknown")
+                db.get_cur().execute(req, datas)
+        except NodeSetParseRangeError as e:
+            logging.error("could not parse nodeset %s", self._nodes) 
         
     def update(self, db):
         req = """
