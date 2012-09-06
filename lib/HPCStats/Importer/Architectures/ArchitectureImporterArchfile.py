@@ -90,7 +90,8 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
 
                 memory_str = config.get(nodeset_section_name, "memory")
                 units = { "MB": 1024**2,  # 1048576
-                          "GB": 1024**3 } # 1073741824 
+                          "GB": 1024**3,  # 1073741824 
+                          "TB": 1024**4 } # 1099511627776
                 memory = None
                 for unit,multiplier in units.items():
                     match_result = re.match("^(\d+)" + unit + "$", memory_str)
