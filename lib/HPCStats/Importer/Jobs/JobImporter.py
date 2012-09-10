@@ -29,10 +29,12 @@ class JobImporter(object):
         req = """
             SELECT sched_id
             FROM jobs
-            WHERE state = 'PENDING'
-               OR state = 'RUNNING'; """
+            WHERE clustername = %s
+              AND (   state = 'PENDING'
+                   OR state = 'RUNNING' ); """
+        datas = (self._cluster_name,)
         cur = self._db.get_cur()
-        cur.execute(req)
+        cur.execute(req, datas)
         results = cur.fetchall()
         for job in results:
             unfinished_job_dbid.append(job[0])
