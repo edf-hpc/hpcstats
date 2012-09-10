@@ -199,7 +199,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
         login = ldap_row['uid'][0]
         uid = ldap_row['uidNumber'][0]
         gid = ldap_row['gidNumber'][0]
-        name = ldap_row['cn'][0]
+        name = ldap_row['givenName'][0] + " " + ldap_row['sn'][0]
        
         department = "UNKNOWN"
         try:
@@ -237,7 +237,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
     def find_with_uid(self, uid):
         user = None
         # search in LDAP
-        r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"uidNumber="+str(uid),["uid","cn","mail","uidNumber","gidNumber","departmentNumber"])
+        r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"uidNumber="+str(uid),["uid","sn","givenName","mail","uidNumber","gidNumber","departmentNumber"])
         if len(r) > 0:
             attrib_dict = r[0][1]
             user = self.user_from_ldap_row(attrib_dict)
