@@ -2,16 +2,18 @@
 # -*- coding: utf-8 -*-
 
 class Event:
-    def __init__(self, nodename = "", start_datetime = 0, end_datetime = 0, event_type = ""):
+    def __init__(self, nodename = "", nb_cpu = 0, start_datetime = 0, end_datetime = 0, event_type = ""):
 
         self._nodename = nodename
+        self._nb_cpu = nb_cpu
         self._start_datetime = start_datetime
         self._end_datetime = end_datetime
         self._event_type = event_type
 
     def __str__(self):
-        return "event on node %s (%s) : %s → %s" % \
+        return "event on node %s/%d (%s) : %s → %s" % \
                    ( self._nodename,
+                     self._nb_cpu,
                      self._event_type,
                      self._start_datetime, 
                      self._end_datetime )
@@ -20,12 +22,14 @@ class Event:
         req = """
             INSERT INTO events (
                             node,
+                            nb_cpus,
                             t_start,
                             t_end,
                             type )
-            VALUES ( %s, %s, %s, %s); """
+            VALUES ( %s, %s, %s, %s, %s); """
         datas = (
             self._nodename,
+            self._nb_cpu,
             self._start_datetime,
             self._end_datetime,
             self._event_type )
@@ -62,6 +66,7 @@ class Event:
 
     def __eq__(self, other):
         return self._nodename == other._nodename and \
+               self._nb_cpu == other._nb_cpu and \
                self._start_datetime == other._start_datetime and \
                self._end_datetime == other._end_datetime and \
                self._event_type == other._event_type
@@ -72,6 +77,9 @@ class Event:
 
     def get_nodename(self):
         return self._nodename
+
+    def get_nb_cpu(self):
+        return self._nb_cpu
 
     def get_start_datetime(self):
         return self._start_datetime

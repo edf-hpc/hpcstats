@@ -21,6 +21,7 @@ CREATE TABLE events (id serial,
                      node character varying(30) NOT NULL,
                      t_start timestamp without time zone NOT NULL,
                      t_end timestamp without time zone,
+                     nb_cpus integer,
                      type character varying(25));
 
 CREATE TABLE nodes ( name character varying(30) NOT NULL,

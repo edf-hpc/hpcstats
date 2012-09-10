@@ -52,7 +52,7 @@ class EventImporterSlurm(EventImporter):
             SELECT time_start,
                    time_end,
                    node_name,
-                   cluster_nodes,
+                   cpu_count,
                    state
             FROM %s_event_table
             WHERE node_name <> ''
@@ -92,6 +92,7 @@ class EventImporterSlurm(EventImporter):
             end_datetime = datetime.fromtimestamp(db_row["time_end"])
 
         event = Event(  nodename = db_row["node_name"],
+                        nb_cpu = db_row["cpu_count"],
                         start_datetime = datetime.fromtimestamp(db_row["time_start"]),
                         end_datetime = end_datetime,
                         event_type = self._txt_slurm_reason(db_row["state"]))

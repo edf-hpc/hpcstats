@@ -19,8 +19,11 @@ class EventImporter(object):
     def _get_last_end_datetime(self):
         req = """
               SELECT MAX(t_end) AS last
-                FROM events; """
-        datas = ()
+                FROM events,
+                     nodes
+               WHERE nodes.name = events.node
+                 AND nodes.cluster = %s ; """
+        datas = (self._cluster_name,)
         cur = self._db.get_cur()
         cur.execute(req, datas)
 
@@ -30,6 +33,7 @@ class EventImporter(object):
     def _get_unfinished_events(self):
         req = """
               SELECT node,
+                     nb_cpus,
                      t_start,
                      type
                 FROM events
@@ -42,9 +46,10 @@ class EventImporter(object):
             db_row = cur.fetchone()
             if db_row == None: break
             event = Event(  nodename = db_row[0],
-                            start_datetime = db_row[1],
+                            nb_cpu = db_row[1],
+                            start_datetime = db_row[2],
                             end_datetime = None,
-                            event_type = db_row[2] )
+                            event_type = db_row[3] )
             self._unfinished_events.append(event)
 
     def _finish_known_events(self):
@@ -55,6 +60,7 @@ class EventImporter(object):
             while not found_event and new_event_index < nb_new_events:            
                 event = self._new_events[new_event_index]
                 if event.get_nodename() == unfinished_event.get_nodename() and \
+                   event.get_nb_cpu() == unfinished_event.get_nb_cpu() and \
                    event.get_start_datetime() == unfinished_event.get_start_datetime() and \
                    event.get_event_type() == unfinished_event.get_event_type():
                     # specify end_datetime in unfinished_events[]
