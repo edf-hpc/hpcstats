@@ -49,8 +49,9 @@ def main(args=sys.argv):
     logging_level = logging.INFO
     if options.debug:
         logging_level = logging.DEBUG
-    logging.basicConfig(format='%(levelname)s: %(filename)s: %(message)s',
-                        level=logging_level)
+    logging.basicConfig(format = '%(levelname)s: %(filename)s: %(message)s',
+                        level  = logging_level,
+                        stream  = sys.stdout)
     
     # Config file argument parser
     config = HPCStatsConfig(options)
