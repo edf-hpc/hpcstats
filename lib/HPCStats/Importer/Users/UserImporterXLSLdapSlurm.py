@@ -26,8 +26,12 @@ class UserImporterXLSLdapSlurm(UserImporter):
         self._ldapbase = config.get(ldap_section,"basedn")
         self._ldapdn = config.get(ldap_section,"dn")
         self._ldappass = config.get(ldap_section,"password")
-        self._ldapconn = ldap.initialize(self._ldapurl)
-        self._ldapconn.simple_bind(self._ldapdn, self._ldappass)
+        try:
+            self._ldapconn = ldap.initialize(self._ldapurl)
+            self._ldapconn.simple_bind(self._ldapdn, self._ldappass)
+        except ldap.SERVER_DOWN as e:
+            logging.error("connection to LDAP failed: %s", e)
+            raise RuntimeError
 
         self._xlsfile = config.get(xls_section,"file")
         self._xlssheetname = config.get(xls_section,"sheet")
