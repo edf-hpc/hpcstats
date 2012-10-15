@@ -1,3 +1,7 @@
+2012-10-15 Rémi Palancher <remi.palancher@edf.fr>
+
+	* Some minor bug fixes
+
 2012-09-05 Rémi Palancher <remi.palancher@edf.fr>
 
 	* Large refactoring of ArchitectureImporterArchFile
