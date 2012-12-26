@@ -3,6 +3,7 @@
 
 from datetime import datetime
 import logging
+import string
 from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 
 class Job:
@@ -58,7 +59,6 @@ class Job:
                  self._nb_procs,
                  self._nodes,
                  self._state )
-
     def save(self, db):
         req = """
             INSERT INTO jobs (
@@ -98,7 +98,8 @@ class Job:
         self._db_id = dbcursor.fetchone()[0]
 
         try:
-            for node in NodeSet(self._nodes):
+	 if self._nodes is not None:
+            for node in NodeSet(self._nodes.replace("x",",")):
                 req = """
                     INSERT INTO job_nodes (
                                     job,
@@ -158,7 +159,7 @@ class Job:
         nodecount = dbcursor.fetchone()[0]
 
         if nodecount == 0 and self._nodes is not None:
-            for node in NodeSet(self._nodes):
+            for node in NodeSet(self._nodes.replace("x",",")):
                 if node != "None assigned":
                     req = """
                         INSERT INTO job_nodes (
@@ -171,9 +172,10 @@ class Job:
                         self._db_id,
                         node,
                         "unknown")
+		    #print (datas)
                     db.get_cur().execute(req, datas)
 
-
+		    
     """ accessors """
 
     def get_db_id(self):

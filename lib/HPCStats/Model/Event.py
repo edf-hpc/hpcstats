@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import logging
 
 class Event:
     def __init__(self, nodename = "", nb_cpu = 0, start_datetime = 0, end_datetime = 0, event_type = ""):

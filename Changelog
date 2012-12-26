@@ -1,3 +1,7 @@
+2012-12-26 Nali Andriana <nali-n-externe.andriana@edf.fr>
+
+	*  correct bug occured since 21-11-2011, add support for zumbrota dynamic nodes allocation
+
 2012-10-15 Rémi Palancher <remi.palancher@edf.fr>
 
 	* Some minor bug fixes
