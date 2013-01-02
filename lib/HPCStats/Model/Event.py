@@ -20,7 +20,15 @@ class Event:
                      self._end_datetime )
 
     def save(self, db):
-        req = """
+        cur = db.get_cur()
+        cur.execute("SELECT * FROM events WHERE node = %s AND t_start = %s AND t_end = %s",
+                     (self._nodename,
+                      self._start_datetime,
+                      self._end_datetime) )
+        nb_rows = cur.rowcount
+
+        if nb_rows == 0:
+          req = """
             INSERT INTO events (
                             node,
                             nb_cpus,
@@ -28,15 +36,15 @@ class Event:
                             t_end,
                             type )
             VALUES ( %s, %s, %s, %s, %s); """
-        datas = (
+          datas = (
             self._nodename,
             self._nb_cpu,
             self._start_datetime,
             self._end_datetime,
             self._event_type )
- 
-        #print db.get_cur().mogrify(req, datas)
-        db.execute(req, datas)
+
+          #print db.get_cur().mogrify(req, datas)
+          db.execute(req, datas)
     
     def update_end_datetime(self, db):
         req = """
