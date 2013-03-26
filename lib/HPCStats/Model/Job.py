@@ -129,7 +129,7 @@ class Job:
                        nb_nodes = %s,
                        nb_cpus = %s,
                        state = %s
-            WHERE sched_id = %s
+            WHERE sched_id = %s AND id_job = %s AND clustername = %s
             RETURNING id; """
         datas = (
             self._id_job,
@@ -143,7 +143,9 @@ class Job:
             self._nb_hosts,
             self._nb_procs,
             self._state,
-            self._sched_id )
+            self._sched_id,
+            self._id_job,
+            self._cluster_name )
 
         dbcursor = db.get_cur()
         dbcursor.execute(req, datas)
