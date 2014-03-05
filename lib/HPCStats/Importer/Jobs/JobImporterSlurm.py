@@ -6,6 +6,7 @@ import _mysql_exceptions
 from datetime import datetime
 from ClusterShell.NodeSet import NodeSet
 import logging
+import os
 import ConfigParser
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Model.Job import Job
@@ -70,7 +71,9 @@ class JobImporterSlurm(JobImporter):
                    partition,
                    qos.name AS qos,
                    state,
-                   nodelist
+                   nodelist,
+                   account,
+                   job_name
              FROM %s_job_table job,
                   qos_table qos
              WHERE id_job > %%s
@@ -96,7 +99,9 @@ class JobImporterSlurm(JobImporter):
                    partition,
                    qos.name AS qos,
                    state,
-                   nodelist
+                   nodelist,
+                   account,
+                   job_name
             FROM %s_job_table job,
                   qos_table qos
             WHERE job_db_inx = %%s
@@ -189,7 +194,9 @@ class JobImporterSlurm(JobImporter):
                     running_queue = str_partition+"-"+res["qos"],
                     nodes = str_nodelist,
                     state = self.get_job_state_from_slurm_state(res["state"]),
-                    cluster_name = self._cluster_name)
+                    cluster_name = self._cluster_name,
+                    login = res["account"],
+                    name = res["job_name"])
         return job
 
     """

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+import logging
 
 class User:
     def __init__(self, name = "", login = "", cluster_name = "", department = "", uid = -1, gid = -1, creation_date = None, deletion_date = None):
@@ -29,17 +30,10 @@ class User:
     def __eq__(self, other):
         return self._cluster_name == other._cluster_name and self._login == other._login
 
-    def get_uid(self):
-        return self._uid
 
-    def set_uid(self, uid):
-        self._uid = uid
-
-    def get_gid(self):
-        return self._gid
-
-    def set_gid(self, gid):
-        self._gid = gid
+    """ getter accessors """
+    def get_name(self):
+        return self._name
 
     def get_login(self):
         return self._login
@@ -47,6 +41,48 @@ class User:
     def get_cluster_name(self):
         return self._cluster_name
 
+    def get_department(self):
+        return self._department
+
+    def get_uid(self):
+        return self._uid
+
+    def get_gid(self):
+        return self._gid
+
+    def get_creation_date(self):
+        return self._creation_date
+
+    def get_deletion_date(self):
+        return self._deletion_date
+
+    """ setter accessors """
+    def set_name(self, name):
+        self._name = name
+
+    def set_login(self, login):
+        self._login = login
+
+    def set_cluster_name(self, cluster_name):
+        self._cluster_name = cluster_name
+
+    def set_department(self, department):
+        self._department = department
+
+    def set_uid(self, uid):
+        self._uid = uid
+
+    def set_gid(self, gid):
+        self._gid = gid
+
+    def set_creation_date(self, creation_date):
+        self._creation_date = creation_date
+
+    def set_deletion_date(self, deletion_date):
+        self._deletion_date = deletion_date
+
+
+    """ functions """
     def exists_in_db(self, db):
         cur = db.get_cur()
         cur.execute("SELECT login FROM users WHERE login = %s AND cluster = %s",
@@ -75,7 +111,7 @@ class User:
                             deletion,
                             uid,
                             gid )
-            VALUES ( %s, %s, %s, %s, %s, %s, %s, %s); """
+            VALUES ( %s, lower(%s), %s, %s, %s, %s, %s, %s); """
         datas = (
             self._name,
             self._login,
@@ -85,7 +121,7 @@ class User:
             self._deletion_date,
             self._uid,
             self._gid )
- 
+
         #print db.get_cur().mogrify(req, datas)
         db.get_cur().execute(req, datas)
 
@@ -93,33 +129,64 @@ class User:
         req = """
             UPDATE users SET
                        name = %s,
-                       cluster = %s,
                        department = %s,
                        creation = %s,
-                       deletion = %s,
-                       uid = %s,
-                       gid = %s
+                       deletion = %s
             WHERE login = %s
               AND cluster = %s; """
         datas = (
             self._name,
-            self._cluster_name,
             self._department,
             self._creation_date,
             self._deletion_date,
-            self._uid,
-            self._gid,
             self._login,
             self._cluster_name )
 
         #print db.get_cur().mogrify(req, datas)
         db.get_cur().execute(req, datas)
 
-    """ accessors """
+    def update_name(self, db):
+        req = """
+            UPDATE users SET name = %s
+            WHERE uid = %s AND cluster = %s;"""
+        datas = (
+            self._name,
+            self._uid,
+            self._cluster_name )
 
-    def get_name(self):
-        return self._name
+        db.get_cur().execute(req, datas)
 
-    def get_department(self):
-        return self._department
+    def update_deletion_date(self, db):
+        req = """
+            UPDATE users SET deletion = %s
+            WHERE uid = %s AND cluster = %s;"""
+        datas = (
+            self._deletion_date,
+            self._uid,
+            self._cluster_name )
+
+        db.get_cur().execute(req, datas)
+
+    def update_department(self, db):
+        req = """
+            UPDATE users SET department = %s
+            WHERE login = %s AND cluster = %s;"""
+        datas = (
+            self._department,
+            self._login,
+            self._cluster_name )
+
+        db.get_cur().execute(req, datas)
+
+    def update_creation_date(self, db):
+        req = """
+            UPDATE users SET
+                        creation = %s
+            WHERE login = %s AND cluster = %s;"""
+        datas = (
+            self._creation_date,
+            self._login,
+            self._cluster_name )
+
+        db.get_cur().execute(req, datas)
 

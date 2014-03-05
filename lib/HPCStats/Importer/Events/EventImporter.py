@@ -30,12 +30,28 @@ class EventImporter(object):
         db_row = cur.fetchone()
         return db_row[0]
 
+    def _get_first_start_datetime_unfinished_event(self):
+	req="""
+	    SELECT MIN(t_start)
+		FROM events,
+		    nodes
+		WHERE nodes.name = events.node
+		AND nodes.cluster = %s
+		AND t_end IS NULL;"""
+        datas = (self._cluster_name,)
+        cur = self._db.get_cur()
+        cur.execute(req, datas)
+
+        db_row = cur.fetchone()
+        return db_row[0]
+
     def _get_unfinished_events(self):
         req = """
               SELECT node,
                      nb_cpus,
                      t_start,
-                     type
+                     type,
+                     reason
                 FROM events
                WHERE t_end IS NULL; """
         datas = ()
@@ -49,7 +65,8 @@ class EventImporter(object):
                             nb_cpu = db_row[1],
                             start_datetime = db_row[2],
                             end_datetime = None,
-                            event_type = db_row[3] )
+                            event_type = db_row[3],
+                            reason = db_row[4])
             self._unfinished_events.append(event)
 
     def _finish_known_events(self):
@@ -68,6 +85,10 @@ class EventImporter(object):
                     unfinished_event.set_end_datetime(event.get_end_datetime())
                     self._new_events.pop(new_event_index)
                     found_event = True
+                if event.get_reason() != unfinished_event.get_reason():
+                    logging.debug("Update reason of %s to %s", unfinished_event, event.get_reason())
+                    unfinished_event.set_reason(event.get_reason())
+                    unfinished_event.update_reason(self._db)
                 new_event_index += 1
 
     def _update_unfinished_events(self):

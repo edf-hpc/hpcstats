@@ -34,6 +34,9 @@ from HPCStats.Importer.Jobs.JobImporterFactory import JobImporterFactory
 from HPCStats.Importer.Users.UserImporterFactory import UserImporterFactory
 from HPCStats.Importer.Architectures.ArchitectureImporterFactory import ArchitectureImporterFactory
 from HPCStats.Importer.Events.EventImporterFactory import EventImporterFactory
+from HPCStats.Importer.Usage.UsageImporterFactory import UsageImporterFactory
+from HPCStats.Importer.MountPoint.MountPointImporterFactory import MountPointImporterFactory
+from HPCStats.Importer.Contexts.ContextImporterFactory import ContextImporterFactory
 
 def main(args=sys.argv):
 
@@ -77,6 +80,13 @@ def main(args=sys.argv):
     cluster_finder = ClusterFinder(db)
     cluster = cluster_finder.find(options.clustername)
 
+    if (options.context):
+        logging.info("=> Updating context for cluster %s from stats file" % (options.clustername))
+        try:
+            context_importer = ContextImporterFactory().factory(db, config, cluster.get_name())
+        except RuntimeError:
+            logging.error("error occured on context update.")
+
     if (options.arch):
         logging.info("=> Updating architecture for cluster %s" % (options.clustername))
         try:
@@ -85,6 +95,25 @@ def main(args=sys.argv):
             db.commit()
         except RuntimeError:
             logging.error("error occured on architecture update.")
+
+    if (options.mounted):
+        logging.info("=> Updating mounted filesystem for cluster %s" % (options.clustername))
+        try:
+            mounted_importer = MountPointImporterFactory().factory(db, config, cluster.get_name())
+            if mounted_importer:
+                mounted_importer.update_mount_point()
+                db.commit()
+        except RuntimeError:
+            logging.error("error occured on mounted filesystem update.")
+ 
+    if (options.usage):
+        logging.info("=> Updating filesystem usage for cluster %s" % (options.clustername))
+        try:
+            usage_importer = UsageImporterFactory().factory(db, config, cluster.get_name())
+            #usage_importer.update_usage()
+            db.commit()
+        except RuntimeError:
+            logging.error("error occured on filesystem usage update.")
 
     if (options.events):
         logging.info("=> Updating events for cluster %s" % (options.clustername))

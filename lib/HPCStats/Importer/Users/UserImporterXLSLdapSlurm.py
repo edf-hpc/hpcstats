@@ -25,13 +25,17 @@ class UserImporterXLSLdapSlurm(UserImporter):
         self._ldapurl = config.get(ldap_section,"url")
         self._ldapbase = config.get(ldap_section,"basedn")
         self._ldapdn = config.get(ldap_section,"dn")
-        self._ldappass = config.get(ldap_section,"password")
-        try:
+        self._ldaphash = config.get(ldap_section,"phash")
+        self._auth_cert = config.get(ldap_section, "auth_cert")
+        self._ldapcert = config.get(ldap_section, "cert")
+        self._ldapgroup = config.get(ldap_section, "group")      
+        try:            
+            ldap.set_option(ldap.OPT_X_TLS_CACERTFILE, self._ldapcert)
             self._ldapconn = ldap.initialize(self._ldapurl)
-            self._ldapconn.simple_bind(self._ldapdn, self._ldappass)
+            self._ldapconn.simple_bind(self._ldapdn, base64.b64decode(self.decypher(base64.b64decode(self._ldaphash))))
         except ldap.SERVER_DOWN as e:
             logging.error("connection to LDAP failed: %s", e)
-            raise RuntimeError
+            raise RuntimeError        
 
         self._xlsfile = config.get(xls_section,"file")
         self._xlssheetname = config.get(xls_section,"sheet")
@@ -59,26 +63,27 @@ class UserImporterXLSLdapSlurm(UserImporter):
         for user in users:
             if user.exists_in_db(self._db):
                 logging.debug("updating user %s", user)
-                user.update(self._db)
-            else:
-                logging.debug("creating user %s", user)
-                user.save(self._db)
+                user.update_creation_deletion(self._db)
+            # Il 'ny a plus de création pour le XLS
+            #else:
+                #logging.debug("creating user %s", user)
+                #user.save(self._db)
         
-        uids = self._get_unknown_users(self._db)
-        if not uids: 
-                logging.debug("no unknown users found")
-        else:
-            for unknown_uid in uids:
-                user = self.find_with_uid(unknown_uid)
-                if user:
-                    if user.exists_in_db(self._db):
-                        logging.debug("updating user %s", user)
-                        user.update(self._db)
-                    else:
-                        logging.debug("creating user %s", user)
-                        user.save(self._db)
-                else:
-                    logging.warning("unknown user with uid %d", unknown_uid) 
+        #uids = self._get_unknown_users(self._db)
+        #if not uids: 
+        #        logging.debug("no unknown users found")
+        #else:
+        #    for unknown_uid in uids:
+        #        user = self.find_with_uid(unknown_uid)
+        #        if user:
+        #            if user.exists_in_db(self._db):
+        #                logging.debug("updating user %s", user)
+        #                user.update(self._db)
+        #            else:
+        #                logging.debug("creating user %s", user)
+        #                user.save(self._db)
+        #        else:
+        #            logging.warning("unknown user with uid %d", unknown_uid) 
         
     def get_all_users(self):
         users = []
@@ -113,6 +118,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
         return xls_row[1].encode('utf-8').strip() == "U"
 
     def get_ids_from_ldap(self, user):
+        self._ldapbase = "ou=Personnes,dc=der,dc=edf,dc=fr"
         r = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"uid="+user.get_login(),["uidNumber","gidNumber"])
         try:
             attrib_dict = r[0][1]
@@ -271,3 +277,14 @@ class UserImporterXLSLdapSlurm(UserImporter):
                 logging.info("uid %d found in too many times in SlurmDBD",
                               uid )
         return user
+
+    def decypher(self, s):
+        x = []
+        for i in xrange(len(s)):
+            j = ord(s[i])
+            if j >= 33 and j <= 126:
+                x.append(chr(33 + ((j + 14) % 94)))
+            else:
+                x.append(s[i])
+        return ''.join(x)
+

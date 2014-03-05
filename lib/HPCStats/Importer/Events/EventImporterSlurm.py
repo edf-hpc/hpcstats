@@ -22,6 +22,11 @@ class EventImporterSlurm(EventImporter):
         self._dbname = config.get(slurm_section,"name")
         self._dbuser = config.get(slurm_section,"user")
         self._dbpass = config.get(slurm_section,"password")
+        self._datetime_end_last_event = ""
+        self._date_from_last_event = ""
+        self._date_from_unfinished_event = ""
+        self._datetime_start_first_unfinished_event = ""
+        self._new_events =[]
         try:
             self._conn = MySQLdb.connect( host = self._dbhost,
                                           user = self._dbuser,
@@ -37,50 +42,77 @@ class EventImporterSlurm(EventImporter):
 
         logging.debug("start updating events out of SlurmDBD")
 
-        datetime_end_last_event = self._get_last_end_datetime()
-        # if None set to 1970-01-01 the beginning of ages for SlurmDBD
-        if not datetime_end_last_event:
-            datetime_end_last_event = datetime.fromtimestamp(0)
-
+        #JB on 2013/10/18
+        #Deteminate which date is more efficient to be sure to don't forget unfinished event
+        logging.debug("JB detected which date to use to import events")
+        self._get_event_date()
+	
         logging.debug("getting the unfinished events")
         self._get_unfinished_events()
 
         logging.debug("start getting the new events out of SlurmDBD since %s",
-                       datetime_end_last_event )
-
-        req = """
-            SELECT time_start,
-                   time_end,
-                   node_name,
-                   cpu_count,
-                   state
-            FROM %s_event_table
-            WHERE node_name <> ''
-              AND time_start >= UNIX_TIMESTAMP(%%s)
-            ORDER BY time_start; """ % (self._cluster_name)
-        datas = (datetime_end_last_event,)
-        self._cur.execute(req, datas)
-
-        self._new_events = []
-
-        while (1):
-            row = self._cur.fetchone()
-            if row == None: break
-            self._new_events.extend( self._events_from_db_row(row) )
-       
+                       self._datetime_end_last_event )
+        self._get_new_events(self._datetime_end_last_event) 
+        
         logging.debug("start detecting the multiple occurences of the same event (%d events in list)",
                        len(self._new_events) )
-                
         self._delete_merge_multiple_occurences()
 
+        #La methode save du Model Event ne permet pas d'inserer les doublons.
+        #Toutefois, il est plus rigoureux d'éviter ce genre de situation, en utilisant la methode
+        #self._del_double_events.
         logging.debug("finishing the previously known events")
         self._finish_known_events()
+
+        logging.debug("JB start to delete existing event from new event list if necessary")
+        self._del_double_events()
 
         logging.debug("updating the previously known events")
         self._update_unfinished_events()
 
         logging.debug("saving in DB all the new events")
         self._save_new_events()
+
+    def _get_event_date(self):
+        self._date_from_last_event = self._get_last_end_datetime()
+        self._date_from_unfinished_event = self._get_first_start_datetime_unfinished_event()
+
+        if not self._date_from_last_event:
+             self._date_from_last_event = datetime.fromtimestamp(0)
+        logging.debug("JB date_from_last_event = %s", self._date_from_last_event )
+
+        if not self._date_from_unfinished_event:
+             self._date_from_unfinished_event = datetime.fromtimestamp(0)
+        logging.debug("JB date_from_unfinished_event = %s", self._date_from_unfinished_event )
+
+        if self._date_from_unfinished_event < self._date_from_last_event and \
+           self._date_from_unfinished_event != datetime.fromtimestamp(0): 
+            self._datetime_end_last_event = self._date_from_unfinished_event
+            logging.debug("JB : first date from unfinished events is more efficient")
+        else:
+            self._datetime_end_last_event = self._date_from_last_event
+            logging.debug("JB : last date from finished events is more efficient")
+
+    def _get_new_events(self, my_datetime):
+        
+        req = """
+            SELECT time_start,
+                   time_end,
+                   node_name,
+                   cpu_count,
+                   state,
+                   reason
+            FROM %s_event_table
+            WHERE node_name <> ''
+              AND time_start >= UNIX_TIMESTAMP(%%s)
+            ORDER BY time_start; """ % (self._cluster_name)
+        datas = (my_datetime,)
+        self._cur.execute(req, datas)
+
+        while (1):
+            row = self._cur.fetchone()
+            if row == None: break
+            self._new_events.extend( self._events_from_db_row(row) )
 
     def _events_from_db_row(self, db_row):
 
@@ -95,7 +127,8 @@ class EventImporterSlurm(EventImporter):
                         nb_cpu = db_row["cpu_count"],
                         start_datetime = datetime.fromtimestamp(db_row["time_start"]),
                         end_datetime = end_datetime,
-                        event_type = self._txt_slurm_reason(db_row["state"]))
+                        event_type = self._txt_slurm_reason(db_row["state"]),
+                        reason = db_row["reason"][:60])
         events.append(event)
 
         return events
@@ -119,6 +152,7 @@ class EventImporterSlurm(EventImporter):
             try:
                 while next_event_index < nb_events and \
                       self._new_events[next_event_index].get_nodename() != event.get_nodename():
+                    #logging.debug("JB : next_event_index : %s", next_event_index)
                     next_event_index += 1
             except IndexError:
                 logging.error("trying to access to index %d of list with %d items",
@@ -126,10 +160,14 @@ class EventImporterSlurm(EventImporter):
                                nb_events )
 
             # if search index is at the end of the list, next event has not been found
+            #logging.debug("JB : nombre d'events : %s", nb_events)
+            #logging.debug("JB : next_event_index : %s", next_event_index)
             if next_event_index == nb_events:
-                logging.debug("did not found the next event of %d (%s)",
+                logging.debug("did not found the next event of %d (%s, %s → %s)",
                                event_index,
-                               event.get_nodename() )
+                               event.get_nodename(),
+                               event.get_start_datetime(),
+                               event.get_end_datetime() )
             else:
                 #print "Debug %s: found the next event of %d (%s) at index %d" % \
                 #          ( self.__class__.__name__,
@@ -152,6 +190,26 @@ class EventImporterSlurm(EventImporter):
                     goto_next_event = False
 
             if goto_next_event:
+                event_index += 1
+
+    def _del_double_events(self):
+        #JB on 2013/10/18
+        #delete events in double in case of using first not end event date
+        if self._datetime_end_last_event == self._date_from_unfinished_event:
+            logging.debug("JB start deleting doubles events")
+            event_index = 0
+            for event in self._new_events:
+                logging.debug("JB : trying event from node : %s with start_time : %s and end_time : %s",
+                           event.get_nodename(),
+                           event.get_start_datetime(),
+                           event.get_end_datetime() )
+                if event.get_end_datetime() and \
+                   event.get_end_datetime() <= self._date_from_last_event:
+                    self._new_events.pop(event_index)
+                    logging.debug("JB : events deleted from _new_event for node : %s with start_time : %s and end_time : %s",
+                               event.get_nodename(), 
+                               event.get_start_datetime(),
+                               event.get_end_datetime() )
                 event_index += 1
 
     def _txt_slurm_reason(self, reason_uid):
@@ -207,8 +265,23 @@ class EventImporterSlurm(EventImporter):
             514:"DRAIN+IDLE", 
             515:"DRAIN+ALLOCATED", 
             2049:"NO_RESPOND+DOWN", 
+            2492:"NODE_STATE_FAIL",
             2561:"NO_RESPOND+DRAIN+DOWN", 
-            2562:"NO_RESPOND+DRAIN+IDLE", 
+            2562:"NO_RESPOND+DRAIN+IDLE",
+            4097:"POWER_SAVE+DOWN",
+            4609:"POWER_SAVE+DRAIN+DOWN",
+            4610:"POWER_SAVE+DRAIN+IDLE",
+            6658:"PS+NO_RES+DRAIN+IDLE",
+            18433:"PU+NO_RESPOND+DOWN",
+            18945:"PU+NO_RESPOND+DRAIN+DOWN",
+            18946:"PU+NO_RESPOND+DRAIN+IDLE",
+            32769:"MAINT+DOWN",
+            34817:"MAINT+NO_RESPOND+DOWN",
+            33280:"MAINT+DRAIN",
+            33282:"MAINT+DRAIN+IDLE",
+            33281:"MAINT+DRAIN+DOWN",
+            35329:"MAINT+NO_RESPOND+DRAIN+DOWN",
+            35330:"MAINT+NO_RESPOND+DRAIN+IDLE",
         }
         return slurm_node_state[reason_uid]
 

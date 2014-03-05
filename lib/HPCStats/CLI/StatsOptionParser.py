@@ -35,7 +35,10 @@ class StatsOptionParser(optparse.OptionParser):
         self.add_option("-j", "--jobs", action="store_true", dest="jobs")
         self.add_option("-u", "--users", action="store_true", dest="users")
         self.add_option("-a", "--arch", action="store_true", dest="arch")
+        self.add_option("-m", "--mounted", action="store_true", dest="mounted")
+        self.add_option("-f", "--usage", action="store_true", dest="usage")
         self.add_option("-e", "--events", action="store_true", dest="events")
+        self.add_option("-p", "--project", action="store_true", dest="context")
         self.add_option("-d", "--debug", action="store_true", dest="debug", default=False)
 
     def validate(self, options):

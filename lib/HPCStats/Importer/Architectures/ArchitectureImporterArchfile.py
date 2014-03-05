@@ -24,9 +24,8 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
 
         self._archfile = config.get(archfile_section, "file")
         if not os.path.isfile(self._archfile):
-            logging.error("file %s does not exist", self._archfile)
+            logging.error("archfile %s does not exist", self._archfile)
             raise RuntimeError
-
 
     def update_architecture(self):
 

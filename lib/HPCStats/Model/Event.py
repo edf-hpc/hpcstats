@@ -3,13 +3,14 @@
 import logging
 
 class Event:
-    def __init__(self, nodename = "", nb_cpu = 0, start_datetime = 0, end_datetime = 0, event_type = ""):
+    def __init__(self, nodename = "", nb_cpu = 0, start_datetime = 0, end_datetime = 0, event_type = "", reason = ""):
 
         self._nodename = nodename
         self._nb_cpu = nb_cpu
         self._start_datetime = start_datetime
         self._end_datetime = end_datetime
         self._event_type = event_type
+        self._reason = reason
 
     def __str__(self):
         return "event on node %s/%d (%s) : %s → %s" % \
@@ -20,7 +21,7 @@ class Event:
                      self._end_datetime )
 
     def save(self, db):
-        cur = db.get_cur()
+	cur = db.get_cur()
         cur.execute("SELECT * FROM events WHERE node = %s AND t_start = %s AND t_end = %s",
                      (self._nodename,
                       self._start_datetime,
@@ -34,15 +35,17 @@ class Event:
                             nb_cpus,
                             t_start,
                             t_end,
-                            type )
-            VALUES ( %s, %s, %s, %s, %s); """
+                            type,
+                            reason )
+            VALUES ( %s, %s, %s, %s, %s, %s); """
           datas = (
             self._nodename,
             self._nb_cpu,
             self._start_datetime,
             self._end_datetime,
-            self._event_type )
-
+            self._event_type,
+            self._reason )
+ 
           #print db.get_cur().mogrify(req, datas)
           db.execute(req, datas)
     
@@ -62,6 +65,20 @@ class Event:
         #print db.get_cur().mogrify(req, datas)
         db.execute(req, datas)
 
+    def update_reason(self, db):
+        req = """
+            UPDATE events
+               SET reason = %s
+            WHERE node = %s
+               AND t_start = %s
+               AND type = %s; """
+        datas = (
+            self._reason,
+            self._nodename,
+            self._start_datetime,
+            self._event_type )
+        db.execute(req, datas)
+
     #
     # utilities
     #
@@ -78,7 +95,8 @@ class Event:
                self._nb_cpu == other._nb_cpu and \
                self._start_datetime == other._start_datetime and \
                self._end_datetime == other._end_datetime and \
-               self._event_type == other._event_type
+               self._event_type == other._event_type and \
+               self._reason == other._reason
 
     #
     # accessors
@@ -99,8 +117,15 @@ class Event:
     def get_event_type(self):
         return self._event_type
 
+    def get_reason(self):
+        return self._reason
+
     def set_end_datetime(self, end_datetime):
         self._end_datetime = end_datetime
 
     def set_event_type(self, event_type):
         self._event_type = event_type
+
+    def set_reason(self, reason):
+        self._reason = reason
+

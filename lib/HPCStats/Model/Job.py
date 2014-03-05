@@ -4,6 +4,7 @@
 from datetime import datetime
 import logging
 import string
+import os
 from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 
 class Job:
@@ -22,7 +23,9 @@ class Job:
                   nb_hosts = 0,
                   running_queue = "",
                   nodes = "",
-                  state = "unknown" ):
+                  state = "unknown",
+                  login = "",
+                  name = ""):
         self._db_id = db_id
         self._sched_id = sched_id
         self._id_job = id_job
@@ -37,6 +40,8 @@ class Job:
         self._running_queue = running_queue
         self._nodes = nodes
         self._state = state
+        self._login = login
+        self._name = os.path.basename(name)[:29]
 
     def __str__(self):
         if self._running_datetime == 0:
@@ -47,7 +52,7 @@ class Job:
            end_datetime = "notyet"
         else:
            end_datetime = self._end_datetime.strftime('%Y-%m-%d %H:%M:%S')
-        return "%s/%s (%d|%d) %s / %s / %s -> %d / %d [%s] %s" % \
+        return "%s/%s (%d|%d) %s / %s / %s -> %d / %d [%s] %s %s %s" % \
                ( self._cluster_name,
                  self._id_job,
                  self._uid,
@@ -58,47 +63,54 @@ class Job:
                  self._nb_hosts,
                  self._nb_procs,
                  self._nodes,
-                 self._state )
+                 self._state,
+                 self._login,
+                 self._name )
+
     def save(self, db):
         req = """
-            INSERT INTO jobs (
-                            id_job,
-                            sched_id,
-                            uid,
-                            gid,
-                            clustername,
-                            running_queue,
-                            submission_datetime,
-                            running_datetime,
-                            end_datetime,
-                            nb_nodes,
-                            nb_cpus,
-                            state)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s )
-            RETURNING id; """
+           INSERT INTO jobs (
+                           id_job,
+                           sched_id,
+                           uid,
+                           gid,
+                           clustername,
+		       	   running_queue,
+                           submission_datetime,
+                           running_datetime,
+                           end_datetime,
+                           nb_nodes,
+                           nb_cpus,
+                           state,
+                           login,
+                           name)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+           RETURNING id; """
+
         datas = (
-            self._id_job,
-            self._sched_id,
-            self._uid,
-            self._gid,
-            self._cluster_name,
-            self._running_queue,
-            self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-            self._running_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-            self._end_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-            self._nb_hosts,
-            self._nb_procs,
-            self._state )
+           self._id_job,
+           self._sched_id,
+           self._uid,
+           self._gid,
+           self._cluster_name,
+	   self._running_queue,
+           self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S'),
+           self._running_datetime.strftime('%Y-%m-%d %H:%M:%S'),
+           self._end_datetime.strftime('%Y-%m-%d %H:%M:%S'),
+           self._nb_hosts,
+           self._nb_procs,
+           self._state,
+           self._login,
+           self._name)
  
         dbcursor = db.get_cur()
 
         #print dbcursor.mogrify(req, datas)
-
+	logging.debug(datas)
         dbcursor.execute(req, datas)
         self._db_id = dbcursor.fetchone()[0]
-
         try:
-	 if self._nodes is not None:
+	  if self._nodes is not None:
             for node in NodeSet(self._nodes.replace("x",",")):
                 req = """
                     INSERT INTO job_nodes (
@@ -117,35 +129,39 @@ class Job:
         
     def update(self, db):
         req = """
-            UPDATE jobs SET
-                       id_job = %s,
-                       uid = %s,
-                       gid = %s,
-                       clustername = %s,
-                       running_queue = %s,
-                       submission_datetime = %s,
-                       running_datetime = %s,
-                       end_datetime = %s,
-                       nb_nodes = %s,
-                       nb_cpus = %s,
-                       state = %s
-            WHERE sched_id = %s AND id_job = %s AND clustername = %s
-            RETURNING id; """
+           UPDATE jobs SET
+                      id_job = %s,
+                      uid = %s,
+                      gid = %s,
+                      clustername = %s,
+                      running_queue = %s,
+                      submission_datetime = %s,
+                      running_datetime = %s,
+                      end_datetime = %s,
+                      nb_nodes = %s,
+                      nb_cpus = %s,
+                      state = %s,
+                      login = %s,
+                      name = %s
+           WHERE sched_id = %s AND id_job = %s AND clustername = %s
+           RETURNING id; """
         datas = (
-            self._id_job,
-            self._uid,
-            self._gid,
-            self._cluster_name,
-            self._running_queue,
-            self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-            self._running_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-            self._end_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-            self._nb_hosts,
-            self._nb_procs,
-            self._state,
-            self._sched_id,
-            self._id_job,
-            self._cluster_name )
+           self._id_job,
+           self._uid,
+           self._gid,
+           self._cluster_name,
+           self._running_queue,
+           self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S'),
+           self._running_datetime.strftime('%Y-%m-%d %H:%M:%S'),
+           self._end_datetime.strftime('%Y-%m-%d %H:%M:%S'),
+           self._nb_hosts,
+           self._nb_procs,
+           self._state,
+           self._login,
+           self._name,
+           self._sched_id,
+	   self._id_job,
+	   self._cluster_name)
 
         dbcursor = db.get_cur()
         dbcursor.execute(req, datas)
@@ -161,21 +177,21 @@ class Job:
         nodecount = dbcursor.fetchone()[0]
 
         if nodecount == 0 and self._nodes is not None:
-            for node in NodeSet(self._nodes.replace("x",",")):
-                if node != "None assigned":
-                    req = """
-                        INSERT INTO job_nodes (
-                                        job,
-                                        node,
-                                        cpu_id
-                                        )
-                        VALUES (%s, %s, %s); """
-                    datas = (
-                        self._db_id,
-                        node,
-                        "unknown")
-		    #print (datas)
-                    db.get_cur().execute(req, datas)
+           for node in NodeSet(self._nodes.replace("x",",")):
+               if node != "None assigned":
+                   req = """
+                       INSERT INTO job_nodes (
+                                       job,
+                                       node,
+                                       cpu_id
+                                       )
+                       VALUES (%s, %s, %s); """
+                   datas = (
+                       self._db_id,
+                       node,
+                       "unknown")
+	    #print (datas)
+                   db.get_cur().execute(req, datas)
 
 		    
     """ accessors """

@@ -1,3 +1,11 @@
+2013-06-25 Nali Andriana <nali-n-externe.andriana@edf.fr>
+	* Suport LDAP change from septen to calibre
+	* hash password in configuration file
+
+2013-02-19 Nali Andriana <nali-n-externe.andriana@edf.fr>
+	* Support use of same sched_id on several clusters, avoiding duplicate entries
+	  and reporting beyond 100%
+
 2013-01-02 Nali Andriana <nali-n-externe.andriana@edf.fr>
 	* Add a duplicate entry test avoiding integrity error while db insertion in events table
 
@@ -55,6 +63,6 @@
 
 	* HPCstats first release
 
-Copyright EDF S.A.  (2010, 2011)
+Copyright EDF S.A.  (2010-2014)
 Copying and distribution of this file, with or without modification, are
 permitted provided the copyright notice and this notice are preserved.

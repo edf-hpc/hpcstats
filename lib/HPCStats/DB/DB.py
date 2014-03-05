@@ -53,10 +53,19 @@ class HPCStatsdb:
 
     def execute(self, req, datas):
         try:
+            logging.error(datas)
             self._cur.execute(req, datas)
-        except psycopg2.IntegrityError, exception_error_msg:
-            logging.error("integrity error %s", exception_error_msg )
-            logging.error(self._cur.mogrify(req, datas))
+        #except psycopg2.IntegrityError, exception_error_msg:
+        #    logging.error("integrity error %s", exception_error_msg )
+        #    logging.error(self._cur.mogrify(req, datas))
+	except:
+	    #rollback()
+	    self._cur.rollback()	
+            self.commit()
+	    pass
+	    #raise()
+	else:
+	    self.commit()
 
     def get_cur(self):
         return self._cur
