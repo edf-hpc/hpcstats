@@ -29,17 +29,20 @@ class ContextImporter(object):
             logging.error("context file %s does not exist", self._context_file)
             raise RuntimeError
 
-        # delete all contexts entries in databases
-        logging.debug("Delete all context entries in db")
-        delete_contexts(self._db)
+        # delete all contexts entries in databases for cluster
+        logging.debug("Delete all context entries in db for cluster %s", self._cluster_name)
+        delete_contexts(self._db, self._cluster_name)
         self._db.commit()
 
         p_file = open(self._context_file, 'r')
         # save point is used to considere exception and commit in database only at the end
         db.get_cur().execute("SAVEPOINT my_savepoint;")
         with p_file as csvfile:
-            file_reader = csv.reader(csvfile, delimiter=',', quotechar='|')
+            file_reader = csv.reader(csvfile, delimiter=';', quotechar='|')
             for row in file_reader:
+                # Delete BOM
+                 if '\xef\xbb\xbf' in row [0]:
+                     row[0] = row[0].replace('\xef\xbb\xbf','')
                  logging.debug("update projects and business codes for user : %s", row[0].lower())
                  # a new context is set in database for all projects attached AND for all business attached.
                  # new line is set with a project referance OR a business referance.
@@ -51,7 +54,8 @@ class ContextImporter(object):
                              context = Context(login = row[0].lower(),
                                                job = None,
                                                project = project.get_id(),
-                                               business = None)
+                                               business = None,
+                                               cluster = self._cluster_name)
                              try:
                                  context.save(self._db)
                                  logging.debug("add context : %s", context)
@@ -77,7 +81,8 @@ class ContextImporter(object):
                              context = Context(login = row[0].lower(),
                                                job = None,
                                                project = None,
-                                               business = business.get_id())
+                                               business = business.get_id(),
+                                               cluster = self._cluster_name)
                              try:
                                  context.save(self._db)
                                  logging.debug("add context : %s", context)

@@ -36,6 +36,9 @@ class BusinessImporter(object):
         with b_file as csvfile:
             file_reader = csv.reader(csvfile, delimiter=';', quotechar='|')
             for row in file_reader:
+                # Delete BOM
+                if '\xef\xbb\xbf' in row [0]:
+                    row[0] = row[0].replace('\xef\xbb\xbf','')
                 code = Business( key = row[0],
                                  description = row[1])
                 try:
@@ -55,4 +58,3 @@ class BusinessImporter(object):
                     db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                     pass
         self._db.commit()
-        b_file.close()

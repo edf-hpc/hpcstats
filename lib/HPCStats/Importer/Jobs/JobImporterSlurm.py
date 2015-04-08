@@ -56,6 +56,7 @@ class JobImporterSlurm(JobImporter):
         # { "cn[0001-1382]": ["small","para","compute"],
         #   "bm[01-29]"    : ["bigmem"],
         #   "cg[01-24]"    : ["visu"]                    }
+	self._id_assoc = self.get_id_assoc()
 
     def request_jobs_since_job_id(self, job_id, offset, max_jobs):
         req = """
@@ -72,7 +73,7 @@ class JobImporterSlurm(JobImporter):
                    qos.name AS qos,
                    state,
                    nodelist,
-                   account,
+                   id_assoc,
                    job_name
              FROM %s_job_table job,
                   qos_table qos
@@ -100,7 +101,7 @@ class JobImporterSlurm(JobImporter):
                    qos.name AS qos,
                    state,
                    nodelist,
-                   account,
+                   id_assoc,
                    job_name
             FROM %s_job_table job,
                   qos_table qos
@@ -195,7 +196,7 @@ class JobImporterSlurm(JobImporter):
                     nodes = str_nodelist,
                     state = self.get_job_state_from_slurm_state(res["state"]),
                     cluster_name = self._cluster_name,
-                    login = res["account"],
+                    login = self._id_assoc[res["id_assoc"]],
                     name = res["job_name"])
         return job
 
@@ -239,6 +240,31 @@ class JobImporterSlurm(JobImporter):
     def _filter(self, jobs):
         job_filter = JobFilterSlurmNoStartTime(self, jobs)
         job_filter.run()
+
+    def get_wckey_from_job(self, id_job):
+    	req = """
+            SELECT wckey
+            FROM %s_job_table
+            WHERE id_job = %%s
+    	""" % (self._cluster_name)
+    	data = (id_job)
+	cur = self._conn.cursor()
+        cur.execute(req, data)
+    	result = cur.fetchone()
+    	return result[0]
+
+    def get_id_assoc(self):
+        id_assoc = {}
+        req = """
+             SELECT id_assoc, user
+             FROM %s_assoc_table
+             WHERE user != '';
+        """ % (self._cluster_name)
+        self._cur.execute(req)
+        results = self._cur.fetchall()
+        for ii in results:
+	    id_assoc[ii['id_assoc']] = ii['user']
+        return id_assoc
 
 class JobFilterSlurmNoStartTime:
 
@@ -286,3 +312,4 @@ class JobFilterSlurmNoStartTime:
                 return job
         else:
             return job
+

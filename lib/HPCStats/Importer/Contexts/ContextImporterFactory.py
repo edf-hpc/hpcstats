@@ -14,20 +14,20 @@ class ContextImporterFactory(object):
     def factory(self, db, config, cluster_name):
         if config.get(cluster_name, "context") == "business":
             business =  BusinessImporter(db, config, cluster_name)
-        if config.get(cluster_name, "context") == "pareo":
+        elif config.get(cluster_name, "context") == "pareo":
             pareo = PareoImporter(db, config, cluster_name)
-        if config.get(cluster_name, "context") == "context":
+        elif config.get(cluster_name, "context") == "context":
             context = ContextImporter(db, config, cluster_name)
-        if config.get(cluster_name, "context") == "business+pareo":
+        elif config.get(cluster_name, "context") == "business+pareo":
             business =  BusinessImporter(db, config, cluster_name)
             pareo = PareoImporter(db, config, cluster_name)
-        if config.get(cluster_name, "context") == "business+context":
+        elif config.get(cluster_name, "context") == "business+context":
             business =  BusinessImporter(db, config, cluster_name)
             context = ContextImporter(db, config, cluster_name)
-        if config.get(cluster_name, "context") == "pareo+context":
+        elif config.get(cluster_name, "context") == "pareo+context":
             pareo = PareoImporter(db, config, cluster_name)
             context = ContextImporter(db, config, cluster_name)
-        if config.get(cluster_name, "context") == "business+pareo+context":
+        elif config.get(cluster_name, "context") == "business+pareo+context":
             business =  BusinessImporter(db, config, cluster_name)
             pareo = PareoImporter(db, config, cluster_name)
             context = ContextImporter(db, config, cluster_name)

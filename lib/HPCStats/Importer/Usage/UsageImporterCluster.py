@@ -7,6 +7,8 @@ import base64
 import logging
 import sys
 import paramiko
+import errno
+import socket
 import csv
 from HPCStats.Importer.Usage.UsageImporter import UsageImporter
 from HPCStats.Model.Filesystem import Filesystem
@@ -22,7 +24,8 @@ class UsageImporterCluster(UsageImporter):
 
         self._fshost = config.get(usage_section,"host")
         self._fsname = config.get(usage_section,"name")
-        self._fspassword = config.get(usage_section,"password")
+	# No need to set self._fspassword if you had delivered public ssh key
+        #self._fspassword = config.get(usage_section,"password")
         self._fsfile = config.get(usage_section,"file")
         self._fs_usage = [] #List of usages for a fs
         self._usage = [] #Output file from ssh connection
@@ -33,9 +36,11 @@ class UsageImporterCluster(UsageImporter):
             self._ssh = paramiko.SSHClient()
             #Set automatically RSA key on known_hosts file
             self._ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            self._ssh.connect(self._fshost, username=self._fsname, \
-                password=base64.b64decode( \
-                self.decypher(base64.b64decode(self._fspassword))))
+            self._ssh.connect(self._fshost, username=self._fsname)
+	    # No need to use password if you had delivered public ssh key
+            #self._ssh.connect(self._fshost, username=self._fsname, \
+            #    password=base64.b64decode( \
+            #    self.decypher(base64.b64decode(self._fspassword))))
             #Send shell command via ssh
             self._stdin, self._stdout, self._stderr = self._ssh.exec_command \
                 ("cat %s*" %self._fsfile)
@@ -49,7 +54,7 @@ class UsageImporterCluster(UsageImporter):
             for fs in fs_list:
                 #Innitiate fs_usage for new fs
                 self._fs_usage = []
-                #Get lest fs timestamp from HPCStats db
+                #Get last fs timestamp from HPCStats db
                 timestamp = self._get_last_fs_timestamp_usage(fs)
                 logging.info("Get %s %s last timestamp : %s", \
                               self._cluster_name, fs, timestamp )
@@ -69,7 +74,7 @@ class UsageImporterCluster(UsageImporter):
                     logging.info("No new %s %s usages", self._cluster_name, fs)
 
 
-        except paramiko.AuthenticationException as e:
+        except (paramiko.AuthenticationException, socket.error ) as e:
             logging.error("ssh connection to cluster %s failed: %s", \
                            cluster_name, e)
             raise RuntimeError
@@ -82,7 +87,7 @@ class UsageImporterCluster(UsageImporter):
             time_list = datetime.strptime(time_from_line, '%Y-%m-%d %H:%M:%S')
             if fs == fs_from_line:
                 if time_list > timestamp:
-                    self._fs_usage.append((line.split(',')[1], line.split(',')[2]))
+                    self._fs_usage.append((line.split(',')[1], line.split(',')[2], line.split(',')[3]))
 
     def _get_last_fs_timestamp_usage(self, fs):
         last_usage_timestamp = 0

@@ -22,11 +22,12 @@ class Filesystem_usage:
                 INSERT INTO filesystem_usage (
                             fs_id,
                             timestamp,
-                            usage )
+                            usage,
+			    inode)
                        VALUES (
                            (SELECT id FROM filesystem 
-                            WHERE mount_point = %s and cluster = %s), %s, %s ); """
-            datas = (fs, cluster, i[0], i[1])
+                            WHERE mount_point = %s and cluster = %s), %s, %s, %s ); """
+            datas = (fs, cluster, i[0], i[1], i[2])
             #logging.info("Add fs %s with timestamp %s, and usage : %s", \
             #              fs, \
             #              i[0], \

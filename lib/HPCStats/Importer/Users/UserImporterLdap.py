@@ -8,6 +8,8 @@ from datetime import datetime, date
 import base64
 import logging
 import sys
+import re
+
 class UserImporterLdap(UserImporter):
 
     def __init__(self, db, config, cluster_name):
@@ -54,7 +56,6 @@ class UserImporterLdap(UserImporter):
             (self._cluster_name,) )
         results = cur.fetchall()
         for user in results:
-            #logging.debug("JBL : test login : %s", user)
             users_from_db.append(self.create_user_from_db(user))
         return users_from_db
      
@@ -69,11 +70,38 @@ class UserImporterLdap(UserImporter):
     
     def get_user_from_id(self, uid):
         if self._cluster_name == 'casanova':
-            self._ldapbase = "ou=people,dc=calibre,dc=edf,dc=fr"
-            self._ldap_users_info = self._ldapconn.search_s(self._ldapbase, ldap.SCOPE_SUBTREE, "uid="+str(uid),["uid","uidNumber","gidNumber","cn","createTimestamp"])
+            self._ldappeople = "ou=people,dc=calibre,dc=edf,dc=fr"
+	    def_member = "member=uid="
+	    def_department = "department"
+	    def_keys = ["uid","uidNumber","gidNumber","cn","createTimestamp"]
+	    def_ldapuser = str(uid).lower() + "," + self._ldappeople
         else:
-            self._ldapbase = "ou=Personnes,dc=der,dc=edf,dc=fr"
-            self._ldap_users_info = self._ldapconn.search_s(self._ldapbase, ldap.SCOPE_SUBTREE, "uid="+str(uid),["uid","uidNumber","gidNumber","sn","createTimestamp", "givenName","departmentNumber"])
+            self._ldappeople = "ou=Personnes,dc=der,dc=edf,dc=fr"
+	    def_member = "memberUid="
+	    def_department = "departmentNumber"
+	    def_keys = ["uid","uidNumber","gidNumber","sn","createTimestamp", "givenName","departmentNumber"]
+	    def_ldapuser = str(uid).upper()
+        # get ldap user info attribut defined by def_keys 
+        self._ldap_users_info = self._ldapconn.search_s(self._ldappeople, \
+							    ldap.SCOPE_SUBTREE, \
+							    "uid=" + str(uid),\
+							    def_keys)
+	# get secondary group of the user to define departement values
+	secondary_group = self._ldapconn.search_s(self._ldapbase,\
+							    ldap.SCOPE_SUBTREE, \
+							    "(&(" + \
+							    def_member + \
+							    def_ldapuser + \
+							    ")(cn=*dp*))",["isMemberOf"])
+	if len(secondary_group) is 1:
+	    match = re.match(r"cn=(.+)-dp-(.+),ou(.+)",secondary_group[-1][0]).groups()
+	    direction = match[0]
+	    group = match[1]
+	    match_department = direction + '-' + group
+	else:
+	    match_department = "OMITTED"
+	if len(self._ldap_users_info) > 0:
+	    self._ldap_users_info[0][1][def_department] = [match_department]
         return self._ldap_users_info
         
     def get_all_users(self):
@@ -84,47 +112,40 @@ class UserImporterLdap(UserImporter):
 
         users = []
         self._members = self.get_members_from_group(self._ldapgroup)
-        logging.info("NAN => %s" % (self._members))
+	logging.info("list of uidMembers : %s" % (self._members))
         for item in self._members:
-            logging.info("NAN item0 => %s :" % (item[0]))
+            logging.info("item0 => %s :" % (item[0]))
             
             if item[1] != {}:
-                logging.info("NAN item1 => %s \n" % (' '.join(item[1][_attr])))
+                logging.info("item1 => %s \n" % (' '.join(item[1][_attr])))
                 
                 for member in item[1][_attr]:
                     if self._cluster_name != 'casanova':
                       user_info = self.get_user_from_id(member)
                     else:
                       user_info = self.get_user_from_id(member.split(",")[0].split("=")[1])
-
                     if len(user_info) >= 1:
                         lu = user_info[0][1]
-                        
                         for clef, valeur in user_info[0][1].items():
-                           logging.info("NAN => %s : %s" % (clef, valeur[0]))
+                           logging.info("%s : %s" % (clef, valeur[0]))
                            
                         if self._cluster_name == "casanova":
-                            createTimestamp = lu["createTimestamp"][0]
-                            logging.info("NAN => %s" % (createTimestamp))
-                            user = User( name = lu["cn"][0],
-                                    #login = lu["uid"][0].upper(),
-                                    login = lu["uid"][0].lower(),
-                                    cluster_name = self._cluster_name,
-                                    uid = lu["uidNumber"][0],
-                                    gid = lu["gidNumber"][0],
-                                    department = "SEPTEN",
-                                    creation_date = datetime.strptime(createTimestamp[:14], "%Y%m%d%H%M%S"))
-                        else:    
-                            createTimestamp = lu["createTimestamp"][0]
-                            logging.info("NAN => %s" % (createTimestamp))
-			    # departmentNumber might be empty
-			    if 'departmentNumber' in lu.keys():
-                                _department = lu["departmentNumber"][0]
-                            else:
-                                _department = "OMITTED"
+			    def_department = 'department'
+			    def_name = lu["cn"][0]
+			else:
+			    def_department = 'departmentNumber'
+                            try :
+				def_name = lu["givenName"][0] + " " + lu["sn"][0]
+			    except KeyError as ke:
+			        def_name = lu["sn"][0]
 
-                            user = User( name = lu["givenName"][0] + " " + lu["sn"][0],
-                                    #login = lu["uid"][0].upper(),
+                        createTimestamp = lu["createTimestamp"][0]
+                        logging.info("createTimestamp => %s" % (createTimestamp))
+			if def_department in lu.keys():
+			    _department = lu[def_department][0]
+			else:
+			    _department = "OMITTED"
+                        user = User( name = def_name,
                                     login = lu["uid"][0].lower(),
                                     cluster_name = self._cluster_name,
                                     uid = lu["uidNumber"][0],
@@ -133,7 +154,7 @@ class UserImporterLdap(UserImporter):
                                     creation_date = datetime.strptime(createTimestamp[:14], "%Y%m%d%H%M%S"))
                         users.append(user)
                     else:
-                        logging.error("NAN => user %s not found in defined OU" % (member))
+                        logging.debug("user %s not found in defined OU" % (member))
         return users
 
     def update_users(self):
@@ -164,31 +185,30 @@ class UserImporterLdap(UserImporter):
                                    user.get_creation_date())
                     user.set_creation_date(datetime.now())
                     boolean = True
-                # update departement column for casanova if necesary
+                # update departement column if necesary
                 if self._cluster_name == "casanova":
+		    def_department = 'department'
                     user_name = user_from_ldap[0][1]["cn"][0]
-                    user_department = "SEPTEN"
-                    if user.get_department() != user_department:
-                        logging.debug("updating department for user %s set from %s to %s", \
-                                       user.get_login(), \
+		else:
+		    def_department = 'departmentNumber'
+                    try :
+		        def_name = user_from_ldap[0][1]["givenName"][0] \
+				                        + " " \
+							+ user_from_ldap[0][1]["sn"][0]
+		    except KeyError as ke:
+		        def_name = user_from_ldap[0][1]["sn"][0]
+		    user_name = def_name
+                if def_department in user_from_ldap[0][1].keys():
+                    user_department = user_from_ldap[0][1][def_department][0]
+		else:
+		    user_department = "OMITTED"
+                if user.get_department() != user_department:
+		    logging.debug("updating department for user %s set from %s to %s", \
+		                       user.get_login(), \
                                        user.get_department(), \
                                        user_department)
-                        user.set_department(user_department)
-                        boolean = True
-                else:
-                    user_name = user_from_ldap[0][1]["givenName"][0] \
-                                     + " " \
-                                     + user_from_ldap[0][1]["sn"][0]
-                    # update departement column for other cluster if necesary
-                    if 'departmentNumber' in user_from_ldap[0][1].keys():
-                        user_department = user_from_ldap[0][1]["departmentNumber"][0]
-                        if user.get_department() != user_department:
-                            logging.debug("updating department for user %s set from %s to %s", \
-                                           user.get_login(), \
-                                           user.get_department(), \
-                                           user_department)
-                            user.set_department(user_department)
-                            boolean = True
+                    user.set_department(user_department)
+                    boolean = True
                 # update name column if necesary
                 if user.get_name() != user_name: 
                     logging.debug("updating name for user %s set from %s to %s", \
@@ -201,7 +221,10 @@ class UserImporterLdap(UserImporter):
                 logging.debug("update user %s on cluster %s", \
                                user.get_login(),
                                self._cluster_name)
-                user.update(self._db)
+		try :
+		    user.update(self._db)
+		except :
+		    logging.error("problem occured on user update")
 
         #create users
         for user in users: # scrutation of ldap list users

@@ -104,4 +104,9 @@ def delete_projects(db):
     db.get_cur().execute("ALTER SEQUENCE projects_id_seq RESTART WITH 1;")   
     db.get_cur().execute("DELETE FROM projects;")
 
+def get_pareo_id(db, pareo):
+    cur = db.get_cur()
+    cur.execute("SELECT id_project FROM projects WHERE lower(pareo) = lower(%s)", (pareo,))
+    results = cur.fetchone()
+    return results[0]
 

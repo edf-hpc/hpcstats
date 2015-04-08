@@ -39,7 +39,7 @@ class HPCStatsdb:
         self._conn = None
 
     def infos(self):
-        return self.database["dbhostname"], self.database["dbport"], self.database["dbname"],self.database["dbuser"], self.database["dbpassword"]
+        return self.database["dbhostname"], self.database["dbport"], self.database["dbname"],self.database["dbuser"], "XXXXXXXXXX"
 
     def bind(self):
         """ Connection to the database """
@@ -53,17 +53,13 @@ class HPCStatsdb:
 
     def execute(self, req, datas):
         try:
-            logging.error(datas)
+            logging.debug(datas)
             self._cur.execute(req, datas)
-        #except psycopg2.IntegrityError, exception_error_msg:
-        #    logging.error("integrity error %s", exception_error_msg )
-        #    logging.error(self._cur.mogrify(req, datas))
 	except:
-	    #rollback()
+            logging.error("can't execute, rollback launch")
 	    self._cur.rollback()	
             self.commit()
 	    pass
-	    #raise()
 	else:
 	    self.commit()
 

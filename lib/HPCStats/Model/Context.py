@@ -4,13 +4,14 @@
 import logging
 
 class Context:
-    def __init__(self, id = "", login = "", job = "", project = "", business = ""):
+    def __init__(self, id = "", login = "", job = "", project = "", business = "", cluster = ""):
 
         self._id = id
         self._login = login
         self._job = job
         self._project = project
         self._business = business
+        self._cluster = cluster
 
     def __str__(self):
         if self._job == None:
@@ -43,6 +44,9 @@ class Context:
     def get_business(self):
         return self._business
 
+    def get_cluster(self):
+        return self._cluster
+
     """ setter accessors """
     def set_login(self, login):
         self._login = login
@@ -56,6 +60,9 @@ class Context:
     def set_business(self, business):
         self._business = business
 
+    def set_cluster(self, cluster):
+        self._cluster = cluster
+
     """ methodes """
     def save(self, db):
         req = """
@@ -63,13 +70,15 @@ class Context:
                               login,
                               id_job,
                               id_project,
-                              id_business )
-            VALUES (%s, %s, %s, %s);"""
+                              id_business,
+                              name_cluster )
+            VALUES (%s, %s, %s, %s, %s);"""
         datas = (
             self._login,
             self._job,
             self._project,
-            self._business )
+            self._business,
+            self._cluster, )
         db.get_cur().execute(req, datas)
 
     def update(self, db):
@@ -77,9 +86,9 @@ class Context:
             UPDATE contexts SET 
                          login = %s,
                          id_job = %s,
-                         id_project = %s 
-                         id_business = %s 
-            WHERE id = %s;"""
+                         id_project = %s,
+                         id_business = %s, 
+            WHERE id_context = %s;"""
         datas = (
             self._login,
             self._job,
@@ -88,9 +97,9 @@ class Context:
             self._id )
         db.get_cur().execute(req, datas)
 
-def delete_contexts(db):
-    db.get_cur().execute("ALTER SEQUENCE contexts_id_seq RESTART WITH 1;")
-    db.get_cur().execute("DELETE FROM contexts;")
+def delete_contexts(db, cluster):
+    #db.get_cur().execute("ALTER SEQUENCE contexts_id_seq RESTART WITH 1;")
+    db.get_cur().execute("DELETE FROM contexts WHERE name_cluster=%s;", (cluster,))
 
 def delete_contexts_with_business(db):
     db.get_cur().execute("DELETE FROM contexts where id_business is not null;")

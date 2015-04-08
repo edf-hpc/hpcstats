@@ -69,7 +69,8 @@ CREATE TABLE contexts (
     login character varying(30) NOT NULL,
     id_job integer,
     id_project integer,
-    id_business integer
+    id_business integer,
+    name_cluster character varying(30) NOT NULL
 );
 
 
@@ -202,7 +203,8 @@ ALTER SEQUENCE filesystem_id_seq OWNED BY filesystem.id;
 CREATE TABLE filesystem_usage (
     fs_id integer NOT NULL,
     "timestamp" timestamp without time zone NOT NULL,
-    usage real
+    usage real,
+    inode real
 );
 
 
@@ -325,7 +327,7 @@ ALTER SEQUENCE projects_id_seq OWNED BY projects.id_project;
 --
 
 CREATE TABLE sectors (
-    id_sectors integer NOT NULL,
+    id_sector integer NOT NULL,
     id_domain character varying(5) NOT NULL,
     description text
 );
@@ -414,7 +416,7 @@ ALTER TABLE ONLY clusters
 --
 
 ALTER TABLE ONLY contexts
-    ADD CONSTRAINT context_unicity UNIQUE (id_context, login, id_job, id_project, id_business);
+    ADD CONSTRAINT context_unicity UNIQUE (id_context, login, id_job, id_project, id_business, name_cluster);
 
 
 --
@@ -518,7 +520,7 @@ ALTER TABLE ONLY projects
 --
 
 ALTER TABLE ONLY sectors
-    ADD CONSTRAINT sector_pkey PRIMARY KEY (id_sectors, id_domain);
+    ADD CONSTRAINT sector_pkey PRIMARY KEY (id_sector, id_domain);
 
 
 --
@@ -549,6 +551,14 @@ CREATE INDEX sched_id_idx ON jobs USING btree (sched_id);
 
 ALTER TABLE ONLY contexts
     ADD CONSTRAINT context_business FOREIGN KEY (id_business) REFERENCES business(id_business) MATCH FULL ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: context_cluster; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
+--
+
+ALTER TABLE ONLY contexts
+    ADD CONSTRAINT context_cluster FOREIGN KEY (name_cluster) REFERENCES clusters(name) MATCH FULL ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
@@ -620,7 +630,7 @@ ALTER TABLE ONLY nodes
 --
 
 ALTER TABLE ONLY projects
-    ADD CONSTRAINT projects_sector_fk FOREIGN KEY (id_sector, id_domain) REFERENCES sectors(id_sectors, id_domain) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT projects_sector_fk FOREIGN KEY (id_sector, id_domain) REFERENCES sectors(id_sector, id_domain) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 --

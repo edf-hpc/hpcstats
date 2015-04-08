@@ -1,3 +1,18 @@
+2015-02-06 Nali Andriana <nalimanaja.andrianavony@bull.net>
+	* Due to change with account handling inside slurmdb, Jobimporter and JobImporterSlurm need
+	  to support user login resolution by querying now <cluster>_assoc_table.
+	  Account field is abandonned.
+
+2014-08-06 Jean-Baptiste Lesenne <jean-baptiste.lesenne@bull.net>
+	* Modify department source - use secondary group on Aures and Calibre LDAP
+
+2014-06-26 Jean-Baptiste Lesenne <jean-baptiste.lesenne@bull.net>
+	* Add Business, Domain, Sector and Project Models
+	* Add Context importer
+	* Add Filesystem and Filesystem_usage Models
+	* Add Usage and MountPoint importer
+	* Support wckeys from jobs
+
 2013-06-25 Nali Andriana <nali-n-externe.andriana@edf.fr>
 	* Suport LDAP change from septen to calibre
 	* hash password in configuration file
@@ -63,6 +78,6 @@
 
 	* HPCstats first release
 
-Copyright EDF S.A.  (2010-2014)
+Copyright EDF S.A.  (2010-2015)
 Copying and distribution of this file, with or without modification, are
 permitted provided the copyright notice and this notice are preserved.

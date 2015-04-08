@@ -44,6 +44,9 @@ class PareoImporter(object):
         with p_file as csvfile:
             file_reader = csv.reader(csvfile, delimiter=';', quotechar='|')
             for row in file_reader:
+                 # Delete BOM
+                 if '\xef\xbb\xbf' in row [0]:
+                     row[0] = row[0].replace('\xef\xbb\xbf','')
                  # update domains table with third column of the file, only if sector exist in forth column
                  if row[2]:
                      id_domain = re.split(delimiters,row[2])[1]

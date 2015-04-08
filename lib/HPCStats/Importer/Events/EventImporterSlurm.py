@@ -33,18 +33,18 @@ class EventImporterSlurm(EventImporter):
                                           passwd = self._dbpass,
                                           db = self._dbname,
                                           port = self._dbport )
-        except _mysql_exceptions.OperationalError as e:
-            logging.error("connection to Slurm DBD MySQL failed: %s", e)
-            raise RuntimeError
-        self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
+            self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
+        except _mysql_exceptions.OperationalError as error:
+            logging.error("connection to Slurm DBD MySQL failed (%s) : %s", \
+		    cluster_name, \
+		    error)
 
     def update_events(self):
 
         logging.debug("start updating events out of SlurmDBD")
 
-        #JB on 2013/10/18
         #Deteminate which date is more efficient to be sure to don't forget unfinished event
-        logging.debug("JB detected which date to use to import events")
+        logging.debug("detect which date to use to import events")
         self._get_event_date()
 	
         logging.debug("getting the unfinished events")
@@ -60,17 +60,17 @@ class EventImporterSlurm(EventImporter):
 
         #La methode save du Model Event ne permet pas d'inserer les doublons.
         #Toutefois, il est plus rigoureux d'éviter ce genre de situation, en utilisant la methode
-        #self._del_double_events.
+        #self._pop_double_events.
         logging.debug("finishing the previously known events")
         self._finish_known_events()
 
-        logging.debug("JB start to delete existing event from new event list if necessary")
-        self._del_double_events()
+        logging.debug("pop existing event from new event list if necessary")
+        self._pop_double_events()
 
         logging.debug("updating the previously known events")
         self._update_unfinished_events()
 
-        logging.debug("saving in DB all the new events")
+        logging.debug("saving in DB all new events")
         self._save_new_events()
 
     def _get_event_date(self):
@@ -79,19 +79,19 @@ class EventImporterSlurm(EventImporter):
 
         if not self._date_from_last_event:
              self._date_from_last_event = datetime.fromtimestamp(0)
-        logging.debug("JB date_from_last_event = %s", self._date_from_last_event )
+        logging.debug("get the last date of last event list = %s", self._date_from_last_event )
 
         if not self._date_from_unfinished_event:
              self._date_from_unfinished_event = datetime.fromtimestamp(0)
-        logging.debug("JB date_from_unfinished_event = %s", self._date_from_unfinished_event )
+        logging.debug("get the first date of unfinished event list = %s", self._date_from_unfinished_event )
 
         if self._date_from_unfinished_event < self._date_from_last_event and \
            self._date_from_unfinished_event != datetime.fromtimestamp(0): 
             self._datetime_end_last_event = self._date_from_unfinished_event
-            logging.debug("JB : first date from unfinished events is more efficient")
+            logging.debug("first date of unfinished events list is more efficient")
         else:
             self._datetime_end_last_event = self._date_from_last_event
-            logging.debug("JB : last date from finished events is more efficient")
+            logging.debug("last date from finished events is more efficient")
 
     def _get_new_events(self, my_datetime):
         
@@ -152,7 +152,6 @@ class EventImporterSlurm(EventImporter):
             try:
                 while next_event_index < nb_events and \
                       self._new_events[next_event_index].get_nodename() != event.get_nodename():
-                    #logging.debug("JB : next_event_index : %s", next_event_index)
                     next_event_index += 1
             except IndexError:
                 logging.error("trying to access to index %d of list with %d items",
@@ -160,23 +159,14 @@ class EventImporterSlurm(EventImporter):
                                nb_events )
 
             # if search index is at the end of the list, next event has not been found
-            #logging.debug("JB : nombre d'events : %s", nb_events)
-            #logging.debug("JB : next_event_index : %s", next_event_index)
             if next_event_index == nb_events:
-                logging.debug("did not found the next event of %d (%s, %s → %s)",
+		logging.debug("no event to merge : %d (%s, %s → %s)",
                                event_index,
                                event.get_nodename(),
                                event.get_start_datetime(),
                                event.get_end_datetime() )
             else:
-                #print "Debug %s: found the next event of %d (%s) at index %d" % \
-                #          ( self.__class__.__name__,
-                #            event_index,
-                #            event.get_nodename(),
-                #            next_event_index )
-
                 next_event = self._new_events[next_event_index]
-
                 if event.get_end_datetime() == next_event.get_start_datetime() and \
                      event.get_event_type() == next_event.get_event_type():
                     logging.debug("merging %s (%d) with %s (%d)",
@@ -192,24 +182,14 @@ class EventImporterSlurm(EventImporter):
             if goto_next_event:
                 event_index += 1
 
-    def _del_double_events(self):
-        #JB on 2013/10/18
-        #delete events in double in case of using first not end event date
+    def _pop_double_events(self):
+        #pop out events in double in case of using first not end event date
         if self._datetime_end_last_event == self._date_from_unfinished_event:
-            logging.debug("JB start deleting doubles events")
             event_index = 0
             for event in self._new_events:
-                logging.debug("JB : trying event from node : %s with start_time : %s and end_time : %s",
-                           event.get_nodename(),
-                           event.get_start_datetime(),
-                           event.get_end_datetime() )
                 if event.get_end_datetime() and \
                    event.get_end_datetime() <= self._date_from_last_event:
                     self._new_events.pop(event_index)
-                    logging.debug("JB : events deleted from _new_event for node : %s with start_time : %s and end_time : %s",
-                               event.get_nodename(), 
-                               event.get_start_datetime(),
-                               event.get_end_datetime() )
                 event_index += 1
 
     def _txt_slurm_reason(self, reason_uid):
@@ -256,32 +236,142 @@ class EventImporterSlurm(EventImporter):
         #|  2561 | -> 0x0A01 : NO_RESPOND + DRAIN + DOWN
         #|  2562 | -> 0x0A02 : NO_RESPOND + DRAIN + IDLE
         #+-------+
-        slurm_node_state = {
-            0:"UNKNOWN",
-            1:"DOWN",
-            4:"ERROR",
-            512:"DRAIN", 
-            513:"DRAIN+DOWN", 
-            514:"DRAIN+IDLE", 
-            515:"DRAIN+ALLOCATED", 
-            2049:"NO_RESPOND+DOWN", 
-            2492:"NODE_STATE_FAIL",
-            2561:"NO_RESPOND+DRAIN+DOWN", 
-            2562:"NO_RESPOND+DRAIN+IDLE",
-            4097:"POWER_SAVE+DOWN",
-            4609:"POWER_SAVE+DRAIN+DOWN",
-            4610:"POWER_SAVE+DRAIN+IDLE",
-            6658:"PS+NO_RES+DRAIN+IDLE",
-            18433:"PU+NO_RESPOND+DOWN",
-            18945:"PU+NO_RESPOND+DRAIN+DOWN",
-            18946:"PU+NO_RESPOND+DRAIN+IDLE",
-            32769:"MAINT+DOWN",
-            34817:"MAINT+NO_RESPOND+DOWN",
-            33280:"MAINT+DRAIN",
-            33282:"MAINT+DRAIN+IDLE",
-            33281:"MAINT+DRAIN+DOWN",
-            35329:"MAINT+NO_RESPOND+DRAIN+DOWN",
-            35330:"MAINT+NO_RESPOND+DRAIN+IDLE",
+# OLD STATIC METHOD
+#        slurm_node_state = {
+#            0:"UNKNOWN",
+#            1:"DOWN",
+#            4:"ERROR",
+#            512:"DRAIN", 
+#            513:"DRAIN+DOWN", 
+#            514:"DRAIN+IDLE", 
+#            515:"DRAIN+ALLOCATED", 
+#            2049:"NO_RESPOND+DOWN", 
+#            2492:"NODE_STATE_FAIL",
+#            2561:"NO_RESPOND+DRAIN+DOWN", 
+#            2562:"NO_RESPOND+DRAIN+IDLE",
+#            4097:"POWER_SAVE+DOWN",
+#            4609:"POWER_SAVE+DRAIN+DOWN",
+#            4610:"POWER_SAVE+DRAIN+IDLE",
+#            6658:"PS+NO_RES+DRAIN+IDLE",
+#            18433:"PU+NO_RESPOND+DOWN",
+#            18945:"PU+NO_RESPOND+DRAIN+DOWN",
+#            18946:"PU+NO_RESPOND+DRAIN+IDLE",
+#            32769:"MAINT+DOWN",
+#            34817:"MAINT+NO_RESPOND+DOWN",
+#            33280:"MAINT+DRAIN",
+#            33282:"MAINT+DRAIN+IDLE",
+#            33281:"MAINT+DRAIN+DOWN",
+#            35329:"MAINT+NO_RESPOND+DRAIN+DOWN",
+#            35330:"MAINT+NO_RESPOND+DRAIN+IDLE",
+#        }
+# NEW DYNAMIC METHOD
+        state="";
+        
+        slurm_node_base={
+        0x0000:"UNKNOWN",
+        0x0001:"DOWN",
+        0x0002:"IDLE",
+        0x0003:"ALLOCATED",
+        0x0004:"ERROR",
+        0x0005:"MIXED",
+        0x0006:"FUTURE",
+        0x0007:"END"
         }
-        return slurm_node_state[reason_uid]
-
+        
+        slurm_node_flag1={
+        0x0010:"NET",
+        0x0020:"RES",
+        0x0040:"UNDRAIN",
+        0x0080:"CLOUD"
+        }
+        
+        slurm_node_flag2={
+        0x0100:"RESUME",
+        0x0200:"DRAIN",
+        0x0400:"COMPLETING",
+        0x0800:"NO_RESPOND"
+        }
+        
+        slurm_node_flag3={
+        0x1000:"POWER_SAVE",
+        0x2000:"FAIL",
+        0x4000:"POWER_UP",
+        0x8000:"MAINT"
+        }
+        
+        base = reason_uid & 0x000F;
+        
+        if base==0 and reason_uid==0 :
+            state=state+slurm_node_base[base];
+        elif base>0 and reason_uid>0:
+            state=state+slurm_node_base[base];
+            
+        flag1 = reason_uid & 0x00F0;
+        
+        if flag1/0x00F0==1 :
+            flag1=flag1-0x00F0;
+        
+        if flag1/0x0080==1 :
+            state=state+"+"+slurm_node_flag1[0x0080];
+            flag1=flag1-0x0080;
+            
+        if flag1/0x0040==1 :
+            state=state+"+"+slurm_node_flag1[0x0040];
+            flag1=flag1-0x0040;
+            
+        if flag1/0x0020==1 :
+            state=state+"+"+slurm_node_flag1[0x0020];
+            flag1=flag1-0x0020;
+            
+        if flag1==0x0010 :
+            state=state+"+"+slurm_node_flag1[0x0010];
+            flag1=flag1-0x0010;
+            
+        flag2 = reason_uid & 0x0F00;
+        
+        if flag2/0x0F00==1 :
+            flag2=flag2-0x0F00;
+        
+        if flag2/0x0800==1 :
+            state=state+"+"+slurm_node_flag2[0x0800];
+            flag2=flag2-0x0800;
+            
+        if flag2/0x0400==1 :
+            state=state+"+"+slurm_node_flag2[0x0400];
+            flag2=flag2-0x0400;
+            
+        if flag2/0x0200==1 :
+            state=state+"+"+slurm_node_flag2[0x0200];
+            flag2=flag2-0x0200;
+            
+        if flag2==0x0100 :
+            state=state+"+"+slurm_node_flag2[0x0100];
+            flag2=flag2-0x0100;
+            
+        flag3 = reason_uid & 0xF000;
+        
+        if flag3/0xF000==1 :
+            flag3=flag3-0xF000;
+        
+        if flag3/0x8000==1 :
+            state=state+"+"+slurm_node_flag3[0x8000];
+            flag3=flag3-0x8000;
+            
+        if flag3/0x4000==1 :
+            state=state+"+"+slurm_node_flag3[0x4000];
+            flag3=flag3-0x4000;
+            
+        if flag3/0x2000==1 :
+            state=state+"+"+slurm_node_flag3[0x2000];
+            flag3=flag3-0x2000;
+            
+        if flag3==0x1000 :
+            state=state+"+"+slurm_node_flag3[0x1000];
+            flag3=flag3-0x1000;
+                
+        state=state.lstrip("+");
+        
+        if state == "":
+            state = "UNASSIGNED"
+            
+        return state

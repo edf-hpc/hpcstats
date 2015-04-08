@@ -51,10 +51,12 @@ class EventImporter(object):
                      nb_cpus,
                      t_start,
                      type,
-                     reason
-                FROM events
-               WHERE t_end IS NULL; """
-        datas = ()
+                     reason,nodes
+               FROM events,nodes
+               WHERE nodes.name = events.node
+	       AND nodes.cluster =%s
+	       AND events.t_end IS NULL; """
+        datas = (self._cluster_name,)
         cur = self._db.get_cur()
         cur.execute(req, datas)
 
@@ -105,4 +107,8 @@ class EventImporter(object):
         logging.debug("launching the save of %d new events",
                        len(self._new_events) )
         for new_event in self._new_events:
+            logging.debug("had new event from node %s, start %s -> end %s",
+                           new_event.get_nodename(),
+                           new_event.get_start_datetime(),
+                           new_event.get_end_datetime() )
             new_event.save(self._db)

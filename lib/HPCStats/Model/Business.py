@@ -77,3 +77,8 @@ def delete_business(db):
     db.get_cur().execute("ALTER SEQUENCE business_id_seq RESTART WITH 1;")  
     db.get_cur().execute("DELETE FROM business;")  
 
+def get_business_id(db, business):
+    cur = db.get_cur()
+    cur.execute("SELECT id_business FROM business WHERE lower(key) = lower(%s)", (business,))
+    results = cur.fetchone()
+    return results[0]

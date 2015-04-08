@@ -37,6 +37,10 @@ from HPCStats.Importer.Events.EventImporterFactory import EventImporterFactory
 from HPCStats.Importer.Usage.UsageImporterFactory import UsageImporterFactory
 from HPCStats.Importer.MountPoint.MountPointImporterFactory import MountPointImporterFactory
 from HPCStats.Importer.Contexts.ContextImporterFactory import ContextImporterFactory
+from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
+from HPCStats.Model.Project import Project, get_pareo_id
+from HPCStats.Model.Business import Business, get_business_id
+from HPCStats.Model.Context import Context
 
 def main(args=sys.argv):
 
@@ -49,7 +53,8 @@ def main(args=sys.argv):
     parser.validate(options)
 
     # configure logging
-    logging_level = logging.INFO
+    # logging_level = logging.INFO
+    logging_level = logging.DEBUG
     if options.debug:
         logging_level = logging.DEBUG
     logging.basicConfig(format = '%(levelname)s: %(filename)s: %(message)s',
@@ -85,7 +90,7 @@ def main(args=sys.argv):
         try:
             context_importer = ContextImporterFactory().factory(db, config, cluster.get_name())
         except RuntimeError:
-            logging.error("error occured on context update.")
+            logging.error("error occured on %s context update." % (options.clustername))
 
     if (options.arch):
         logging.info("=> Updating architecture for cluster %s" % (options.clustername))
@@ -94,7 +99,7 @@ def main(args=sys.argv):
             arch_importer.update_architecture()
             db.commit()
         except RuntimeError:
-            logging.error("error occured on architecture update.")
+            logging.error("error occured on %s architecture update." % (options.clustername))
 
     if (options.mounted):
         logging.info("=> Updating mounted filesystem for cluster %s" % (options.clustername))
@@ -104,7 +109,7 @@ def main(args=sys.argv):
                 mounted_importer.update_mount_point()
                 db.commit()
         except RuntimeError:
-            logging.error("error occured on mounted filesystem update.")
+            logging.error("error occured on %s mounted filesystem update." (options.clustername))
  
     if (options.usage):
         logging.info("=> Updating filesystem usage for cluster %s" % (options.clustername))
@@ -113,7 +118,7 @@ def main(args=sys.argv):
             #usage_importer.update_usage()
             db.commit()
         except RuntimeError:
-            logging.error("error occured on filesystem usage update.")
+            logging.error("error occured on %s filesystem usage update." % (options.clustername))
 
     if (options.events):
         logging.info("=> Updating events for cluster %s" % (options.clustername))
@@ -122,16 +127,17 @@ def main(args=sys.argv):
             event_importer.update_events()
             db.commit()
         except RuntimeError:
-            logging.error("error occured on events update.")
+            logging.error("error occured on %s events update." % (options.clustername))
 
     if (options.users):
         logging.info("=> Updating users for cluster %s" % (options.clustername))
         try:
           user_importer = UserImporterFactory().factory(db, config, cluster.get_name())
           user_importer.update_users()
+          #user_importer.update_users_from_ldap()
           db.commit()
         except RuntimeError:
-            logging.error("error occured on users update.")
+            logging.error("error occured on %s users update." % (options.clustername))
 
     if (options.jobs):
         logging.info("=> Update of jobs for cluster %s" % (options.clustername))
@@ -157,21 +163,56 @@ def main(args=sys.argv):
                 if not offset % 10:
                     logging.debug("update job push %d" % offset)
                 job.update(db)
-    
             offset = 0
-    
             while new_jobs:
-                logging.debug("Get %d new jobs starting at offset %d" % (max_jobs, offset))
+                logging.debug("get %d new jobs starting at offset %d" % (max_jobs, offset))
                 new_jobs = job_importer.get_job_for_id_above(last_updated_id, offset, max_jobs)
                 for job in new_jobs:
                     offset = offset + 1
                     if not offset % 10000:
                         logging.debug("create job push %d" % offset)
                     job.save(db)
-    
+		    # get wckeys from job to insert in context tab.
+		    wckey = job_importer.get_wckey_from_job(job._id_job)
+		    if wckey != None and wckey != '*' and wckey != '' and wckey.find(":") >= 0 :
+                        logging.debug("get wc_key %s" % (wckey))
+			context = Context()
+			# get pareo and business from job
+			try:
+			    pareo = wckey.split(":")[0]
+			except :
+			    pareo = None
+			    logging.debug("pareo value is unavailable")
+			try:
+			    business = wckey.split(":")[1]
+			except:
+			    business = None
+			    logging.debug("business value is unavailable")
+			# verify if pareo and business exist
+			try:
+			    context.set_project(get_pareo_id(db, pareo))
+			except:
+			    context.set_project(None)
+			    logging.debug("pareo does not exist")
+			try:
+			    context.set_business(get_business_id(db, business))
+			except:
+			    context.set_business(None)
+			    logging.debug("business does not exist")
+			# create context if you have one or both
+			if context.get_business() or context.get_project():
+			    context.set_login(job._login)
+			    context.set_job(job._db_id)
+			    context.set_cluster(cluster.get_name())
+			    context.save(db)
+			    logging.debug("create new context : %s" % context)
+			else:
+			    logging.debug("abort creating context")
+		    else:
+			logging.debug("no wc_keys available for this job")
             db.commit()
-        except RuntimeError:
-            logging.error("error occured on jobs update.")
-        
+        except :
+            logging.error("error occured on %s jobs update." % (options.clustername))
+	        
     db.unbind()
 

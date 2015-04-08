@@ -84,7 +84,7 @@ class MountPointImporter():
 
 ###### USE MODEL FUNCTION
     def add_mount_point(self, mount_point, type):
-        logging.info("ADD JB => %s, type : %s",mount_point, type)
+        logging.info("%s, type : %s",mount_point, type)
         req = """
            INSERT INTO filesystem (
                   id,

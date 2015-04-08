@@ -35,7 +35,7 @@ class Sector:
     def save(self, db):
         req = """
             INSERT INTO sectors (
-                              id_sectors,
+                              id_sector,
                               id_domain,
                               description )
             VALUES (%s, %s, %s);"""
@@ -59,7 +59,7 @@ class Sector:
 
     def already_exist(self, db):
         cur = db.get_cur()
-        cur.execute("SELECT * FROM sectors WHERE id_sectors = %s AND id_domain = %s", (self._id, self._domain,))
+        cur.execute("SELECT * FROM sectors WHERE id_sector = %s AND id_domain = %s", (self._id, self._domain,))
         nb_rows = cur.rowcount
         if nb_rows == 1:
            return True
