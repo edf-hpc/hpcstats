@@ -242,16 +242,16 @@ class JobImporterSlurm(JobImporter):
         job_filter.run()
 
     def get_wckey_from_job(self, id_job):
-    	req = """
+        req = """
             SELECT wckey
             FROM %s_job_table
             WHERE id_job = %%s
-    	""" % (self._cluster_name)
-    	data = (id_job)
-	cur = self._conn.cursor()
+            """ % (self._cluster_name)
+        data = (id_job)
+        cur = self._conn.cursor()
         cur.execute(req, data)
-    	result = cur.fetchone()
-    	return result[0]
+        result = cur.fetchone()
+        return result[0]
 
     def get_id_assoc(self):
         id_assoc = {}
@@ -312,4 +312,3 @@ class JobFilterSlurmNoStartTime:
                 return job
         else:
             return job
-

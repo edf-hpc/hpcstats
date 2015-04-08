@@ -81,7 +81,7 @@ class UserImporterLdap(UserImporter):
 	    def_department = "departmentNumber"
 	    def_keys = ["uid","uidNumber","gidNumber","sn","createTimestamp", "givenName","departmentNumber"]
 	    def_ldapuser = str(uid).upper()
-        # get ldap user info attribut defined by def_keys 
+        # get ldap user info attribut defined by def_keys
         self._ldap_users_info = self._ldapconn.search_s(self._ldappeople, \
 							    ldap.SCOPE_SUBTREE, \
 							    "uid=" + str(uid),\

@@ -87,7 +87,7 @@ class Context:
                          login = %s,
                          id_job = %s,
                          id_project = %s,
-                         id_business = %s, 
+                         id_business = %s,
             WHERE id_context = %s;"""
         datas = (
             self._login,

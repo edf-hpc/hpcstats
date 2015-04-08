@@ -241,13 +241,13 @@ class EventImporterSlurm(EventImporter):
 #            0:"UNKNOWN",
 #            1:"DOWN",
 #            4:"ERROR",
-#            512:"DRAIN", 
-#            513:"DRAIN+DOWN", 
-#            514:"DRAIN+IDLE", 
-#            515:"DRAIN+ALLOCATED", 
-#            2049:"NO_RESPOND+DOWN", 
+#            512:"DRAIN",
+#            513:"DRAIN+DOWN",
+#            514:"DRAIN+IDLE",
+#            515:"DRAIN+ALLOCATED",
+#            2049:"NO_RESPOND+DOWN",
 #            2492:"NODE_STATE_FAIL",
-#            2561:"NO_RESPOND+DRAIN+DOWN", 
+#            2561:"NO_RESPOND+DRAIN+DOWN",
 #            2562:"NO_RESPOND+DRAIN+IDLE",
 #            4097:"POWER_SAVE+DOWN",
 #            4609:"POWER_SAVE+DRAIN+DOWN",
@@ -266,7 +266,7 @@ class EventImporterSlurm(EventImporter):
 #        }
 # NEW DYNAMIC METHOD
         state="";
-        
+
         slurm_node_base={
         0x0000:"UNKNOWN",
         0x0001:"DOWN",
@@ -277,101 +277,101 @@ class EventImporterSlurm(EventImporter):
         0x0006:"FUTURE",
         0x0007:"END"
         }
-        
+
         slurm_node_flag1={
         0x0010:"NET",
         0x0020:"RES",
         0x0040:"UNDRAIN",
         0x0080:"CLOUD"
         }
-        
+
         slurm_node_flag2={
         0x0100:"RESUME",
         0x0200:"DRAIN",
         0x0400:"COMPLETING",
         0x0800:"NO_RESPOND"
         }
-        
+
         slurm_node_flag3={
         0x1000:"POWER_SAVE",
         0x2000:"FAIL",
         0x4000:"POWER_UP",
         0x8000:"MAINT"
         }
-        
+
         base = reason_uid & 0x000F;
-        
+
         if base==0 and reason_uid==0 :
             state=state+slurm_node_base[base];
         elif base>0 and reason_uid>0:
             state=state+slurm_node_base[base];
-            
+
         flag1 = reason_uid & 0x00F0;
-        
+
         if flag1/0x00F0==1 :
             flag1=flag1-0x00F0;
-        
+
         if flag1/0x0080==1 :
             state=state+"+"+slurm_node_flag1[0x0080];
             flag1=flag1-0x0080;
-            
+
         if flag1/0x0040==1 :
             state=state+"+"+slurm_node_flag1[0x0040];
             flag1=flag1-0x0040;
-            
+
         if flag1/0x0020==1 :
             state=state+"+"+slurm_node_flag1[0x0020];
             flag1=flag1-0x0020;
-            
+
         if flag1==0x0010 :
             state=state+"+"+slurm_node_flag1[0x0010];
             flag1=flag1-0x0010;
-            
+
         flag2 = reason_uid & 0x0F00;
-        
+
         if flag2/0x0F00==1 :
             flag2=flag2-0x0F00;
-        
+
         if flag2/0x0800==1 :
             state=state+"+"+slurm_node_flag2[0x0800];
             flag2=flag2-0x0800;
-            
+
         if flag2/0x0400==1 :
             state=state+"+"+slurm_node_flag2[0x0400];
             flag2=flag2-0x0400;
-            
+
         if flag2/0x0200==1 :
             state=state+"+"+slurm_node_flag2[0x0200];
             flag2=flag2-0x0200;
-            
+
         if flag2==0x0100 :
             state=state+"+"+slurm_node_flag2[0x0100];
             flag2=flag2-0x0100;
-            
+
         flag3 = reason_uid & 0xF000;
-        
+
         if flag3/0xF000==1 :
             flag3=flag3-0xF000;
-        
+
         if flag3/0x8000==1 :
             state=state+"+"+slurm_node_flag3[0x8000];
             flag3=flag3-0x8000;
-            
+
         if flag3/0x4000==1 :
             state=state+"+"+slurm_node_flag3[0x4000];
             flag3=flag3-0x4000;
-            
+
         if flag3/0x2000==1 :
             state=state+"+"+slurm_node_flag3[0x2000];
             flag3=flag3-0x2000;
-            
+
         if flag3==0x1000 :
             state=state+"+"+slurm_node_flag3[0x1000];
             flag3=flag3-0x1000;
-                
+
         state=state.lstrip("+");
-        
+
         if state == "":
             state = "UNASSIGNED"
-            
+
         return state

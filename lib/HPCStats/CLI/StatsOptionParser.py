@@ -1,4 +1,4 @@
-# -*- co.   
+# -*- co.
 
 # This file is part of HPCStats
 #

@@ -213,6 +213,6 @@ def main(args=sys.argv):
             db.commit()
         except :
             logging.error("error occured on %s jobs update." % (options.clustername))
-	        
+
     db.unbind()
 

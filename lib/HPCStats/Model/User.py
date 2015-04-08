@@ -121,7 +121,7 @@ class User:
             self._deletion_date,
             self._uid,
             self._gid )
- 
+
         #print db.get_cur().mogrify(req, datas)
         db.get_cur().execute(req, datas)
 
@@ -144,7 +144,7 @@ class User:
 
         #print db.get_cur().mogrify(req, datas)
         db.get_cur().execute(req, datas)
-    
+
     def update_name(self, db):
         req = """
             UPDATE users SET name = %s
@@ -153,7 +153,7 @@ class User:
             self._name,
             self._uid,
             self._cluster_name )
-        
+
         db.get_cur().execute(req, datas)
 
     def update_deletion_date(self, db):
@@ -164,7 +164,7 @@ class User:
             self._deletion_date,
             self._uid,
             self._cluster_name )
-        
+
         db.get_cur().execute(req, datas)
 
     def update_department(self, db):
@@ -175,9 +175,9 @@ class User:
             self._department,
             self._login,
             self._cluster_name )
-        
+
         db.get_cur().execute(req, datas)
-        
+
     def update_creation_date(self, db):
         req = """
             UPDATE users SET
@@ -187,6 +187,5 @@ class User:
             self._creation_date,
             self._login,
             self._cluster_name )
-        
+
         db.get_cur().execute(req, datas)
-                             
