@@ -136,7 +136,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                 #print "Error in %s: %s" % (self.__class__.__name__, e)
                 continue
 
-        return users;
+        return users
 
     def _user_row(self, xls_row):
         """ Return True is the XLS row refers to a user instead of a project """
