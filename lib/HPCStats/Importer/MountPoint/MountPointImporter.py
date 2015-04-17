@@ -104,4 +104,3 @@ class MountPointImporter():
     def delete_mount_point(self, mount_point):
         cur = self._db.get_cur()
         cur.execute("DELETE FROM filesystem WHERE mount_point = %s",(mount_point,))
-

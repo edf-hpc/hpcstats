@@ -24,7 +24,7 @@ class UsageImporterCluster(UsageImporter):
 
         self._fshost = config.get(usage_section,"host")
         self._fsname = config.get(usage_section,"name")
-	# No need to set self._fspassword if you had delivered public ssh key
+        # No need to set self._fspassword if you had delivered public ssh key
         #self._fspassword = config.get(usage_section,"password")
         self._fsfile = config.get(usage_section,"file")
         self._fs_usage = [] #List of usages for a fs
@@ -37,7 +37,7 @@ class UsageImporterCluster(UsageImporter):
             #Set automatically RSA key on known_hosts file
             self._ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self._ssh.connect(self._fshost, username=self._fsname)
-	    # No need to use password if you had delivered public ssh key
+            # No need to use password if you had delivered public ssh key
             #self._ssh.connect(self._fshost, username=self._fsname, \
             #    password=base64.b64decode( \
             #    self.decypher(base64.b64decode(self._fspassword))))
@@ -119,5 +119,3 @@ class UsageImporterCluster(UsageImporter):
             else:
                 x.append(s[i])
         return ''.join(x)
-
-

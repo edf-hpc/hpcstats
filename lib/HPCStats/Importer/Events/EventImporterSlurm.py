@@ -36,8 +36,8 @@ class EventImporterSlurm(EventImporter):
             self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
         except _mysql_exceptions.OperationalError as error:
             logging.error("connection to Slurm DBD MySQL failed (%s) : %s", \
-		    cluster_name, \
-		    error)
+                          cluster_name, \
+                          error)
 
     def update_events(self):
 
@@ -46,7 +46,7 @@ class EventImporterSlurm(EventImporter):
         #Deteminate which date is more efficient to be sure to don't forget unfinished event
         logging.debug("detect which date to use to import events")
         self._get_event_date()
-	
+
         logging.debug("getting the unfinished events")
         self._get_unfinished_events()
 
@@ -160,7 +160,7 @@ class EventImporterSlurm(EventImporter):
 
             # if search index is at the end of the list, next event has not been found
             if next_event_index == nb_events:
-		logging.debug("no event to merge : %d (%s, %s → %s)",
+                logging.debug("no event to merge : %d (%s, %s → %s)",
                                event_index,
                                event.get_nodename(),
                                event.get_start_datetime(),

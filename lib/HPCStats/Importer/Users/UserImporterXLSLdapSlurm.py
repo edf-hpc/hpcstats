@@ -28,14 +28,14 @@ class UserImporterXLSLdapSlurm(UserImporter):
         self._ldaphash = config.get(ldap_section,"phash")
         self._auth_cert = config.get(ldap_section, "auth_cert")
         self._ldapcert = config.get(ldap_section, "cert")
-        self._ldapgroup = config.get(ldap_section, "group")      
-        try:            
+        self._ldapgroup = config.get(ldap_section, "group")
+        try:
             ldap.set_option(ldap.OPT_X_TLS_CACERTFILE, self._ldapcert)
             self._ldapconn = ldap.initialize(self._ldapurl)
             self._ldapconn.simple_bind(self._ldapdn, base64.b64decode(self.decypher(base64.b64decode(self._ldaphash))))
         except ldap.SERVER_DOWN as e:
             logging.error("connection to LDAP failed: %s", e)
-            raise RuntimeError        
+            raise RuntimeError
 
         self._xlsfile = config.get(xls_section,"file")
         self._xlssheetname = config.get(xls_section,"sheet")
@@ -68,7 +68,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
             #else:
                 #logging.debug("creating user %s", user)
                 #user.save(self._db)
-        
+
         #uids = self._get_unknown_users(self._db)
         #if not uids: 
         #        logging.debug("no unknown users found")
@@ -83,26 +83,26 @@ class UserImporterXLSLdapSlurm(UserImporter):
         #                logging.debug("creating user %s", user)
         #                user.save(self._db)
         #        else:
-        #            logging.warning("unknown user with uid %d", unknown_uid) 
-        
+        #            logging.warning("unknown user with uid %d", unknown_uid)
+
     def get_all_users(self):
         users = []
         previous_user = None
 
-        # start from row 8 in xls sheet which starts itself from 0 
+        # start from row 8 in xls sheet which starts itself from 0
         for rownum in range(8,self._xlssheet.nrows):
             try:
                 xls_row = self._xlssheet.row_values(rownum)
 
                 if self._user_row(xls_row):
-                    user = self.user_from_xls_row(xls_row) 
-                
+                    user = self.user_from_xls_row(xls_row)
+
                     if user.get_cluster_name() == self._cluster_name and (not previous_user or not user == previous_user):
-                    
+
                         [uid, gid] = self.get_ids_from_ldap(user)
                         user.set_uid(uid)
                         user.set_gid(gid)
-                    
+
                         users.append(user)
                         previous_user = user
 
@@ -111,7 +111,6 @@ class UserImporterXLSLdapSlurm(UserImporter):
                 continue
 
         return users;
-
 
     def _user_row(self, xls_row):
         """ Return True is the XLS row refers to a user instead of a project """
@@ -210,7 +209,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
         uid = ldap_row['uidNumber'][0]
         gid = ldap_row['gidNumber'][0]
         name = ldap_row['givenName'][0] + " " + ldap_row['sn'][0]
-       
+
         department = "UNKNOWN"
         try:
             department = ldap_row['departmentNumber'][0]
@@ -287,4 +286,3 @@ class UserImporterXLSLdapSlurm(UserImporter):
             else:
                 x.append(s[i])
         return ''.join(x)
-

@@ -31,13 +31,13 @@ class EventImporter(object):
         return db_row[0]
 
     def _get_first_start_datetime_unfinished_event(self):
-	req="""
-	    SELECT MIN(t_start)
-		FROM events,
-		    nodes
-		WHERE nodes.name = events.node
-		AND nodes.cluster = %s
-		AND t_end IS NULL;"""
+        req="""
+            SELECT MIN(t_start)
+            FROM events,
+                 nodes
+            WHERE nodes.name = events.node
+              AND nodes.cluster = %s
+              AND t_end IS NULL;"""
         datas = (self._cluster_name,)
         cur = self._db.get_cur()
         cur.execute(req, datas)
@@ -54,8 +54,8 @@ class EventImporter(object):
                      reason,nodes
                FROM events,nodes
                WHERE nodes.name = events.node
-	       AND nodes.cluster =%s
-	       AND events.t_end IS NULL; """
+                 AND nodes.cluster =%s
+                 AND events.t_end IS NULL; """
         datas = (self._cluster_name,)
         cur = self._db.get_cur()
         cur.execute(req, datas)

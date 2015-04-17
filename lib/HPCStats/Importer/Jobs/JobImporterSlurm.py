@@ -33,7 +33,7 @@ class JobImporterSlurm(JobImporter):
         except _mysql_exceptions.OperationalError as e:
             logging.error("connection to Slurm DBD MySQL failed: %s", e)
             raise RuntimeError
-        self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor) 
+        self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
 
         # get it from archfile
         self._partitions = {}
@@ -56,7 +56,7 @@ class JobImporterSlurm(JobImporter):
         # { "cn[0001-1382]": ["small","para","compute"],
         #   "bm[01-29]"    : ["bigmem"],
         #   "cg[01-24]"    : ["visu"]                    }
-	self._id_assoc = self.get_id_assoc()
+        self._id_assoc = self.get_id_assoc()
 
     def request_jobs_since_job_id(self, job_id, offset, max_jobs):
         req = """
@@ -128,7 +128,7 @@ class JobImporterSlurm(JobImporter):
             jobs.append(self.job_from_information(result))
         #self._filter(jobs)
         return jobs
-   
+
     def job_from_information(self, res):
         # manage a case where slurmdbd puts a weird value '(null)' in nodelist
         str_nodelist = res["nodelist"]
@@ -174,14 +174,13 @@ class JobImporterSlurm(JobImporter):
                                        str_part_nodeset,
                                        len(ns_job),
                                        len(ns_job.intersection(ns_part)) )
-                
+
             if str_partition == None:
                 logging.error("job %d did not found partition in list %s which intersect for nodes %s",
                                res["id_job"],
                                str_partitions_lst,
                                str_nodelist )
                 str_partition = "UNKNOWN"
-
 
         job = Job(  id_job = res["id_job"],
                     sched_id = str(res["job_db_inx"]),
@@ -221,21 +220,21 @@ class JobImporterSlurm(JobImporter):
     """
     def get_job_state_from_slurm_state(self, state):
         slurm_state = {
-            0:"PENDING", # queued waiting for initiation 
-            1:"RUNNING", # allocated resources and executing 
-            2:"SUSPENDED", # allocated resources, execution suspended 
-            3:"COMPLETE", # completed execution successfully 
-            4:"CANCELLED", # cancelled by user 
-            5:"FAILED", # completed execution unsuccessfully 
-            6:"TIMEOUT", # terminated on reaching time limit 
-            7:"NODE_FAIL", # terminated on node failure 
-            8:"PREEMPTED", # terminated due to preemption 
-            9:"END", # not a real state, last entry in table 
+            0:"PENDING", # queued waiting for initiation
+            1:"RUNNING", # allocated resources and executing
+            2:"SUSPENDED", # allocated resources, execution suspended
+            3:"COMPLETE", # completed execution successfully
+            4:"CANCELLED", # cancelled by user
+            5:"FAILED", # completed execution unsuccessfully
+            6:"TIMEOUT", # terminated on reaching time limit
+            7:"NODE_FAIL", # terminated on node failure
+            8:"PREEMPTED", # terminated due to preemption
+            9:"END", # not a real state, last entry in table
             8192:"RESIZING" # Size of job about to change, flag set
                             # before calling accounting functions
                             # immediately before job changes size
         }
-        return slurm_state[state]            
+        return slurm_state[state]
 
     def _filter(self, jobs):
         job_filter = JobFilterSlurmNoStartTime(self, jobs)
@@ -263,7 +262,7 @@ class JobImporterSlurm(JobImporter):
         self._cur.execute(req)
         results = self._cur.fetchall()
         for ii in results:
-	    id_assoc[ii['id_assoc']] = ii['user']
+            id_assoc[ii['id_assoc']] = ii['user']
         return id_assoc
 
 class JobFilterSlurmNoStartTime:
@@ -271,10 +270,10 @@ class JobFilterSlurmNoStartTime:
     def __init__(self, job_importer, jobs):
 
         self._name = "SlurmNoStartTime"
-        self._description = "Filter job imported from SlurmDBD with no time_start"   
+        self._description = "Filter job imported from SlurmDBD with no time_start"
         self._slurmdbd_cur = job_importer._cur
         self._jobs = jobs
-        
+
     def __str__(self):
         return "JobFilter %s (%d jobs)" % (self._name, len(self._jobs))
 
@@ -295,7 +294,7 @@ class JobFilterSlurmNoStartTime:
                 FROM %s_step_table
                 WHERE job_db_inx = %%s
                 ORDER BY id_step; """ % (job.get_cluster_name())
-    
+
             data = (job.get_db_id(),)
             self._slurmdbd_cur.execute(sql, data)
             row = self._slurmdbd_cur.fetchone()

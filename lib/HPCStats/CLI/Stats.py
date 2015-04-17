@@ -147,15 +147,15 @@ def main(args=sys.argv):
             last_updated_id = job_importer.get_last_job_id()
             # The unfinished jobs in hpcstatsdb for this cluster
             ids = job_importer.get_unfinished_job_id()
-    
+
             jobs_to_update = ['not_empty']
             new_jobs = ['not_empty']
-    
+
             nb_theads = 4
-    
+
             offset = 0
             max_jobs = 100000
-    
+
             logging.debug("Get jobs to update")
             jobs_to_update = job_importer.get_job_information_from_dbid_job_list(ids)
             for job in jobs_to_update:
@@ -172,44 +172,44 @@ def main(args=sys.argv):
                     if not offset % 10000:
                         logging.debug("create job push %d" % offset)
                     job.save(db)
-		    # get wckeys from job to insert in context tab.
-		    wckey = job_importer.get_wckey_from_job(job._id_job)
-		    if wckey != None and wckey != '*' and wckey != '' and wckey.find(":") >= 0 :
+                    # get wckeys from job to insert in context tab.
+                    wckey = job_importer.get_wckey_from_job(job._id_job)
+                    if wckey != None and wckey != '*' and wckey != '' and wckey.find(":") >= 0 :
                         logging.debug("get wc_key %s" % (wckey))
-			context = Context()
-			# get pareo and business from job
-			try:
-			    pareo = wckey.split(":")[0]
-			except :
-			    pareo = None
-			    logging.debug("pareo value is unavailable")
-			try:
-			    business = wckey.split(":")[1]
-			except:
-			    business = None
-			    logging.debug("business value is unavailable")
-			# verify if pareo and business exist
-			try:
-			    context.set_project(get_pareo_id(db, pareo))
-			except:
-			    context.set_project(None)
-			    logging.debug("pareo does not exist")
-			try:
-			    context.set_business(get_business_id(db, business))
-			except:
-			    context.set_business(None)
-			    logging.debug("business does not exist")
-			# create context if you have one or both
-			if context.get_business() or context.get_project():
-			    context.set_login(job._login)
-			    context.set_job(job._db_id)
-			    context.set_cluster(cluster.get_name())
-			    context.save(db)
-			    logging.debug("create new context : %s" % context)
-			else:
-			    logging.debug("abort creating context")
-		    else:
-			logging.debug("no wc_keys available for this job")
+                        context = Context()
+                        # get pareo and business from job
+                        try:
+                            pareo = wckey.split(":")[0]
+                        except :
+                            pareo = None
+                            logging.debug("pareo value is unavailable")
+                        try:
+                            business = wckey.split(":")[1]
+                        except:
+                            business = None
+                            logging.debug("business value is unavailable")
+                        # verify if pareo and business exist
+                        try:
+                            context.set_project(get_pareo_id(db, pareo))
+                        except:
+                            context.set_project(None)
+                            logging.debug("pareo does not exist")
+                        try:
+                            context.set_business(get_business_id(db, business))
+                        except:
+                            context.set_business(None)
+                            logging.debug("business does not exist")
+                        # create context if you have one or both
+                        if context.get_business() or context.get_project():
+                            context.set_login(job._login)
+                            context.set_job(job._db_id)
+                            context.set_cluster(cluster.get_name())
+                            context.save(db)
+                            logging.debug("create new context : %s" % context)
+                        else:
+                            logging.debug("abort creating context")
+                    else:
+                        logging.debug("no wc_keys available for this job")
             db.commit()
         except :
             logging.error("error occured on %s jobs update." % (options.clustername))

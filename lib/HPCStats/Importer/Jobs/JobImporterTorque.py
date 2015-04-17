@@ -24,7 +24,6 @@ class JobImporterTorque(JobImporter):
         db_section = self._cluster_name + "/torque"
         self._logfolder = config.get(db_section,"logdir")
 
-   
     def get_job_information_from_dbid_job_list(self,ids_job):
         # No need to update with Torque
         return []
@@ -33,7 +32,6 @@ class JobImporterTorque(JobImporter):
 #FIXME        last_filename = last_id_job
         filenames = os.listdir(self._logfolder)
         return filenames
-        
 
     def get_job_for_id_above(self, last_id_job):
         jobs = []
@@ -50,7 +48,7 @@ class JobImporterTorque(JobImporter):
                     jobinfo = match.groups()
                     jobs.append(self.job_from_information(jobinfo, filename))
         return jobs
-   
+
     def job_from_information(self, res, filename):
         nbprocs, nbnodes, nodelist = self.torque_job_nodelist(res[10])
         uuid, ugid = self.get_uid_gid_from_login(res[3])
@@ -92,7 +90,7 @@ class JobImporterTorque(JobImporter):
         nbnodes = len(nodelist)
         nodelist = str(nodelist)
         return nbprocs, nbnodes, nodelist
-        
+
     def get_uid_gid_from_login(self, login):
         req = """
             SELECT uid, gid
@@ -108,4 +106,3 @@ class JobImporterTorque(JobImporter):
         else :
             (uid, gid) = 0, 0
         return uid, gid
-

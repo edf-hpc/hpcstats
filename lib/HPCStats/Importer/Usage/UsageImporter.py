@@ -28,4 +28,3 @@ class UsageImporter(object):
             if last_home_usage_timestamp < usage[0]:
                 last_home_usage_timestamp = usage[0]
         return last_home_usage_timestamp
-

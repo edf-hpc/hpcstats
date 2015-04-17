@@ -24,7 +24,6 @@ class JobImporter(object):
                 last_job_id = job[0]
         return last_job_id
 
-
     def get_unfinished_job_id(self):
         unfinished_job_dbid = []
         req = """
