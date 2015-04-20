@@ -168,8 +168,6 @@ def HPCStatsUpdater(object):
                 jobs_to_update = ['not_empty']
                 new_jobs = ['not_empty']
 
-                nb_theads = 4
-
                 offset = 0
                 max_jobs = 100000
 
