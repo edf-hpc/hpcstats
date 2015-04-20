@@ -33,7 +33,6 @@ from datetime import datetime
 from ClusterShell.NodeSet import NodeSet
 import logging
 import os
-import ConfigParser
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Model.Job import Job
 
@@ -60,28 +59,8 @@ class JobImporterSlurm(JobImporter):
             logging.error("connection to Slurm DBD MySQL failed: %s", e)
             raise RuntimeError
         self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
-
-        # get it from archfile
-        self._partitions = {}
-        archfile_section = self._cluster_name + "/archfile"
-        archfile_name = config.get(archfile_section, "file")
-        archfile = ConfigParser.ConfigParser()
-        archfile.read(archfile_name)
-        partitions_list = archfile.get(self._cluster_name,"partitions").split(',')
-        for partition_name in partitions_list:
-            partition_section_name = self._cluster_name + "/" + partition_name
-            nodesets_list = archfile.get(partition_section_name, "nodesets").split(',')
-            slurm_partitions_list = archfile.get(partition_section_name, "slurm_partitions").split(',')
-            ns_nodeset = NodeSet()
-            for nodeset_name in nodesets_list:
-                nodeset_section_name = self._cluster_name + "/" + partition_name + "/" + nodeset_name
-                str_nodenames = archfile.get(nodeset_section_name, "names")
-                ns_nodeset.add(str_nodenames)
-            self._partitions[str(ns_nodeset)] = slurm_partitions_list 
-        # As a result, we have here:
-        # { "cn[0001-1382]": ["small","para","compute"],
-        #   "bm[01-29]"    : ["bigmem"],
-        #   "cg[01-24]"    : ["visu"]                    }
+        # get partitions list for nodes from ArchitectureImporter
+        self._partitions = self.app.arch.get_partitions()
         self._id_assoc = self.get_id_assoc()
 
     def request_jobs_since_job_id(self, job_id, offset, max_jobs):

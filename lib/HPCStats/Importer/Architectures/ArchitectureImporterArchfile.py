@@ -152,3 +152,28 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                                        flops = flops ) )
 
         return nodes
+
+    def get_partitions(self):
+        """Returns a dict with nodesets as keys and the list of possible
+           partitions for this nodeset as items. Ex:
+           { "cn[0001-1382]": ["small","para","compute"],
+             "bm[01-29]"    : ["bigmem"],
+             "cg[01-24]"    : ["visu"]                    }
+        """
+        partitions = {}
+
+        config = ConfigParser.ConfigParser()
+        config.read(self._archfile)
+        partitions_list = config.get(self._cluster_name,"partitions").split(',')
+        for partition_name in partitions_list:
+            partition_section_name = self._cluster_name + "/" + partition_name
+            nodesets_list = config.get(partition_section_name, "nodesets").split(',')
+            slurm_partitions_list = config.get(partition_section_name, "slurm_partitions").split(',')
+            ns_nodeset = NodeSet()
+            for nodeset_name in nodesets_list:
+                nodeset_section_name = self._cluster_name + "/" + partition_name + "/" + nodeset_name
+                str_nodenames = config.get(nodeset_section_name, "names")
+                ns_nodeset.add(str_nodenames)
+            partitions[str(ns_nodeset)] = slurm_partitions_list
+
+        return partitions
