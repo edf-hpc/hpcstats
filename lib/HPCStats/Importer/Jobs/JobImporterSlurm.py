@@ -59,9 +59,14 @@ class JobImporterSlurm(JobImporter):
             logging.error("connection to Slurm DBD MySQL failed: %s", e)
             raise RuntimeError
         self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
+
         # get partitions list for nodes from ArchitectureImporter
         self._partitions = self.app.arch.get_partitions()
-        self._id_assoc = self.get_id_assoc()
+
+        # The id_assoc dict attribute is used as associations ID/login mapping
+        # cache at Job objects creation.
+        self.id_assoc = None
+        self.fill_id_assoc()
 
     def request_jobs_since_job_id(self, job_id, offset, max_jobs):
         req = """
@@ -200,7 +205,7 @@ class JobImporterSlurm(JobImporter):
                     nodes = str_nodelist,
                     state = self.get_job_state_from_slurm_state(res["state"]),
                     cluster_name = self._cluster_name,
-                    login = self._id_assoc[res["id_assoc"]],
+                    login = self.id_assoc[res["id_assoc"]],
                     name = res["job_name"])
         return job
 
@@ -257,8 +262,10 @@ class JobImporterSlurm(JobImporter):
         result = cur.fetchone()
         return result[0]
 
-    def get_id_assoc(self):
-        id_assoc = {}
+    def fill_id_assoc(self):
+        """Fill id_assoc dict attribute with data coming from SlurmDBD."""
+
+        self.id_assoc = {}
         req = """
              SELECT id_assoc, user
              FROM %s_assoc_table
@@ -267,8 +274,7 @@ class JobImporterSlurm(JobImporter):
         self._cur.execute(req)
         results = self._cur.fetchall()
         for ii in results:
-            id_assoc[ii['id_assoc']] = ii['user']
-        return id_assoc
+            self.id_assoc[ii['id_assoc']] = ii['user']
 
 class JobFilterSlurmNoStartTime:
 
