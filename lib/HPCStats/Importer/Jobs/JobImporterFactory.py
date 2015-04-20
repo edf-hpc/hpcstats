@@ -36,11 +36,11 @@ class JobImporterFactory(object):
     def __init__(self):
         pass
 
-    def factory(self, db, config, cluster_name):
+    def factory(self, app, db, config, cluster_name):
         if config.get(cluster_name, "jobs") == "slurm": ## Slurm
-            return JobImporterSlurm(db, config, cluster_name)
+            return JobImporterSlurm(app, db, config, cluster_name)
         elif config.get(cluster_name, "jobs") == "torque": ## Torque
-            return JobImporterTorque(db, config, cluster_name)
+            return JobImporterTorque(app, db, config, cluster_name)
         else:
             logging.critical("TO BE CODED")
             # Throw Exception

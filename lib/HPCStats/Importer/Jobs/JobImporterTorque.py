@@ -40,9 +40,9 @@ from HPCStats.Model.Job import Job
 
 class JobImporterTorque(JobImporter):
 
-    def __init__(self, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster_name):
 
-        JobImporter.__init__(self, db, config, cluster_name)
+        JobImporter.__init__(self, app, db, config, cluster_name)
 
         self._logpat = re.compile('(.{19});E;(\d+)(?:-(\d+))?\..*;user=(\S+) (?:account=(\S+))?.*group=(\S+).*queue=(\S+) ctime=\d+ qtime=(\d+) etime=(\d+) start=(\d+) .* exec_host=(\S+) .* Exit_status=(\d+) .*\n')
         self._exechostpat = re.compile('/\d+')

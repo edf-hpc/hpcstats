@@ -107,14 +107,14 @@ def HPCStatsUpdater(object):
         if (options.context):
             logging.info("=> Updating context for cluster %s from stats file" % (options.clustername))
             try:
-                self.context = ContextImporterFactory().factory(db, config, cluster.get_name())
+                self.context = ContextImporterFactory().factory(self, db, config, cluster.get_name())
             except RuntimeError:
                 logging.error("error occured on %s context update." % (options.clustername))
 
         if (options.arch):
             logging.info("=> Updating architecture for cluster %s" % (options.clustername))
             try:
-                self.arch = ArchitectureImporterFactory().factory(db, config, cluster.get_name())
+                self.arch = ArchitectureImporterFactory().factory(self, db, config, cluster.get_name())
                 self.arch.update_architecture()
                 db.commit()
             except RuntimeError:
@@ -123,7 +123,7 @@ def HPCStatsUpdater(object):
         if (options.mounted):
             logging.info("=> Updating mounted filesystem for cluster %s" % (options.clustername))
             try:
-                self.mounts = MountPointImporterFactory().factory(db, config, cluster.get_name())
+                self.mounts = MountPointImporterFactory().factory(self, db, config, cluster.get_name())
                 if self.mounts:
                     self.mounts.update_mount_point()
                     db.commit()
@@ -133,7 +133,7 @@ def HPCStatsUpdater(object):
         if (options.usage):
             logging.info("=> Updating filesystem usage for cluster %s" % (options.clustername))
             try:
-                self.fsusage = UsageImporterFactory().factory(db, config, cluster.get_name())
+                self.fsusage = UsageImporterFactory().factory(self, db, config, cluster.get_name())
                 db.commit()
             except RuntimeError:
                 logging.error("error occured on %s filesystem usage update." % (options.clustername))
@@ -141,7 +141,7 @@ def HPCStatsUpdater(object):
         if (options.events):
             logging.info("=> Updating events for cluster %s" % (options.clustername))
             try:
-                self.events = EventImporterFactory().factory(db, config, cluster.get_name())
+                self.events = EventImporterFactory().factory(self, db, config, cluster.get_name())
                 self.events.update_events()
                 db.commit()
             except RuntimeError:
@@ -150,7 +150,7 @@ def HPCStatsUpdater(object):
         if (options.users):
             logging.info("=> Updating users for cluster %s" % (options.clustername))
             try:
-              self.users = UserImporterFactory().factory(db, config, cluster.get_name())
+              self.users = UserImporterFactory().factory(self, db, config, cluster.get_name())
               self.users.update_users()
               db.commit()
             except RuntimeError:
@@ -159,7 +159,7 @@ def HPCStatsUpdater(object):
         if (options.jobs):
             logging.info("=> Update of jobs for cluster %s" % (options.clustername))
             try:
-                self.jobs = JobImporterFactory().factory(db, config, cluster.get_name())
+                self.jobs = JobImporterFactory().factory(self, db, config, cluster.get_name())
                 # The last updated job in hpcstatsdb for this cluster
                 last_updated_id = self.jobs.get_last_job_id()
                 # The unfinished jobs in hpcstatsdb for this cluster

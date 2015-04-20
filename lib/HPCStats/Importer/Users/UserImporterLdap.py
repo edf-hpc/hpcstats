@@ -38,9 +38,9 @@ import re
 
 class UserImporterLdap(UserImporter):
 
-    def __init__(self, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster_name):
 
-        UserImporter.__init__(self, db, cluster_name)
+        UserImporter.__init__(self, app, db, cluster_name)
 
         self._db = db
         self._conf = config

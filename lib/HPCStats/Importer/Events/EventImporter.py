@@ -33,8 +33,9 @@ from HPCStats.Model.Event import Event
 
 class EventImporter(object):
 
-    def __init__(self, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster_name):
 
+        self.app = app
         self._db = db
         self._conf = config
         self._cluster_name = cluster_name

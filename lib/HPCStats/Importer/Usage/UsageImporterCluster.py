@@ -42,9 +42,9 @@ from HPCStats.Model.Filesystem_usage import Filesystem_usage
 
 class UsageImporterCluster(UsageImporter):
 
-    def __init__(self, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster_name):
 
-        UsageImporter.__init__(self, db, config, cluster_name)
+        UsageImporter.__init__(self, app, db, config, cluster_name)
 
         usage_section = self._cluster_name + "/usage"
 

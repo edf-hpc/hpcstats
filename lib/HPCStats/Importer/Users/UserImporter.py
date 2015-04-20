@@ -29,8 +29,9 @@
 
 class UserImporter(object):
 
-    def __init__(self, db, cluster_name):
+    def __init__(self, app, db, cluster_name):
 
+        self.app = app
         self._db = db
         self._cluster_name = cluster_name
 

@@ -35,9 +35,9 @@ class EventImporterFactory(object):
     def __init__(self):
         pass
 
-    def factory(self, db, config, cluster_name):
+    def factory(self, app, db, config, cluster_name):
         if config.get(cluster_name, "events") == "slurm": ## Slurm
-            return EventImporterSlurm(db, config, cluster_name)
+            return EventImporterSlurm(app, db, config, cluster_name)
         else:
             logging.critical("TO BE CODED")
             # Throw Exception

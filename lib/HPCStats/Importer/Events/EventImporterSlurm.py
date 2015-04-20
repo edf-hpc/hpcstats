@@ -37,9 +37,9 @@ from HPCStats.Model.Event import Event
 
 class EventImporterSlurm(EventImporter):
 
-    def __init__(self, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster_name):
 
-        EventImporter.__init__(self, db, config, cluster_name)
+        EventImporter.__init__(self, app, db, config, cluster_name)
 
         slurm_section = self._cluster_name + "/slurm"
 

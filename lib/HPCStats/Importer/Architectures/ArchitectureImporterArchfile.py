@@ -38,10 +38,11 @@ import logging
 
 class ArchitectureImporterArchfile(ArchitectureImporter):
 
-    def __init__(self, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster_name):
 
         ArchitectureImporter.__init__(self)
 
+        self.app = app
         self._db = db
         self._conf = config
         self._cluster_name = cluster_name

@@ -39,9 +39,9 @@ from HPCStats.Model.Job import Job
 
 class JobImporterSlurm(JobImporter):
 
-    def __init__(self, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster_name):
 
-        JobImporter.__init__(self, db, config, cluster_name)
+        JobImporter.__init__(self, app, db, config, cluster_name)
 
         slurm_section = self._cluster_name + "/slurm"
 
