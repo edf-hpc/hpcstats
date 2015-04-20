@@ -8,7 +8,7 @@ developpement of statistical indicators.
 Installation
 ------------
 
-# Requirements
+### Requirements
 
 HPCStats is tested and validated on Debian 6.
 If there are not yet installed on the HPCStats server, please install
@@ -25,7 +25,7 @@ following packages:
                   python-paramiko
 ```
 
-# Quick installation from source
+### Quick installation from source
 
 Create hpcstats local user:
 
@@ -116,15 +116,15 @@ Full documentation is centralise on file
 Authors
 -------
 
-Rémi Palancher		    <remi.palancher@edf.fr>
-Stéphan Gorget		    <stephan.gorget@edf.fr>
+* Rémi Palancher		    <remi.palancher@edf.fr>
+* Stéphan Gorget		    <stephan.gorget@edf.fr>
 
 Contributors
 ------------
 
-Loic Laureote
-Rodrigue Nsiangani
-Nali Andriana		    <nalimanaja.andrianavony@bull.net>
-Gaston Samarou
-Damien Balima
-Jean-Baptiste Lesenne	    <jean-baptiste.lesenne@bull.net>
+* Loic Laureote
+* Rodrigue Nsiangani
+* Nali Andriana		    <nalimanaja.andrianavony@bull.net>
+* Gaston Samarou
+* Damien Balima
+* Jean-Baptiste Lesenne	    <jean-baptiste.lesenne@bull.net>
