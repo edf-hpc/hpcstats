@@ -9,8 +9,7 @@ VERSION='0.1'
 
 setup(name='hpcstats',
       version=VERSION,
-      package_dir={'': 'lib'},
-      packages=find_packages('lib'),
+      packages=find_packages(),
       scripts=['scripts/supervision'],
       author='Stéphan Gorget, Rémi Palancher',
       author_email='stephan.gorget@edf.fr, remi.palancher@edf.fr',
