@@ -27,22 +27,23 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-class JobImporter(object):
+from HPCStats.Importer.Importer import Importer
 
-    def __init__(self, app, db, config, cluster_name):
+class JobImporter(Importer):
 
-        self.app = app
-        self._db = db
-        self._conf = config
-        self._cluster_name = cluster_name
+    def __init__(self, app, db, config, cluster):
+
+        super(JobImporter, self).__init__(app, db, config, cluster)
 
     def get_last_job_id(self):
+        """Returns the last inserted id_job in HPCStats DB."""
+
         last_job_id = 0
         req = """
             SELECT MAX(id_job) AS last_id
             FROM jobs
             WHERE clustername = %s; """
-        datas = (self._cluster_name,)
+        datas = (self.cluster,)
         cur = self._db.get_cur()
         cur.execute(req, datas)
         results = cur.fetchall()
@@ -52,6 +53,8 @@ class JobImporter(object):
         return last_job_id
 
     def get_unfinished_job_id(self):
+        """Returns the list of sched_id of unfinished jobs in HPCStats DB."""
+
         unfinished_job_dbid = []
         req = """
             SELECT sched_id
@@ -59,7 +62,7 @@ class JobImporter(object):
             WHERE clustername = %s
               AND (   state = 'PENDING'
                    OR state = 'RUNNING' ); """
-        datas = (self._cluster_name,)
+        datas = (self.cluster,)
         cur = self._db.get_cur()
         cur.execute(req, datas)
         results = cur.fetchall()
