@@ -37,11 +37,11 @@ from HPCStats.Model.Event import Event
 
 class EventImporterSlurm(EventImporter):
 
-    def __init__(self, app, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster):
 
-        EventImporter.__init__(self, app, db, config, cluster_name)
+        super(EventImporterSlurm, self).__init__(app, db, config, cluster)
 
-        slurm_section = self._cluster_name + "/slurm"
+        slurm_section = self.cluster + "/slurm"
 
         self._dbhost = config.get(slurm_section,"host")
         self._dbport = int(config.get(slurm_section,"port"))
@@ -62,7 +62,7 @@ class EventImporterSlurm(EventImporter):
             self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
         except _mysql_exceptions.OperationalError as error:
             logging.error("connection to Slurm DBD MySQL failed (%s) : %s", \
-                          cluster_name, \
+                          self.cluster, \
                           error)
 
     def update_events(self):
@@ -131,7 +131,7 @@ class EventImporterSlurm(EventImporter):
             FROM %s_event_table
             WHERE node_name <> ''
               AND time_start >= UNIX_TIMESTAMP(%%s)
-            ORDER BY time_start; """ % (self._cluster_name)
+            ORDER BY time_start; """ % (self.cluster)
         datas = (my_datetime,)
         self._cur.execute(req, datas)
 

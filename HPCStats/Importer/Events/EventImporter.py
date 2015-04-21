@@ -29,16 +29,14 @@
 
 import logging
 from datetime import datetime
+from HPCStats.Importer.Importer import Importer
 from HPCStats.Model.Event import Event
 
-class EventImporter(object):
+class EventImporter(Importer):
 
-    def __init__(self, app, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster):
 
-        self.app = app
-        self._db = db
-        self._conf = config
-        self._cluster_name = cluster_name
+        super(EventImporter, self).__init__(app, db, config, cluster)
 
         self._new_events = []
         self._unfinished_events = []
@@ -50,8 +48,8 @@ class EventImporter(object):
                      nodes
                WHERE nodes.name = events.node
                  AND nodes.cluster = %s ; """
-        datas = (self._cluster_name,)
-        cur = self._db.get_cur()
+        datas = (self.cluster,)
+        cur = self.db.get_cur()
         cur.execute(req, datas)
 
         db_row = cur.fetchone()
@@ -65,8 +63,8 @@ class EventImporter(object):
             WHERE nodes.name = events.node
               AND nodes.cluster = %s
               AND t_end IS NULL;"""
-        datas = (self._cluster_name,)
-        cur = self._db.get_cur()
+        datas = (self.cluster,)
+        cur = self.db.get_cur()
         cur.execute(req, datas)
 
         db_row = cur.fetchone()
@@ -83,8 +81,8 @@ class EventImporter(object):
                WHERE nodes.name = events.node
                  AND nodes.cluster =%s
                  AND events.t_end IS NULL; """
-        datas = (self._cluster_name,)
-        cur = self._db.get_cur()
+        datas = (self.cluster,)
+        cur = self.db.get_cur()
         cur.execute(req, datas)
 
         while (1):
@@ -117,7 +115,7 @@ class EventImporter(object):
                 if event.get_reason() != unfinished_event.get_reason():
                     logging.debug("Update reason of %s to %s", unfinished_event, event.get_reason())
                     unfinished_event.set_reason(event.get_reason())
-                    unfinished_event.update_reason(self._db)
+                    unfinished_event.update_reason(self.db)
                 new_event_index += 1
 
     def _update_unfinished_events(self):
@@ -128,7 +126,7 @@ class EventImporter(object):
             if unfinished_event.get_end_datetime():
                 logging.debug("updating end datetime of event %s",
                                unfinished_event )
-                unfinished_event.update_end_datetime(self._db)
+                unfinished_event.update_end_datetime(self.db)
 
     def _save_new_events(self):
         logging.debug("launching the save of %d new events",
@@ -138,4 +136,4 @@ class EventImporter(object):
                            new_event.get_nodename(),
                            new_event.get_start_datetime(),
                            new_event.get_end_datetime() )
-            new_event.save(self._db)
+            new_event.save(self.db)
