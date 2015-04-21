@@ -28,22 +28,16 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
-from HPCStats.Importer.Contexts.PareoImporter import PareoImporter
-from HPCStats.Importer.Contexts.ContextImporter import ContextImporter
+from HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV import BusinessCodeImporterCSV
 
-class ContextImporterFactory(object):
+class BusinessCodeImporterFactory(object):
 
     def __init__(self):
         pass
 
-    def factory(self, app, db, config, cluster_name):
-        if config.get(cluster_name, "context") == "pareo":
-            pareo = PareoImporter(app, db, config, cluster_name)
-        elif config.get(cluster_name, "context") == "context":
-            context = ContextImporter(app, db, config, cluster_name)
-        elif config.get(cluster_name, "context") == "pareo+context":
-            pareo = PareoImporter(app, db, config, cluster_name)
-            context = ContextImporter(app, db, config, cluster_name)
+    def factory(self, app, db, config, cluster):
+        if config.get(cluster, "business") == "csv":
+            return BusinessCodeImporterCSV(app, db, config, cluster)
         else:
             logging.critical("TO BE CODED")
         return None

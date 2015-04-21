@@ -27,6 +27,7 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+from HPCStats.Importer.BusinessCodes.BusinessCodeImporter import BusinessCodesImporter
 from HPCStats.Model.Business import Business, delete_business
 from HPCStats.Model.Context import *
 import ConfigParser
@@ -36,15 +37,13 @@ import csv
 import psycopg2
 import codecs
 
-class BusinessImporter(object):
+class BusinessCodeImporterCSV(BusinessCodeImporter):
 
-    def __init__(self, app, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster):
 
-        self.app = app
-        self._db = db
-        self._cluster_name = cluster_name
+        super(BusinessCodeImporterCSV, self).__init__(app, db, config, cluster)
 
-        business_section = self._cluster_name + "/business"
+        business_section = self.cluster + "/business"
         self._business_file = config.get(business_section, "file")
 
         if not os.path.isfile(self._business_file):
@@ -53,9 +52,9 @@ class BusinessImporter(object):
 
         #In first delete all entries in business table and his dependances 
         logging.debug("Delete all business entries in db")
-        delete_contexts_with_business(self._db)
-        delete_business(self._db)
-        self._db.commit()
+        delete_contexts_with_business(self.db)
+        delete_business(self.db)
+        self.db.commit()
 
         b_file = open(self._business_file, 'r')
         # savepoint is used to considere exceptions and commit only at the end
@@ -69,8 +68,8 @@ class BusinessImporter(object):
                 code = Business( key = row[0],
                                  description = row[1])
                 try:
-                    if not code.already_exist(self._db):
-                        code.save(self._db)
+                    if not code.already_exist(self.db):
+                        code.save(self.db)
                         if not code.get_description():
                             logging.debug("add new business entry with key : %s, without description", code.get_key())
                         else:
@@ -84,4 +83,4 @@ class BusinessImporter(object):
                     logging.error("impossible to add BUSINESS entry in database : (%s) du to encoding error", row)
                     db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                     pass
-        self._db.commit()
+        self.db.commit()
