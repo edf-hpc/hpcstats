@@ -27,30 +27,26 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+from HPCStats.Importer.Importer import Importer
 #from HPCStats.Importer.MountePoint.FilesystemImporter import FilesystemImporter
 from HPCStats.Model.Cluster import Cluster
 from HPCStats.Model.Filesystem import Filesystem
 import os
 import logging
 
+class MountPointImporter(Importer):
 
+    def __init__(self, app, db, config, cluster):
 
-class MountPointImporter():
+        super(MountPointImporter, self).__init__(app, db, config, cluster)
 
-    def __init__(self, app, db, config, cluster_name):
-
-        self.app = app
-        self._db = db
-        self._conf = config
-        self._cluster_name = cluster_name
-
-        self._fs_mounted = self._cluster_name + "/mounted"
+        self._fs_mounted = self.cluster + "/mounted"
 
         self._conf_mount_point = {}
         self._db_mount_point = {}
 
     def update_mount_point(self):
-        cluster = Cluster(self._cluster_name)
+        cluster = Cluster(self.cluster)
 
         self._conf_mount_point = self.get_mount_point_from_config()
         logging.info("fs from conf -> %s", self._conf_mount_point)
@@ -66,11 +62,11 @@ class MountPointImporter():
             else:
                 logging.info("Add %s in db", i)
                 #self.add_mount_point(i, self._conf_mount_point[i])
-                filesystem = Filesystem ( 
+                filesystem = Filesystem (
                     mount_point = i, 
-                    cluster = self._cluster_name, 
+                    cluster = self.cluster,
                     type = self._conf_mount_point[i])
-                filesystem.save(self._db)
+                filesystem.save(self.db)
 
 ##Useful if you need to delete in casa of mount point does not exist on conf file
 ##Need delete on cascade : too dangerous
@@ -81,11 +77,11 @@ class MountPointImporter():
 #            else:
 #                #logging.info("Delete %s from db", i)
 #                self.delete_mount_point(i)
-#                filesystem = Filesystem ( 
+#                filesystem = Filesystem (
 #                    mount_point = i, 
-#                    cluster = self._cluster_name, 
+#                    cluster = self.cluster,
 #                    type = self._db_mount_point[i])
-#                #filesystem.delete(self._db)
+#                #filesystem.delete(self.db)
 
     def get_mount_point_from_config(self):
         fs_config = dict(self._conf.items(self._fs_mounted))
@@ -96,8 +92,8 @@ class MountPointImporter():
               SELECT mount_point, type
                 FROM filesystem
               WHERE cluster = %s; """
-        datas = (self._cluster_name,)
-        cur = self._db.get_cur()
+        datas = (self.cluster,)
+        cur = self.db.get_cur()
         cur.execute(req, datas)
         fs_db = {}
         while (1):
@@ -121,7 +117,7 @@ class MountPointImporter():
            VALUES ( DEFAULT, %s, %s, %s );"""
         datas = (
           mount_point,
-          self._cluster_name,
+          self.cluster,
           type )
         self._db.execute(req, datas)
 
@@ -129,5 +125,5 @@ class MountPointImporter():
 
 ###### USE MODEL FUNCTION
     def delete_mount_point(self, mount_point):
-        cur = self._db.get_cur()
+        cur = self.db.get_cur()
         cur.execute("DELETE FROM filesystem WHERE mount_point = %s",(mount_point,))
