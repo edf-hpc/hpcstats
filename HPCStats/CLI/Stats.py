@@ -42,6 +42,7 @@ from HPCStats.Importer.Usage.UsageImporterFactory import UsageImporterFactory
 from HPCStats.Importer.MountPoint.MountPointImporterFactory import MountPointImporterFactory
 from HPCStats.Importer.Contexts.ContextImporterFactory import ContextImporterFactory
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory import BusinessCodeImporterFactory
+from HPCStats.Importer.Projects.ProjectImporterFactory import ProjectImporterFactory
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
 from HPCStats.Model.Project import Project, get_pareo_id
 from HPCStats.Model.Business import Business, get_business_id
@@ -56,6 +57,7 @@ def HPCStatsUpdater(object):
         # all importer objects
         self.context = None
         self.business = None
+        self.projects = None
         self.arch = None
         self.mounts = None
         self.fsusage = None
@@ -105,6 +107,13 @@ def HPCStatsUpdater(object):
 
         cluster_finder = ClusterFinder(db)
         cluster = cluster_finder.find(options.clustername)
+
+        if (options.projects):
+            logging.info("=> Updating projects for cluster %s" % (options.clustername))
+            try:
+                self.projects = ProjectImporterFactory().factory(self, db, config, cluster.get_name())
+            except RuntimeError:
+                logging.error("error occured on %s projects update." % (options.clustername))
 
         if (options.projects):
             logging.info("=> Updating context for cluster %s from stats file" % (options.clustername))
