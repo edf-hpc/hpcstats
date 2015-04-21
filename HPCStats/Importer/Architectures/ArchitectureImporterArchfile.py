@@ -38,16 +38,11 @@ import logging
 
 class ArchitectureImporterArchfile(ArchitectureImporter):
 
-    def __init__(self, app, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster):
 
-        ArchitectureImporter.__init__(self)
+        super(ArchitectureImporterArchfile, self).__init__(app, db, config, cluster)
 
-        self.app = app
-        self._db = db
-        self._conf = config
-        self._cluster_name = cluster_name
-
-        archfile_section = self._cluster_name + "/archfile"
+        archfile_section = self.cluster + "/archfile"
 
         self._archfile = config.get(archfile_section, "file")
         if not os.path.isfile(self._archfile):
@@ -56,23 +51,23 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
 
     def update_architecture(self):
 
-        cluster = Cluster(self._cluster_name)
+        cluster = Cluster(self.cluster)
         nodes = self.get_cluster_nodes()
-        if cluster.exists_in_db(self._db):
+        if cluster.exists_in_db(self.db):
             logging.debug("updating cluster %s", cluster)
-            cluster.update(self._db)
+            cluster.update(self.db)
         else:
             logging.debug("creating cluster %s", cluster)
-            cluster.save(self._db)
+            cluster.save(self.db)
 
         # insert or update nodes
         for node in nodes:
-            if node.exists_in_db(self._db):
+            if node.exists_in_db(self.db):
                 logging.debug("updating node %s", node)
-                node.update(self._db)
+                node.update(self.db)
             else:
                 logging.debug("creating node %s", node)
-                node.save(self._db)
+                node.save(self.db)
 
         
     def get_cluster_nodes(self):
@@ -84,14 +79,14 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
         config = ConfigParser.ConfigParser()
         config.read(self._archfile)
 
-        partitions_list = config.get(self._cluster_name,"partitions").split(',')
+        partitions_list = config.get(self.cluster,"partitions").split(',')
 
         for partition_name in partitions_list:
-            partition_section_name = self._cluster_name + "/" + partition_name
+            partition_section_name = self.cluster + "/" + partition_name
             nodesets_list = config.get(partition_section_name, "nodesets").split(',')
 
             for nodeset_name in nodesets_list:
-                nodeset_section_name = self._cluster_name + "/" + partition_name + "/" + nodeset_name
+                nodeset_section_name = self.cluster + "/" + partition_name + "/" + nodeset_name
                 nodenames = config.get(nodeset_section_name, "names")
 
                 sockets = config.getint(nodeset_section_name, "sockets")
@@ -111,7 +106,7 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                 if not frequency:
                     logging.error("frequency for nodeset %s/%s/%s (%s) '%s' does" \
                                   "not have a proper format : (\d+.)?\d(GHz|MHz)",
-                                   self._cluster_name,
+                                   self.cluster,
                                    partition_name,
                                    nodeset_name,
                                    nodenames,
@@ -131,7 +126,7 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                 if not memory:
                     logging.error("memory for nodeset %s/%s/%s (%s) '%s' does" \
                                   "not have a proper format : \d+(GB|MB)",
-                                   self._cluster_name,
+                                   self.cluster,
                                    partition_name,
                                    nodeset_name,
                                    nodenames,
@@ -144,7 +139,7 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                 for nodename in nodeset:
                     # create and append node
                     nodes.append( Node(name = nodename,
-                                       cluster = self._cluster_name,
+                                       cluster = self.cluster,
                                        partition = partition_name,
                                        cpu = cpu,
                                        memory = memory,
@@ -164,14 +159,14 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
 
         config = ConfigParser.ConfigParser()
         config.read(self._archfile)
-        partitions_list = config.get(self._cluster_name,"partitions").split(',')
+        partitions_list = config.get(self.cluster,"partitions").split(',')
         for partition_name in partitions_list:
-            partition_section_name = self._cluster_name + "/" + partition_name
+            partition_section_name = self.cluster + "/" + partition_name
             nodesets_list = config.get(partition_section_name, "nodesets").split(',')
             slurm_partitions_list = config.get(partition_section_name, "slurm_partitions").split(',')
             ns_nodeset = NodeSet()
             for nodeset_name in nodesets_list:
-                nodeset_section_name = self._cluster_name + "/" + partition_name + "/" + nodeset_name
+                nodeset_section_name = self.cluster + "/" + partition_name + "/" + nodeset_name
                 str_nodenames = config.get(nodeset_section_name, "names")
                 ns_nodeset.add(str_nodenames)
             partitions[str(ns_nodeset)] = slurm_partitions_list

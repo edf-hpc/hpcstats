@@ -27,7 +27,10 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-class ArchitectureImporter(object):
+from HPCStats.Importer.Importer import Importer
 
-    def __init__(self):
-        pass
+class ArchitectureImporter(Importer):
+
+    def __init__(self, app, db, config, cluster):
+
+        super(ArchitectureImporter, self).__init__(app, db, config, cluster)
