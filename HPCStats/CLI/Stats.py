@@ -111,7 +111,9 @@ def HPCStatsUpdater(object):
         if (options.projects):
             logging.info("=> Updating projects for cluster %s" % (options.clustername))
             try:
-                self.projects = ProjectImporterFactory().factory(self, db, config, cluster.get_name())
+                self.projects = ProjectImporterFactory().factory(self, db, config, cluster.get_name()
+                self.projects.load()
+                self.projects.update()
             except RuntimeError:
                 logging.error("error occured on %s projects update." % (options.clustername))
 
