@@ -73,10 +73,10 @@ class ContextImporterCSV(ContextImporter):
                  # a new context is set in database for all projects attached AND for all business attached.
                  # new line is set with a project referance OR a business referance.
                  if row[6]:
-                     for pareo in re.split('\|',row[6]):
+                     for project_name in re.split('\|',row[6]):
                          project = Project()
                          try:
-                             project.project_from_pareo(self.db, pareo)
+                             project.project_from_name(self.db, project_name)
                              context = Context(login = row[0].lower(),
                                                job = None,
                                                project = project.get_id(),
@@ -96,7 +96,7 @@ class ContextImporterCSV(ContextImporter):
                                  db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                                  pass
                          except:
-                             logging.error("context rejected. Project %s does not exist", pareo)
+                             logging.error("context rejected. Project %s does not exist", project_name)
                              db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                              pass
                  if row[7]:

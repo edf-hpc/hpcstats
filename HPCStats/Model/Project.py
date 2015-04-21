@@ -30,53 +30,28 @@
 import logging
 
 class Project:
-    def __init__(self, id = "", sector = "", domain = "", description = "", pareo = ""):
+    def __init__(self, name, description, sector=None, domain=None):
 
-        self._id = id
-        self._sector = sector
-        self._domain = domain
-        self._description = description
-        self._pareo = pareo
+        self.name = name
+        self.description = description
+        self.domain = domain
+        self.sector = sector
 
     def __str__(self):
-        if self._sector == None:
+        if self.sector == None:
            sector = "unknown"
         else:
-           sector = self._sector
-        if self._domain == None:
+           sector = self.sector
+        if self.domain == None:
            domain = "unknown"
         else:
-           domain = self._domain
-        if self._description == None:
+           domain = self.domain
+        if self.description == None:
            description = "unknown"
         else:
-           description = self._description
-        return self._id + " : " + self._pareo + " : " + self._sector + " - " + self._domain + " - " + self._description
+           description = self.description
+        return self.name + " : " + self.sector + " - " + self.domain + " - " + self.description
 
-    """ getter accessors """
-    def get_id(self):
-        return self._id
-
-    def get_sector(self):
-        return self._sector
-
-    def get_domain(self):
-        return self._domain
-
-    def get_description(self):
-        return self._description
-
-    def get_pareo(self):
-        return self._pareo
-
-    """ setter accessors """
-    def set_description(self, description):
-        self._description = description
-
-    def set_pareo(self, pareo):
-        self._pareo = pareo
-
-    """ methodes """
     def save(self, db):
         req = """
             INSERT INTO projects (
@@ -86,53 +61,51 @@ class Project:
                               pareo )
             VALUES (%s, %s, %s, %s);"""
         datas = (
-            self._sector,
-            self._domain,
-            self._description,
-            self._pareo )
+            self.sector,
+            self.domain,
+            self.description,
+            self.name )
         db.get_cur().execute(req, datas)
 
     def update(self, db):
         req = """
-            UPDATE projects SET 
+            UPDATE projects SET
                          sector = %s,
                          domain = %s,
-                         description = %s 
-                         pareo = %s 
-            WHERE id = %s;"""
+                         description = %s
+            WHERE pareo = %s;"""
         datas = (
-            self._sector,
-            self._domain, 
-            self._description, 
-            self._pareo, 
-            self._id )
+            self.sector,
+            self.domain,
+            self.description,
+            self.name )
         db.get_cur().execute(req, datas)
 
     def already_exist(self, db):
         cur = db.get_cur()
-        cur.execute("SELECT * FROM projects WHERE pareo = %s", (self._pareo,))
+        cur.execute("SELECT * FROM projects WHERE pareo = %s", (self.name,))
         nb_rows = cur.rowcount
         if nb_rows == 1:
            return True
         elif nb_rows == 0:
            return False
 
-    def project_from_pareo(self, db, pareo):
+    def project_from_name(self, db, name):
         cur = db.get_cur()
-        cur.execute("SELECT * FROM projects WHERE pareo = %s", (pareo,))
+        cur.execute("SELECT pareo, description, sector, domain FROM projects WHERE pareo = %s", (name,))
         res = cur.fetchone()
-        self._id = res[0]
-        self._sector = res[1]
-        self._domain = res[2]
-        self._description = res[3]
+        self.name = res[0]
+        self.description = res[1]
+        self.sector = res[2]
+        self.domain = res[3]
 
 def delete_projects(db):
     db.get_cur().execute("ALTER SEQUENCE projects_id_seq RESTART WITH 1;")   
     db.get_cur().execute("DELETE FROM projects;")
 
-def get_pareo_id(db, pareo):
+def get_name_id(db, name):
     cur = db.get_cur()
-    cur.execute("SELECT id_project FROM projects WHERE lower(pareo) = lower(%s)", (pareo,))
+    cur.execute("SELECT id_project FROM projects WHERE lower(pareo) = lower(%s)", (name,))
     results = cur.fetchone()
     return results[0]
 
