@@ -38,15 +38,13 @@ from HPCStats.Model.User import User
 
 class UserImporterXLSLdapSlurm(UserImporter):
 
-    def __init__(self, app, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster):
 
-        UserImporter.__init__(self, app, db, cluster_name)
+        super(UserImporterXLSLdapSlurm, self).__init__(app, db, config, cluster)
 
-        self._conf = config
-
-        ldap_section = self._cluster_name + "/ldap"
-        xls_section = self._cluster_name + "/xls"
-        db_section = self._cluster_name + "/slurm"
+        ldap_section = self.cluster + "/ldap"
+        xls_section = self.cluster + "/xls"
+        db_section = self.cluster + "/slurm"
 
         self._ldapurl = config.get(ldap_section,"url")
         self._ldapbase = config.get(ldap_section,"basedn")
@@ -87,27 +85,27 @@ class UserImporterXLSLdapSlurm(UserImporter):
     def update_users(self):
         users = self.get_all_users()
         for user in users:
-            if user.exists_in_db(self._db):
+            if user.exists_in_db(self.db):
                 logging.debug("updating user %s", user)
-                user.update_creation_deletion(self._db)
+                user.update_creation_deletion(self.db)
             # Il 'ny a plus de création pour le XLS
             #else:
                 #logging.debug("creating user %s", user)
-                #user.save(self._db)
+                #user.save(self.db)
 
-        #uids = self._get_unknown_users(self._db)
+        #uids = self._get_unknown_users(self.db)
         #if not uids: 
         #        logging.debug("no unknown users found")
         #else:
         #    for unknown_uid in uids:
         #        user = self.find_with_uid(unknown_uid)
         #        if user:
-        #            if user.exists_in_db(self._db):
+        #            if user.exists_in_db(self.db):
         #                logging.debug("updating user %s", user)
-        #                user.update(self._db)
+        #                user.update(self.db)
         #            else:
         #                logging.debug("creating user %s", user)
-        #                user.save(self._db)
+        #                user.save(self.db)
         #        else:
         #            logging.warning("unknown user with uid %d", unknown_uid)
 
@@ -123,7 +121,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                 if self._user_row(xls_row):
                     user = self.user_from_xls_row(xls_row)
 
-                    if user.get_cluster_name() == self._cluster_name and (not previous_user or not user == previous_user):
+                    if user.get_cluster_name() == self.cluster and (not previous_user or not user == previous_user):
 
                         [uid, gid] = self.get_ids_from_ldap(user)
                         user.set_uid(uid)
@@ -172,7 +170,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                     SELECT DISTINCT(id_user) AS uid,
                            id_group AS gid
                      FROM %s_job_table
-                     WHERE account = %%s; """ % (self._cluster_name)
+                     WHERE account = %%s; """ % (self.cluster)
                 datas = (user.get_login().lower(),)
                 nb_rows = self._cur.execute(req, datas)
                 if nb_rows == 1:
@@ -255,7 +253,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                      login = login,
                      uid = uid,
                      gid = gid,
-                     cluster_name = self._cluster_name,
+                     cluster_name = self.cluster,
                      department = department )
         return user
 
@@ -266,7 +264,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
         user = User( login = login,
                      uid = uid,
                      gid = gid,
-                     cluster_name = self._cluster_name )
+                     cluster_name = self.cluster )
         return user
 
     def find_with_uid(self, uid):
@@ -289,7 +287,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                        %s_job_table AS jobs
                  WHERE jobs.id_assoc = assoc.id_assoc
                    AND jobs.id_user = %%s
-              GROUP BY login; """ % (self._cluster_name, self._cluster_name)
+              GROUP BY login; """ % (self.cluster, self.cluster)
             datas = (uid,)
             nb_rows = self._cur.execute(req, datas)
             if nb_rows == 1:

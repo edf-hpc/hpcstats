@@ -27,13 +27,13 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-class UserImporter(object):
+from HPCStats.Importer.Importer import Importer
 
-    def __init__(self, app, db, cluster_name):
+class UserImporter(Importer):
 
-        self.app = app
-        self._db = db
-        self._cluster_name = cluster_name
+    def __init__(self, app, db, config, cluster):
+
+        super(UserImporter, self).__init__(app, db, config, cluster)
 
     def _get_unknown_users(self, db):
         req = """
@@ -41,7 +41,7 @@ class UserImporter(object):
               FROM jobs
              WHERE clustername = %s
                AND uid NOT IN (SELECT uid FROM users WHERE users.cluster = %s); """
-        datas = (self._cluster_name, self._cluster_name)
+        datas = (self.cluster, self.cluster)
 
         cur = db.get_cur()
         #print cur.mogrify(req, datas)

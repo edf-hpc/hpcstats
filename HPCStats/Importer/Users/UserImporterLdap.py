@@ -38,15 +38,11 @@ import re
 
 class UserImporterLdap(UserImporter):
 
-    def __init__(self, app, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster):
 
-        UserImporter.__init__(self, app, db, cluster_name)
+        super(UserImporterLdap, self).__init__(app, db, config, cluster)
 
-        self._db = db
-        self._conf = config
-        self._cluster_name = cluster_name
-
-        ldap_section = self._cluster_name + "/ldap"
+        ldap_section = self.cluster + "/ldap"
 
         self._ldapurl = config.get(ldap_section,"url")
         self._ldapbase = config.get(ldap_section,"basedn")
@@ -79,7 +75,7 @@ class UserImporterLdap(UserImporter):
         users_from_db = []
         cur = db.get_cur()
         cur.execute("SELECT * FROM users WHERE cluster = %s",
-            (self._cluster_name,) )
+            (self.cluster,) )
         results = cur.fetchall()
         for user in results:
             users_from_db.append(self.create_user_from_db(user))
@@ -87,7 +83,7 @@ class UserImporterLdap(UserImporter):
      
         
     def get_members_from_group(self, group):
-            if self._cluster_name != 'casanova':
+            if self.cluster != 'casanova':
               self._ldap_users = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"(&(objectclass=posixGroup)(cn=" + group + "))", ["memberUid"])
             else:
               self._ldap_users = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"(&(objectclass=posixGroup)(cn=" + group + "))", ["member"])
@@ -95,7 +91,7 @@ class UserImporterLdap(UserImporter):
             return self._ldap_users    
     
     def get_user_from_id(self, uid):
-        if self._cluster_name == 'casanova':
+        if self.cluster == 'casanova':
             self._ldappeople = "ou=people,dc=calibre,dc=edf,dc=fr"
             def_member = "member=uid="
             def_department = "department"
@@ -131,7 +127,7 @@ class UserImporterLdap(UserImporter):
         return self._ldap_users_info
 
     def get_all_users(self):
-        if self._cluster_name != 'casanova':
+        if self.cluster != 'casanova':
            _attr = "memberUid"
         else:
            _attr = "member"
@@ -146,7 +142,7 @@ class UserImporterLdap(UserImporter):
                 logging.info("item1 => %s \n" % (' '.join(item[1][_attr])))
 
                 for member in item[1][_attr]:
-                    if self._cluster_name != 'casanova':
+                    if self.cluster != 'casanova':
                       user_info = self.get_user_from_id(member)
                     else:
                       user_info = self.get_user_from_id(member.split(",")[0].split("=")[1])
@@ -155,7 +151,7 @@ class UserImporterLdap(UserImporter):
                         for clef, valeur in user_info[0][1].items():
                            logging.info("%s : %s" % (clef, valeur[0]))
                            
-                        if self._cluster_name == "casanova":
+                        if self.cluster == "casanova":
                             def_department = 'department'
                             def_name = lu["cn"][0]
                         else:
@@ -173,7 +169,7 @@ class UserImporterLdap(UserImporter):
                             _department = "OMITTED"
                         user = User( name = def_name,
                                     login = lu["uid"][0].lower(),
-                                    cluster_name = self._cluster_name,
+                                    cluster_name = self.cluster,
                                     uid = lu["uidNumber"][0],
                                     gid = lu["gidNumber"][0],
                                     department = _department,
@@ -185,7 +181,7 @@ class UserImporterLdap(UserImporter):
 
     def update_users(self):
         users = self.get_all_users()
-        users_db = self.get_all_users_from_db(self._db)
+        users_db = self.get_all_users_from_db(self.db)
 
         # scrutation of the db users table
         for user in users_db:
@@ -212,7 +208,7 @@ class UserImporterLdap(UserImporter):
                     user.set_creation_date(datetime.now())
                     boolean = True
                 # update departement column if necesary
-                if self._cluster_name == "casanova":
+                if self.cluster == "casanova":
                     def_department = 'department'
                     user_name = user_from_ldap[0][1]["cn"][0]
                 else:
@@ -245,18 +241,18 @@ class UserImporterLdap(UserImporter):
             if boolean is True:
                 logging.debug("update user %s on cluster %s", \
                                user.get_login(),
-                               self._cluster_name)
+                               self.cluster)
                 try :
-                    user.update(self._db)
+                    user.update(self.db)
                 except :
                     logging.error("problem occured on user update")
 
         #create users
         for user in users: # scrutation of ldap list users
-            if not user.exists_in_db(self._db):
+            if not user.exists_in_db(self.db):
                 user.set_creation_date(datetime.now())
                 logging.debug("creating user %s", user)
-                user.save(self._db) 
+                user.save(self.db) 
 
     def decypher(self, s):
         x = []
