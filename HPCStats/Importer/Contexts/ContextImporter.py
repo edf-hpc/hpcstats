@@ -27,6 +27,7 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+from HPCStats.Importer.Importer import Importer
 from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Sector import Sector
 from HPCStats.Model.Project import Project
@@ -41,15 +42,13 @@ import codecs
 import re
 import string
 
-class ContextImporter(object):
+class ContextImporter(Importer):
 
-    def __init__(self, app, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster):
 
-        self.app = app
-        self._db = db
-        self._cluster_name = cluster_name
+        super(ContextImporter, self).__init__(app, db, config, cluster)
 
-        context_section = self._cluster_name + "/context"
+        context_section = self.cluster + "/context"
         self._context_file = config.get(context_section, "file")
 
         if not os.path.isfile(self._context_file):
@@ -57,9 +56,9 @@ class ContextImporter(object):
             raise RuntimeError
 
         # delete all contexts entries in databases for cluster
-        logging.debug("Delete all context entries in db for cluster %s", self._cluster_name)
-        delete_contexts(self._db, self._cluster_name)
-        self._db.commit()
+        logging.debug("Delete all context entries in db for cluster %s", self.cluster)
+        delete_contexts(self.db, self.cluster)
+        self.db.commit()
 
         p_file = open(self._context_file, 'r')
         # save point is used to considere exception and commit in database only at the end
@@ -77,16 +76,16 @@ class ContextImporter(object):
                      for pareo in re.split('\|',row[6]):
                          project = Project()
                          try:
-                             project.project_from_pareo(self._db, pareo)
+                             project.project_from_pareo(self.db, pareo)
                              context = Context(login = row[0].lower(),
                                                job = None,
                                                project = project.get_id(),
                                                business = None,
-                                               cluster = self._cluster_name)
+                                               cluster = self.cluster)
                              try:
-                                 context.save(self._db)
+                                 context.save(self.db)
                                  logging.debug("add context : %s", context)
-                                 #self._db.commit()
+                                 #self.db.commit()
                                  db.get_cur().execute("SAVEPOINT my_savepoint;")
                              except psycopg2.DataError:
                                  logging.error("impossible to add CONTEXT entry in database : (%s), du to encoding error", row)
@@ -104,16 +103,16 @@ class ContextImporter(object):
                      for code in re.split('\|',row[7]):
                          business = Business()
                          try:
-                             business.business_from_key(self._db, code)
+                             business.business_from_key(self.db, code)
                              context = Context(login = row[0].lower(),
                                                job = None,
                                                project = None,
                                                business = business.get_id(),
-                                               cluster = self._cluster_name)
+                                               cluster = self.cluster)
                              try:
-                                 context.save(self._db)
+                                 context.save(self.db)
                                  logging.debug("add context : %s", context)
-                                 #self._db.commit()
+                                 #self.db.commit()
                                  db.get_cur().execute("SAVEPOINT my_savepoint;")
                              except psycopg2.DataError:
                                  logging.error("impossible to add CONTEXT entry in database : (%s), du to encoding error", row)
@@ -129,5 +128,5 @@ class ContextImporter(object):
                              pass
                  if not row[6] and not row[7]:
                      logging.error("line : %s rejected - not code or project associate", row)
-        self._db.commit()
+        self.db.commit()
         p_file.close()
