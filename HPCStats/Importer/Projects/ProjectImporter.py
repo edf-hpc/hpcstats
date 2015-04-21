@@ -27,17 +27,11 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import logging
-from HPCStats.Importer.Contexts.ContextImporter import ContextImporter
+from HPCStats.Importer.Importer import Importer
 
-class ContextImporterFactory(object):
+class ProjectImporter(Importer):
 
-    def __init__(self):
-        pass
+    def __init__(self, app, db, config, cluster):
 
-    def factory(self, app, db, config, cluster_name):
-        if config.get(cluster_name, "context") == "context":
-            return ContextImporter(app, db, config, cluster_name)
-        else:
-            logging.critical("TO BE CODED")
-        return None
+        super(ProjectImporter, self).__init__(app, db, config, cluster)
+

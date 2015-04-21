@@ -27,6 +27,7 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
 from HPCStats.Model.Domain import Domain, delete_domains
 from HPCStats.Model.Sector import Sector, delete_sectors
 from HPCStats.Model.Project import Project, delete_projects
@@ -39,15 +40,13 @@ import psycopg2
 import codecs
 import re
 
-class PareoImporter(object):
+class ProjectImporterCSV(ProjectImporter):
 
-    def __init__(self, app, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster):
 
-        self.app = app
-        self._db = db
-        self._cluster_name = cluster_name
+        super(ProjectImporter, self).__init__(app, db, config, cluster)
 
-        pareo_section = self._cluster_name + "/pareo"
+        pareo_section = self.cluster + "/pareo"
         self._pareo_file = config.get(pareo_section, "file")
 
         if not os.path.isfile(self._pareo_file):
@@ -57,11 +56,11 @@ class PareoImporter(object):
         # delete all entries in domains and sectors tables and 
         # its dependances in contexts and projects table
         logging.debug("Delete all pareo entries in db")
-        delete_contexts_with_pareo(self._db)
-        delete_projects(self._db)
-        delete_sectors(self._db)
-        delete_domains(self._db)
-        self._db.commit()
+        delete_contexts_with_pareo(self.db)
+        delete_projects(self.db)
+        delete_sectors(self.db)
+        delete_domains(self.db)
+        self.db.commit()
 
         p_file = open(self._pareo_file, 'r')
         # savepoint is used to considere exceptions and commit in database only at the end.
@@ -81,8 +80,8 @@ class PareoImporter(object):
                      domain = Domain(id = id_domain,
                                      description = description_domain)
                      try:
-                         if not domain.already_exist(self._db):
-                             domain.save(self._db)
+                         if not domain.already_exist(self.db):
+                             domain.save(self.db)
                              if not domain.get_description():
                                  logging.debug("add domain : %s, without description", \
                                                 domain.get_id())
@@ -110,8 +109,8 @@ class PareoImporter(object):
                                      domain = id_domain,
                                      description = description_sector)
                      try:
-                         if not sector.already_exist(self._db):
-                             sector.save(self._db)
+                         if not sector.already_exist(self.db):
+                             sector.save(self.db)
                              if not sector.get_description():
                                  logging.debug("add sector : %s, from domain : %s, without description", \
                                                 sector.get_id(),\
@@ -142,8 +141,8 @@ class PareoImporter(object):
                                      description = row[1],
                                      pareo = row[0])
                      try:
-                         if not project.already_exist(self._db):
-                             project.save(self._db)
+                         if not project.already_exist(self.db):
+                             project.save(self.db)
                              if not project.get_description():
                                  logging.debug("add project : %s, from domain : %s, without description", \
                                                 project.get_pareo(), \
@@ -163,5 +162,5 @@ class PareoImporter(object):
                          logging.error("impossible to add PAREO entry in database : (%s - %s), du to relations error", row[0], row[1])
                          db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                          pass
-        self._db.commit()
+        self.db.commit()
         p_file.close()
