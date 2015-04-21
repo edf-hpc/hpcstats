@@ -27,15 +27,13 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-class UsageImporter(object):
+from HPCStats.Importer.Importer import Importer
 
-    def __init__(self, app, db, config, cluster_name):
+class UsageImporter(Importer):
 
-        self.app = app
-        self._db = db
-        self._conf = config
-        self._cluster_name = cluster_name
-        #self._fs_type = fs_type
+    def __init__(self, app, db, config, cluster):
+
+        super(UsageImporter, self).__init__(app, db, config, cluster)
 
     def get_last_home_usage_timestamp(self):
         last_usage_timestamp = 0
@@ -46,9 +44,9 @@ class UsageImporter(object):
             AND filesystem.clustername = %s
             AND filesystem.type = %s
               ; """
-        datas = (self._cluster_name,
+        datas = (self.cluster,
                  self._fs_type,)
-        cur = self._db.get_cur()
+        cur = self.db.get_cur()
         cur.execute(req, datas)
         results = cur.fetchall()
         for usage in results:

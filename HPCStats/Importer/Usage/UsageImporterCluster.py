@@ -42,11 +42,11 @@ from HPCStats.Model.Filesystem_usage import Filesystem_usage
 
 class UsageImporterCluster(UsageImporter):
 
-    def __init__(self, app, db, config, cluster_name):
+    def __init__(self, app, db, config, cluster):
 
-        UsageImporter.__init__(self, app, db, config, cluster_name)
+        super(UsageImporter, self).__init__(app, db, config, cluster)
 
-        usage_section = self._cluster_name + "/usage"
+        usage_section = self.cluster + "/usage"
 
         self._fshost = config.get(usage_section,"host")
         self._fsname = config.get(usage_section,"name")
@@ -57,7 +57,7 @@ class UsageImporterCluster(UsageImporter):
         self._usage = [] #Output file from ssh connection
  
         try:
-            logging.info("Start ssh connection on cluster %s", cluster_name)
+            logging.info("Start ssh connection on cluster %s", self.cluster)
             #Paramiko is used to initiate ssh connection
             self._ssh = paramiko.SSHClient()
             #Set automatically RSA key on known_hosts file
@@ -73,8 +73,8 @@ class UsageImporterCluster(UsageImporter):
             self._usage = self._stdout.readlines()
             #print self._usage
             #Get filesytem from HPCStats db
-            fs_list = Filesystem().get_fs_for_cluster(self._db, self._cluster_name)
-            logging.info("Get fs for cluster %s : %s", cluster_name, fs_list)
+            fs_list = Filesystem().get_fs_for_cluster(self.db, self.cluster)
+            logging.info("Get fs for cluster %s : %s", self.cluster, fs_list)
 
             #For all files system on the cluster
             for fs in fs_list:
@@ -83,26 +83,26 @@ class UsageImporterCluster(UsageImporter):
                 #Get last fs timestamp from HPCStats db
                 timestamp = self._get_last_fs_timestamp_usage(fs)
                 logging.info("Get %s %s last timestamp : %s", \
-                              self._cluster_name, fs, timestamp )
+                              self.cluster, fs, timestamp )
                 if timestamp:
                     #Get usage list from cluster
-                    logging.info("Get new %s %s usages", self._cluster_name, fs)
+                    logging.info("Get new %s %s usages", self.cluster, fs)
                     self._get_usage_list(fs, timestamp)
                 #Update HPCStats database with new values
                 if self._fs_usage:
                     logging.info("List of %s usages to add for cluster %s : %s", \
                           fs, \
-                          self._cluster_name, \
+                          self.cluster, \
                           self._fs_usage)
                     #for fs_usage in self._fs_usage:
-                    Filesystem_usage().update_usage(self._db, self._cluster_name, fs, self._fs_usage)
+                    Filesystem_usage().update_usage(self.db, self.cluster, fs, self._fs_usage)
                 else:
-                    logging.info("No new %s %s usages", self._cluster_name, fs)
+                    logging.info("No new %s %s usages", self.cluster, fs)
 
 
         except (paramiko.AuthenticationException, socket.error ) as e:
             logging.error("ssh connection to cluster %s failed: %s", \
-                           cluster_name, e)
+                           self.cluster, e)
             raise RuntimeError
 
 
@@ -124,16 +124,16 @@ class UsageImporterCluster(UsageImporter):
             AND filesystem.cluster = %s
             AND filesystem.mount_point = %s
               ; """
-        datas = (self._cluster_name,
+        datas = (self.cluster,
                  fs,)
-        cur = self._db.get_cur()
+        cur = self.db.get_cur()
         cur.execute(req, datas)
         if cur.fetchone()[0] is None:
             result = datetime(1970, 1, 1, 0, 0)
         else:
             cur.execute(req, datas)
             result = cur.fetchone()[0]
-        #logging.info("Get %s %s timestamp : %s", self._cluster_name, fs, result )
+        #logging.info("Get %s %s timestamp : %s", self.cluster, fs, result )
         return result
 
     def decypher(self, s):
