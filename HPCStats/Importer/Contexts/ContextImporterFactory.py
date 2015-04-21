@@ -28,16 +28,16 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
-from HPCStats.Importer.Contexts.ContextImporter import ContextImporter
+from HPCStats.Importer.Contexts.ContextImporterCSV import ContextImporterCSV
 
 class ContextImporterFactory(object):
 
     def __init__(self):
         pass
 
-    def factory(self, app, db, config, cluster_name):
-        if config.get(cluster_name, "context") == "context":
-            return ContextImporter(app, db, config, cluster_name)
+    def factory(self, app, db, config, cluster):
+        if config.get(cluster_name, "context") == "csv":
+            return ContextImporterCSV(app, db, config, cluster)
         else:
             logging.critical("TO BE CODED")
         return None
