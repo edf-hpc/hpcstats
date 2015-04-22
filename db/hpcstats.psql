@@ -1,840 +1,140 @@
---
--- PostgreSQL database dump
---
+-------------------------------------------------------------
+---      PostgreSQL script for HPCStats database
+-------------------------------------------------------------
 
-SET statement_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
-SET check_function_bodies = false;
-SET client_min_messages = warning;
-SET escape_string_warning = off;
 
-SET search_path = public, pg_catalog;
-
-SET default_tablespace = '';
-
-SET default_with_oids = false;
-
---
--- Name: business; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE business (
-    id_business integer NOT NULL,
-    key character varying(30) NOT NULL,
-    description text
+CREATE TABLE Userhpc(
+        userhpc_id         character varying(30) NOT NULL,
+        userhpc_name       character varying(30) NOT NULL,
+        userhpc_firstname  character varying(30) NOT NULL,
+        userhpc_department character varying(30),
+        CONSTRAINT Userhpc_pkey PRIMARY KEY (userhpc_id)
 );
 
-
-ALTER TABLE public.business OWNER TO hpcstats;
-
---
--- Name: business_id_seq; Type: SEQUENCE; Schema: public; Owner: hpcstats
---
-
-CREATE SEQUENCE business_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.business_id_seq OWNER TO hpcstats;
-
---
--- Name: business_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: hpcstats
---
-
-ALTER SEQUENCE business_id_seq OWNED BY business.id_business;
-
-
---
--- Name: clusters; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE clusters (
-    name character varying(30) NOT NULL
+CREATE TABLE Cluster(
+        cluster_id   SERIAL,
+        cluster_name character varying(30) NOT NULL,
+        CONSTRAINT Cluster_pkey PRIMARY KEY (cluster_id)
 );
 
-
-ALTER TABLE public.clusters OWNER TO hpcstats;
-
---
--- Name: contexts; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE contexts (
-    id_context integer NOT NULL,
-    login character varying(30) NOT NULL,
-    id_job integer,
-    id_project integer,
-    id_business integer,
-    name_cluster character varying(30) NOT NULL
+CREATE TABLE Job(
+        job_id         SERIAL,
+        job_sched_id   integer NOT NULL,
+        job_batch_id   character varying(30) NOT NULL,
+        job_nbCpu      integer NOT NULL,
+        job_name       character varying(30),
+        job_state      character varying(30) NOT NULL,
+        job_queue      character varying(30),
+        job_submission timestamp NOT NULL,
+        job_start      timestamp,
+        job_end        timestamp,
+        userhpc_id     character varying(30) NOT NULL,
+        cluster_id     integer NOT NULL,
+        project_id     integer NOT NULL,
+        business_code  character varying(30) NOT NULL,
+        CONSTRAINT Job_pkey PRIMARY KEY (job_id),
+        CONSTRAINT Job_unique UNIQUE (job_sched_id, job_batch_id)
 );
 
-
-ALTER TABLE public.contexts OWNER TO hpcstats;
-
---
--- Name: COLUMN contexts.login; Type: COMMENT; Schema: public; Owner: hpcstats
---
-
-COMMENT ON COLUMN contexts.login IS 'login users, sans contrainte de cl trangre pour des problmes de performances';
-
-
---
--- Name: COLUMN contexts.id_business; Type: COMMENT; Schema: public; Owner: hpcstats
---
-
-COMMENT ON COLUMN contexts.id_business IS 'code mtier';
-
-
---
--- Name: contexts_id_seq; Type: SEQUENCE; Schema: public; Owner: hpcstats
---
-
-CREATE SEQUENCE contexts_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.contexts_id_seq OWNER TO hpcstats;
-
---
--- Name: contexts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: hpcstats
---
-
-ALTER SEQUENCE contexts_id_seq OWNED BY contexts.id_context;
-
-
---
--- Name: domains; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE domains (
-    id_domain character varying(5) NOT NULL,
-    description text
+CREATE TABLE Account(
+        account_uid      integer NOT NULL,
+        account_gid      integer NOT NULL,
+        account_creation date NOT NULL,
+        account_deletion date NOT NULL,
+        userhpc_id       character varying(30) NOT NULL,
+        cluster_id       integer NOT NULL,
+        CONSTRAINT Account_pkey PRIMARY KEY (userhpc_id, cluster_id)
 );
 
-
-ALTER TABLE public.domains OWNER TO hpcstats;
-
---
--- Name: events; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE events (
-    id integer NOT NULL,
-    node character varying(30) NOT NULL,
-    t_start timestamp without time zone NOT NULL,
-    t_end timestamp without time zone,
-    nb_cpus integer,
-    type character varying(64),
-    reason character varying(60)
+CREATE TABLE Node(
+        node_id        SERIAL,
+        node_name      character varying(30) NOT NULL,
+        node_nbCpu     integer,
+        node_partition character varying(30) NOT NULL,
+        node_flops     integer NOT NULL,
+        node_memory    integer NOT NULL,
+        cluster_id     integer NOT NULL,
+        CONSTRAINT Node_pkey PRIMARY KEY (node_id, cluster_id)
 );
 
-
-ALTER TABLE public.events OWNER TO hpcstats;
-
---
--- Name: events_id_seq; Type: SEQUENCE; Schema: public; Owner: hpcstats
---
-
-CREATE SEQUENCE events_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.events_id_seq OWNER TO hpcstats;
-
---
--- Name: events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: hpcstats
---
-
-ALTER SEQUENCE events_id_seq OWNED BY events.id;
-
-
---
--- Name: filesystem; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE filesystem (
-    id integer NOT NULL,
-    mount_point character varying(30),
-    cluster character varying(30),
-    type character varying(30)
+CREATE TABLE Event(
+        event_id     SERIAL,
+        event_type   character varying(30) NOT NULL,
+        event_reason character varying(30),
+        event_start  timestamp NOT NULL,
+        event_end    timestamp NOT NULL,
+        node_id      integer NOT NULL,
+        cluster_id   integer NOT NULL,
+        CONSTRAINT Event_pkey PRIMARY KEY (event_id, node_id)
 );
 
-
-ALTER TABLE public.filesystem OWNER TO hpcstats;
-
---
--- Name: filesystem_id_seq; Type: SEQUENCE; Schema: public; Owner: hpcstats
---
-
-CREATE SEQUENCE filesystem_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.filesystem_id_seq OWNER TO hpcstats;
-
---
--- Name: filesystem_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: hpcstats
---
-
-ALTER SEQUENCE filesystem_id_seq OWNED BY filesystem.id;
-
-
---
--- Name: filesystem_usage; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE filesystem_usage (
-    fs_id integer NOT NULL,
-    "timestamp" timestamp without time zone NOT NULL,
-    usage real,
-    inode real
+CREATE TABLE Project(
+        project_id          SERIAL,
+        project_code        character varying(30) NOT NULL,
+        project_description text,
+        sector_key          character varying(5),
+        domain_id           character varying(4),
+        CONSTRAINT Project_pkey PRIMARY KEY (project_id)
 );
 
-
-ALTER TABLE public.filesystem_usage OWNER TO hpcstats;
-
---
--- Name: job_nodes; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE job_nodes (
-    job integer NOT NULL,
-    node character varying(30) NOT NULL,
-    cpu_id character varying(30) NOT NULL
+CREATE TABLE Business(
+        business_code        character varying(30) NOT NULL,
+        business_description text NOT NULL,
+        CONSTRAINT Business_pkey PRIMARY KEY (business_code)
 );
 
-
-ALTER TABLE public.job_nodes OWNER TO hpcstats;
-
---
--- Name: jobs; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE jobs (
-    id integer NOT NULL,
-    id_job integer NOT NULL,
-    uid integer,
-    gid integer,
-    submission_datetime timestamp without time zone,
-    running_datetime timestamp without time zone,
-    end_datetime timestamp without time zone,
-    nb_nodes integer,
-    nb_cpus integer,
-    running_queue character varying(64),
-    clustername character varying(30),
-    state character varying(30),
-    sched_id character varying(30),
-    login character varying(30),
-    name character varying(30)
+CREATE TABLE Sector(
+        sector_key    character varying(5) NOT NULL,
+        sector_domain character varying(30),
+        sector_name   character varying(25),
+        domain_id     character varying(4) NOT NULL,
+        CONSTRAINT Sector_pkey PRIMARY KEY (sector_key, domain_id)
 );
 
-
-ALTER TABLE public.jobs OWNER TO hpcstats;
-
---
--- Name: jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: hpcstats
---
-
-CREATE SEQUENCE jobs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.jobs_id_seq OWNER TO hpcstats;
-
---
--- Name: jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: hpcstats
---
-
-ALTER SEQUENCE jobs_id_seq OWNED BY jobs.id;
-
-
---
--- Name: nodes; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE nodes (
-    name character varying(30) NOT NULL,
-    cluster character varying(30),
-    partition character varying(30),
-    cpu integer,
-    memory bigint,
-    model character varying(50),
-    flops bigint
+CREATE TABLE Domain(
+        domain_id   character varying(4) NOT NULL,
+        domain_name character varying(30),
+        CONSTRAINT Domain_pkey PRIMARY KEY (domain_id)
 );
 
-
-ALTER TABLE public.nodes OWNER TO hpcstats;
-
---
--- Name: projects; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE projects (
-    id_project integer NOT NULL,
-    id_sector integer,
-    id_domain character varying(5),
-    description text,
-    pareo character varying(30) NOT NULL
+CREATE TABLE filesystem(
+        filesystem_id   SERIAL,
+        filesystem_name character varying(30) NOT NULL,
+        cluster_id      integer NOT NULL,
+        CONSTRAINT filesystem_pkey PRIMARY KEY (filesystem_id, cluster_id)
 );
 
-
-ALTER TABLE public.projects OWNER TO hpcstats;
-
---
--- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: hpcstats
---
-
-CREATE SEQUENCE projects_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.projects_id_seq OWNER TO hpcstats;
-
---
--- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: hpcstats
---
-
-ALTER SEQUENCE projects_id_seq OWNED BY projects.id_project;
-
-
---
--- Name: sectors; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE sectors (
-    id_sector integer NOT NULL,
-    id_domain character varying(5) NOT NULL,
-    description text
+CREATE TABLE fsusage(
+        fsusage_time  timestamp NOT NULL,
+        fsusage_usage real NOT NULL,
+        filesystem_id integer NOT NULL,
+        cluster_id    integer NOT NULL,
+        CONSTRAINT fsusage_pkey PRIMARY KEY (fsusage_time, filesystem_id, cluster_id)
 );
 
-
-ALTER TABLE public.sectors OWNER TO hpcstats;
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE TABLE users (
-    name character varying(50) NOT NULL,
-    login character varying(30) NOT NULL,
-    cluster character varying(30) NOT NULL,
-    department character varying(30),
-    creation date,
-    deletion date,
-    uid integer,
-    gid integer
+CREATE TABLE ContextAccount(
+        userhpc_id    character varying(30) NOT NULL,
+        cluster_id    integer NOT NULL,
+        business_code character varying(30) NOT NULL,
+        project_id    integer NOT NULL,
+        CONSTRAINT ContextAccount_pkey PRIMARY KEY (userhpc_id, cluster_id, business_code, project_id)
 );
 
-
-ALTER TABLE public.users OWNER TO hpcstats;
-
---
--- Name: id_business; Type: DEFAULT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY business ALTER COLUMN id_business SET DEFAULT nextval('business_id_seq'::regclass);
-
-
---
--- Name: id_context; Type: DEFAULT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY contexts ALTER COLUMN id_context SET DEFAULT nextval('contexts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY filesystem ALTER COLUMN id SET DEFAULT nextval('filesystem_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY jobs ALTER COLUMN id SET DEFAULT nextval('jobs_id_seq'::regclass);
-
-
---
--- Name: id_project; Type: DEFAULT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY projects ALTER COLUMN id_project SET DEFAULT nextval('projects_id_seq'::regclass);
-
-
---
--- Name: business_key_unicity; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY business
-    ADD CONSTRAINT business_key_unicity UNIQUE (key);
-
-
---
--- Name: clusters_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY clusters
-    ADD CONSTRAINT clusters_pkey PRIMARY KEY (name);
-
-
---
--- Name: context_unicity; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY contexts
-    ADD CONSTRAINT context_unicity UNIQUE (id_context, login, id_job, id_project, id_business, name_cluster);
-
-
---
--- Name: contexts_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY contexts
-    ADD CONSTRAINT contexts_pkey PRIMARY KEY (id_context);
-
-
---
--- Name: domain_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY domains
-    ADD CONSTRAINT domain_pkey PRIMARY KEY (id_domain);
-
-
---
--- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_pkey PRIMARY KEY (id);
-
-
---
--- Name: events_unique; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_unique UNIQUE (node, t_start, t_end);
-
-
---
--- Name: filesystem_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY filesystem
-    ADD CONSTRAINT filesystem_pkey PRIMARY KEY (id);
-
-
---
--- Name: filesystem_usage_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY filesystem_usage
-    ADD CONSTRAINT filesystem_usage_pkey PRIMARY KEY (fs_id, "timestamp");
-
-
---
--- Name: id_business_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY business
-    ADD CONSTRAINT id_business_pkey PRIMARY KEY (id_business);
-
-
---
--- Name: job_nodes_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY job_nodes
-    ADD CONSTRAINT job_nodes_pkey PRIMARY KEY (job, node, cpu_id);
-
-
---
--- Name: jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY jobs
-    ADD CONSTRAINT jobs_pkey PRIMARY KEY (id);
-
-
---
--- Name: nodes_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY nodes
-    ADD CONSTRAINT nodes_pkey PRIMARY KEY (name);
-
-
---
--- Name: projects_pareo_unique; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT projects_pareo_unique UNIQUE (pareo);
-
-
---
--- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT projects_pkey PRIMARY KEY (id_project);
-
-
---
--- Name: sector_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY sectors
-    ADD CONSTRAINT sector_pkey PRIMARY KEY (id_sector, id_domain);
-
-
---
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-ALTER TABLE ONLY users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (login, cluster);
-
-
---
--- Name: context_index; Type: INDEX; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE INDEX context_index ON contexts USING btree (login, id_job NULLS FIRST, id_project, id_business);
-
-
---
--- Name: sched_id_idx; Type: INDEX; Schema: public; Owner: hpcstats; Tablespace: 
---
-
-CREATE INDEX sched_id_idx ON jobs USING btree (sched_id);
-
-
---
--- Name: context_business; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY contexts
-    ADD CONSTRAINT context_business FOREIGN KEY (id_business) REFERENCES business(id_business) MATCH FULL ON UPDATE CASCADE ON DELETE SET NULL;
-
-
---
--- Name: context_cluster; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY contexts
-    ADD CONSTRAINT context_cluster FOREIGN KEY (name_cluster) REFERENCES clusters(name) MATCH FULL ON UPDATE CASCADE ON DELETE SET NULL;
-
-
---
--- Name: context_project_fk; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY contexts
-    ADD CONSTRAINT context_project_fk FOREIGN KEY (id_project) REFERENCES projects(id_project) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- Name: contexts_jobs_fk; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY contexts
-    ADD CONSTRAINT contexts_jobs_fk FOREIGN KEY (id_job) REFERENCES jobs(id) MATCH FULL ON UPDATE CASCADE ON DELETE SET NULL;
-
-
---
--- Name: events_node_fkey; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_node_fkey FOREIGN KEY (node) REFERENCES nodes(name);
-
-
---
--- Name: filesystem_cluster_fkey; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY filesystem
-    ADD CONSTRAINT filesystem_cluster_fkey FOREIGN KEY (cluster) REFERENCES clusters(name);
-
-
---
--- Name: filesystem_usage_fs_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY filesystem_usage
-    ADD CONSTRAINT filesystem_usage_fs_id_fkey FOREIGN KEY (fs_id) REFERENCES filesystem(id);
-
-
---
--- Name: job_nodes_job_fkey; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY job_nodes
-    ADD CONSTRAINT job_nodes_job_fkey FOREIGN KEY (job) REFERENCES jobs(id) ON DELETE CASCADE;
-
-
---
--- Name: job_nodes_node_fkey; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY job_nodes
-    ADD CONSTRAINT job_nodes_node_fkey FOREIGN KEY (node) REFERENCES nodes(name);
-
-
---
--- Name: nodes_cluster_fkey; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY nodes
-    ADD CONSTRAINT nodes_cluster_fkey FOREIGN KEY (cluster) REFERENCES clusters(name);
-
-
---
--- Name: projects_sector_fk; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT projects_sector_fk FOREIGN KEY (id_sector, id_domain) REFERENCES sectors(id_sector, id_domain) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- Name: sectors_domain_fk; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY sectors
-    ADD CONSTRAINT sectors_domain_fk FOREIGN KEY (id_domain) REFERENCES domains(id_domain) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- Name: users_cluster_fkey; Type: FK CONSTRAINT; Schema: public; Owner: hpcstats
---
-
-ALTER TABLE ONLY users
-    ADD CONSTRAINT users_cluster_fkey FOREIGN KEY (cluster) REFERENCES clusters(name);
-
-
---
--- Name: public; Type: ACL; Schema: -; Owner: postgres
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
-
-
---
--- Name: business; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE business FROM PUBLIC;
-REVOKE ALL ON TABLE business FROM hpcstats;
-GRANT ALL ON TABLE business TO hpcstats;
-GRANT SELECT ON TABLE business TO hpcstatsro;
-GRANT SELECT ON TABLE business TO hpcstatsbull;
-
-
---
--- Name: clusters; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE clusters FROM PUBLIC;
-REVOKE ALL ON TABLE clusters FROM hpcstats;
-GRANT ALL ON TABLE clusters TO hpcstats;
-GRANT SELECT ON TABLE clusters TO hpcstatsro;
-GRANT SELECT ON TABLE clusters TO hpcstatsbull;
-
-
---
--- Name: contexts; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE contexts FROM PUBLIC;
-REVOKE ALL ON TABLE contexts FROM hpcstats;
-GRANT ALL ON TABLE contexts TO hpcstats;
-GRANT SELECT ON TABLE contexts TO hpcstatsro;
-GRANT SELECT ON TABLE contexts TO hpcstatsbull;
-
-
---
--- Name: domains; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE domains FROM PUBLIC;
-REVOKE ALL ON TABLE domains FROM hpcstats;
-GRANT ALL ON TABLE domains TO hpcstats;
-GRANT SELECT ON TABLE domains TO hpcstatsro;
-GRANT SELECT ON TABLE domains TO hpcstatsbull;
-
-
---
--- Name: events; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE events FROM PUBLIC;
-REVOKE ALL ON TABLE events FROM hpcstats;
-GRANT ALL ON TABLE events TO hpcstats;
-GRANT SELECT ON TABLE events TO hpcstatsro;
-GRANT SELECT ON TABLE events TO hpcstatsbull;
-
-
---
--- Name: events_id_seq; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON SEQUENCE events_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE events_id_seq FROM hpcstats;
-GRANT ALL ON SEQUENCE events_id_seq TO hpcstats;
-GRANT SELECT ON SEQUENCE events_id_seq TO hpcstatsro;
-GRANT SELECT ON SEQUENCE events_id_seq TO hpcstatsbull;
-
-
---
--- Name: filesystem; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE filesystem FROM PUBLIC;
-REVOKE ALL ON TABLE filesystem FROM hpcstats;
-GRANT ALL ON TABLE filesystem TO hpcstats;
-GRANT SELECT ON TABLE filesystem TO hpcstatsro;
-GRANT SELECT ON TABLE filesystem TO hpcstatsbull;
-
-
---
--- Name: filesystem_id_seq; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON SEQUENCE filesystem_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE filesystem_id_seq FROM hpcstats;
-GRANT ALL ON SEQUENCE filesystem_id_seq TO hpcstats;
-GRANT SELECT ON SEQUENCE filesystem_id_seq TO hpcstatsbull;
-
-
---
--- Name: filesystem_usage; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE filesystem_usage FROM PUBLIC;
-REVOKE ALL ON TABLE filesystem_usage FROM hpcstats;
-GRANT ALL ON TABLE filesystem_usage TO hpcstats;
-GRANT SELECT ON TABLE filesystem_usage TO hpcstatsro;
-GRANT SELECT ON TABLE filesystem_usage TO hpcstatsbull;
-
-
---
--- Name: job_nodes; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE job_nodes FROM PUBLIC;
-REVOKE ALL ON TABLE job_nodes FROM hpcstats;
-GRANT ALL ON TABLE job_nodes TO hpcstats;
-GRANT SELECT ON TABLE job_nodes TO hpcstatsro;
-GRANT SELECT ON TABLE job_nodes TO hpcstatsbull;
-
-
---
--- Name: jobs; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE jobs FROM PUBLIC;
-REVOKE ALL ON TABLE jobs FROM hpcstats;
-GRANT ALL ON TABLE jobs TO hpcstats;
-GRANT SELECT ON TABLE jobs TO hpcstatsro;
-GRANT SELECT ON TABLE jobs TO hpcstatsbull;
-
-
---
--- Name: jobs_id_seq; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON SEQUENCE jobs_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE jobs_id_seq FROM hpcstats;
-GRANT ALL ON SEQUENCE jobs_id_seq TO hpcstats;
-GRANT SELECT ON SEQUENCE jobs_id_seq TO hpcstatsro;
-GRANT SELECT ON SEQUENCE jobs_id_seq TO hpcstatsbull;
-
-
---
--- Name: nodes; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE nodes FROM PUBLIC;
-REVOKE ALL ON TABLE nodes FROM hpcstats;
-GRANT ALL ON TABLE nodes TO hpcstats;
-GRANT SELECT ON TABLE nodes TO hpcstatsro;
-GRANT SELECT ON TABLE nodes TO hpcstatsbull;
-
-
---
--- Name: projects; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE projects FROM PUBLIC;
-REVOKE ALL ON TABLE projects FROM hpcstats;
-GRANT ALL ON TABLE projects TO hpcstats;
-GRANT SELECT ON TABLE projects TO hpcstatsro;
-GRANT SELECT ON TABLE projects TO hpcstatsbull;
-
-
---
--- Name: sectors; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE sectors FROM PUBLIC;
-REVOKE ALL ON TABLE sectors FROM hpcstats;
-GRANT ALL ON TABLE sectors TO hpcstats;
-GRANT SELECT ON TABLE sectors TO hpcstatsro;
-GRANT SELECT ON TABLE sectors TO hpcstatsbull;
-
-
---
--- Name: users; Type: ACL; Schema: public; Owner: hpcstats
---
-
-REVOKE ALL ON TABLE users FROM PUBLIC;
-REVOKE ALL ON TABLE users FROM hpcstats;
-GRANT ALL ON TABLE users TO hpcstats;
-GRANT SELECT ON TABLE users TO hpcstatsro;
-GRANT SELECT ON TABLE users TO hpcstatsbull;
-
-
---
--- PostgreSQL database dump complete
---
-
+ALTER TABLE ONLY Job ADD CONSTRAINT FK_Job_userhpc_id FOREIGN KEY (userhpc_id) REFERENCES Userhpc(userhpc_id);
+ALTER TABLE ONLY Job ADD CONSTRAINT FK_Job_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
+ALTER TABLE ONLY Job ADD CONSTRAINT FK_Job_project_id FOREIGN KEY (project_id) REFERENCES Project(project_id);
+ALTER TABLE ONLY Job ADD CONSTRAINT FK_Job_business_code FOREIGN KEY (business_code) REFERENCES Business(business_code);
+ALTER TABLE ONLY Account ADD CONSTRAINT FK_Account_userhpc_id FOREIGN KEY (userhpc_id) REFERENCES Userhpc(userhpc_id);
+ALTER TABLE ONLY Account ADD CONSTRAINT FK_Account_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
+ALTER TABLE ONLY Node ADD CONSTRAINT FK_Node_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
+ALTER TABLE ONLY Event ADD CONSTRAINT FK_Event_node_id FOREIGN KEY (node_id, cluster_id) REFERENCES Node(node_id, cluster_id);
+ALTER TABLE ONLY Project ADD CONSTRAINT FK_Project_sector_key FOREIGN KEY (sector_key, domain_id) REFERENCES Sector(sector_key, domain_id);
+ALTER TABLE ONLY Project ADD CONSTRAINT FK_Project_domain_id FOREIGN KEY (domain_id) REFERENCES Domain(domain_id);
+ALTER TABLE ONLY Sector ADD CONSTRAINT FK_Sector_domain_id FOREIGN KEY (domain_id) REFERENCES Domain(domain_id);
+ALTER TABLE ONLY filesystem ADD CONSTRAINT FK_filesystem_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
+ALTER TABLE ONLY fsusage ADD CONSTRAINT FK_fsusage_filesystem_id FOREIGN KEY (filesystem_id, cluster_id) REFERENCES filesystem(filesystem_id, cluster_id);
+ALTER TABLE ONLY fsusage ADD CONSTRAINT FK_fsusage_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
+ALTER TABLE ONLY ContextAccount ADD CONSTRAINT FK_ContextAccount_userhpc_id FOREIGN KEY (userhpc_id) REFERENCES Userhpc(userhpc_id);
+ALTER TABLE ONLY ContextAccount ADD CONSTRAINT FK_ContextAccount_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
+ALTER TABLE ONLY ContextAccount ADD CONSTRAINT FK_ContextAccount_business_code FOREIGN KEY (business_code) REFERENCES Business(business_code);
+ALTER TABLE ONLY ContextAccount ADD CONSTRAINT FK_ContextAccount_project_id FOREIGN KEY (project_id) REFERENCES Project(project_id);
