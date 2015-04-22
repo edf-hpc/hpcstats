@@ -38,9 +38,9 @@ from multiprocessing import Pool
 from HPCStats.CLI.ReportOptionParser import ReportOptionParser
 from HPCStats.CLI.Config import HPCStatsConfig
 from HPCStats.DB.DB import HPCStatsdb
+from HPCStats.Model.Cluster import Cluster
 from HPCStats.Finder.JobFinder import JobFinder
 from HPCStats.Finder.UserFinder import UserFinder
-from HPCStats.Finder.ClusterFinder import ClusterFinder
 
 # templates management
 def get_templates_dirname():
@@ -126,14 +126,14 @@ def run_interval(process_info):
     #cluster = Cluster(options.cluster)
 
     if options.debug:
-        print "getting nb cpus on cluster %s" % (cluster.get_name())
+        print "getting nb cpus on cluster %s" % (cluster.name)
 
     db.bind()
 
     nb_cpus_cluster = cluster.get_nb_cpus(db)
     
     if options.debug:
-        print "nb cpus on cluster %s: %d" % (cluster.get_name(), nb_cpus_cluster)
+        print "nb cpus on cluster %s: %d" % (cluster.name, nb_cpus_cluster)
 
     userstats = {} 
     groupstats = {}
@@ -145,7 +145,7 @@ def run_interval(process_info):
     nb_hours_interval = ((interval_end - interval_beginning).days + 1) * 24
 
     job_finder = JobFinder(db)
-    interval_jobs = job_finder.find_jobs_in_interval(cluster.get_name(), interval_beginning, interval_end)
+    interval_jobs = job_finder.find_jobs_in_interval(cluster.name, interval_beginning, interval_end)
 
     cpu_time_interval = 0
     nb_jobs = 0
@@ -162,7 +162,7 @@ def run_interval(process_info):
             nb_cpus = job.get_nb_procs()
             uid = job.get_uid()
             user_finder = UserFinder(db)
-            user = user_finder.find(cluster.get_name(), uid)
+            user = user_finder.find(cluster.name, uid)
             username = user.get_name()
             group = user.get_department()
 
@@ -289,8 +289,7 @@ def main(args=sys.argv):
 
     db.bind()
     
-    cluster_finder = ClusterFinder(db)
-    cluster = cluster_finder.find(options.cluster)  
+    cluster = Cluster(options.cluster)
       
     # check if cluster really exists
     if not cluster.exists_in_db(db):
@@ -298,7 +297,7 @@ def main(args=sys.argv):
                    % (cluster, ",".join(available_clusters)) )
 
     if options.debug:
-        print "main: getting nb cpus on cluster %s" % (cluster.get_name())
+        print "main: getting nb cpus on cluster %s" % (cluster.name)
 
     # get the total number of cpus inside the cluster
     nb_cpus_cluster = cluster.get_nb_cpus(db)
