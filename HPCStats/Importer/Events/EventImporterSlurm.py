@@ -149,7 +149,8 @@ class EventImporterSlurm(EventImporter):
         else:
             end_datetime = datetime.fromtimestamp(db_row["time_end"])
 
-        event = Event(  nodename = db_row["node_name"],
+        event = Event(  node = db_row["node_name"],
+                        cluster = self.cluster,
                         nb_cpu = db_row["cpu_count"],
                         start_datetime = datetime.fromtimestamp(db_row["time_start"]),
                         end_datetime = end_datetime,
@@ -177,7 +178,7 @@ class EventImporterSlurm(EventImporter):
 
             try:
                 while next_event_index < nb_events and \
-                      self._new_events[next_event_index].get_nodename() != event.get_nodename():
+                      self._new_events[next_event_index].node != event.node:
                     next_event_index += 1
             except IndexError:
                 logging.error("trying to access to index %d of list with %d items",
@@ -188,19 +189,19 @@ class EventImporterSlurm(EventImporter):
             if next_event_index == nb_events:
                 logging.debug("no event to merge : %d (%s, %s → %s)",
                                event_index,
-                               event.get_nodename(),
-                               event.get_start_datetime(),
-                               event.get_end_datetime() )
+                               event.node,
+                               event.start_datetime,
+                               event.end_datetime )
             else:
                 next_event = self._new_events[next_event_index]
-                if event.get_end_datetime() == next_event.get_start_datetime() and \
-                     event.get_event_type() == next_event.get_event_type():
+                if event.end_datetime == next_event.start_datetime and \
+                     event.event_type == next_event.event_type:
                     logging.debug("merging %s (%d) with %s (%d)",
                                    event,
                                    event_index,
                                    next_event,
                                    next_event_index )
-                    event.set_end_datetime(next_event.get_end_datetime())
+                    event.set_end_datetime(next_event.end_datetime)
                     self._new_events.pop(next_event_index)
                     nb_events -= 1
                     goto_next_event = False
@@ -213,8 +214,8 @@ class EventImporterSlurm(EventImporter):
         if self._datetime_end_last_event == self._date_from_unfinished_event:
             event_index = 0
             for event in self._new_events:
-                if event.get_end_datetime() and \
-                   event.get_end_datetime() <= self._date_from_last_event:
+                if event.end_datetime and \
+                   event.end_datetime <= self._date_from_last_event:
                     self._new_events.pop(event_index)
                 event_index += 1
 
