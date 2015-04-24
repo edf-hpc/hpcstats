@@ -4,17 +4,20 @@
 
 
 CREATE TABLE Userhpc(
-        userhpc_id         character varying(30) NOT NULL,
+        userhpc_id         SERIAL,
+        userhpc_login      character varying(30) NOT NULL,
         userhpc_name       character varying(30) NOT NULL,
         userhpc_firstname  character varying(30) NOT NULL,
         userhpc_department character varying(30),
-        CONSTRAINT Userhpc_pkey PRIMARY KEY (userhpc_id)
+        CONSTRAINT Userhpc_pkey PRIMARY KEY (userhpc_id),
+        CONSTRAINT Userhpc_unique UNIQUE (userhpc_login)
 );
 
 CREATE TABLE Cluster(
         cluster_id   SERIAL,
         cluster_name character varying(30) NOT NULL,
-        CONSTRAINT Cluster_pkey PRIMARY KEY (cluster_id)
+        CONSTRAINT Cluster_pkey PRIMARY KEY (cluster_id),
+        CONSTRAINT Cluster_unique UNIQUE (cluster_name)
 );
 
 CREATE TABLE Job(
@@ -28,12 +31,12 @@ CREATE TABLE Job(
         job_submission timestamp NOT NULL,
         job_start      timestamp,
         job_end        timestamp,
-        userhpc_id     character varying(30) NOT NULL,
+        userhpc_id     integer NOT NULL,
         cluster_id     integer NOT NULL,
         project_id     integer NOT NULL,
         business_code  character varying(30) NOT NULL,
         CONSTRAINT Job_pkey PRIMARY KEY (job_id),
-        CONSTRAINT Job_unique UNIQUE (job_sched_id, job_batch_id)
+        CONSTRAINT Job_unique UNIQUE (job_sched_id, cluster_id)
 );
 
 CREATE TABLE Account(
@@ -41,9 +44,10 @@ CREATE TABLE Account(
         account_gid      integer NOT NULL,
         account_creation date NOT NULL,
         account_deletion date NOT NULL,
-        userhpc_id       character varying(30) NOT NULL,
+        userhpc_id       integer NOT NULL,
         cluster_id       integer NOT NULL,
-        CONSTRAINT Account_pkey PRIMARY KEY (userhpc_id, cluster_id)
+        CONSTRAINT Account_pkey PRIMARY KEY (userhpc_id, cluster_id),
+        CONSTRAINT Job_unique UNIQUE (job_sched_id, cluster_id)
 );
 
 CREATE TABLE Node(
@@ -54,7 +58,8 @@ CREATE TABLE Node(
         node_flops     integer NOT NULL,
         node_memory    integer NOT NULL,
         cluster_id     integer NOT NULL,
-        CONSTRAINT Node_pkey PRIMARY KEY (node_id, cluster_id)
+        CONSTRAINT Node_pkey PRIMARY KEY (node_id, cluster_id),
+        CONSTRAINT Node_unique UNIQUE (node_name, cluster_id)
 );
 
 CREATE TABLE Event(
@@ -66,7 +71,8 @@ CREATE TABLE Event(
         event_end    timestamp NOT NULL,
         node_id      integer NOT NULL,
         cluster_id   integer NOT NULL,
-        CONSTRAINT Event_pkey PRIMARY KEY (event_id, node_id)
+        CONSTRAINT Event_pkey PRIMARY KEY (event_id, node_id),
+        CONSTRAINT Event_unique UNIQUE (node_id, cluster_id, event_start)
 );
 
 CREATE TABLE Project(
@@ -75,7 +81,8 @@ CREATE TABLE Project(
         project_description text,
         sector_key          character varying(5),
         domain_id           character varying(4),
-        CONSTRAINT Project_pkey PRIMARY KEY (project_id)
+        CONSTRAINT Project_pkey PRIMARY KEY (project_id),
+        CONSTRAINT Project_unique UNIQUE (project_code)
 );
 
 CREATE TABLE Business(
@@ -95,14 +102,16 @@ CREATE TABLE Sector(
 CREATE TABLE Domain(
         domain_id   character varying(4) NOT NULL,
         domain_name character varying(30),
-        CONSTRAINT Domain_pkey PRIMARY KEY (domain_id)
+        CONSTRAINT Domain_pkey PRIMARY KEY (domain_id),
+        CONSTRAINT Domain_unique UNIQUE (domain_name)
 );
 
 CREATE TABLE filesystem(
         filesystem_id   SERIAL,
         filesystem_name character varying(30) NOT NULL,
         cluster_id      integer NOT NULL,
-        CONSTRAINT filesystem_pkey PRIMARY KEY (filesystem_id, cluster_id)
+        CONSTRAINT filesystem_pkey PRIMARY KEY (filesystem_id, cluster_id),
+        CONSTRAINT filesystem_unique UNIQUE (filesystem_name, cluster_id)
 );
 
 CREATE TABLE fsusage(
