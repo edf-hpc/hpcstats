@@ -47,7 +47,7 @@ class EventImporter(Importer):
                   FROM Event
                  WHERE cluster_name = %s
               """
-        params = ( self.cluster, )
+        params = ( self.cluster.name, )
         cur = self.db.get_cur()
         cur.execute(req, params)
 
@@ -61,7 +61,7 @@ class EventImporter(Importer):
                  WHERE cluster_name = %s
                    AND event_end IS NULL
               """
-        params = ( self.cluster, )
+        params = ( self.cluster.name, )
         cur = self.db.get_cur()
         cur.execute(req, params)
 
@@ -80,7 +80,7 @@ class EventImporter(Importer):
                  WHERE cluster_name = %s
                    AND event_end IS NULL
               """
-        params = ( self.cluster, )
+        params = ( self.cluster.name, )
         cur = self.db.get_cur()
         cur.execute(req, params)
 
@@ -89,7 +89,7 @@ class EventImporter(Importer):
             if db_row == None: break
             event = Event( event_id = db_row[0],
                            node = db_row[1],
-                           cluster = self.cluster,
+                           cluster = self.cluster.name,
                            event_type = db_row[2],
                            reason = db_row[3],
                            nb_cpu = db_row[4],

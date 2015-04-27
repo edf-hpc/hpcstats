@@ -46,7 +46,7 @@ class UsageImporterCluster(UsageImporter):
 
         super(UsageImporter, self).__init__(app, db, config, cluster)
 
-        usage_section = self.cluster + "/usage"
+        usage_section = self.cluster.name + "/usage"
 
         self._fshost = config.get(usage_section,"host")
         self._fsname = config.get(usage_section,"name")
@@ -57,7 +57,7 @@ class UsageImporterCluster(UsageImporter):
         self._usage = [] #Output file from ssh connection
  
         try:
-            logging.info("Start ssh connection on cluster %s", self.cluster)
+            logging.info("Start ssh connection on cluster %s", self.cluster.name)
             #Paramiko is used to initiate ssh connection
             self._ssh = paramiko.SSHClient()
             #Set automatically RSA key on known_hosts file
@@ -74,7 +74,7 @@ class UsageImporterCluster(UsageImporter):
             #print self._usage
             #Get filesytem from HPCStats db
             fs_list = Filesystem().get_fs_for_cluster(self.db, self.cluster)
-            logging.info("Get fs for cluster %s : %s", self.cluster, fs_list)
+            logging.info("Get fs for cluster %s : %s", self.cluster.name, fs_list)
 
             #For all files system on the cluster
             for fs in fs_list:
@@ -83,26 +83,26 @@ class UsageImporterCluster(UsageImporter):
                 #Get last fs timestamp from HPCStats db
                 timestamp = self._get_last_fs_timestamp_usage(fs)
                 logging.info("Get %s %s last timestamp : %s", \
-                              self.cluster, fs, timestamp )
+                              self.cluster.name, fs, timestamp )
                 if timestamp:
                     #Get usage list from cluster
-                    logging.info("Get new %s %s usages", self.cluster, fs)
+                    logging.info("Get new %s %s usages", self.cluster.name, fs)
                     self._get_usage_list(fs, timestamp)
                 #Update HPCStats database with new values
                 if self._fs_usage:
                     logging.info("List of %s usages to add for cluster %s : %s", \
                           fs, \
-                          self.cluster, \
+                          self.cluster.name, \
                           self._fs_usage)
                     #for fs_usage in self._fs_usage:
                     Filesystem_usage().update_usage(self.db, self.cluster, fs, self._fs_usage)
                 else:
-                    logging.info("No new %s %s usages", self.cluster, fs)
+                    logging.info("No new %s %s usages", self.cluster.name, fs)
 
 
         except (paramiko.AuthenticationException, socket.error ) as e:
             logging.error("ssh connection to cluster %s failed: %s", \
-                           self.cluster, e)
+                           self.cluster.name, e)
             raise RuntimeError
 
 
@@ -124,7 +124,7 @@ class UsageImporterCluster(UsageImporter):
             AND filesystem.cluster = %s
             AND filesystem.mount_point = %s
               ; """
-        datas = (self.cluster,
+        datas = (self.cluster.name,
                  fs,)
         cur = self.db.get_cur()
         cur.execute(req, datas)
@@ -133,7 +133,7 @@ class UsageImporterCluster(UsageImporter):
         else:
             cur.execute(req, datas)
             result = cur.fetchone()[0]
-        #logging.info("Get %s %s timestamp : %s", self.cluster, fs, result )
+        #logging.info("Get %s %s timestamp : %s", self.cluster.name, fs, result )
         return result
 
     def decypher(self, s):

@@ -36,11 +36,11 @@ class UserImporterFactory(object):
     def __init__(self):
         pass
 
-    def factory(self, app, db, config, cluster_name):
-        if config.get(cluster_name, "users") == "xls+ldap+slurm":
-            return UserImporterXLSLdapSlurm(app, db, config, cluster_name)
-        elif config.get(cluster_name, "users") == "ldap":
-            return UserImporterLdap(app, db, config, cluster_name)
+    def factory(self, app, db, config, cluster):
+        if config.get(cluster.name, "users") == "xls+ldap+slurm":
+            return UserImporterXLSLdapSlurm(app, db, config, cluster)
+        elif config.get(cluster.name, "users") == "ldap":
+            return UserImporterLdap(app, db, config, cluster)
         else:
             logging.critical("TO BE CODED")
             # Throw Exception

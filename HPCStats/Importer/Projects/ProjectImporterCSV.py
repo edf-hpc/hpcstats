@@ -71,7 +71,7 @@ class ProjectImporterCSV(ProjectImporter):
 
         super(ProjectImporter, self).__init__(app, db, config, cluster)
 
-        projects_section = self.cluster + "/projects"
+        projects_section = self.cluster.name + "/projects"
         self.csv_file = config.get(projects_section, "file")
 
         self.domains = None

@@ -36,7 +36,7 @@ class ProjectImporterFactory(object):
         pass
 
     def factory(self, app, db, config, cluster):
-        if config.get(cluster, "projects") == "csv":
+        if config.get(cluster.name, "projects") == "csv":
             return ProjectImporterCSV(app, db, config, cluster)
         else:
             logging.critical("TO BE CODED")

@@ -36,7 +36,7 @@ class ContextImporterFactory(object):
         pass
 
     def factory(self, app, db, config, cluster):
-        if config.get(cluster_name, "context") == "csv":
+        if config.get(cluster.name, "context") == "csv":
             return ContextImporterCSV(app, db, config, cluster)
         else:
             logging.critical("TO BE CODED")

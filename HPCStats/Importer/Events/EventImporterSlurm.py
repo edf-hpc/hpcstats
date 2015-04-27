@@ -41,7 +41,7 @@ class EventImporterSlurm(EventImporter):
 
         super(EventImporterSlurm, self).__init__(app, db, config, cluster)
 
-        slurm_section = self.cluster + "/slurm"
+        slurm_section = self.cluster.name + "/slurm"
 
         self._dbhost = config.get(slurm_section,"host")
         self._dbport = int(config.get(slurm_section,"port"))
@@ -62,7 +62,7 @@ class EventImporterSlurm(EventImporter):
             self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
         except _mysql_exceptions.OperationalError as error:
             logging.error("connection to Slurm DBD MySQL failed (%s) : %s", \
-                          self.cluster, \
+                          self.cluster.name, \
                           error)
 
     def update_events(self):
@@ -131,7 +131,7 @@ class EventImporterSlurm(EventImporter):
             FROM %s_event_table
             WHERE node_name <> ''
               AND time_start >= UNIX_TIMESTAMP(%%s)
-            ORDER BY time_start; """ % (self.cluster)
+            ORDER BY time_start; """ % (self.cluster.name)
         datas = (my_datetime,)
         self._cur.execute(req, datas)
 
@@ -150,7 +150,7 @@ class EventImporterSlurm(EventImporter):
             end_datetime = datetime.fromtimestamp(db_row["time_end"])
 
         event = Event(  node = db_row["node_name"],
-                        cluster = self.cluster,
+                        cluster = self.cluster.name,
                         nb_cpu = db_row["cpu_count"],
                         start_datetime = datetime.fromtimestamp(db_row["time_start"]),
                         end_datetime = end_datetime,

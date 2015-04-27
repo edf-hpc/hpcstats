@@ -47,7 +47,7 @@ class JobImporterTorque(JobImporter):
         self._logpat = re.compile('(.{19});E;(\d+)(?:-(\d+))?\..*;user=(\S+) (?:account=(\S+))?.*group=(\S+).*queue=(\S+) ctime=\d+ qtime=(\d+) etime=(\d+) start=(\d+) .* exec_host=(\S+) .* Exit_status=(\d+) .*\n')
         self._exechostpat = re.compile('/\d+')
 
-        db_section = self.cluster + "/torque"
+        db_section = self.cluster.name + "/torque"
         self._logfolder = config.get(db_section,"logdir")
 
     def get_job_information_from_dbid_job_list(self,ids_job):
@@ -90,7 +90,7 @@ class JobImporterTorque(JobImporter):
                     running_queue = res[6],
                     nodes = nodelist,
                     state = self.get_job_state_from_torque_state(res[11]),
-                    cluster_name = self.cluster)
+                    cluster_name = self.cluster.name)
         return job
 
     def get_job_state_from_torque_state(self, state):
@@ -122,7 +122,7 @@ class JobImporterTorque(JobImporter):
             SELECT uid, gid
             FROM users
             WHERE cluster = %s AND login = %s; """
-        datas = (self.cluster, login)
+        datas = (self.cluster.name, login)
         cur = self._db.get_cur()
         #print cur.mogrify(req, datas)
         cur.execute(req, datas)

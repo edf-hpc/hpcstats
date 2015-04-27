@@ -43,7 +43,7 @@ class JobImporter(Importer):
             SELECT MAX(id_job) AS last_id
             FROM jobs
             WHERE clustername = %s; """
-        datas = (self.cluster,)
+        datas = (self.cluster.name,)
         cur = self._db.get_cur()
         cur.execute(req, datas)
         results = cur.fetchall()
@@ -62,7 +62,7 @@ class JobImporter(Importer):
             WHERE clustername = %s
               AND (   state = 'PENDING'
                    OR state = 'RUNNING' ); """
-        datas = (self.cluster,)
+        datas = (self.cluster.name,)
         cur = self._db.get_cur()
         cur.execute(req, datas)
         results = cur.fetchall()

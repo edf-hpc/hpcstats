@@ -105,82 +105,91 @@ def HPCStatsUpdater(object):
 
         logging.debug("db information %s %s %s %s %s" % db.infos())
 
-        cluster = Cluster(options.clustername)
-        if cluster.find(db) is None:
-            cluster.save()
+        cluster = None
+        cluster_name = options.clustername
+
+        #
+        # Architecture Importer is both responsible for importing/updating data
+        # about cluster and nodes in database and creating the Cluster object
+        # for other importers.
+        #
+        if (options.arch):
+            logging.info("=> Updating architecture for cluster %s" % (cluster_name))
+            try:
+                self.arch = ArchitectureImporterFactory().factory(self, db, config, cluster_name)
+                self.arch.update_architecture()
+                db.commit()
+                cluster = self.arch.cluster
+            except RuntimeError:
+                logging.error("error occured on %s architecture update." % (cluster_name))
+
+        if cluster is None or cluster.cluster_id is None:
+            logging.error("problem in DB with cluster %s" % (str(cluster)))
+            sys.exit(1)
 
         if (options.projects):
-            logging.info("=> Updating projects for cluster %s" % (options.clustername))
+            logging.info("=> Updating projects for cluster %s" % (cluster.name))
             try:
-                self.projects = ProjectImporterFactory().factory(self, db, config, cluster.name)
+                self.projects = ProjectImporterFactory().factory(self, db, config, cluster)
                 self.projects.load()
                 self.projects.update()
             except RuntimeError:
-                logging.error("error occured on %s projects update." % (options.clustername))
+                logging.error("error occured on %s projects update." % (cluster.name))
 
         if (options.projects):
-            logging.info("=> Updating context for cluster %s from stats file" % (options.clustername))
+            logging.info("=> Updating context for cluster %s from stats file" % (cluster.name))
             try:
-                self.context = ContextImporterFactory().factory(self, db, config, cluster.name)
+                self.context = ContextImporterFactory().factory(self, db, config, cluster)
             except RuntimeError:
-                logging.error("error occured on %s context update." % (options.clustername))
+                logging.error("error occured on %s context update." % (cluster.name))
 
         if (options.projects):
-            logging.info("=> Updating business codes for cluster %s" % (options.clustername))
+            logging.info("=> Updating business codes for cluster %s" % (cluster.name))
             try:
-                self.business = BusinessCodeImporterFactory().factory(self, db, config, cluster.name)
+                self.business = BusinessCodeImporterFactory().factory(self, db, config, cluster)
             except RuntimeError:
-                logging.error("error occured on %s business codes update." % (options.clustername))
-
-        if (options.arch):
-            logging.info("=> Updating architecture for cluster %s" % (options.clustername))
-            try:
-                self.arch = ArchitectureImporterFactory().factory(self, db, config, cluster.name)
-                self.arch.update_architecture()
-                db.commit()
-            except RuntimeError:
-                logging.error("error occured on %s architecture update." % (options.clustername))
+                logging.error("error occured on %s business codes update." % (cluster.name))
 
         if (options.mounted):
-            logging.info("=> Updating mounted filesystem for cluster %s" % (options.clustername))
+            logging.info("=> Updating mounted filesystem for cluster %s" % (cluster.name))
             try:
-                self.mounts = MountPointImporterFactory().factory(self, db, config, cluster.name)
+                self.mounts = MountPointImporterFactory().factory(self, db, config, cluster)
                 if self.mounts:
                     self.mounts.update_mount_point()
                     db.commit()
             except RuntimeError:
-                logging.error("error occured on %s mounted filesystem update." (options.clustername))
+                logging.error("error occured on %s mounted filesystem update." (cluster.name))
 
         if (options.usage):
-            logging.info("=> Updating filesystem usage for cluster %s" % (options.clustername))
+            logging.info("=> Updating filesystem usage for cluster %s" % (cluster.name))
             try:
-                self.fsusage = UsageImporterFactory().factory(self, db, config, cluster.name)
+                self.fsusage = UsageImporterFactory().factory(self, db, config, cluster)
                 db.commit()
             except RuntimeError:
-                logging.error("error occured on %s filesystem usage update." % (options.clustername))
+                logging.error("error occured on %s filesystem usage update." % (cluster.name))
 
         if (options.events):
-            logging.info("=> Updating events for cluster %s" % (options.clustername))
+            logging.info("=> Updating events for cluster %s" % (cluster.name))
             try:
-                self.events = EventImporterFactory().factory(self, db, config, cluster.name)
+                self.events = EventImporterFactory().factory(self, db, config, cluster)
                 self.events.update_events()
                 db.commit()
             except RuntimeError:
-                logging.error("error occured on %s events update." % (options.clustername))
+                logging.error("error occured on %s events update." % (cluster.name))
 
         if (options.users):
-            logging.info("=> Updating users for cluster %s" % (options.clustername))
+            logging.info("=> Updating users for cluster %s" % (cluster.name))
             try:
-              self.users = UserImporterFactory().factory(self, db, config, cluster.name)
+              self.users = UserImporterFactory().factory(self, db, config, cluster)
               self.users.update_users()
               db.commit()
             except RuntimeError:
-                logging.error("error occured on %s users update." % (options.clustername))
+                logging.error("error occured on %s users update." % (cluster.name))
 
         if (options.jobs):
-            logging.info("=> Update of jobs for cluster %s" % (options.clustername))
+            logging.info("=> Update of jobs for cluster %s" % (cluster.name))
             try:
-                self.jobs = JobImporterFactory().factory(self, db, config, cluster.name)
+                self.jobs = JobImporterFactory().factory(self, db, config, cluster)
                 # The last updated job in hpcstatsdb for this cluster
                 last_updated_id = self.jobs.get_last_job_id()
                 # The unfinished jobs in hpcstatsdb for this cluster
@@ -248,6 +257,6 @@ def HPCStatsUpdater(object):
                             logging.debug("no wc_keys available for this job")
                 db.commit()
             except :
-                logging.error("error occured on %s jobs update." % (options.clustername))
+                logging.error("error occured on %s jobs update." % (cluster.name))
 
         db.unbind()

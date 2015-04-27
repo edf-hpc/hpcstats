@@ -41,7 +41,7 @@ class UserImporter(Importer):
               FROM jobs
              WHERE clustername = %s
                AND uid NOT IN (SELECT uid FROM users WHERE users.cluster = %s); """
-        datas = (self.cluster, self.cluster)
+        datas = (self.cluster.name, self.cluster.name)
 
         cur = db.get_cur()
         #print cur.mogrify(req, datas)

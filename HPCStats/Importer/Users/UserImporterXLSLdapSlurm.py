@@ -42,9 +42,9 @@ class UserImporterXLSLdapSlurm(UserImporter):
 
         super(UserImporterXLSLdapSlurm, self).__init__(app, db, config, cluster)
 
-        ldap_section = self.cluster + "/ldap"
-        xls_section = self.cluster + "/xls"
-        db_section = self.cluster + "/slurm"
+        ldap_section = self.cluster.name + "/ldap"
+        xls_section = self.cluster.name + "/xls"
+        db_section = self.cluster.name + "/slurm"
 
         self._ldapurl = config.get(ldap_section,"url")
         self._ldapbase = config.get(ldap_section,"basedn")
@@ -121,7 +121,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                 if self._user_row(xls_row):
                     user = self.user_from_xls_row(xls_row)
 
-                    if user.get_cluster_name() == self.cluster and (not previous_user or not user == previous_user):
+                    if user.get_cluster_name() == self.cluster.name and (not previous_user or not user == previous_user):
 
                         [uid, gid] = self.get_ids_from_ldap(user)
                         user.set_uid(uid)
@@ -170,7 +170,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                     SELECT DISTINCT(id_user) AS uid,
                            id_group AS gid
                      FROM %s_job_table
-                     WHERE account = %%s; """ % (self.cluster)
+                     WHERE account = %%s; """ % (self.cluster.name)
                 datas = (user.get_login().lower(),)
                 nb_rows = self._cur.execute(req, datas)
                 if nb_rows == 1:
@@ -253,7 +253,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                      login = login,
                      uid = uid,
                      gid = gid,
-                     cluster_name = self.cluster,
+                     cluster_name = self.cluster.name,
                      department = department )
         return user
 
@@ -264,7 +264,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
         user = User( login = login,
                      uid = uid,
                      gid = gid,
-                     cluster_name = self.cluster )
+                     cluster_name = self.cluster.name )
         return user
 
     def find_with_uid(self, uid):
@@ -287,7 +287,7 @@ class UserImporterXLSLdapSlurm(UserImporter):
                        %s_job_table AS jobs
                  WHERE jobs.id_assoc = assoc.id_assoc
                    AND jobs.id_user = %%s
-              GROUP BY login; """ % (self.cluster, self.cluster)
+              GROUP BY login; """ % (self.cluster.name, self.cluster.name)
             datas = (uid,)
             nb_rows = self._cur.execute(req, datas)
             if nb_rows == 1:

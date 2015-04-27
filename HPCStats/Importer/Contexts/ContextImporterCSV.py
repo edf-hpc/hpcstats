@@ -48,7 +48,7 @@ class ContextImporterCSV(ContextImporter):
 
         super(ContextImporterCSV, self).__init__(app, db, config, cluster)
 
-        context_section = self.cluster + "/context"
+        context_section = self.cluster.name + "/context"
         self._context_file = config.get(context_section, "file")
 
         if not os.path.isfile(self._context_file):
@@ -56,8 +56,8 @@ class ContextImporterCSV(ContextImporter):
             raise RuntimeError
 
         # delete all contexts entries in databases for cluster
-        logging.debug("Delete all context entries in db for cluster %s", self.cluster)
-        delete_contexts(self.db, self.cluster)
+        logging.debug("Delete all context entries in db for cluster %s", self.cluster.name)
+        delete_contexts(self.db, self.cluster.name)
         self.db.commit()
 
         p_file = open(self._context_file, 'r')
@@ -81,7 +81,7 @@ class ContextImporterCSV(ContextImporter):
                                                job = None,
                                                project = project.get_id(),
                                                business = None,
-                                               cluster = self.cluster)
+                                               cluster = self.cluster.name)
                              try:
                                  context.save(self.db)
                                  logging.debug("add context : %s", context)
@@ -108,7 +108,7 @@ class ContextImporterCSV(ContextImporter):
                                                job = None,
                                                project = None,
                                                business = business.get_id(),
-                                               cluster = self.cluster)
+                                               cluster = self.cluster.name)
                              try:
                                  context.save(self.db)
                                  logging.debug("add context : %s", context)

@@ -42,7 +42,7 @@ class JobImporterSlurm(JobImporter):
 
         super(JobImporterSlurm, self).__init__(app, db, config, cluster)
 
-        slurm_section = self.cluster + "/slurm"
+        slurm_section = self.cluster.name + "/slurm"
 
         self._dbhost = config.get(slurm_section,"host")
         self._dbport = int(config.get(slurm_section,"port"))
@@ -90,7 +90,7 @@ class JobImporterSlurm(JobImporter):
              WHERE id_job > %%s
                AND qos.id = job.id_qos
              ORDER BY job_db_inx
-             LIMIT %%s, %%s; """ % (self.cluster)
+             LIMIT %%s, %%s; """ % (self.cluster.name)
         datas = (job_id, offset, max_jobs)
         self._cur.execute(req, datas)
         results = self._cur.fetchall()
@@ -117,7 +117,7 @@ class JobImporterSlurm(JobImporter):
                   qos_table qos
             WHERE job_db_inx = %%s
               AND qos.id = job.id_qos
-            ORDER BY job_db_inx; """ % (self.cluster)
+            ORDER BY job_db_inx; """ % (self.cluster.name)
         datas = (job_dbid)
         self._cur.execute(req, datas)
         results = self._cur.fetchall()
@@ -204,7 +204,7 @@ class JobImporterSlurm(JobImporter):
                     running_queue = str_partition+"-"+res["qos"],
                     nodes = str_nodelist,
                     state = self.get_job_state_from_slurm_state(res["state"]),
-                    cluster_name = self.cluster,
+                    cluster_name = self.cluster.name,
                     login = self.id_assoc[res["id_assoc"]],
                     name = res["job_name"])
         return job
@@ -255,7 +255,7 @@ class JobImporterSlurm(JobImporter):
             SELECT wckey
             FROM %s_job_table
             WHERE id_job = %%s
-            """ % (self.cluster)
+            """ % (self.cluster.name)
         data = (id_job)
         cur = self._conn.cursor()
         cur.execute(req, data)
@@ -270,7 +270,7 @@ class JobImporterSlurm(JobImporter):
              SELECT id_assoc, user
              FROM %s_assoc_table
              WHERE user != '';
-        """ % (self.cluster)
+        """ % (self.cluster.name)
         self._cur.execute(req)
         results = self._cur.fetchall()
         for ii in results:

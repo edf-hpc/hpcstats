@@ -31,6 +31,8 @@ from HPCStats.Importer.Importer import Importer
 
 class ArchitectureImporter(Importer):
 
-    def __init__(self, app, db, config, cluster):
+    def __init__(self, app, db, config, cluster_name):
 
-        super(ArchitectureImporter, self).__init__(app, db, config, cluster)
+        super(ArchitectureImporter, self).__init__(app, db, config, None)
+
+        self.cluster_name = cluster_name

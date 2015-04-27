@@ -36,7 +36,7 @@ class BusinessCodeImporterFactory(object):
         pass
 
     def factory(self, app, db, config, cluster):
-        if config.get(cluster, "business") == "csv":
+        if config.get(cluster.name, "business") == "csv":
             return BusinessCodeImporterCSV(app, db, config, cluster)
         else:
             logging.critical("TO BE CODED")

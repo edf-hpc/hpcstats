@@ -43,7 +43,7 @@ class BusinessCodeImporterCSV(BusinessCodeImporter):
 
         super(BusinessCodeImporterCSV, self).__init__(app, db, config, cluster)
 
-        business_section = self.cluster + "/business"
+        business_section = self.cluster.name + "/business"
         self._business_file = config.get(business_section, "file")
 
         if not os.path.isfile(self._business_file):

@@ -40,13 +40,13 @@ class MountPointImporter(Importer):
 
         super(MountPointImporter, self).__init__(app, db, config, cluster)
 
-        self._fs_mounted = self.cluster + "/mounted"
+        self._fs_mounted = self.cluster.name + "/mounted"
 
         self._conf_mount_point = {}
         self._db_mount_point = {}
 
     def update_mount_point(self):
-        cluster = Cluster(self.cluster)
+        cluster = Cluster(self.cluster.name)
 
         self._conf_mount_point = self.get_mount_point_from_config()
         logging.info("fs from conf -> %s", self._conf_mount_point)
@@ -64,7 +64,7 @@ class MountPointImporter(Importer):
                 #self.add_mount_point(i, self._conf_mount_point[i])
                 filesystem = Filesystem (
                     mount_point = i, 
-                    cluster = self.cluster,
+                    cluster = self.cluster.name,
                     type = self._conf_mount_point[i])
                 filesystem.save(self.db)
 
@@ -79,7 +79,7 @@ class MountPointImporter(Importer):
 #                self.delete_mount_point(i)
 #                filesystem = Filesystem (
 #                    mount_point = i, 
-#                    cluster = self.cluster,
+#                    cluster = self.cluster.name,
 #                    type = self._db_mount_point[i])
 #                #filesystem.delete(self.db)
 
@@ -92,7 +92,7 @@ class MountPointImporter(Importer):
               SELECT mount_point, type
                 FROM filesystem
               WHERE cluster = %s; """
-        datas = (self.cluster,)
+        datas = (self.cluster.name,)
         cur = self.db.get_cur()
         cur.execute(req, datas)
         fs_db = {}
@@ -117,7 +117,7 @@ class MountPointImporter(Importer):
            VALUES ( DEFAULT, %s, %s, %s );"""
         datas = (
           mount_point,
-          self.cluster,
+          self.cluster.name,
           type )
         self._db.execute(req, datas)
 

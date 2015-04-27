@@ -35,11 +35,11 @@ class MountPointImporterFactory(object):
     def __init__(self):
         pass
 
-    def factory(self, app, db, config, cluster_name):
+    def factory(self, app, db, config, cluster):
 #        try:
-            config.items(cluster_name + "/mounted")
-            logging.debug("Mounted section exist on config file for cluster %s", cluster_name)
-            return MountPointImporter(app, db, config, cluster_name)
+            config.items(cluster.name + "/mounted")
+            logging.debug("Mounted section exist on config file for cluster %s", cluster.name)
+            return MountPointImporter(app, db, config, cluster)
 #        except:
-            logging.error("No mounted section exist on config file for cluster %s", cluster_name)
+            logging.error("No mounted section exist on config file for cluster %s", cluster.name)
 

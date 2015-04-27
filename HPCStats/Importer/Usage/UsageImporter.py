@@ -44,7 +44,7 @@ class UsageImporter(Importer):
             AND filesystem.clustername = %s
             AND filesystem.type = %s
               ; """
-        datas = (self.cluster,
+        datas = (self.cluster.name,
                  self._fs_type,)
         cur = self.db.get_cur()
         cur.execute(req, datas)
