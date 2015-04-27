@@ -52,7 +52,7 @@ class Node:
     def __init__(self, name, cluster, partition,
                  cpu, memory, flops, node_id=None):
 
-        self.node_id = node_d
+        self.node_id = node_id
         self.name = name
         self.cluster = cluster
         self.partition = partition
