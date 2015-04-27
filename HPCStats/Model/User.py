@@ -27,191 +27,127 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-from datetime import datetime
+"""
+Model class for the User table:
+
+User(
+  userhpc_id         SERIAL,
+  userhpc_login      character varying(30) NOT NULL,
+  userhpc_name       character varying(30) NOT NULL,
+  userhpc_firstname  character varying(30) NOT NULL,
+  userhpc_department character varying(30),
+  CONSTRAINT Userhpc_pkey PRIMARY KEY (userhpc_id),
+  CONSTRAINT Userhpc_unique UNIQUE (userhpc_login)
+)
+
+"""
+
 import logging
+from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class User:
-    def __init__(self, name = "", login = "", cluster_name = "", department = "", uid = -1, gid = -1, creation_date = None, deletion_date = None):
 
-        self._name = name
-        self._login = login
-        self._cluster_name = cluster_name
-        self._department = department
-        self._uid = uid
-        self._gid = gid
-        self._creation_date = creation_date
-        self._deletion_date = deletion_date
+    def __init__(self, login, firstname, lastname, department, user_id=None):
+
+        self.user_id = user_id
+        self.login = login
+        self.lastname = lastname
+        self.firstname = firstname
+        self.department = department
 
     def __str__(self):
-        if self._creation_date == None:
-           creation_date = "unknown"
-        else:
-           creation_date = self._creation_date.strftime('%Y-%m-%d')
-        if self._deletion_date == None:
-           deletion_date = "unknown"
-        else:
-           deletion_date = self._deletion_date.strftime('%Y-%m-%d')
-        return self._name + " [" + self._department + "] " + self._login + " - " + self._cluster_name + " (" + str(self._uid) + "|" + str(self._gid) + "): " + creation_date + "/" + deletion_date
+
+        return self.firstname + " " + self.lastname \
+               + " [" + self.department + "] " + self.login
 
     def __eq__(self, other):
-        return self._cluster_name == other._cluster_name and self._login == other._login
 
+        return self.login == other.login
 
-    """ getter accessors """
-    def get_name(self):
-        return self._name
+    def find(self, db):
+        """Search the User in the database based on its login. If exactly
+           one user matches in database, set user_id attribute properly
+           and returns its value. If more than one user matches, raises
+           HPCStatsDBIntegrityError. If no user is found, returns None.
+        """
 
-    def get_login(self):
-        return self._login
-
-    def get_cluster_name(self):
-        return self._cluster_name
-
-    def get_department(self):
-        return self._department
-
-    def get_uid(self):
-        return self._uid
-
-    def get_gid(self):
-        return self._gid
-
-    def get_creation_date(self):
-        return self._creation_date
-
-    def get_deletion_date(self):
-        return self._deletion_date
-
-    """ setter accessors """
-    def set_name(self, name):
-        self._name = name
-
-    def set_login(self, login):
-        self._login = login
-
-    def set_cluster_name(self, cluster_name):
-        self._cluster_name = cluster_name
-
-    def set_department(self, department):
-        self._department = department
-
-    def set_uid(self, uid):
-        self._uid = uid
-
-    def set_gid(self, gid):
-        self._gid = gid
-
-    def set_creation_date(self, creation_date):
-        self._creation_date = creation_date
-
-    def set_deletion_date(self, deletion_date):
-        self._deletion_date = deletion_date
-
-
-    """ functions """
-    def exists_in_db(self, db):
+        req = """
+                SELECT userhpc_id
+                  FROM Userhpc
+                 WHERE userhpc_login = %s
+              """
+        params = ( self.login, )
         cur = db.get_cur()
-        cur.execute("SELECT login FROM users WHERE login = %s AND cluster = %s",
-                     (self._login,
-                      self._cluster_name ) )
+        cur.execute(req, params)
         nb_rows = cur.rowcount
-        if nb_rows == 1:
-           return True
-        elif nb_rows == 0:
-           return False
+        if nb_rows == 0:
+            logging.debug("user %s not found in DB" % (str(self)))
+            return None
+        elif nb_rows == 1:
+            raise HPCStatsDBIntegrityError(
+                    "several user_id found in DB for user %s" \
+                      % (str(self)))
         else:
-           raise UserWarning, ("incorrect number of results (%d) for login \
-                                %s on cluster %s" % \
-                                ( nb_rows,
-                                  self._login,
-                                  self._cluster_name ) )
+            self.user_id = cur.fetchone()[0]
+            logging.debug("user %s found in DB with id %d" \
+                            % (str(self),
+                               self.user_id))
+            return self.user_id
 
     def save(self, db):
-        req = """
-            INSERT INTO users (
-                            name,
-                            login,
-                            cluster,
-                            department,
-                            creation,
-                            deletion,
-                            uid,
-                            gid )
-            VALUES ( %s, lower(%s), %s, %s, %s, %s, %s, %s); """
-        datas = (
-            self._name,
-            self._login,
-            self._cluster_name,
-            self._department,
-            self._creation_date,
-            self._deletion_date,
-            self._uid,
-            self._gid )
+        """Insert User in database. You must make sure that the User does
+           not already exist in database yet (typically using User.find()
+           method else there is a risk of future integrity errors because of
+           duplicated users. If user_id attribute is set, it raises
+           HPCStatsRuntimeError.
+        """
 
-        #print db.get_cur().mogrify(req, datas)
-        db.get_cur().execute(req, datas)
+        if self.user_id is not None:
+            raise HPCStatsRuntimeError(
+                    "could not insert user %s since already existing in "\
+                    "database" \
+                      % (str(self)))
+
+        req = """
+                INSERT INTO Userhpc ( userhpc_login,
+                                      userhpc_firstname,
+                                      userhpc_name,
+                                      userhpc_department)
+                VALUES ( %s, %s, %s, %s)
+                RETURNING userhpc_id
+              """
+        params = ( self.login,
+                   self.firstname,
+                   self.lastname,
+                   self.department )
+
+        #print db.get_cur().mogrify(req, params)
+        cur = db.get_cur()
+        cur.execute(req, params)
+        self.user_id = cur.fetchone()[0]
 
     def update(self, db):
+        """Update User firstname, lastname and departement fields in database.
+           Raises HPCStatsRuntimeError is user_id is None.
+        """
+
+        if self.user_id is None:
+            raise HPCStatsRuntimeError(
+                    "could not update user %s since not found in database" \
+                      % (str(self)))
+
         req = """
-            UPDATE users SET
-                       name = %s,
-                       department = %s,
-                       creation = %s,
-                       deletion = %s
-            WHERE login = %s
-              AND cluster = %s; """
-        datas = (
-            self._name,
-            self._department,
-            self._creation_date,
-            self._deletion_date,
-            self._login,
-            self._cluster_name )
+                UPDATE Userhpc
+                   SET userhpc_firstname = %s,
+                       userhpc_name = %s,
+                       userhpc_department = %s
+                WHERE userhpc_id = %s
+              """
+        params = ( self.firstname,
+                   self.lastname,
+                   self.department,
+                   self.user_id )
 
-        #print db.get_cur().mogrify(req, datas)
-        db.get_cur().execute(req, datas)
-
-    def update_name(self, db):
-        req = """
-            UPDATE users SET name = %s
-            WHERE uid = %s AND cluster = %s;"""
-        datas = (
-            self._name,
-            self._uid,
-            self._cluster_name )
-
-        db.get_cur().execute(req, datas)
-
-    def update_deletion_date(self, db):
-        req = """
-            UPDATE users SET deletion = %s
-            WHERE uid = %s AND cluster = %s;"""
-        datas = (
-            self._deletion_date,
-            self._uid,
-            self._cluster_name )
-
-        db.get_cur().execute(req, datas)
-
-    def update_department(self, db):
-        req = """
-            UPDATE users SET department = %s
-            WHERE login = %s AND cluster = %s;"""
-        datas = (
-            self._department,
-            self._login,
-            self._cluster_name )
-
-        db.get_cur().execute(req, datas)
-
-    def update_creation_date(self, db):
-        req = """
-            UPDATE users SET
-                        creation = %s
-            WHERE login = %s AND cluster = %s;"""
-        datas = (
-            self._creation_date,
-            self._login,
-            self._cluster_name )
-
-        db.get_cur().execute(req, datas)
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
