@@ -142,7 +142,12 @@ class Node:
 
     def update(self, db):
         """Update Node partition, cpu, memory and flops fields in database.
+           Raises HPCStatsRuntimeError if self.node_id is None.
         """
+        if self.node_id is None:
+            raise HPCStatsRuntimeError(
+                    "could not update node %s since not found in database" \
+                      % (str(self)))
 
         req = """
                 UPDATE Node
@@ -150,15 +155,13 @@ class Node:
                        node_nbCpu = %s,
                        node_memory = %s,
                        node_flops = %s
-                 WHERE node_name = %s
-                   AND cluster_id = %s
+                 WHERE node_id = %s
              """
         params = ( self.partition,
                    self.cpu,
                    self.memory,
                    self.flops,
-                   self.name,
-                   self.cluster.cluster_id )
+                   self.node_id )
 
         cur = db.get_cur()
         #print cur.mogrify(req, params)
