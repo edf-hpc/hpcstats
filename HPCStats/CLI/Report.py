@@ -122,13 +122,15 @@ def run_interval(process_info):
     dbuser = config.get(db_section,"user")
     dbpass = config.get(db_section,"password")
     db = HPCStatsdb(dbhostname, dbport, dbname, dbuser, dbpass)
+    db.bind()
 
-    #cluster = Cluster(options.cluster)
+    cluster = Cluster(options.cluster)
+    if cluster.find() is None:
+        print("cluster %s not found in DB, exiting." % (cluster.name))
+        sys.exit(1)
 
     if options.debug:
         print "getting nb cpus on cluster %s" % (cluster.name)
-
-    db.bind()
 
     nb_cpus_cluster = cluster.get_nb_cpus(db)
     

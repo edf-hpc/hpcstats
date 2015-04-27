@@ -106,6 +106,8 @@ def HPCStatsUpdater(object):
         logging.debug("db information %s %s %s %s %s" % db.infos())
 
         cluster = Cluster(options.clustername)
+        if cluster.find(db) is None:
+            cluster.save()
 
         if (options.projects):
             logging.info("=> Updating projects for cluster %s" % (options.clustername))
