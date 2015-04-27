@@ -27,84 +27,105 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""
+Model class for the Business table:
+
+Business(
+  business_code        character varying(30) NOT NULL,
+  business_description text NOT NULL,
+  CONSTRAINT Business_pkey PRIMARY KEY (business_code)
+)
+
+"""
+
 import logging
+from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Business:
-    def __init__(self, id = "", key="", description = ""):
 
-        self._id = id
-        self._key = key
-        self._description = description
+    def __init__(self, code, description):
+
+        self.code
+        self.description = description
+        self.exists = None
 
     def __str__(self):
-        if self._description == None:
-           description = "unknown"
+        if self.description == None:
+           description = "(empty)"
         else:
-           description = self._description
-        return self._id + " : " + self._key + " - " + self._description
+           description = self.description
+        return self.code + " - " + description
 
-    """ getter accessors """
-    def get_id(self):
-        return self._id
+    def existing(self, db):
+        """Returns True if the business already exists in database (with same
+           code), or False if not.
+        """
 
-    def get_key(self):
-        return self._key
-
-    def get_description(self):
-        return self._description
-
-    """ setter accessors """
-    def set_description(self, description):
-        self._description = description
-
-
-    """ methodes """
-    def save(self, db):
         req = """
-            INSERT INTO business (
-                              key,
-                              description )
-            VALUES (%s, %s);"""
-        datas = (
-            self._key,
-            self._description )
-        db.get_cur().execute(req, datas)
+                SELECT business_code
+                  FROM Business
+                 WHERE business_code = %s
+              """
+        params = ( self.code, )
+        cur = db.get_cur()
+        cur.execute(req, params)
+        nb_rows = cur.rowcount
+        if nb_rows == 0:
+            logging.debug("business %s not found in DB" % (str(self)))
+            self.exists = False
+        elif nb_rows == 1:
+            raise HPCStatsDBIntegrityError(
+                    "several businesses found in DB for account %s" \
+                      % (str(self)))
+        else:
+            logging.debug("business %s found in DB" % (str(self)))
+            self.exists = True
+        return self.exists
+
+    def save(self, db):
+        """Insert Business in database. It first makes sure that the Business
+           does not already exist in database yet by calling
+           Business.existing() method if needed. If the business already exists
+           in database, it raises HPCStatsRuntimeError.
+        """
+
+        if self.exists is None: # not checked yet
+            self.existing(db)
+        if self.exists is True:
+            raise HPCStatsRuntimeError(
+                    "could not insert business %s since already existing in "\
+                    "database" % (str(self)))
+
+        req = """
+                INSERT INTO Business ( business_code,
+                                       business_description )
+                VALUES (%s, %s)
+              """
+        params = ( self.code, self.description )
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
+        self.exists = True
 
     def update(self, db):
+        """Update Business description in database. Raises HPCStatsRuntimeError
+           if exists is False.
+        """
+
+        if self.exists is None: # not checked yet
+            self.existing(db)
+        if self.exists is False:
+            raise HPCStatsRuntimeError(
+                    "could not update business %s since not found in " \
+                    "database" \
+                      % (str(self)))
         req = """
-            UPDATE business SET 
-                         key = %s,
-                         description = %s 
-            WHERE id = %s;"""
-        datas = (
-            self._key,
-            self._description, 
-            self._id )
-        db.get_cur().execute(req, datas)
-
-    def already_exist(self, db):
+                UPDATE Business
+                   SET business_description = %s
+                 WHERE business_code = %s
+              """
+        params = ( self.description,
+                   self.code )
         cur = db.get_cur()
-        cur.execute("SELECT * FROM business WHERE key = %s", (self._key,))
-        nb_rows = cur.rowcount
-        if nb_rows == 1:
-           return True
-        elif nb_rows == 0:
-           return False
-
-    def business_from_key(self, db, key):
-        cur = db.get_cur()
-        cur.execute("SELECT * FROM business WHERE key = %s", (key,))
-        res = cur.fetchone()
-        self._id = res[0]
-        self._key = res[1]
-        self._description = res[2]
-
-def delete_business(db):
-    db.get_cur().execute("ALTER SEQUENCE business_id_seq RESTART WITH 1;")  
-    db.get_cur().execute("DELETE FROM business;")  
-
-def get_business_id(db, business):
-    cur = db.get_cur()
-    cur.execute("SELECT id_business FROM business WHERE lower(key) = lower(%s)", (business,))
-    results = cur.fetchone()
-    return results[0]
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
