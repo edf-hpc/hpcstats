@@ -27,85 +27,136 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-class Node:
-    def __init__(self, name = "", cluster = "", partition = "", cpu = 0, memory = 0, model = "", flops = 0):
+"""
+Model class for the Node table:
 
-        self._name = name
-        self._cluster = cluster
-        self._partition = partition
-        self._cpu = cpu
-        self._memory = memory
-        self._model = model
-        self._flops = flops
+Node(
+  node_id        SERIAL,
+  node_name      character varying(30) NOT NULL,
+  node_nbCpu     integer,
+  node_partition character varying(30) NOT NULL,
+  node_flops     integer NOT NULL,
+  node_memory    integer NOT NULL,
+  cluster_id     integer NOT NULL,
+  CONSTRAINT Node_pkey PRIMARY KEY (node_id, cluster_id),
+  CONSTRAINT Node_unique UNIQUE (node_name, cluster_id)
+)
+
+"""
+
+class Node:
+
+    def __init__(self, name, cluster, partition,
+                 cpu, memory, flops, node_id=None):
+
+        self.node_id = node_d
+        self.name = name
+        self.cluster = cluster
+        self.partition = partition
+        self.cpu = cpu
+        self.memory = memory
+        self.flops = flops
 
     def __str__(self):
-        return "%s/%s/%s [%s]: cpu:%d Gflops:%.2f memory:%dGB" % \
-                   ( self._cluster,
-                     self._partition,
-                     self._name,
-                     self._model,
-                     self._cpu,
-                     self._flops / float(1000**3),
-                     self._memory / 1024**3 )
 
-    def exists_in_db(self, db):
+        return "%s/%s/%s: cpu:%d Gflops:%.2f memory:%dGB" % \
+                   ( self.cluster.name,
+                     self.partition,
+                     self.name,
+                     self.cpu,
+                     self.flops / float(1000**3),
+                     self.memory / 1024**3 )
+
+    def find(self, db):
+        """Search the Node in the database based on its name and cluster. If
+           exactly one node matches in database, set node_id attribute properly
+           and returns its value. If more than one node matches, raises
+           HPCStatsDBIntegrityError. If no node is found, returns None.
+        """
+
+        req = """
+                SELECT node_id
+                  FROM Node
+                 WHERE name = %s
+                   AND cluster = %s"
+              """
+        params = ( self.name,
+                   self.cluster.cluster_id )
+
         cur = db.get_cur()
-        cur.execute("SELECT name FROM nodes WHERE name = %s AND cluster = %s;",
-                     (self._name,
-                      self._cluster) )
+        cur.execute(req, params)
         nb_rows = cur.rowcount
-        if nb_rows == 1:
-           return True
-        elif nb_rows == 0:
-           return False
+
+        if nb_rows == 0:
+            logging.debug("node %s not found in DB" % (str(self)))
+            return None
+        elif nb_rows == 1:
+            raise HPCStatsDBIntegrityError(
+                    "several node_id found in DB for node %s" \
+                      % (str(self)))
         else:
-           raise UserWarning, ("incorrect number of results (%d) for node \
-                                %s on cluster %s" % \
-                                ( nb_rows,
-                                  self._name,
-                                  self._cluster ) )
+            self.node_id = cur.fetchone()[0]
+            logging.debug("node %s found in DB with id %d" \
+                            % (str(self),
+                               self.node_id))
+            return self.node_id
 
     def save(self, db):
+        """Insert Node in database. You must make sure that the Node does not
+           already exist in database yet (typically using Node.find() method
+           else there is a risk of future integrity errors because of
+           duplicated nodes. If node_id attribute is set, it raises
+           HPCStatsRuntimeError.
+        """
+
+        if self.node_id is not None:
+            raise HPCStatsRuntimeError(
+                    "could not insert node %s since already existing in "\
+                    "database" \
+                      % (str(self)))
+
         req = """
-            INSERT INTO nodes (
-                            name,
-                            cluster,
-                            partition,
-                            cpu,
-                            memory,
-                            model,
-                            flops )
-            VALUES ( %s, %s, %s, %s, %s, %s, %s); """
-        datas = (
-            self._name,
-            self._cluster,
-            self._partition,
-            self._cpu,
-            self._memory,
-            self._model,
-            self._flops )
+                INSERT INTO Node (node_name,
+                                  cluster_id,
+                                  node_partition,
+                                  node_nbCpu,
+                                  node_memory,
+                                  node_flops )
+                VALUES ( %s, %s, %s, %s, %s, %s)
+                RETURNING node_id
+              """
+        params = ( self.name,
+                   self.cluster.cluster_id,
+                   self.partition,
+                   self.cpu,
+                   self.memory,
+                   self.flops )
  
-        #print db.get_cur().mogrify(req, datas)
-        db.get_cur().execute(req, datas)
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
+        self.node_id = cur.fetchone()[0]
 
     def update(self, db):
-        req = """
-            UPDATE nodes SET
-                       partition = %s,
-                       cpu = %s,
-                       memory = %s,
-                       model = %s,
-                       flops = %s
-            WHERE name = %s
-              AND cluster = %s; """
-        datas = (
-            self._partition,
-            self._cpu,
-            self._memory,
-            self._model,
-            self._flops,
-            self._name,
-            self._cluster )
+        """Update Node partition, cpu, memory and flops fields in database.
+        """
 
-        #print db.get_cur().mogrify(req, datas)
-        db.get_cur().execute(req, datas)
+        req = """
+                UPDATE Node
+                   SET node_partition = %s,
+                       node_nbCpu = %s,
+                       node_memory = %s,
+                       node_flops = %s
+                 WHERE node_name = %s
+                   AND cluster_id = %s
+             """
+        params = ( self.partition,
+                   self.cpu,
+                   self.memory,
+                   self.flops,
+                   self.name,
+                   self.cluster.cluster_id )
+
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
