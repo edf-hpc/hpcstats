@@ -108,8 +108,8 @@ class Cluster:
               """
         params = ( self.name, )
 
-        #print db.get_cur().mogrify(req, params)
         cur = db.get_cur()
+        #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.cluster_id = cur.fetchone()[0]
 
@@ -127,11 +127,11 @@ class Cluster:
                   FROM Node
                  WHERE cluster_id = %s
               """
-        datas = ( self.cluster_id, )
+        params = ( self.cluster_id, )
 
         cur = db.get_cur()
-        #print cur.mogrify(req, datas)
-        cur.execute(req, datas)
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
         return cur.fetchone()[0]
 
     def get_min_datetime(self, db):
