@@ -46,8 +46,7 @@ CREATE TABLE Account(
         account_deletion date NOT NULL,
         userhpc_id       integer NOT NULL,
         cluster_id       integer NOT NULL,
-        CONSTRAINT Account_pkey PRIMARY KEY (userhpc_id, cluster_id),
-        CONSTRAINT Job_unique UNIQUE (job_sched_id, cluster_id)
+        CONSTRAINT Account_pkey PRIMARY KEY (userhpc_id, cluster_id)
 );
 
 CREATE TABLE Node(
