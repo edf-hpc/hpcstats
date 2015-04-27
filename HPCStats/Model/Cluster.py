@@ -39,6 +39,7 @@ Cluster(
 
 """
 
+import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Cluster:
