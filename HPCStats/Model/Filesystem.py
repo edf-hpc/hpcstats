@@ -27,54 +27,94 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""
+Model class for the filesystem table:
+
+filesystem(
+  filesystem_id   SERIAL,
+  filesystem_name character varying(30) NOT NULL,
+  cluster_id      integer NOT NULL,
+  CONSTRAINT filesystem_pkey PRIMARY KEY (filesystem_id, cluster_id),
+  CONSTRAINT filesystem_unique UNIQUE (filesystem_name, cluster_id)
+)
+
+"""
+
 import logging
+from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Filesystem:
-    def __init__(self, mount_point = "", cluster = "", type = ""):
 
-        self._mount_point = mount_point
-        self._cluster = cluster
-        self._type = type
+    def __init__(self, mountpoint, cluster, fs_id=None):
+
+        self.fs_id = fs_id
+        self.mountpoint = mountpoint
+        self.cluster = cluster
 
     def __str__(self):
-        return "mount point : %s ,on cluster : %s, type : %s" % \
-                   ( self._mount_point,
-                     self._cluster,
-                     self._type)
+
+        return "filesystem: %s [cluster: %s]" % \
+                   ( self.mountpoint,
+                     self.cluster.name )
+
+    def find(self, db):
+        """Search the Filesystem in the database based on its mountpoint and
+           cluster. If exactly one filesystem matches in database, set fs_id
+           attribute properly and returns its value. If more than one
+           filesystem matches, raises HPCStatsDBIntegrityError. If no
+           filesystem is found, returns None.
+        """
+
+        req = """
+                SELECT filesystem_id
+                  FROM filesystem
+                 WHERE filename_name = %s
+                   AND cluster_id = %s
+              """
+        params = ( self.mountpoint,
+                   self.cluster.cluster_id )
+
+        cur = db.get_cur()
+        cur.execute(req, params)
+        nb_rows = cur.rowcount
+        if nb_rows == 0:
+            logging.debug("filesystem %s not found in DB" % (str(self)))
+            return None
+        elif nb_rows == 1:
+            raise HPCStatsDBIntegrityError(
+                    "several filesystem_id found in DB for filesystem %s" \
+                      % (str(self)))
+        else:
+            self.fs_id = cur.fetchone()[0]
+            logging.debug("filesystem %s found in DB with id %d" \
+                            % (str(self),
+                               self.fs_id))
+            return self.fs_id
 
     def save(self, db):
+        """Insert Filesystem in database. You must make sure that the
+           Filesystem does not already exist in database yet (typically using
+           Filesystem.find() method else there is a risk of future integrity
+           errors because of duplicated filesystems. If fs_id attribute is set,
+           it raises HPCStatsRuntimeError.
+        """
+
+        if self.fs_id is not None:
+            raise HPCStatsRuntimeError(
+                    "could not insert filesystem %s since already existing " \
+                    "in database" \
+                      % (str(self)))
+
         req = """
-            INSERT INTO filesystem (
-                            mount_point,
-                            cluster,
-                            type )
-            VALUES ( %s, %s, %s); """
-        datas = (
-            self._mount_point,
-            self._cluster,
-            self._type )
+                INSERT INTO filesystem ( filesystem_name,
+                                         cluster_id )
+                VALUES ( %s, %s)
+                RETURNING cluster_id
+              """
+        params = ( self.mountpoint,
+                   self.cluster.cluster_id )
 
-        #print db.get_cur().mogrify(req, datas)
-        db.get_cur().execute(req, datas)
-
-
-    def delete(self, db):
         cur = db.get_cur()
-        cur.execute("DELETE FROM filesystem WHERE mount_point = %s",(self._mount_point,))
-
-    def get_fs_for_cluster(self, db, cluster):
-        req = """
-            SELECT mount_point
-            FROM filesystem
-            WHERE cluster = %s
-              ;"""
-        datas = (cluster,)
-        cur = db.get_cur()
-        cur.execute(req, datas)
-        results = []
-        while (1):
-            db_row = cur.fetchone()
-            if db_row == None: break
-            results.append(db_row[0])
-        return results
-
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
+        self.fs_id = cur.fetchone()[0]
