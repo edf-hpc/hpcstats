@@ -59,8 +59,8 @@ class Cluster:
     def find(self, db):
         """Search the Cluster in the database based on its name. If exactly
            one cluster matches in database, set cluster_id attribute properly
-           and returns its value. If more than one event matches, raises
-           HPCStatsDBIntegrityError. If no event is found, returns None.
+           and returns its value. If more than one cluster matches, raises
+           HPCStatsDBIntegrityError. If no cluster is found, returns None.
         """
 
         req = """
@@ -90,7 +90,7 @@ class Cluster:
         """Insert Cluster in database. You must make sure that the Cluster does
            not already exist in database yet (typically using Cluster.find()
            method else there is a risk of future integrity errors because of
-           duplicated events. If cluster_id attribute is set, it raises
+           duplicated clusters. If cluster_id attribute is set, it raises
            HPCStatsRuntimeError.
         """
 
