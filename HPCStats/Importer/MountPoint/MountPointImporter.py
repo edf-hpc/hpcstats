@@ -29,7 +29,6 @@
 
 from HPCStats.Importer.Importer import Importer
 #from HPCStats.Importer.MountePoint.FilesystemImporter import FilesystemImporter
-from HPCStats.Model.Cluster import Cluster
 from HPCStats.Model.Filesystem import Filesystem
 import os
 import logging
@@ -46,7 +45,6 @@ class MountPointImporter(Importer):
         self._db_mount_point = {}
 
     def update_mount_point(self):
-        cluster = Cluster(self.cluster.name)
 
         self._conf_mount_point = self.get_mount_point_from_config()
         logging.info("fs from conf -> %s", self._conf_mount_point)
