@@ -121,8 +121,8 @@ class User:
                    self.lastname,
                    self.department )
 
-        #print db.get_cur().mogrify(req, params)
         cur = db.get_cur()
+        #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.user_id = cur.fetchone()[0]
 

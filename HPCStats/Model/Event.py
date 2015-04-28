@@ -155,8 +155,9 @@ class Event:
                    self.event_start,
                    self.event_end )
  
-        #print db.get_cur().mogrify(req, params)
-        db.execute(req, params)
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
     
     def update_end_datetime(self, db):
         """Update the end datetime of the Event. The event_id attribute must be
@@ -182,8 +183,9 @@ class Event:
                    self.node,
                    self.cluster )
  
-        #print db.get_cur().mogrify(req, params)
-        db.execute(req, params)
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
 
     def update_reason(self, db):
         """Update the reason of the Event. The event_id attribute must be set
@@ -209,7 +211,10 @@ class Event:
             self.event_id,
             self.node,
             self.cluster )
-        db.execute(req, params)
+
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
 
     def merge_event(self, event):
         """Set Event end datetime equals to event in parameter end datetime.
