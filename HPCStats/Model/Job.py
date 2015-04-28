@@ -27,221 +27,231 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""
+Model class for the Cluster table:
+
+Job(
+  job_id         SERIAL,
+  job_sched_id   integer NOT NULL,
+  job_batch_id   character varying(30) NOT NULL,
+  job_nbCpu      integer NOT NULL,
+  job_name       character varying(30),
+  job_state      character varying(30) NOT NULL,
+  job_queue      character varying(30),
+  job_submission timestamp NOT NULL,
+  job_start      timestamp,
+  job_end        timestamp,
+  userhpc_id     integer NOT NULL,
+  cluster_id     integer NOT NULL,
+  project_id     integer NOT NULL,
+  business_code  character varying(30) NOT NULL,
+  CONSTRAINT Job_pkey PRIMARY KEY (job_id),
+  CONSTRAINT Job_unique UNIQUE (job_batch_id, cluster_id)
+)
+
+"""
+
 from datetime import datetime
 import logging
 import string
 import os
 from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
+from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Job:
 
-    def __init__( self,
-                  db_id = 0,
-                  id_job = 0,
-                  sched_id = 0,
-                  cluster_name = "",
-                  uid = -1,
-                  gid = -1,
-                  submission_datetime = 0,
-                  running_datetime = 0,
-                  end_datetime = 0,
-                  nb_procs = 0,
-                  nb_hosts = 0,
-                  running_queue = "",
-                  nodes = "",
-                  state = "unknown",
-                  login = "",
-                  name = ""):
-        self._db_id = db_id
-        self._sched_id = sched_id
-        self._id_job = id_job
-        self._cluster_name = cluster_name
-        self._uid = uid
-        self._gid = gid
-        self._submission_datetime = submission_datetime
-        self._running_datetime = running_datetime
-        self._end_datetime = end_datetime
-        self._nb_procs = nb_procs
-        self._nb_hosts = nb_hosts
-        self._running_queue = running_queue
-        self._nodes = nodes
-        self._state = state
-        self._login = login
-        self._name = os.path.basename(name)[:29]
+    def __init__( self, cluster, user, project, business, nodeset,
+                  sched_id, batch_id, name, nbcpu, state, queue,
+                  submission, start, end, job_id=None):
+
+        self.job_id = job_id
+        self.sched_id = sched_id # user interface ID
+        self.batch_id = batch_id # internal ID
+        self.name = name
+        self.nbcpu = nbcpu
+        self.state = state
+        self.queue = queue
+
+        self.submission = submission
+        self.start = start
+        self.end = end
+
+        self.cluster = cluster
+        self.user = user
+        self.project = project
+        self.business = business
+        self.nodeset = nodeset
 
     def __str__(self):
-        if self._running_datetime == 0:
-           running_datetime = "notyet"
+
+        # format datetimes strings
+        submission = self.submission.strftime('%Y-%m-%d %H:%M:%S')
+        if self.start is None:
+           start = "notyet"
         else:
-           running_datetime = self._running_datetime.strftime('%Y-%m-%d %H:%M:%S')
-        if self._end_datetime == 0:
-           end_datetime = "notyet"
+           start = self.start.strftime('%Y-%m-%d %H:%M:%S')
+        if self.end is None:
+           end = "notyet"
         else:
-           end_datetime = self._end_datetime.strftime('%Y-%m-%d %H:%M:%S')
-        return "%s/%s (%d|%d) %s / %s / %s -> %d / %d [%s] %s %s %s" % \
-               ( self._cluster_name,
-                 self._id_job,
-                 self._uid,
-                 self._gid,
-                 self._submission_datetime,
-                 self._running_datetime,
-                 self._end_datetime,
-                 self._nb_hosts,
-                 self._nb_procs,
-                 self._nodes,
-                 self._state,
-                 self._login,
-                 self._name )
+           end = self.end.strftime('%Y-%m-%d %H:%M:%S')
+
+        return "job %d on %s(%d) by %s: state:%s queue:%s %s/%s/%s" % \
+               ( self.sched_id,
+                 self.cluster.name,
+                 self.nbcpu
+                 self.user.login,
+                 self.state,
+                 self.squeue,
+                 submission,
+                 start,
+                 end )
+
+    def find(self, db):
+        """Search the Job in the database based on its sched_id and cluster. If
+           exactly one job matches in database, set job_id attribute properly
+           and returns its value. If more than one job matches, raises
+           HPCStatsDBIntegrityError. If no job is found, returns None.
+        """
+
+        req = """
+                SELECT job_id
+                  FROM Job
+                 WHERE cluster_id = %s
+                   AND job_batch_id = %s
+              """
+        params = ( self.cluster.cluster_id,
+                   self.batch_id )
+        cur = db.get_cur()
+        cur.execute(req, params)
+        nb_rows = cur.rowcount
+        if nb_rows == 0:
+            logging.debug("job %s not found in DB" % (str(self)))
+            return None
+        elif nb_rows == 1:
+            raise HPCStatsDBIntegrityError(
+                    "several job_id found in DB for job %s" \
+                      % (str(self)))
+        else:
+            self.job_id = cur.fetchone()[0]
+            logging.debug("job %s found in DB with id %d" \
+                            % (str(self),
+                               self.job_id))
+            return self.job_id
 
     def save(self, db):
+        """Insert Job in database. You must make sure that the Job does not
+           already exist in database yet (typically using Job.find() method
+           else there is a risk of future integrity errors because of
+           duplicated jobs. If job_id attribute is set, it raises
+           HPCStatsRuntimeError.
+        """
+
+        if self.job_id is not None:
+            raise HPCStatsRuntimeError(
+                    "could not insert job %s since already existing in "\
+                    "database" \
+                      % (str(self)))
+
         req = """
-           INSERT INTO jobs (
-                           id_job,
-                           sched_id,
-                           uid,
-                           gid,
-                           clustername,
-		       	   running_queue,
-                           submission_datetime,
-                           running_datetime,
-                           end_datetime,
-                           nb_nodes,
-                           nb_cpus,
-                           state,
-                           login,
-                           name)
-           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-           RETURNING id; """
+                INSERT INTO job ( job_sched_id,
+                                  job_batch_id,
+                                  job_name,
+                                  job_nbCpu,
+                                  job_state,
+                                  job_queue,
+                                  job_submission,
+                                  job_start,
+                                  job_end,
+                                  cluster_id,
+                                  userhpc_id,
+                                  project_id,
+                                  business_code )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                RETURNING job_id
+              """
 
-        datas = (
-           self._id_job,
-           self._sched_id,
-           self._uid,
-           self._gid,
-           self._cluster_name,
-	   self._running_queue,
-           self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-           self._running_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-           self._end_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-           self._nb_hosts,
-           self._nb_procs,
-           self._state,
-           self._login,
-           self._name)
- 
-        dbcursor = db.get_cur()
+        params = ( self.sched_id,
+                   self.batch_id,
+                   self.name,
+                   self.nbcpu,
+                   self.state,
+                   self.queue,
+                   self.submission,
+                   self.start,
+                   self.end,
+                   self.cluster.cluster_id,
+                   self.user.user_id,
+                   self.project.project_id,
+                   self.business.code )
 
-        #print dbcursor.mogrify(req, datas)
-	logging.debug(datas)
-        dbcursor.execute(req, datas)
-        self._db_id = dbcursor.fetchone()[0]
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
+        self.job_id = cur.fetchone()[0]
         try:
-	  if self._nodes is not None:
-            for node in NodeSet(self._nodes.replace("x",",")):
-                req = """
-                    INSERT INTO job_nodes (
-                                    job,
-                                    node,
-                                    cpu_id
-                                    )
-                    VALUES (%s, %s, %s); """
-                datas = (
-                    self._db_id,
-                    node,
-                    "unknown")
-                db.get_cur().execute(req, datas)
+            if self.nodeset is not None
+                for node_name in NodeSet(self.nodeset):
+                    node = Node(node_name, self.cluster, "", 0, 0, 0)
+                    node_id = node.find()
+                    if node_id is None:
+                        raise HPCStatsDBIntegrityError(
+                                "unable to find node %s for job %s" \
+                                  % (node_name, str(self)))
+
+                    run = Run(self.cluster, node, self)
+                    run.save()
         except NodeSetParseRangeError as e:
-            logging.error("could not parse nodeset %s", self._nodes) 
+            logging.error("could not parse nodeset %s", self.nodeset)
         
     def update(self, db):
+        """Update Job sched_id, nbcpu, name, state, queue, submission, start and
+           end in database. Raises HPCStatsRuntimeError if self.job_id is None.
+        """
+
+        if self.job_id is None:
+            raise HPCStatsRuntimeError(
+                    "could not update job %s since not found in database" \
+                      % (str(self)))
+
         req = """
-           UPDATE jobs SET
-                      id_job = %s,
-                      uid = %s,
-                      gid = %s,
-                      clustername = %s,
-                      running_queue = %s,
-                      submission_datetime = %s,
-                      running_datetime = %s,
-                      end_datetime = %s,
-                      nb_nodes = %s,
-                      nb_cpus = %s,
-                      state = %s,
-                      login = %s,
-                      name = %s
-           WHERE sched_id = %s AND id_job = %s AND clustername = %s
-           RETURNING id; """
-        datas = (
-           self._id_job,
-           self._uid,
-           self._gid,
-           self._cluster_name,
-           self._running_queue,
-           self._submission_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-           self._running_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-           self._end_datetime.strftime('%Y-%m-%d %H:%M:%S'),
-           self._nb_hosts,
-           self._nb_procs,
-           self._state,
-           self._login,
-           self._name,
-           self._sched_id,
-	   self._id_job,
-	   self._cluster_name)
+                UPDATE Job
+                   SET job_sched_id = %s,
+                       job_nbCpu = %s,
+                       job_name = %s,
+                       job_state = %s,
+                       job_queue = %s,
+                       job_submission = %s,
+                       job_start = %s,
+                       job_end = %s
+                 WHERE job_id = %s
+              """
+        params = ( self.sched_id
+                   self.nbcpu,
+                   self.name,
+                   self.state,
+                   self.queue,
+                   self.submission,
+                   self.start,
+                   self.end,
+                   self.job_id )
 
-        dbcursor = db.get_cur()
-        dbcursor.execute(req, datas)
-        self._db_id = dbcursor.fetchone()[0]
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
 
-        # Add nodes to job_nodes if not defined already
-        req = """ SELECT count(job) FROM job_nodes WHERE job = %s; """
-        datas = ( self._db_id, )
+        try:
+            if self.nodeset is not None
+                for node_name in NodeSet(self.nodeset):
+                    # fake temporary Node just to get the node
+                    node = Node(node_name, self.cluster, "", 0, 0, 0)
+                    node_id = node.find()
+                    if node_id is None:
+                        raise HPCStatsDBIntegrityError(
+                                "unable to find node %s for job %s" \
+                                  % (node_name, str(self)))
 
-        #print dbcursor.mogrify(req, datas)
-
-        dbcursor.execute(req, datas)
-        nodecount = dbcursor.fetchone()[0]
-
-        if nodecount == 0 and self._nodes is not None:
-           for node in NodeSet(self._nodes.replace("x",",")):
-               if node != "None assigned":
-                   req = """
-                       INSERT INTO job_nodes (
-                                       job,
-                                       node,
-                                       cpu_id
-                                       )
-                       VALUES (%s, %s, %s); """
-                   datas = (
-                       self._db_id,
-                       node,
-                       "unknown")
-	    #print (datas)
-                   db.get_cur().execute(req, datas)
-
-		    
-    """ accessors """
-
-    def get_db_id(self):
-        return self._db_id
-
-    def get_uid(self):
-        return self._uid
-
-    def get_running_datetime(self):
-        return self._running_datetime
-
-    def set_running_datetime(self, running_datetime):
-        self._running_datetime = running_datetime
-
-    def get_end_datetime(self):
-        return self._end_datetime
-
-    def get_nb_procs(self):
-        return self._nb_procs
-
-    def get_state(self):
-        return self._state
-
-    def get_cluster_name(self):
-        return self._cluster_name
+                    run = Run(self.cluster, node, self)
+                    if not run.existing():
+                        run.save()
+        except NodeSetParseRangeError as e:
+            logging.error("could not parse nodeset %s", self.nodeset)
