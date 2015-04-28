@@ -80,8 +80,8 @@ class Node:
         req = """
                 SELECT node_id
                   FROM Node
-                 WHERE name = %s
-                   AND cluster = %s"
+                 WHERE node_name = %s
+                   AND cluster_id = %s"
               """
         params = ( self.name,
                    self.cluster.cluster_id )
