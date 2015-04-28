@@ -61,6 +61,13 @@ CREATE TABLE Node(
         CONSTRAINT Node_unique UNIQUE (node_name, cluster_id)
 );
 
+CREATE TABLE Run(
+        job_id         integer NOT NULL,
+        node_id        integer NOT NULL,
+        cluster_id     integer NOT NULL,
+        CONSTRAINT Run_pkey PRIMARY KEY (job_id, node_id, cluster_id)
+);
+
 CREATE TABLE Event(
         event_id     SERIAL,
         event_type   character varying(30) NOT NULL,
@@ -133,6 +140,9 @@ ALTER TABLE ONLY Job ADD CONSTRAINT FK_Job_userhpc_id FOREIGN KEY (userhpc_id) R
 ALTER TABLE ONLY Job ADD CONSTRAINT FK_Job_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
 ALTER TABLE ONLY Job ADD CONSTRAINT FK_Job_project_id FOREIGN KEY (project_id) REFERENCES Project(project_id);
 ALTER TABLE ONLY Job ADD CONSTRAINT FK_Job_business_code FOREIGN KEY (business_code) REFERENCES Business(business_code);
+ALTER TABLE ONLY Run ADD CONSTRAINT FK_Run_node_id FOREIGN KEY (node_id) REFERENCES Node(node_id);
+ALTER TABLE ONLY Run ADD CONSTRAINT FK_Run_job_id FOREIGN KEY (job_id) REFERENCES Job(job_id);
+ALTER TABLE ONLY Run ADD CONSTRAINT FK_Run_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
 ALTER TABLE ONLY Account ADD CONSTRAINT FK_Account_userhpc_id FOREIGN KEY (userhpc_id) REFERENCES Userhpc(userhpc_id);
 ALTER TABLE ONLY Account ADD CONSTRAINT FK_Account_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
 ALTER TABLE ONLY Node ADD CONSTRAINT FK_Node_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
