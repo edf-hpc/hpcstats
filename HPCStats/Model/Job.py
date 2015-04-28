@@ -188,6 +188,7 @@ class Job:
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.job_id = cur.fetchone()[0]
+        # TODO: Run creation should be done in JobImporter, not here
         try:
             if self.nodeset is not None
                 for node_name in NodeSet(self.nodeset):
@@ -239,6 +240,7 @@ class Job:
         #print cur.mogrify(req, params)
         cur.execute(req, params)
 
+        # TODO: Run creation should be done in JobImporter, not here
         try:
             if self.nodeset is not None
                 for node_name in NodeSet(self.nodeset):
