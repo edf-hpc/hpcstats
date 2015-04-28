@@ -61,13 +61,13 @@ class HPCStatsdb:
         try:
             logging.debug(datas)
             self._cur.execute(req, datas)
-	except:
+        except:
             logging.error("can't execute, rollback launch")
-	    self._cur.rollback()	
+            self._cur.rollback()	
             self.commit()
-	    pass
-	else:
-	    self.commit()
+            pass
+        else:
+            self.commit()
 
     def get_cur(self):
         return self._cur
