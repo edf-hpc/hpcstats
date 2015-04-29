@@ -102,7 +102,7 @@ class Cluster:
                       % (str(self)))
 
         req = """
-                INSERT INTO Cluster ( name )
+                INSERT INTO Cluster ( cluster_name )
                 VALUES ( %s )
                 RETURNING cluster_id
               """
@@ -200,7 +200,7 @@ class Cluster:
         req = """
                 SELECT COUNT(DISTINCT userhpc_id)
                   FROM Job
-                 WHERE Job.cluster_id =%,
+                 WHERE Job.cluster_id = %s,
                    AND ((job_start BETWEEN %s AND %s)
                         OR (job_end BETWEEN %s AND %s)
                         OR (job_start <= %s AND job_end >= %s))
