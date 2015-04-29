@@ -24,69 +24,108 @@
 # License along with HPCStats. If not, see
 # <http://www.gnu.org/licenses/>.
 #
-# On Calibre systems, the complete text of the GNU General
+# On Calibre systems, the  complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""
+Model class for the Domain table:
+
+Domain(
+  domain_id   character varying(4) NOT NULL,
+  domain_name character varying(30),
+  CONSTRAINT Domain_pkey PRIMARY KEY (domain_id),
+  CONSTRAINT Domain_unique UNIQUE (domain_name)
+)
+
+"""
+
 import logging
+from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Domain:
-    def __init__(self, id = "", description = ""):
+
+    def __init__(self, key, name):
        
-        self._id = id #id est ici un chaine de caractère
-        self._description = description
+        self.key = key
+        self.name = name
+
+        self.exists = None
 
     def __str__(self):
-        if self._description == None:
-           description = "unknown"
-        else:
-           description = self._description
-        return self._id + " : " + self._description
 
-    """ getter accessors """
-    def get_id(self):
-        return self._id
+        return "domain [%s] %s" % (self.key, self.name)
 
-    def get_description(self):
-        return self._description
+    def existing(self, db):
+        """Returns True if the domain already exists in database (same key), or
+           False if not.
+        """
 
-    """ setter accessors """
-    def set_description(self, description):
-        self._description = description
-
-    """ methodes """
-    def save(self, db):
         req = """
-            INSERT INTO domains (
-                              id_domain,
-                              description )
-            VALUES (%s, %s);"""
-        datas = (
-            self._id,
-            self._description )
-        db.get_cur().execute(req, datas)
+                SELECT domain_id
+                  FROM Domain
+                 WHERE domain_id = %s
+              """
+        params = ( self.key, )
+        cur = db.get_cur()
+        cur.execute(req, params)
+        nb_rows = cur.rowcount
+        if nb_rows == 0:
+            logging.debug("domain %s not found in DB" % (str(self)))
+            self.exists = False
+        elif nb_rows == 1:
+            raise HPCStatsDBIntegrityError(
+                    "several domain found in DB for domain %s" \
+                      % (str(self)))
+        else:
+            logging.debug("domain %s found in DB" % (str(self)))
+            self.exists = True
+        return self.exists
+
+    def save(self, db):
+        """Insert Domain in database. It first makes sure that the Domain does
+           not already exist in database yet by calling Domain.existing()
+           method if needed. If the domain already exists in database, it
+           raises HPCStatsRuntimeError.
+        """
+
+        if self.exists is None: # not checked yet
+            self.existing(db)
+        if self.exists is True:
+            raise HPCStatsRuntimeError(
+                    "could not insert domain %s since already existing in "\
+                    "database" % (str(self)))
+
+        req = """
+                INSERT INTO Domain ( domain_id,
+                                     domain_name )
+                VALUES ( %s, %s )
+              """
+        params = ( self.key,
+                   self.name )
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
+        self.exists = True
 
     def update(self, db):
+        """Update Domain name in database. Raises HPCStatsRuntimeError if
+           exists is False.
+        """
+
+        if self.exists is None: # not checked yet
+            self.existing(db)
+        if self.exists is False:
+            raise HPCStatsRuntimeError(
+                    "could not update domain %s since not found in database" \
+                      % (str(self)))
+
         req = """
-            UPDATE domains SET 
-                         id_domain = %s,
-                         description = %s 
-            WHERE id_domain = %s;"""
-        datas = (
-            self._id,
-            self._description,
-            self._id )
-        db.get_cur().execute(req, datas)
-
-    def already_exist(self, db):
+                UPDATE Domain
+                   SET domain_name = %s
+                 WHERE domain_id = %s
+              """
+        params = ( self.name,
+                   self.key )
         cur = db.get_cur()
-        cur.execute("SELECT * FROM domains WHERE id_domain = %s", (self._id,))
-        nb_rows = cur.rowcount
-        if nb_rows == 1:
-           return True
-        elif nb_rows == 0:
-           return False
-
-def delete_domains(db):
-    db.get_cur().execute("DELETE FROM domains;")
-
- 
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
