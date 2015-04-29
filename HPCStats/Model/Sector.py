@@ -27,72 +27,111 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""
+Model class for the Sector table:
+
+Sector(
+  sector_key    character varying(5) NOT NULL,
+  sector_name   character varying(25),
+  domain_id     character varying(4) NOT NULL,
+  CONSTRAINT Sector_pkey PRIMARY KEY (sector_key, domain_id)
+)
+
+"""
+
 import logging
+from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Sector:
-    def __init__(self, id = "", domain="", description = ""):
 
-        self._id = id
-        self._domain = domain
-        self._description = description
+    def __init__(self, domain, key, name):
+
+        self.key = key
+        self.name = name
+        self.domain = domain
+
+        self.exists = None
 
     def __str__(self):
-        if self._description == None:
-           description = "unknown"
-        else:
-           description = self._description
-        return self._id + " : " + self._domain + " - " + self._description
 
-    """ getter accessors """
-    def get_id(self):
-        return self._id
+        return "sector (%s): [%s] %s" % (self.domain.key, self.key, self.name)
 
-    def get_domain(self):
-        return self._domain
+    def existing(self, db):
+        """Returns True if the Sector already exists in database (same key and
+           domain), or False if not.
+        """
 
-    def get_description(self):
-        return self._description
-
-    """ setter accessors """
-    def set_description(self, description):
-        self._description = description
-
-    """ methodes """
-    def save(self, db):
         req = """
-            INSERT INTO sectors (
-                              id_sector,
-                              id_domain,
-                              description )
-            VALUES (%s, %s, %s);"""
-        datas = (
-            self._id,
-            self._domain,
-            self._description )
-        db.get_cur().execute(req, datas)
+                SELECT sector_key
+                  FROM Sector
+                 WHERE sector_key = %s
+                   AND domain_id = %s
+              """
+        params = ( self.key, self.domain.key )
+        cur = db.get_cur()
+        cur.execute(req, params)
+        nb_rows = cur.rowcount
+        if nb_rows == 0:
+            logging.debug("sector %s not found in DB" % (str(self)))
+            self.exists = False
+        elif nb_rows == 1:
+            raise HPCStatsDBIntegrityError(
+                    "several sector found in DB for sector %s" \
+                      % (str(self)))
+        else:
+            logging.debug("sector %s found in DB" % (str(self)))
+            self.exists = True
+        return self.exists
+
+    def save(self, db):
+        """Insert Sector in database. It first makes sure that the Sector does
+           not already exist in database yet by calling Sector.existing()
+           method if needed. If the sector already exists in database, it
+           raises HPCStatsRuntimeError.
+        """
+
+        if self.exists is None: # not checked yet
+            self.existing(db)
+        if self.exists is True:
+            raise HPCStatsRuntimeError(
+                    "could not insert sector %s since already existing in "\
+                    "database" % (str(self)))
+
+        req = """
+                INSERT INTO Sector ( sector_key,
+                                     sector_name,
+                                     domain_id )
+                VALUES ( %s, %s, %s )
+              """
+        params = ( self.key,
+                   self.name,
+                   self.domain.key )
+        cur = db.get_cur()
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
+        self.exists = True
 
     def update(self, db):
+        """Update Sector name in database. Raises HPCStatsRuntimeError if
+           exists is False.
+        """
+
+        if self.exists is None: # not checked yet
+            self.existing(db)
+        if self.exists is False:
+            raise HPCStatsRuntimeError(
+                    "could not update sector %s since not found in database" \
+                      % (str(self)))
+
         req = """
-            UPDATE sectors SET 
-                         id_domain = %s,
-                         description = %s 
-            WHERE id = %s;"""
-        datas = (
-            self._domain,
-            self._description,
-            self._id )
-        db.get_cur().execute(req, datas)
-
-    def already_exist(self, db):
+                UPDATE Sector
+                   SET sector_name = %s
+                 WHERE sector_key = %s
+                   AND domain_id = %s
+              """
+        params = ( self.name,
+                   self.key,
+                   self.domain.key )
         cur = db.get_cur()
-        cur.execute("SELECT * FROM sectors WHERE id_sector = %s AND id_domain = %s", (self._id, self._domain,))
-        nb_rows = cur.rowcount
-        if nb_rows == 1:
-           return True
-        elif nb_rows == 0:
-           return False
-
-def delete_sectors(db):
-    db.get_cur().execute("DELETE FROM sectors;")
-
- 
+        #print cur.mogrify(req, params)
+        cur.execute(req, params)
