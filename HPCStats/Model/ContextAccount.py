@@ -45,6 +45,11 @@ from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class ContextAccount:
 
+    """There is no update() method in this class because all fields are the
+       primary key of the table. So one field change is just another
+       ContextAccount, not an updated one.
+    """
+
     def __init__(self, cluster, user, business, project):
 
         self.cluster = cluster
