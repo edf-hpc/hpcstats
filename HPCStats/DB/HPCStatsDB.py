@@ -30,7 +30,7 @@
 import logging
 import psycopg2
 
-class HPCStatsdb:
+class HPCStatsDB:
 
     def __init__(self, dbhostname, dbport, dbname, dbuser, dbpassword):
         """ This object is a singleton class, this means only one instance will be created """
@@ -63,7 +63,7 @@ class HPCStatsdb:
             self._cur.execute(req, datas)
         except:
             logging.error("can't execute, rollback launch")
-            self._cur.rollback()	
+            self._cur.rollback()
             self.commit()
             pass
         else:

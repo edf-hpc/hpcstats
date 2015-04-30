@@ -31,8 +31,9 @@
 hpcstats command-line tool
 """
 
-from HPCStats.CLI.Stats import HPCStatsUpdater
+import sys
+from HPCStats.CLI.HPCStatsLauncher import HPCStatsLauncher
 
 if __name__ == '__main__':
-    app = HPCStatsUpdater()
+    app = HPCStatsLauncher(sys.args)
     app.run()
