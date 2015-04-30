@@ -60,7 +60,7 @@ from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Job:
 
-    def __init__( self, cluster, user, project, business, nodeset,
+    def __init__( self, account, project, business, nodeset,
                   sched_id, batch_id, name, nbcpu, state, queue,
                   submission, start, end, job_id=None):
 
@@ -76,8 +76,7 @@ class Job:
         self.start = start
         self.end = end
 
-        self.cluster = cluster
-        self.user = user
+        self.account = account
         self.project = project
         self.business = business
         self.nodeset = nodeset
@@ -97,7 +96,7 @@ class Job:
 
         return "job %d on %s(%d) by %s: state:%s queue:%s %s/%s/%s" % \
                ( self.sched_id,
-                 self.cluster.name,
+                 self.account.cluster.name,
                  self.nbcpu
                  self.user.login,
                  self.state,
@@ -119,7 +118,7 @@ class Job:
                  WHERE cluster_id = %s
                    AND job_batch_id = %s
               """
-        params = ( self.cluster.cluster_id,
+        params = ( self.account.cluster.cluster_id,
                    self.batch_id )
         cur = db.get_cur()
         cur.execute(req, params)
@@ -179,8 +178,8 @@ class Job:
                    self.submission,
                    self.start,
                    self.end,
-                   self.cluster.cluster_id,
-                   self.user.user_id,
+                   self.account.cluster.cluster_id,
+                   self.account.user.user_id,
                    self.project.project_id,
                    self.business.code )
 
@@ -245,14 +244,14 @@ class Job:
             if self.nodeset is not None
                 for node_name in NodeSet(self.nodeset):
                     # fake temporary Node just to get the node
-                    node = Node(node_name, self.cluster, "", 0, 0, 0)
+                    node = Node(node_name, self.account.cluster, "", 0, 0, 0)
                     node_id = node.find()
                     if node_id is None:
                         raise HPCStatsDBIntegrityError(
                                 "unable to find node %s for job %s" \
                                   % (node_name, str(self)))
 
-                    run = Run(self.cluster, node, self)
+                    run = Run(self.account.cluster, node, self)
                     if not run.existing():
                         run.save()
         except NodeSetParseRangeError as e:
