@@ -93,7 +93,7 @@ class Event:
            If no event is found, returns None.
         """
 
-        cur = db.get_cur()
+        cur = db.cur
         req = """
                 SELECT Event.event_id
                   FROM Event
@@ -135,7 +135,7 @@ class Event:
                     "database" \
                       % (str(self)))
 
-	cur = db.get_cur()
+	cur = db.cur
         req = """
                 INSERT INTO Event (
                               node_name,
@@ -155,7 +155,7 @@ class Event:
                    self.event_start,
                    self.event_end )
  
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
     
@@ -183,7 +183,7 @@ class Event:
                    self.node,
                    self.cluster )
  
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
 
@@ -212,7 +212,7 @@ class Event:
             self.node,
             self.cluster )
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
 

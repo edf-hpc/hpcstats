@@ -60,7 +60,7 @@ class JobFinder:
              ORDER BY end_datetime; """
         data = (cluster_name, begin, end, begin, end, begin, end)
 
-        cur = self._db.get_cur()
+        cur = self._db.cur
         #print cur.mogrify(req, data)
         cur.execute (req, data)
 

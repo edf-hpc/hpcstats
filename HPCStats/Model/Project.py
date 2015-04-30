@@ -78,7 +78,7 @@ class Project:
                  WHERE project_code = %s
               """
         params = ( self.code, )
-        cur = db.get_cur()
+        cur = db.cur
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
@@ -126,7 +126,7 @@ class Project:
                    self.sector.key,
                    domain_key )
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.project_id = cur.fetchone()[0]
@@ -148,6 +148,6 @@ class Project:
         params = ( self.description,
                    self.project_id )
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)

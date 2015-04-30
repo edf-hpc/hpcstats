@@ -58,7 +58,7 @@ class BusinessCodeImporterCSV(BusinessCodeImporter):
 
         b_file = open(self._business_file, 'r')
         # savepoint is used to considere exceptions and commit only at the end
-        db.get_cur().execute("SAVEPOINT my_savepoint;")
+        db.cur.execute("SAVEPOINT my_savepoint;")
         with b_file as csvfile:
             file_reader = csv.reader(csvfile, delimiter=';', quotechar='|')
             for row in file_reader:
@@ -76,11 +76,11 @@ class BusinessCodeImporterCSV(BusinessCodeImporter):
                             logging.debug("add new business entry with key : %s, and description : %s", \
                                            code.get_key(), \
                                            code.get_description())
-                        db.get_cur().execute("SAVEPOINT my_savepoint;")
+                        db.cur.execute("SAVEPOINT my_savepoint;")
                     else :
                         logging.debug("code %s not added, already exist", code.get_key())
                 except psycopg2.DataError:
                     logging.error("impossible to add BUSINESS entry in database : (%s) du to encoding error", row)
-                    db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                    db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                     pass
         self.db.commit()

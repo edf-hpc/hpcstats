@@ -73,7 +73,7 @@ class UserImporterLdap(UserImporter):
 
     def get_all_users_from_db(self, db):
         users_from_db = []
-        cur = db.get_cur()
+        cur = db.cur
         cur.execute("SELECT * FROM users WHERE cluster = %s",
             (self.cluster.name,) )
         results = cur.fetchall()

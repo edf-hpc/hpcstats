@@ -91,7 +91,7 @@ class Account:
               """
         params = ( self.user.user_id,
                    self.cluster.cluster_id )
-        cur = db.get_cur()
+        cur = db.cur
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
@@ -135,7 +135,7 @@ class Account:
                    self.deletion_date,
                    self.user.user_id,
                    self.cluster.cluster_id )
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.exists = True
@@ -167,6 +167,6 @@ class Account:
                    self.deletion_date,
                    self.user.user_id,
                    self.cluster.cluster_id )
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)

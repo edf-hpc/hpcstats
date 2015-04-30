@@ -68,7 +68,7 @@ class Sector:
                    AND domain_id = %s
               """
         params = ( self.key, self.domain.key )
-        cur = db.get_cur()
+        cur = db.cur
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
@@ -106,7 +106,7 @@ class Sector:
         params = ( self.key,
                    self.name,
                    self.domain.key )
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.exists = True
@@ -132,6 +132,6 @@ class Sector:
         params = ( self.name,
                    self.key,
                    self.domain.key )
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)

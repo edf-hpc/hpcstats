@@ -48,7 +48,7 @@ class EventImporter(Importer):
                  WHERE cluster_name = %s
               """
         params = ( self.cluster.name, )
-        cur = self.db.get_cur()
+        cur = self.db.cur
         cur.execute(req, params)
 
         db_row = cur.fetchone()
@@ -62,7 +62,7 @@ class EventImporter(Importer):
                    AND event_end IS NULL
               """
         params = ( self.cluster.name, )
-        cur = self.db.get_cur()
+        cur = self.db.cur
         cur.execute(req, params)
 
         db_row = cur.fetchone()
@@ -81,7 +81,7 @@ class EventImporter(Importer):
                    AND event_end IS NULL
               """
         params = ( self.cluster.name, )
-        cur = self.db.get_cur()
+        cur = self.db.cur
         cur.execute(req, params)
 
         while (1):

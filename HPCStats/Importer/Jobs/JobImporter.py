@@ -44,7 +44,7 @@ class JobImporter(Importer):
             FROM jobs
             WHERE clustername = %s; """
         datas = (self.cluster.name,)
-        cur = self._db.get_cur()
+        cur = self._db.cur
         cur.execute(req, datas)
         results = cur.fetchall()
         for job in results:
@@ -63,7 +63,7 @@ class JobImporter(Importer):
               AND (   state = 'PENDING'
                    OR state = 'RUNNING' ); """
         datas = (self.cluster.name,)
-        cur = self._db.get_cur()
+        cur = self._db.cur
         cur.execute(req, datas)
         results = cur.fetchall()
         for job in results:

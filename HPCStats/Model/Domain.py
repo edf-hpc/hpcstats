@@ -66,7 +66,7 @@ class Domain:
                  WHERE domain_id = %s
               """
         params = ( self.key, )
-        cur = db.get_cur()
+        cur = db.cur
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
@@ -102,7 +102,7 @@ class Domain:
               """
         params = ( self.key,
                    self.name )
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.exists = True
@@ -126,6 +126,6 @@ class Domain:
               """
         params = ( self.name,
                    self.key )
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)

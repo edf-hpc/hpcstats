@@ -62,7 +62,7 @@ class ContextImporterCSV(ContextImporter):
 
         p_file = open(self._context_file, 'r')
         # save point is used to considere exception and commit in database only at the end
-        db.get_cur().execute("SAVEPOINT my_savepoint;")
+        db.cur.execute("SAVEPOINT my_savepoint;")
         with p_file as csvfile:
             file_reader = csv.reader(csvfile, delimiter=';', quotechar='|')
             for row in file_reader:
@@ -86,18 +86,18 @@ class ContextImporterCSV(ContextImporter):
                                  context.save(self.db)
                                  logging.debug("add context : %s", context)
                                  #self.db.commit()
-                                 db.get_cur().execute("SAVEPOINT my_savepoint;")
+                                 db.cur.execute("SAVEPOINT my_savepoint;")
                              except psycopg2.DataError:
                                  logging.error("impossible to add CONTEXT entry in database : (%s), du to encoding error", row)
-                                 db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                                  pass
                              except psycopg2.IntegrityError:
                                  logging.error("impossible to add CONTEXT entry in database : (%s), du to relations error", row)
-                                 db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                                  pass
                          except:
                              logging.error("context rejected. Project %s does not exist", project_name)
-                             db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                             db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                              pass
                  if row[7]:
                      for code in re.split('\|',row[7]):
@@ -113,18 +113,18 @@ class ContextImporterCSV(ContextImporter):
                                  context.save(self.db)
                                  logging.debug("add context : %s", context)
                                  #self.db.commit()
-                                 db.get_cur().execute("SAVEPOINT my_savepoint;")
+                                 db.cur.execute("SAVEPOINT my_savepoint;")
                              except psycopg2.DataError:
                                  logging.error("impossible to add CONTEXT entry in database : (%s), du to encoding error", row)
-                                 db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                                  pass
                              except psycopg2.IntegrityError:
                                  logging.error("impossible to add CONTEXT entry in database : (%s), du to relations error", row)
-                                 db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                                  pass
                          except:
                              logging.error("context rejected. Business %s does not exist", code)
-                             db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                             db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                              pass
                  if not row[6] and not row[7]:
                      logging.error("line : %s rejected - not code or project associate", row)

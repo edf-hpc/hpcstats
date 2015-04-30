@@ -50,7 +50,7 @@ class UserFinder():
             uid,
             cluster_name )
 
-        cur = self._db.get_cur()
+        cur = self._db.cur
         #print cur.mogrify(req, data)
         cur.execute(req, data)
         

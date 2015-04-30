@@ -43,7 +43,7 @@ class UserImporter(Importer):
                AND uid NOT IN (SELECT uid FROM users WHERE users.cluster = %s); """
         datas = (self.cluster.name, self.cluster.name)
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, datas)
         cur.execute(req, datas)
 

@@ -70,7 +70,7 @@ class Cluster:
                  WHERE cluster_name = %s
               """
         params = ( self.name, )
-        cur = db.get_cur()
+        cur = db.cur
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
@@ -108,7 +108,7 @@ class Cluster:
               """
         params = ( self.name, )
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.cluster_id = cur.fetchone()[0]
@@ -129,7 +129,7 @@ class Cluster:
               """
         params = ( self.cluster_id, )
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         return cur.fetchone()[0]
@@ -153,7 +153,7 @@ class Cluster:
               """
         params = ( self.cluster_id, )
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         return cur.fetchone()[0]
@@ -180,7 +180,7 @@ class Cluster:
               """
         params = (creation_date, self.cluster_id )
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         
@@ -206,7 +206,7 @@ class Cluster:
                         OR (job_start <= %s AND job_end >= %s))
               """
         params = (self.cluster_id, start, end, start, end, start, end)
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         

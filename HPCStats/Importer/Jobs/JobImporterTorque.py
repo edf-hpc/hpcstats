@@ -123,7 +123,7 @@ class JobImporterTorque(JobImporter):
             FROM users
             WHERE cluster = %s AND login = %s; """
         datas = (self.cluster.name, login)
-        cur = self._db.get_cur()
+        cur = self._db.cur
         #print cur.mogrify(req, datas)
         cur.execute(req, datas)
         results = cur.fetchall()

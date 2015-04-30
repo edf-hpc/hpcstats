@@ -91,7 +91,7 @@ class MountPointImporter(Importer):
                 FROM filesystem
               WHERE cluster = %s; """
         datas = (self.cluster.name,)
-        cur = self.db.get_cur()
+        cur = self.db.cur
         cur.execute(req, datas)
         fs_db = {}
         while (1):
@@ -123,5 +123,5 @@ class MountPointImporter(Importer):
 
 ###### USE MODEL FUNCTION
     def delete_mount_point(self, mount_point):
-        cur = self.db.get_cur()
+        cur = self.db.cur
         cur.execute("DELETE FROM filesystem WHERE mount_point = %s",(mount_point,))

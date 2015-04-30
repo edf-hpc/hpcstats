@@ -33,7 +33,9 @@ import psycopg2
 class HPCStatsDB:
 
     def __init__(self, dbhostname, dbport, dbname, dbuser, dbpassword):
-        """ This object is a singleton class, this means only one instance will be created """
+        """This object is a singleton class, this means only one instance will
+           be created.
+        """
         self.database = {
             'dbhostname': dbhostname,
             'dbport':     dbport,
@@ -41,17 +43,26 @@ class HPCStatsDB:
             'dbuser':     dbuser,
             'dbpassword': dbpassword,
         }
-        self._cur = None
+        self.cur = None
         self._conn = None
 
     def infos(self):
-        return self.database["dbhostname"], self.database["dbport"], self.database["dbname"],self.database["dbuser"], "XXXXXXXXXX"
+        return self.database["dbhostname"],
+               self.database["dbport"],
+               self.database["dbname"],
+               self.database["dbuser"],
+               "XXXXXXXXXX"
 
     def bind(self):
         """ Connection to the database """
-        self._conn = psycopg2.connect("host = %(dbhostname)s dbname= %(dbname)s user= %(dbuser)s password= %(dbpassword)s" % self.database)
-        self._cur = self._conn.cursor()
-        return self._cur, self._conn
+        conn_str = "host = %(dbhostname)s " \
+                   "dbname= %(dbname)s " \
+                   "user= %(dbuser)s " \
+                   "password= %(dbpassword)s" \
+                     % self.database)
+        self._conn = psycopg2.connect(conn_str)
+        self.cur = self._conn.cursor()
+        return self.cur, self._conn
 
     def unbind(self):
         """ Disconnect from the database """
@@ -60,17 +71,14 @@ class HPCStatsDB:
     def execute(self, req, datas):
         try:
             logging.debug(datas)
-            self._cur.execute(req, datas)
+            self.cur.execute(req, datas)
         except:
             logging.error("can't execute, rollback launch")
-            self._cur.rollback()
+            self.cur.rollback()
             self.commit()
             pass
         else:
             self.commit()
-
-    def get_cur(self):
-        return self._cur
 
     def get_conn(self):
         return self._conn

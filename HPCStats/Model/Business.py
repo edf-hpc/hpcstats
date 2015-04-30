@@ -67,7 +67,7 @@ class Business:
                  WHERE business_code = %s
               """
         params = ( self.code, )
-        cur = db.get_cur()
+        cur = db.cur
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
@@ -102,7 +102,7 @@ class Business:
                 VALUES (%s, %s)
               """
         params = ( self.code, self.description )
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.exists = True
@@ -126,6 +126,6 @@ class Business:
               """
         params = ( self.description,
                    self.code )
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)

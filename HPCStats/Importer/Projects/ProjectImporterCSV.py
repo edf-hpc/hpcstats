@@ -163,7 +163,7 @@ class ProjectImporterCSV(ProjectImporter):
         self.delete_projects()
 
         # savepoint is used to considere exceptions and commit in database only at the end.
-        db.get_cur().execute("SAVEPOINT my_savepoint;")
+        db.cur.execute("SAVEPOINT my_savepoint;")
         for domain in domains:
             try:
                  if not domain.already_exist(self.db):
@@ -175,10 +175,10 @@ class ProjectImporterCSV(ProjectImporter):
                          logging.debug("add domain : %s, with description : %s", \
                                         domain.get_id(), \
                                         domain.get_description())
-                     db.get_cur().execute("SAVEPOINT my_savepoint;")
+                     db.cur.execute("SAVEPOINT my_savepoint;")
              except psycopg2.DataError:
                  logging.error("impossible to add DOMAIN entry in database : (%s), du to encoding error", domain.get_description())
-                 db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                  pass
          for sector in sectors:
              try:
@@ -193,14 +193,14 @@ class ProjectImporterCSV(ProjectImporter):
                                         sector.get_id(), \
                                         sector.get_domain(), \
                                         sector.get_description())
-                     db.get_cur().execute("SAVEPOINT my_savepoint;")
+                     db.cur.execute("SAVEPOINT my_savepoint;")
              except psycopg2.DataError:
                  logging.error("impossible to add SECTOR entry in database : (%s) du to encoding error", sector.get_description())
-                 db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                  pass
              except psycopg2.IntegrityError:
                  logging.error("impossible to add SECTOR entry in database : (%s), du to relations error", sector.get_description())
-                 db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                  pass
         for project in projects:
              try:
@@ -216,13 +216,13 @@ class ProjectImporterCSV(ProjectImporter):
                                         project.get_domain(), \
                                         project.get_sector(), \
                                         project.get_description())
-                     db.get_cur().execute("SAVEPOINT my_savepoint;")
+                     db.cur.execute("SAVEPOINT my_savepoint;")
              except psycopg2.DataError:
                  logging.error("impossible to add PAREO entry in database : (%s - %s), du to encoding error", project.get_pareo(), project.get_description())
-                 db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                  pass
              except psycopg2.IntegrityError:
                  logging.error("impossible to add PAREO entry in database : (%s - %s), du to relations error", project.get_pareo(), projet.get_description())
-                 db.get_cur().execute("ROLLBACK TO SAVEPOINT my_savepoint;")
+                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
                  pass
         self.db.commit()

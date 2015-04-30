@@ -86,7 +86,7 @@ class Node:
         params = ( self.name,
                    self.cluster.cluster_id )
 
-        cur = db.get_cur()
+        cur = db.cur
         cur.execute(req, params)
         nb_rows = cur.rowcount
 
@@ -135,7 +135,7 @@ class Node:
                    self.memory,
                    self.flops )
  
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.node_id = cur.fetchone()[0]
@@ -163,6 +163,6 @@ class Node:
                    self.flops,
                    self.node_id )
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)

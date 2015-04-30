@@ -126,7 +126,7 @@ class UsageImporterCluster(UsageImporter):
               ; """
         datas = (self.cluster.name,
                  fs,)
-        cur = self.db.get_cur()
+        cur = self.db.cur
         cur.execute(req, datas)
         if cur.fetchone()[0] is None:
             result = datetime(1970, 1, 1, 0, 0)

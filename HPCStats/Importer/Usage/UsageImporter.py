@@ -46,7 +46,7 @@ class UsageImporter(Importer):
               ; """
         datas = (self.cluster.name,
                  self._fs_type,)
-        cur = self.db.get_cur()
+        cur = self.db.cur
         cur.execute(req, datas)
         results = cur.fetchall()
         for usage in results:

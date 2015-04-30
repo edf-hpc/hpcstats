@@ -77,7 +77,7 @@ class User:
                  WHERE userhpc_login = %s
               """
         params = ( self.login, )
-        cur = db.get_cur()
+        cur = db.cur
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
@@ -121,7 +121,7 @@ class User:
                    self.lastname,
                    self.department )
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.user_id = cur.fetchone()[0]
@@ -148,6 +148,6 @@ class User:
                    self.department,
                    self.user_id )
 
-        cur = db.get_cur()
+        cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
