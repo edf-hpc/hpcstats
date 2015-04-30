@@ -50,10 +50,9 @@ class ContextAccount:
        ContextAccount, not an updated one.
     """
 
-    def __init__(self, cluster, user, business, project):
+    def __init__(self, account, business, project):
 
-        self.cluster = cluster
-        self.user = user
+        self.account = account
         self.business = business
         self.project = project
 
@@ -63,8 +62,8 @@ class ContextAccount:
 
         return  "contextaccount cluster: %s user: %s business: %s " \
                 "project: %s" \
-                  % ( self.cluster.name,
-                      self.user.login,
+                  % ( self.account.cluster.name,
+                      self.account.user.login,
                       self.business.code,
                       self.project.name )
 
@@ -82,8 +81,8 @@ class ContextAccount:
                    AND business_code = %s
                    AND project_id = %s
               """
-        params = ( self.cluster.cluster_id,
-                   self.userhpc.userhpc_id,
+        params = ( self.account.cluster.cluster_id,
+                   self.account.user.userhpc_id,
                    self.business.code,
                    self.project.project_id )
         cur = db.get_cur()
@@ -123,8 +122,8 @@ class ContextAccount:
                                              project_id )
                 VALUES ( %s, %s, %s, %s )
               """
-        params = ( self.cluster.cluster_id,
-                   self.user.user_id,
+        params = ( self.account.cluster.cluster_id,
+                   self.account.user.user_id,
                    self.business.code,
                    self.project.project_id )
         cur = db.get_cur()
