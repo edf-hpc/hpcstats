@@ -45,9 +45,8 @@ from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class FSUsage:
 
-    def __init__(self, cluster, filesystem, datetime, usage):
+    def __init__(self, filesystem, datetime, usage):
 
-        self.cluster = cluster
         self.filesystem = filesystem
         self.datetime = datetime
         self.usage = usage
@@ -57,7 +56,7 @@ class FSUsage:
 
         return "FSUsage %s [%s]: at %s %s% usage" % \
                    ( self.filesystem.name,
-                     self.cluster.name,
+                     self.filesystem.cluster.name,
                      self.datetime,
                      self.usage )
 
@@ -73,7 +72,7 @@ class FSUsage:
                    AND filesystem_id = %s
                    AND fsusage_time = %s
               """
-        params = ( self.cluster.cluster_id,
+        params = ( self.filesystem.cluster.cluster_id,
                    self.filesystem.fs_id,
                    self.datetime )
         cur = db.get_cur()
@@ -114,7 +113,7 @@ class FSUsage:
                 VALUES ( %s, %s, %s, %s )
               """
         params = ( self.filesystem.fs_id,
-                   self.cluster.cluster_id,
+                   self.filesystem.cluster.cluster_id,
                    self.datetime,
                    self.usage )
 
