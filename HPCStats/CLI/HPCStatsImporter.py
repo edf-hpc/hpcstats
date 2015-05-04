@@ -44,17 +44,17 @@ from HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory import Business
 from HPCStats.Importer.Projects.ProjectImporterFactory import ProjectImporterFactory
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
 from HPCStats.Model.Cluster import Cluster
-from HPCStats.Model.Project import Project, get_pareo_id
-from HPCStats.Model.Business import Business, get_business_id
-from HPCStats.Model.Context import Context
+from HPCStats.Model.Project import Project
+from HPCStats.Model.Business import Business
+from HPCStats.Model.ContextAccount import ContextAccount
 
-def HPCStatsImporter(HPCStatsApp):
+class HPCStatsImporter(HPCStatsApp):
 
     """HPCStats Importer application which import data from various sources
        and update the database.
     """
 
-    def __init__(self, conf, cluster_name)
+    def __init__(self, conf, cluster_name):
 
         super(HPCStatsImporter, self).__init__(conf, cluster_name)
 
@@ -93,8 +93,8 @@ def HPCStatsImporter(HPCStatsApp):
             sys.exit(1)
 
         if self.cluster_name == 'all':
-            clusters = self.conf.get_clusters_list)
-        else
+            clusters = self.conf.get_clusters_list()
+        else:
             clusters = [ self.cluster_name ]
 
         for cluster_name in clusters:

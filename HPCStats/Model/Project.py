@@ -119,7 +119,7 @@ class Project:
               """
 
         # domain_key is None if sector has no domain
-        domain_key = getattr(self.sector.domain, 'key', None))
+        domain_key = getattr(self.sector.domain, 'key', None)
 
         params = ( self.code,
                    self.description,

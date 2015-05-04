@@ -46,7 +46,7 @@ class HPCStatsApp(object):
         # dump configuration in debug mode
         for section in self.conf.sections():
             logging.debug("conf: %s", section)
-                for option in self.conf.options(section):
+            for option in self.conf.options(section):
                 logging.debug("conf:  %s=%s",
                               option,
                               self.conf.get(section, option))
@@ -56,7 +56,7 @@ class HPCStatsApp(object):
             try:
                 self.conf.check_cluster()
             except HPCStatsConfigurationException, err:
-                logging.error("configuration error: %s", err))
+                logging.error("configuration error: %s", err)
                 sys.exit(1)
 
     def new_db(self):

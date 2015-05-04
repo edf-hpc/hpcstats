@@ -27,12 +27,12 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-from HPCStats.Importer.Contexts.ContextImporter import ContextsImporter
+from HPCStats.Importer.Contexts.ContextImporter import ContextImporter
 from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Sector import Sector
 from HPCStats.Model.Project import Project
 from HPCStats.Model.Business import Business
-from HPCStats.Model.Context import *
+from HPCStats.Model.ContextAccount import ContextAccount
 import ConfigParser
 import os
 import logging

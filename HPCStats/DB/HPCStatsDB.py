@@ -47,11 +47,11 @@ class HPCStatsDB:
         self._conn = None
 
     def infos(self):
-        return self.database["dbhostname"],
-               self.database["dbport"],
-               self.database["dbname"],
-               self.database["dbuser"],
-               "XXXXXXXXXX"
+        return ( self.database["dbhostname"],
+                 self.database["dbport"],
+                 self.database["dbname"],
+                 self.database["dbuser"],
+                 "XXXXXXXXXX" )
 
     def bind(self):
         """ Connection to the database """
@@ -59,7 +59,7 @@ class HPCStatsDB:
                    "dbname= %(dbname)s " \
                    "user= %(dbuser)s " \
                    "password= %(dbpassword)s" \
-                     % self.database)
+                     % (self.database)
         self._conn = psycopg2.connect(conn_str)
         self.cur = self._conn.cursor()
         return self.cur, self._conn

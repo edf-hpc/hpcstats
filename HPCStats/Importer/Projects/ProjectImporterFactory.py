@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
-from HPCStats.Importer.Projects.ProjectsImporterCSV import ProjectImporterCSV
+from HPCStats.Importer.Projects.ProjectImporterCSV import ProjectImporterCSV
 
 class ProjectImporterFactory(object):
 

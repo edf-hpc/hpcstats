@@ -38,7 +38,7 @@ import socket
 import csv
 from HPCStats.Importer.Usage.UsageImporter import UsageImporter
 from HPCStats.Model.Filesystem import Filesystem
-from HPCStats.Model.Filesystem_usage import Filesystem_usage
+from HPCStats.Model.FSUsage import FSUsage
 
 class UsageImporterCluster(UsageImporter):
 
