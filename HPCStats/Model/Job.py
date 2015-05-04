@@ -97,7 +97,7 @@ class Job:
         return "job %d on %s(%d) by %s: state:%s queue:%s %s/%s/%s" % \
                ( self.sched_id,
                  self.account.cluster.name,
-                 self.nbcpu
+                 self.nbcpu,
                  self.user.login,
                  self.state,
                  self.squeue,
@@ -189,7 +189,7 @@ class Job:
         self.job_id = cur.fetchone()[0]
         # TODO: Run creation should be done in JobImporter, not here
         try:
-            if self.nodeset is not None
+            if self.nodeset is not None:
                 for node_name in NodeSet(self.nodeset):
                     node = Node(node_name, self.cluster, "", 0, 0, 0)
                     node_id = node.find()
@@ -225,7 +225,7 @@ class Job:
                        job_end = %s
                  WHERE job_id = %s
               """
-        params = ( self.sched_id
+        params = ( self.sched_id,
                    self.nbcpu,
                    self.name,
                    self.state,
@@ -241,7 +241,7 @@ class Job:
 
         # TODO: Run creation should be done in JobImporter, not here
         try:
-            if self.nodeset is not None
+            if self.nodeset is not None:
                 for node_name in NodeSet(self.nodeset):
                     # fake temporary Node just to get the node
                     node = Node(node_name, self.account.cluster, "", 0, 0, 0)
