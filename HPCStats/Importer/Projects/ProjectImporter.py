@@ -31,7 +31,7 @@ from HPCStats.Importer.Importer import Importer
 
 class ProjectImporter(Importer):
 
-    def __init__(self, app, db, config, cluster):
+    def __init__(self, app, db, config):
 
-        super(ProjectImporter, self).__init__(app, db, config, cluster)
+        super(ProjectImporter, self).__init__(app, db, config, None)
 

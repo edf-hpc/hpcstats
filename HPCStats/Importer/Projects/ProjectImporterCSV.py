@@ -56,6 +56,7 @@ from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Sector import Sector
 from HPCStats.Model.Project import Project
 from HPCStats.Model.ContextAccount import ContextAccount
+from HPCStats.Exceptions import HPCStatsRuntimeError
 import ConfigParser
 import os
 import logging
@@ -67,11 +68,11 @@ import re
 class ProjectImporterCSV(ProjectImporter):
     """Main class of this module."""
 
-    def __init__(self, app, db, config, cluster):
+    def __init__(self, app, db, config):
 
-        super(ProjectImporter, self).__init__(app, db, config, cluster)
+        super(ProjectImporterCSV, self).__init__(app, db, config)
 
-        projects_section = self.cluster.name + "/projects"
+        projects_section = "projects"
         self.csv_file = config.get(projects_section, "file")
 
         self.domains = None
@@ -85,7 +86,8 @@ class ProjectImporterCSV(ProjectImporter):
         """
 
         if not os.path.isfile(self.csv_file):
-            raise RuntimeError("CSV file %s does not exist" % (self.csv_file))
+            raise HPCStatsRuntimeError("CSV file %s does not exist" \
+                                       % (self.csv_file))
 
         p_file = open(self.csv_file, 'r')
         # define projects delimiters in csv file for domains and sectors values
