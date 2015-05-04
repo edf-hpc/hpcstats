@@ -34,15 +34,25 @@ import sys
 
 from HPCStats.Exceptions import HPCStatsConfigurationException
 
-class HPCStatsConf(ConfigParser.ConfigParser):
+class HPCStatsConf(ConfigParser.ConfigParser, object):
 
     def __init__(self, filename, cluster):
 
-        super(HPCStatsReporter, self).__init__()
+        super(HPCStatsConf, self).__init__()
 
         self.cluster = cluster
         self.filename = filename
         self.read(filename)
+
+    def get(self, section, option):
+        try:
+            return super(HPCStatsConf, self).get(section, option)
+        except ConfigParser.NoSectionError:
+            raise HPCStatsConfigurationException( \
+                    "section %s not found" % (section))
+        except ConfigParser.NoOptionError:
+            raise HPCStatsConfigurationException( \
+                    "option %s not found in section %s" % (option, section))
 
     def get_clusters_list(self):
         """Returns the list of clusters in configuration file. If any problem
