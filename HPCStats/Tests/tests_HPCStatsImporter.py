@@ -27,10 +27,10 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import sys
-
+import mock
 from HPCStats.CLI.HPCStatsImporter import HPCStatsImporter
-from HPCStats.Tests.Mocks.Conf import MockConf
+from HPCStats.Conf.HPCStatsConf import HPCStatsConf
+from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 
 CONFIG = { 'clusters':
@@ -48,12 +48,21 @@ CONFIG = { 'clusters':
 class TestsHPCStatsImporter(HPCStatsTestCase):
 
     def setUp(self):
-        self.conf = MockConf(CONFIG, 'testcluster')
-        self.importer = HPCStatsImporter(self.conf, 'testcluster')
+        self.filename = 'fake'
+        self.cluster = 'testcluster'
+        MockConfigParser.conf = CONFIG
+        HPCStatsConf.__bases__ = (MockConfigParser, object)
+        self.conf = HPCStatsConf(self.filename, self.cluster)
+        self.importer = HPCStatsImporter(self.conf, self.cluster)
 
     def test_init(self):
-        """HPCStatsImporter.__init__() + add_args() run w/o problem
+        """HPCStatsImporter.__init__() run w/o problem
         """
         pass
+
+    def test_run(self):
+        """HPCStatsImporter.run()
+        """
+        self.importer.run()
 
 loadtestcase(TestsHPCStatsImporter)
