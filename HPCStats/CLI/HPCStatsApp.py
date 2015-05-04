@@ -28,6 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import sys
+import logging
 from HPCStats.DB.HPCStatsDB import HPCStatsDB
 from HPCStats.Exceptions import *
 
