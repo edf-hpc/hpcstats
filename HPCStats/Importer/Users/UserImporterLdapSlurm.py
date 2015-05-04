@@ -28,7 +28,6 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import ldap
-import xlrd
 import MySQLdb
 import _mysql_exceptions
 from datetime import date
@@ -36,11 +35,11 @@ import logging
 from HPCStats.Importer.Users.UserImporter import UserImporter
 from HPCStats.Model.User import User
 
-class UserImporterXLSLdapSlurm(UserImporter):
+class UserImporterLdapSlurm(UserImporter):
 
     def __init__(self, app, db, config, cluster):
 
-        super(UserImporterXLSLdapSlurm, self).__init__(app, db, config, cluster)
+        super(UserImporterLdapSlurm, self).__init__(app, db, config, cluster)
 
         ldap_section = self.cluster.name + "/ldap"
         xls_section = self.cluster.name + "/xls"

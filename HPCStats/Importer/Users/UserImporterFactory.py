@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
-from HPCStats.Importer.Users.UserImporterXLSLdapSlurm import UserImporterXLSLdapSlurm
+from HPCStats.Importer.Users.UserImporterLdapSlurm import UserImporterLdapSlurm
 from HPCStats.Importer.Users.UserImporterLdap import UserImporterLdap
 
 class UserImporterFactory(object):
@@ -37,8 +37,8 @@ class UserImporterFactory(object):
         pass
 
     def factory(self, app, db, config, cluster):
-        if config.get(cluster.name, "users") == "xls+ldap+slurm":
-            return UserImporterXLSLdapSlurm(app, db, config, cluster)
+        if config.get(cluster.name, "users") == "ldap+slurm":
+            return UserImporterLdapSlurm(app, db, config, cluster)
         elif config.get(cluster.name, "users") == "ldap":
             return UserImporterLdap(app, db, config, cluster)
         else:
