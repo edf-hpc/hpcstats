@@ -50,7 +50,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
                 mock_mysqldb())
     def setUp(self):
         self.db = 'testdb'
-        self.conf = MockConf(CONFIG)
+        self.conf = MockConf(CONFIG, 'testcluster')
         self.cluster = Cluster('testcluster')
         self.app = MockApp()
         self.importer = JobImporterSlurm(self.app,

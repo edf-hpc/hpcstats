@@ -29,10 +29,24 @@
 
 class MockConf(object):
 
-    def __init__(self, conf):
+    def __init__(self, conf, cluster):
 
         self.conf = conf
+        self.cluster = cluster
 
     def get(self, section, param):
 
         return self.conf[section][param]
+
+    def sections(self):
+
+        return self.conf.keys()
+
+    def options(self, section):
+
+        return self.conf[section].keys()
+
+    def check_cluster(self):
+
+        return self.cluster in \
+               self.conf['clusters']['clusters'].split(',')
