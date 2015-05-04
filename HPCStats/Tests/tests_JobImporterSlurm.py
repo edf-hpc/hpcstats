@@ -28,10 +28,10 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import mock
-import unittest2 as unittest
 
 from HPCStats.Model.Cluster import Cluster
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
+from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 from HPCStats.Tests.Mocks.MySQLdb import mock_mysqldb
 from HPCStats.Tests.Mocks.Conf import MockConf
 from HPCStats.Tests.Mocks.App import MockApp
@@ -44,7 +44,7 @@ CONFIG = { 'testcluster/slurm':
                'password': 'dbpassword' }
          }
 
-class TestsJobImporterSlurm(unittest.TestCase):
+class TestsJobImporterSlurm(HPCStatsTestCase):
 
     @mock.patch('HPCStats.Importer.Jobs.JobImporterSlurm.MySQLdb',
                 mock_mysqldb())
@@ -59,10 +59,9 @@ class TestsJobImporterSlurm(unittest.TestCase):
                                          self.cluster)
 
     def test_init(self):
-        """JobImporterSlurm.__init__()
+        """JobImporterSlurm.__init__() initializes object with attributes
         """
         self.assertEquals(self.importer._dbhost,
                           self.conf.conf[self.cluster.name + '/slurm']['host'])
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestsJobImporterSlurm)
-unittest.TextTestRunner(verbosity=2).run(suite)
+loadtestcase(TestsJobImporterSlurm)
