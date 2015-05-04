@@ -65,19 +65,13 @@ class HPCStatsApp(object):
 
         # Instantiate connexion to db
         try:
-            db_section = "hpcstatsdb"
-            dbhostname = self.conf.get(db_section,"hostname")
-            dbport = self.conf.get(db_section,"port")
-            dbname = self.conf.get(db_section,"dbname")
-            dbuser = self.conf.get(db_section,"user")
-            dbpass = self.conf.get(db_section,"password")
+            db = HPCStatsDB(self.conf)
+            db.bind()
+            logging.debug("db information %s %s %s %s %s" % db.infos())
+            return db
         except HPCStatsConfigurationException, err:
             logging.error("configuration error: ", err)
             sys.exit(1)
-        db = HPCStatsDB(dbhostname, dbport, dbname, dbuser, dbpass)
-        db.bind()
-        logging.debug("db information %s %s %s %s %s" % db.infos())
-        return db
 
     def run(self):
 

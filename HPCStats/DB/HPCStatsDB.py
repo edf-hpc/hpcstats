@@ -32,16 +32,18 @@ import psycopg2
 
 class HPCStatsDB:
 
-    def __init__(self, dbhostname, dbport, dbname, dbuser, dbpassword):
+    def __init__(self, conf):
         """This object is a singleton class, this means only one instance will
            be created.
         """
+        self.conf = conf
+        self.section = "hpcstatsdb"
         self.database = {
-            'dbhostname': dbhostname,
-            'dbport':     dbport,
-            'dbname':     dbname,
-            'dbuser':     dbuser,
-            'dbpassword': dbpassword,
+            'dbhostname': self.conf.get(self.section,"hostname"),
+            'dbport':     self.conf.get(self.section,"port"),
+            'dbname':     self.conf.get(self.section,"dbname"),
+            'dbuser':     self.conf.get(self.section,"user"),
+            'dbpassword': self.conf.get(self.section,"password"),
         }
         self.cur = None
         self._conn = None
