@@ -31,6 +31,7 @@ import sys
 import logging
 import locale
 
+from HPCStats.Exceptions import *
 from HPCStats.CLI.HPCStatsImporter import HPCStatsImporter
 from HPCStats.CLI.HPCStatsReporter import HPCStatsReporter
 from HPCStats.CLI.HPCStatsArgumentParser import HPCStatsArgumentParser
@@ -44,9 +45,15 @@ class HPCStatsLauncher(object)
 
     def __init__(self, args):
 
-        parser = HPCStatsArgumentParser('hpcstats')
-        parser.add_args()
-        args = parser.parse_args()
+        self.app = None
+
+        try:
+            parser = HPCStatsArgumentParser('hpcstats')
+            parser.add_args()
+            args = parser.parse_args()
+        except HPCStatsArgumentException, err:
+            logging.error("Argument Error: ", err)
+            self.exit()
 
         # locale to format numbers
         # TODO: load locale output of the environment
@@ -66,11 +73,36 @@ class HPCStatsLauncher(object)
         cluster_name = args.cluster
 
         if action == "importer":
-            return HPCStatsImporter(conf, cluster_name)
+            self.app = HPCStatsImporter(conf, cluster_name)
         elif action == "reporter":
             template = args.template
             interval = args.interval
-            return HPCStatsReporter(conf, cluster_name,
-                                    template, interval)
+            self.app = HPCStatsReporter(conf, cluster_name,
+                                        template, interval)
         else:
             raise NotImplemented
+
+    def run(self):
+        """Run the application and catch all exceptions."""
+
+        try:
+            self.app.run()
+        except HPCStatsConfigurationException, err:
+            logging.error("Configuration Error: ", err)
+            self.exit()
+        except HPCStatsDBIntegrityError, err:
+            logging.error("DB Integrity Error: ", err)
+            self.exit()
+        except HPCStatsRuntimeError, err:
+            logging.error("Runtime Error: ", err)
+            self.exit()
+
+
+    def exit():
+        """Clean-up the application and exit the program with error return
+           node.
+        """
+
+        if self.app is not None:
+            self.app.cleanup()
+        sys.exit(1)

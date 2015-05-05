@@ -27,7 +27,6 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import sys
 import logging
 from HPCStats.DB.HPCStatsDB import HPCStatsDB
 from HPCStats.Exceptions import *
@@ -54,24 +53,16 @@ class HPCStatsApp(object):
 
         if self.cluster_name != 'all':
             # check presence of cluster in configuration
-            try:
-                self.conf.check_cluster()
-            except HPCStatsConfigurationException, err:
-                logging.error("configuration error: %s", err)
-                sys.exit(1)
+            self.conf.check_cluster()
 
     def new_db(self):
         """Returns a new HPCStatsDB object."""
 
         # Instantiate connexion to db
-        try:
-            db = HPCStatsDB(self.conf)
-            db.bind()
-            logging.debug("db information %s %s %s %s %s" % db.infos())
-            return db
-        except HPCStatsConfigurationException, err:
-            logging.error("configuration error: ", err)
-            sys.exit(1)
+        db = HPCStatsDB(self.conf)
+        db.bind()
+        logging.debug("db information %s %s %s %s %s" % db.infos())
+        return db
 
     def run(self):
 

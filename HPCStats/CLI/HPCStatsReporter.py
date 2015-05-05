@@ -27,7 +27,6 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import sys
 import locale
 import logging
 import os
@@ -67,10 +66,10 @@ class HPCStatsReporter(HPCStatsApp):
         self.cluster = Cluster(self.cluster_name)
         # check if cluster really exists
         if not cluster.find(db):
-            logging.error("cluster %s does not exist in database. " \
-                          "Available clusters are: %s." \
-                           % (cluster, ",".join(available_clusters)))
-            sys.exit(1)
+            raise HPCStatsRuntimeError( \
+                      "cluster %s does not exist in database. " \
+                      "Available clusters are: %s." \
+                        % (cluster, ",".join(available_clusters)))
 
         # get the total number of cpus inside the cluster
         logging.debug("main: getting nb cpus on cluster %s" % (cluster.name))
@@ -212,10 +211,10 @@ class HPCStatsReporter(HPCStatsApp):
             templates_clean =  [ template.split("/")[-1].split(".")[0] \
                                  for template in available_templates ]
             str_available_templates = ",".join(templates_clean)
-            logging.error("template %s does not exists.\navailable templates " \
-                          "are: %s." \
-                            % (name, str_available_templates))
-            sys.exit(1)
+            raise HPCStatsRuntimeError( \
+                      "template %s does not exists. Available templates " \
+                      "are: %s." \
+                        % (name, str_available_templates))
 
     def run_interval(self, process_info):
 
@@ -358,3 +357,7 @@ class HPCStatsReporter(HPCStatsApp):
         db.unbind()
 
         return result
+
+    def cleanup(self):
+        """Clean-up the application before exit."""
+        pass

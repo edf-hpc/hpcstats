@@ -27,7 +27,6 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import sys
 import logging
 
 from HPCStats.CLI.HPCStatsApp import HPCStatsApp
@@ -77,20 +76,12 @@ class HPCStatsImporter(HPCStatsApp):
         # import projects and business code that are globals and not related
         # to a specific cluster
         logging.info("updating projects")
-        try:
-            self.projects = ProjectImporterFactory().factory(self, db, self.conf)
-            self.projects.load()
-            self.projects.update()
-        except HPCStatsRuntimeError:
-            logging.error("error occured on projects update")
-            sys.exit(1)
+        self.projects = ProjectImporterFactory().factory(self, db, self.conf)
+        self.projects.load()
+        self.projects.update()
 
         logging.info("updating business codes")
-        try:
-            self.business = BusinessCodeImporterFactory().factory(self, db, self.conf)
-        except HPCStatsRuntimeError:
-            logging.error("error occured on business codes update")
-            sys.exit(1)
+        self.business = BusinessCodeImporterFactory().factory(self, db, self.conf)
 
         if self.cluster_name == 'all':
             clusters = self.conf.get_clusters_list()
@@ -123,8 +114,7 @@ class HPCStatsImporter(HPCStatsApp):
 
         # check that cluster has been properly created and initialized
         if cluster is None or cluster.cluster_id is None:
-            logging.error("problem in DB with cluster %s" % (str(cluster)))
-            sys.exit(1)
+            raise HPCStatsRuntimeError("problem in DB with cluster %s" % (str(cluster)))
 
         logging.info("updating context for cluster %s from stats file" % (cluster.name))
         try:
@@ -235,3 +225,7 @@ class HPCStatsImporter(HPCStatsApp):
             db.commit()
         except :
             logging.error("error occured on %s jobs update." % (cluster.name))
+
+    def cleanup(self):
+        """Clean-up the application before exit."""
+        pass
