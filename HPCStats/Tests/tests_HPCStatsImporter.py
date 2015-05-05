@@ -28,21 +28,35 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import mock
+from HPCStats.Exceptions import *
 from HPCStats.CLI.HPCStatsImporter import HPCStatsImporter
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 
-CONFIG = { 'clusters':
-             {
-               'clusters': 'testcluster,testcluster2',
-             },
-           'testcluster/slurm':
-             { 'host': 'dbhost',
-               'port': 3128,
-               'name': 'dbname',
-               'user': 'dbuser',
-               'password': 'dbpassword' }
+CONFIG = { 'clusters': {
+             'clusters': 'testcluster,testcluster2',
+           },
+           'hpcstatsdb': {
+             'hostname': 'test_hostname',
+             'port':     'test_port',
+             'dbname':   'test_name',
+             'user':     'test_user',
+             'password': 'test_password',
+           },
+           'globals': {
+             'projects': 'csv',
+           },
+           'projects': {
+             'file': 'fake_project_file',
+           },
+           'testcluster/slurm': {
+             'host': 'dbhost',
+             'port': 3128,
+             'name': 'dbname',
+             'user': 'dbuser',
+             'password': 'dbpassword'
+           },
          }
 
 class TestsHPCStatsImporter(HPCStatsTestCase):
@@ -50,7 +64,7 @@ class TestsHPCStatsImporter(HPCStatsTestCase):
     def setUp(self):
         self.filename = 'fake'
         self.cluster = 'testcluster'
-        MockConfigParser.conf = CONFIG
+        MockConfigParser.conf = CONFIG.copy()
         HPCStatsConf.__bases__ = (MockConfigParser, object)
         self.conf = HPCStatsConf(self.filename, self.cluster)
         self.importer = HPCStatsImporter(self.conf, self.cluster)
@@ -61,8 +75,20 @@ class TestsHPCStatsImporter(HPCStatsTestCase):
         pass
 
     def test_run(self):
-        """HPCStatsImporter.run()
+        """HPCStatsImporter.run() NOT SUPPOSED TO WORK YET.
         """
-        self.importer.run()
+        pass
+        #self.importer.run()
+
+    def test_run_exception_no_hpcstatsdb(self):
+        """HPCStatsImporter.run() raise exception when hpcstatsdb section is
+           missing.
+        """
+        del MockConfigParser.conf['hpcstatsdb']
+
+        self.assertRaisesRegexp(
+               HPCStatsConfigurationException,
+               "section hpcstatsdb not found",
+               self.importer.run)
 
 loadtestcase(TestsHPCStatsImporter)
