@@ -214,85 +214,25 @@ class ProjectImporterCSV(ProjectImporter):
 
         return self.projects
 
-    def delete(self):
-        """Delete all projects, sectors, and domains from database and remove
-           the contexts linked to these projects.
-        """
-        logging.debug("Delete all projects entries in db")
-        delete_contexts_with_pareo(self.db)
-        delete_projects(self.db)
-        delete_sectors(self.db)
-        delete_domains(self.db)
-        self.db.commit()
-
     def update(self):
         """Update loaded project (with associated sectors and domains) in
            database.
         """
 
-        self.delete_projects()
-
         # savepoint is used to considere exceptions and commit in database only at the end.
-        db.cur.execute("SAVEPOINT my_savepoint;")
-        for domain in domains:
-            try:
-                 if not domain.already_exist(self.db):
-                     domain.save(self.db)
-                     if not domain.get_description():
-                         logging.debug("add domain : %s, without description", \
-                                        domain.get_id())
-                     else:
-                         logging.debug("add domain : %s, with description : %s", \
-                                        domain.get_id(), \
-                                        domain.get_description())
-                     db.cur.execute("SAVEPOINT my_savepoint;")
-            except psycopg2.DataError:
-                logging.error("impossible to add DOMAIN entry in database : (%s), du to encoding error", domain.get_description())
-                db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                pass
-        for sector in sectors:
-            try:
-                if not sector.already_exist(self.db):
-                    sector.save(self.db)
-                    if not sector.get_description():
-                        logging.debug("add sector : %s, from domain : %s, without description", \
-                                       sector.get_id(),\
-                                       sector.get_domain())
-                    else:
-                        logging.debug("add sector : %s, from domain : %s, with description : %s", \
-                                       sector.get_id(), \
-                                       sector.get_domain(), \
-                                       sector.get_description())
-                    db.cur.execute("SAVEPOINT my_savepoint;")
-            except psycopg2.DataError:
-                logging.error("impossible to add SECTOR entry in database : (%s) du to encoding error", sector.get_description())
-                db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                pass
-            except psycopg2.IntegrityError:
-                logging.error("impossible to add SECTOR entry in database : (%s), du to relations error", sector.get_description())
-                db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                pass
-        for project in projects:
-            try:
-                if not project.already_exist(self.db):
-                    project.save(self.db)
-                    if not project.get_description():
-                        logging.debug("add project : %s, from domain : %s, without description", \
-                                       project.get_pareo(), \
-                                       project.get_domain())
-                    else:
-                        logging.debug("add project : %s, from domain : %s, and sector : %s with description : %s", \
-                                       project.get_pareo(), \
-                                       project.get_domain(), \
-                                       project.get_sector(), \
-                                       project.get_description())
-                    db.cur.execute("SAVEPOINT my_savepoint;")
-            except psycopg2.DataError:
-                logging.error("impossible to add PAREO entry in database : (%s - %s), du to encoding error", project.get_pareo(), project.get_description())
-                db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                pass
-            except psycopg2.IntegrityError:
-                logging.error("impossible to add PAREO entry in database : (%s - %s), du to relations error", project.get_pareo(), projet.get_description())
-                db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                pass
+        for domain in self.domains:
+             if domain.existing(self.db):
+                 domain.update(self.db)
+             else:
+                 domain.save(self.db)
+        for sector in self.sectors:
+            if sector.existing(self.db):
+                sector.update(self.db)
+            else:
+                sector.save(self.db)
+        for project in self.projects:
+            if project.find(self.db):
+                project.update(self.db)
+            else:
+                project.save(self.db)
         self.db.commit()
