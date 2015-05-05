@@ -106,30 +106,30 @@ class ProjectImporterCSV(ProjectImporter):
                  # update domains table with third column of the file, only if
                  # sector exist in 4th column
                  if row[2]:
-                     id_domain = re.split(delimiters,row[2])[1]
-                     description_domain = re.split(delimiters,row[2])[2]
-                     domain = Domain(id = id_domain,
-                                     description = description_domain)
+                     domain_key = re.split(delimiters,row[2])[1]
+                     domain_name = re.split(delimiters,row[2])[2]
+                     domain = Domain(key=domain_key,
+                                     name=domain_name)
                      self.domains.append(domain)
                  else:
-                     id_domain = None
+                     domain = None
 
                  # update sector table with forth column of the file
-                 if id_domain:
+                 if domain:
                      if row[3] and row[3]!='[]':
-                         id_sector = int(re.sub('[^0-9]', '',
+                         sector_key = int(re.sub('[^0-9]', '',
                                                 re.split(delimiters,row[3])[1]))
-                         description_sector = re.split(delimiters,row[3])[2]
+                         sector_name = re.split(delimiters,row[3])[2]
                      if not row[3] or row[3]=='[]':
-                         id_sector = 0
-                         description_sector = "default value for domain " \
-                                              + domain.get_id()
-                     sector = Sector(id = id_sector,
-                                     domain = id_domain,
-                                     description = description_sector)
+                         sector_key = 0
+                         sector_name = "default value for domain " \
+                                         + str(domain)
+                     sector = Sector(domain=domain,
+                                     key=sector_key,
+                                     name=sector_name)
                      self.sectors.append(sector)
                  else:
-                     id_sector = None
+                     sector = None
 
                  # update Project table with first and seconds columns of the
                  # file because of constrains of database, it is impossible to
@@ -138,13 +138,12 @@ class ProjectImporterCSV(ProjectImporter):
                  # referance doesn't exist, None value is set for both (see
                  # first if condition).
                  if row[0]:
-                     project = Project(sector = id_sector,
-                                       domain = id_domain,
-                                       description = row[1],
-                                       pareo = row[0])
+                     project = Project(sector = sector,
+                                       code = row[0],
+                                       description = row[1])
                      self.projects.append(project)
         p_file.close()
-        return projects
+        return self.projects
 
     def delete(self):
         """Delete all projects, sectors, and domains from database and remove
