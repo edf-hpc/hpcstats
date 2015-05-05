@@ -79,6 +79,24 @@ class ProjectImporterCSV(ProjectImporter):
         self.sectors = None
         self.projects = None
 
+    def find_domain(self, domain):
+        """Find a Domain among the list of domains in attributes.
+        """
+
+        for xdomain in self.domains:
+            if xdomain == domain:
+                return xdomain
+        return None
+
+    def find_sector(self, sector):
+        """Find a Sector among the list of sectors in attributes.
+        """
+
+        for xsector in self.sectors:
+            if xsector == sector:
+                return xsector
+        return None
+
     def load(self):
         """Open CSV file and load project out of it.
            Raises Exceptions if error is found in the file.
@@ -127,9 +145,14 @@ class ProjectImporterCSV(ProjectImporter):
                             "Project CSV %s domain name is empty" \
                               % (project_code))
 
-                domain = Domain(key=domain_key,
-                                name=domain_name)
-                self.domains.append(domain)
+                # Create the Domain and search for it among the already
+                # existing ones. If not found, append to the list of Domains.
+                new_domain = Domain(key=domain_key,
+                                    name=domain_name)
+                domain = self.find_domain(new_domain)
+                if domain is None:
+                    domain = new_domain
+                    self.domains.append(domain)
 
                 # sectors
                 sector_str = row[3]
@@ -152,10 +175,15 @@ class ProjectImporterCSV(ProjectImporter):
                             "Project CSV %s sector name is empty" \
                               % (project_code))
 
-                sector = Sector(domain=domain,
-                                key=sector_key,
-                                name=sector_name)
-                self.sectors.append(sector)
+                # Create the Sector and search for it among the already
+                # existing ones. If not found, append to the list of Sectors.
+                new_sector = Sector(domain=domain,
+                                    key=sector_key,
+                                    name=sector_name)
+                sector = self.find_sector(new_sector)
+                if sector is None:
+                    sector = new_sector
+                    self.sectors.append(sector)
 
                 # update Project table with first and seconds columns of the
                 # file because of constrains of database, it is impossible to
