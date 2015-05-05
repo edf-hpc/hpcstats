@@ -79,6 +79,16 @@ class ProjectImporterCSV(ProjectImporter):
         self.sectors = None
         self.projects = None
 
+    def find_project(self, code):
+        """Find a Project with same code among the list of domains in
+           attributes.
+        """
+
+        for project in self.projects:
+            if project.code == code:
+                return project
+        return None
+
     def find_domain(self, domain):
         """Find a Domain among the list of domains in attributes.
         """
@@ -122,6 +132,12 @@ class ProjectImporterCSV(ProjectImporter):
 
                 project_code = row[0]
                 project_name = row[1]
+
+                # check for duplicate project and raise error if found
+                if self.find_project(project_code):
+                    raise HPCStatsSourceError( \
+                              "duplicated project code %s in CSV file" \
+                                  % (project_code))
 
                 # domains
                 domain_str = row[2]
