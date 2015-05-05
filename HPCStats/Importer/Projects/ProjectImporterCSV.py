@@ -107,7 +107,7 @@ class ProjectImporterCSV(ProjectImporter):
 
                 # domains
                 domain_str = row[2]
-                domain_m = re.match(r"\[(.+)\](.+)", domain_str)
+                domain_m = re.match(r"\[(.*)\](.*)", domain_str)
                 if domain_m:
                     domain_key = domain_m.group(1)
                     domain_name = domain_m.group(2)
@@ -133,7 +133,7 @@ class ProjectImporterCSV(ProjectImporter):
 
                 # sectors
                 sector_str = row[3]
-                sector_m = re.match(r"\[(.+)\](.+)", sector_str)
+                sector_m = re.match(r"\[(.*)\](.*)", sector_str)
                 if sector_m:
                     sector_key = sector_m.group(1)
                     sector_name = sector_m.group(2)
