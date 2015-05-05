@@ -56,7 +56,7 @@ from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Sector import Sector
 from HPCStats.Model.Project import Project
 from HPCStats.Model.ContextAccount import ContextAccount
-from HPCStats.Exceptions import HPCStatsRuntimeError
+from HPCStats.Exceptions import HPCStatsRuntimeError, HPCStatsSourceError
 import ConfigParser
 import os
 import logging
@@ -99,49 +99,74 @@ class ProjectImporterCSV(ProjectImporter):
 
         with p_file as csvfile:
             file_reader = csv.reader(csvfile, delimiter=';', quotechar='|')
+
             for row in file_reader:
-                 # Delete BOM
-                 if '\xef\xbb\xbf' in row [0]:
-                     row[0] = row[0].replace('\xef\xbb\xbf','')
-                 # update domains table with third column of the file, only if
-                 # sector exist in 4th column
-                 if row[2]:
-                     domain_key = re.split(delimiters,row[2])[1]
-                     domain_name = re.split(delimiters,row[2])[2]
-                     domain = Domain(key=domain_key,
-                                     name=domain_name)
-                     self.domains.append(domain)
-                 else:
-                     domain = None
 
-                 # update sector table with forth column of the file
-                 if domain:
-                     if row[3] and row[3]!='[]':
-                         sector_key = int(re.sub('[^0-9]', '',
-                                                re.split(delimiters,row[3])[1]))
-                         sector_name = re.split(delimiters,row[3])[2]
-                     if not row[3] or row[3]=='[]':
-                         sector_key = 0
-                         sector_name = "default value for domain " \
-                                         + str(domain)
-                     sector = Sector(domain=domain,
-                                     key=sector_key,
-                                     name=sector_name)
-                     self.sectors.append(sector)
-                 else:
-                     sector = None
+                project_code = row[0]
+                project_name = row[1]
 
-                 # update Project table with first and seconds columns of the
-                 # file because of constrains of database, it is impossible to
-                 # add project with domain reference and no sector reference.
-                 # Need both or any.in case of domain reference exist but sector
-                 # referance doesn't exist, None value is set for both (see
-                 # first if condition).
-                 if row[0]:
-                     project = Project(sector = sector,
-                                       code = row[0],
-                                       description = row[1])
-                     self.projects.append(project)
+                # domains
+                domain_str = row[2]
+                domain_m = re.match(r"\[(.+)\](.+)", domain_str)
+                if domain_m:
+                    domain_key = domain_m.group(1)
+                    domain_name = domain_m.group(2)
+                else:
+                    raise HPCStatsSourceError( \
+                            "Project CSV %s domain format is invalid" \
+                              % (project_code))
+
+                domain_key = domain_key.strip()
+                domain_name = domain_name.strip()
+                if len(domain_key) == 0:
+                    raise HPCStatsSourceError( \
+                            "Project CSV %s domain key is empty" \
+                              % (project_code))
+                if len(domain_name) == 0:
+                    raise HPCStatsSourceError( \
+                            "Project CSV %s domain name is empty" \
+                              % (project_code))
+
+                domain = Domain(key=domain_key,
+                                name=domain_name)
+                self.domains.append(domain)
+
+                # sectors
+                sector_str = row[3]
+                sector_m = re.match(r"\[(.+)\](.+)", sector_str)
+                if sector_m:
+                    sector_key = sector_m.group(1)
+                    sector_name = sector_m.group(2)
+                else:
+                    raise HPCStatsSourceError( \
+                            "Project CSV %s sector format is invalid" \
+                              % (project_code))
+                sector_key = sector_key.strip()
+                sector_name = sector_name.strip()
+                if len(sector_key) == 0:
+                    raise HPCStatsSourceError( \
+                            "Project CSV %s sector key is empty" \
+                              % (project_code))
+                if len(sector_name) == 0:
+                    raise HPCStatsSourceError( \
+                            "Project CSV %s sector name is empty" \
+                              % (project_code))
+
+                sector = Sector(domain=domain,
+                                key=sector_key,
+                                name=sector_name)
+                self.sectors.append(sector)
+
+                # update Project table with first and seconds columns of the
+                # file because of constrains of database, it is impossible to
+                # add project with domain reference and no sector reference.
+                # Need both or any.in case of domain reference exist but sector
+                # referance doesn't exist, None value is set for both (see
+                # first if condition).
+                project = Project(sector=sector,
+                                  code=project_code,
+                                  description=project_name)
+                self.projects.append(project)
         p_file.close()
         return self.projects
 
