@@ -34,8 +34,13 @@ from HPCStats.Exceptions import *
 from HPCStats.Importer.Projects.ProjectImporterCSV import ProjectImporterCSV
 from HPCStats.DB.HPCStatsDB import HPCStatsDB
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
+from HPCStats.Model.Domain import Domain
+from HPCStats.Model.Sector import Sector
+from HPCStats.Model.Project import Project
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Mocks.Utils import mock_open
+import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for REQS
+from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 
 CONFIG = {
@@ -53,7 +58,7 @@ CONFIG = {
 
 module = "HPCStats.Importer.Projects.ProjectImporterCSV"
 
-class TestsProjectImporterCSV(HPCStatsTestCase):
+class TestsProjectImporterCSVLoad(HPCStatsTestCase):
 
     def setUp(self):
         self.filename = 'fake'
@@ -62,7 +67,7 @@ class TestsProjectImporterCSV(HPCStatsTestCase):
         HPCStatsConf.__bases__ = (MockConfigParser, object)
         self.conf = HPCStatsConf(self.filename, self.cluster)
         self.app = None
-        self.db = HPCStatsDB(self.conf)
+        self.db = None
         self.importer = ProjectImporterCSV(self.app, self.db, self.conf)
 
     def test_init(self):
@@ -287,4 +292,55 @@ class TestsProjectImporterCSV(HPCStatsTestCase):
                    "duplicated project code code1 in CSV file",
                    self.importer.load)
 
-loadtestcase(TestsProjectImporterCSV)
+class TestsProjectImporterCSVUpdate(HPCStatsTestCase):
+
+    @mock.patch("HPCStats.DB.HPCStatsDB.psycopg2", mock_psycopg2())
+    def setUp(self):
+        self.filename = 'fake'
+        self.cluster = 'testcluster'
+        MockConfigParser.conf = CONFIG
+        HPCStatsConf.__bases__ = (MockConfigParser, object)
+        self.conf = HPCStatsConf(self.filename, self.cluster)
+        self.app = None
+        self.db = HPCStatsDB(self.conf)
+        self.db.bind()
+        self.importer = ProjectImporterCSV(self.app, self.db, self.conf)
+
+    def test_update(self):
+        """ProjectImporterCSV.update() works with simple data
+        """
+        MockPg2.REQS = {
+          #"exist_domain_dom1": {
+          #  "req": "SELECT domain_id FROM Domain WHERE domain_id = %s",
+          #  "res": [],
+          #},
+          #"save_domain_dom1": {
+          #  "req": "INSERT INTO Domain \( domain_id, domain_name \) " \
+          #         "VALUES \( %s, %s \)",
+          #  "res": [],
+          #},
+          #"find_project_code1": {
+          #  "req": "SELECT project_id FROM Project WHERE project_code = %s",
+          #  "res": [],
+          #},
+          "save_project_code1": {
+            "req": "INSERT INTO Project \( project_code, " \
+                                          "project_description, "\
+                                          "sector_key, "\
+                                          "domain_id \) "\
+                   "VALUES \( %s, %s, %s, %s \) "\
+                   "RETURNING project_id",
+            "res": [ [ 1 ] ],
+          },
+        }
+        domain1 = Domain('dom1', 'domain name 1')
+        sector1 = Sector(domain1, 'sect1', 'sector name 1')
+        project1 = Project(sector1, 'code1', 'project description 1')
+        self.importer.projects = [ project1 ]
+        self.importer.sectors = [ sector1 ]
+        self.importer.domains = [ domain1 ]
+
+        self.importer.update()
+
+loadtestcase(TestsProjectImporterCSVLoad)
+loadtestcase(TestsProjectImporterCSVUpdate)
