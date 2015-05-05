@@ -89,7 +89,6 @@ class ProjectImporterCSV(ProjectImporter):
             raise HPCStatsRuntimeError("CSV file %s does not exist" \
                                        % (self.csv_file))
 
-        p_file = open(self.csv_file, 'r')
         # define projects delimiters in csv file for domains and sectors values
         delimiters = '\[|]'
 
@@ -97,7 +96,8 @@ class ProjectImporterCSV(ProjectImporter):
         self.sectors = []
         self.projects = []
 
-        with p_file as csvfile:
+        with open(self.csv_file, 'r') as csvfile:
+
             file_reader = csv.reader(csvfile, delimiter=';', quotechar='|')
 
             for row in file_reader:
@@ -167,7 +167,7 @@ class ProjectImporterCSV(ProjectImporter):
                                   code=project_code,
                                   description=project_name)
                 self.projects.append(project)
-        p_file.close()
+
         return self.projects
 
     def delete(self):
