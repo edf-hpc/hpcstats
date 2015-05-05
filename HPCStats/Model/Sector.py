@@ -56,6 +56,11 @@ class Sector:
 
         return "sector (%s): [%s] %s" % (self.domain.key, self.key, self.name)
 
+    def __eq__(self, sector):
+
+        return sector.domain.key == self.domain.key and \
+               sector.key == self.key
+
     def existing(self, db):
         """Returns True if the Sector already exists in database (same key and
            domain), or False if not.

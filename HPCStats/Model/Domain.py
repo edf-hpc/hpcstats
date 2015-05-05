@@ -55,6 +55,10 @@ class Domain:
 
         return "domain [%s] %s" % (self.key, self.name)
 
+    def __eq__(self, domain):
+
+        return domain.key == self.key
+
     def existing(self, db):
         """Returns True if the domain already exists in database (same key), or
            False if not.
