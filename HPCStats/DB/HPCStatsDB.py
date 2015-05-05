@@ -30,7 +30,7 @@
 import logging
 import psycopg2
 
-class HPCStatsDB:
+class HPCStatsDB(object):
 
     def __init__(self, conf):
         """This object is a singleton class, this means only one instance will
