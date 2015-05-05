@@ -56,7 +56,7 @@ class Project:
         self.sector = sector
 
     def __str__(self):
-        if self.sector == None:
+        if self.sector is None:
            sector = "unknown"
         else:
            sector = self.sector
