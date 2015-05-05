@@ -93,6 +93,9 @@ class HPCStatsLauncher(object)
         except HPCStatsDBIntegrityError, err:
             logging.error("DB Integrity Error: ", err)
             self.exit()
+        except HPCStatsSourceError, err:
+            logging.error("Source Error: ", err)
+            self.exit()
         except HPCStatsRuntimeError, err:
             logging.error("Runtime Error: ", err)
             self.exit()

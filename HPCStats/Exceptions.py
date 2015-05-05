@@ -34,6 +34,7 @@ Set of Exceptions for HPCStats application.
 __all__ = [ "HPCStatsException",
             "HPCStatsRuntimeError",
             "HPCStatsDBIntegrityError",
+            "HPCStatsSourceError",
             "HPCStatsArgumentException",
             "HPCStatsConfigurationException" ]
 
@@ -65,6 +66,14 @@ class HPCStatsDBIntegrityError(HPCStatsException):
     def __init__(self, msg):
 
         super(HPCStatsDBIntegrityError, self).__init__(msg)
+
+class HPCStatsSourceError(HPCStatsException):
+
+    """Class for source errors exceptions in HPCStats"""
+
+    def __init__(self, msg):
+
+        super(HPCStatsSourceError, self).__init__(msg)
 
 class HPCStatsArgumentException(HPCStatsException):
 
