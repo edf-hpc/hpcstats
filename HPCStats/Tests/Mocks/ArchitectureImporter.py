@@ -31,6 +31,3 @@ class MockArchitectureImporter(object):
 
     def __init__(self):
         self.partitions = { 'nodes[001-100]': ['compute', ] }
-
-    def get_partitions(self):
-        return self.partitions

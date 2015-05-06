@@ -27,14 +27,15 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-from HPCStats.Importer.Architectures.ArchitectureImporter import ArchitectureImporter
-from HPCStats.Model.Node import Node
-from HPCStats.Model.Cluster import Cluster
-from ClusterShell.NodeSet import NodeSet
 import ConfigParser
 import re
 import os
 import logging
+from ClusterShell.NodeSet import NodeSet
+from HPCStats.Exceptions import *
+from HPCStats.Importer.Architectures.ArchitectureImporter import ArchitectureImporter
+from HPCStats.Model.Node import Node
+from HPCStats.Model.Cluster import Cluster
 
 class ArchitectureImporterArchfile(ArchitectureImporter):
 
@@ -44,24 +45,22 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
 
         archfile_section = self.cluster_name + "/archfile"
 
-        self._archfile = config.get(archfile_section, "file")
-        if not os.path.isfile(self._archfile):
-            logging.error("archfile %s does not exist", self._archfile)
-            raise RuntimeError
+        self.archfile = config.get(archfile_section, "file")
+        self.arch = None # ConfigParser object
 
-    def update_architecture(self):
+        self.cluster = None
+        self.nodes = None
+        self.partitions = None
 
-        self.cluster = Cluster(self.cluster_name)
-        nodes = self.get_cluster_nodes()
-        if cluster.find(self.db):
-            logging.debug("updating cluster %s", cluster)
-            cluster.update(self.db)
-        else:
+    def update(self):
+        """Create or update Cluster and Nodes in the database."""
+
+        if not cluster.find(self.db):
             logging.debug("creating cluster %s", cluster)
             cluster.save(self.db)
 
         # insert or update nodes
-        for node in nodes:
+        for node in self.nodes:
             if node.exists_in_db(self.db):
                 logging.debug("updating node %s", node)
                 node.update(self.db)
@@ -69,106 +68,147 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                 logging.debug("creating node %s", node)
                 node.save(self.db)
 
-        
-    def get_cluster_nodes(self):
+    def config_get(self, section, option, isint=False):
+        """Static method to get option/section in architecture file and raise
+           HPCStatsSourceError when a problem occurs.
+        """
+
+        try:
+            if isint:
+                return self.arch.getint(section, option)
+            else:
+                return self.arch.get(section, option)
+        except ConfigParser.NoSectionError:
+            raise HPCStatsSourceError( \
+                    "missing section %s in architecture file" \
+                      % (section))
+        except ConfigParser.NoOptionError:
+            raise HPCStatsSourceError( \
+                    "missing option %s in section %s of " \
+                    "architecture file" \
+                      % (section, option))
+
+    @staticmethod
+    def convert_freq(freq_str):
+        """Convert frequency string in parameter into float. Returns None if
+           string format is not valid.
+        """
+        units = { "MHz": 1000**2,
+                  "GHz": 1000**3 }
+        for unit, multiplier in units.iteritems():
+            match_result = re.match("^((\d+.)?\d+)" + unit + "$", freq_str)
+            if match_result:
+                return float(match_result.group(1)) * multiplier
+        return None
+
+    @staticmethod
+    def convert_mem(mem_str):
+        """Convert memory string in parameter into int. Returns None if
+           string format is not valid.
+        """
+        units = { "MB": 1024**2,  # 1048576
+                  "GB": 1024**3,  # 1073741824 
+                  "TB": 1024**4 } # 1099511627776
+
+        for unit, multiplier in units.iteritems():
+            match_result = re.match("^(\d+)" + unit + "$", mem_str)
+            if match_result:
+                return int(match_result.group(1)) * multiplier
+        return None
+
+    def read_arch(self):
+        """Check if archfile actually exists then reads it and set arch
+           attribute. Raises HPCStatsSourceError on error.
+        """
+        if not os.path.isfile(self.archfile):
+            raise HPCStatsSourceError( \
+                    "Architecture file %s does not exist" \
+                      % (self.archfile))
+
+        self.arch = ConfigParser.ConfigParser()
+        self.arch.read(self.archfile)
+
+    def load(self):
+        """Load Cluster, Nodes and partitions from Architecture files. Raises
+           HPCStatsRuntimeError or HPCStatsSourceError if error is encountered
+           while loading data from sources. It sets attributes cluster, nodes
+           and partitions with loaded data.
+        """
         # [ivanoe]
         # nodes=nodes1,nodes2,nodes3
 
-        nodes = []
+        self.cluster = Cluster(self.cluster_name)
+        self.nodes = []
+        self.partitions = {}
 
-        config = ConfigParser.ConfigParser()
-        config.read(self._archfile)
+        self.read_arch()
+        config_get = self.config_get
+        partitions = config_get(self.cluster.name, "partitions").split(',')
 
-        partitions_list = config.get(self.cluster.name,"partitions").split(',')
+        for partition in partitions:
 
-        for partition_name in partitions_list:
-            partition_section_name = self.cluster.name + "/" + partition_name
-            nodesets_list = config.get(partition_section_name, "nodesets").split(',')
+            part_sect = self.cluster.name + "/" + partition
 
-            for nodeset_name in nodesets_list:
-                nodeset_section_name = self.cluster.name + "/" + partition_name + "/" + nodeset_name
-                nodenames = config.get(nodeset_section_name, "names")
+            nodegroups = config_get(part_sect, "nodesets").split(',')
+            slurm_partitions = config_get(part_sect, "slurm_partitions") \
+                                   .split(',')
 
-                sockets = config.getint(nodeset_section_name, "sockets")
-                cores_per_socket = config.getint(nodeset_section_name, "corespersocket")
+            nodeset_part = NodeSet() # nodeset for the partitions attribute
+
+            for nodegroup in nodegroups:
+
+                nodegroup_sect = self.cluster.name + "/" + partition \
+                                 + "/" + nodegroup
+                nodenames = config_get(nodegroup_sect, "names")
+                nodeset_part.add(nodenames)
+
+                sockets = config_get(nodegroup_sect, "sockets", isint=True)
+                cores_per_socket = config_get(nodegroup_sect,
+                                              "corespersocket",
+                                              isint=True)
                 cpu = sockets * cores_per_socket
 
-                float_instructions = config.getint(nodeset_section_name, "floatinstructions")
+                float_instructions = config_get(nodegroup_sect,
+                                                "floatinstructions",
+                                                isint=True)
 
-                frequency_str = config.get(nodeset_section_name, "frequency")
-                frequency = None
-                units = { "MHz": 1000**2,
-                          "GHz": 1000**3 }
-                for unit,multiplier in units.items():
-                    match_result = re.match("^((\d+.)?\d+)" + unit + "$", frequency_str)
-                    if match_result and not frequency:
-                        frequency = float(match_result.group(1)) * multiplier
-                if not frequency:
-                    logging.error("frequency for nodeset %s/%s/%s (%s) '%s' does" \
-                                  "not have a proper format : (\d+.)?\d(GHz|MHz)",
-                                   self.cluster.name,
-                                   partition_name,
-                                   nodeset_name,
-                                   nodenames,
-                                   frequency_str )
+                freq_str = config_get(nodegroup_sect, "frequency")
+                freq = ArchitectureImporterArchfile.convert_freq(freq_str)
+                if freq is None:
+                    raise HPCStatsSourceError( \
+                            "format of frequency for nodeset %s/%s/%s (%s) " \
+                            "'%s' is not valid" \
+                              % ( self.cluster.name,
+                                  partition,
+                                  nodegroup,
+                                  nodenames,
+                                  freq_str ))
 
-                flops = sockets * cores_per_socket * float_instructions * frequency
+                flops = sockets * cores_per_socket * float_instructions * freq
 
-                memory_str = config.get(nodeset_section_name, "memory")
-                units = { "MB": 1024**2,  # 1048576
-                          "GB": 1024**3,  # 1073741824 
-                          "TB": 1024**4 } # 1099511627776
-                memory = None
-                for unit,multiplier in units.items():
-                    match_result = re.match("^(\d+)" + unit + "$", memory_str)
-                    if match_result and not memory:
-                        memory = int(match_result.group(1)) * multiplier
-                if not memory:
-                    logging.error("memory for nodeset %s/%s/%s (%s) '%s' does" \
-                                  "not have a proper format : \d+(GB|MB)",
-                                   self.cluster.name,
-                                   partition_name,
-                                   nodeset_name,
-                                   nodenames,
-                                   memory_str )
-                    memory = 0
-                model = config.get(nodeset_section_name, "model")
+                mem_str = config_get(nodegroup_sect, "memory")
+                mem = ArchitectureImporterArchfile.convert_mem(mem_str)
+                if mem is None:
+                    raise HPCStatsSourceError( \
+                            "format of memory for nodeset %s/%s/%s (%s) " \
+                            "'%s' is not valid" \
+                              % ( self.cluster.name,
+                                  partition,
+                                  nodegroup,
+                                  nodenames,
+                                  mem_str ))
+
+                model = config_get(nodegroup_sect, "model")
             
-                # expand nodeset using clustershell
-                nodeset = NodeSet(nodenames)
-                for nodename in nodeset:
+                nodeset_group = NodeSet(nodenames)
+                for nodename in nodeset_group:
                     # create and append node
-                    nodes.append( Node(name = nodename,
-                                       cluster = self.cluster.name,
-                                       partition = partition_name,
-                                       cpu = cpu,
-                                       memory = memory,
-                                       model = model,
-                                       flops = flops ) )
+                    new_node = Node(name=nodename,
+                                    cluster=self.cluster,
+                                    partition=partition,
+                                    cpu=cpu,
+                                    memory=mem,
+                                    flops=flops)
+                    self.nodes.append(new_node)
 
-        return nodes
-
-    def get_partitions(self):
-        """Returns a dict with nodesets as keys and the list of possible
-           partitions for this nodeset as items. Ex:
-           { "cn[0001-1382]": ["small","para","compute"],
-             "bm[01-29]"    : ["bigmem"],
-             "cg[01-24]"    : ["visu"]                    }
-        """
-        partitions = {}
-
-        config = ConfigParser.ConfigParser()
-        config.read(self._archfile)
-        partitions_list = config.get(self.cluster.name,"partitions").split(',')
-        for partition_name in partitions_list:
-            partition_section_name = self.cluster.name + "/" + partition_name
-            nodesets_list = config.get(partition_section_name, "nodesets").split(',')
-            slurm_partitions_list = config.get(partition_section_name, "slurm_partitions").split(',')
-            ns_nodeset = NodeSet()
-            for nodeset_name in nodesets_list:
-                nodeset_section_name = self.cluster.name + "/" + partition_name + "/" + nodeset_name
-                str_nodenames = config.get(nodeset_section_name, "names")
-                ns_nodeset.add(str_nodenames)
-            partitions[str(ns_nodeset)] = slurm_partitions_list
-
-        return partitions
+            self.partitions[str(nodeset_part)] = slurm_partitions

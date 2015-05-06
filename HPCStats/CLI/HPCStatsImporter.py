@@ -106,8 +106,8 @@ class HPCStatsImporter(HPCStatsApp):
         logging.info("updating architecture for cluster %s" % (cluster_name))
         try:
             self.arch = ArchitectureImporterFactory().factory(self, db, self.conf, cluster_name)
-            self.arch.update_architecture()
-            db.commit()
+            self.arch.load()
+            self.arch.update()
             cluster = self.arch.cluster
         except RuntimeError:
             logging.error("error occured on %s architecture update." % (cluster_name))

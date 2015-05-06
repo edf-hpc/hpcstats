@@ -61,7 +61,7 @@ class JobImporterSlurm(JobImporter):
         self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
 
         # get partitions list for nodes from ArchitectureImporter
-        self._partitions = self.app.arch.get_partitions()
+        self._partitions = self.app.arch.partitions
 
         # The id_assoc dict attribute is used as associations ID/login mapping
         # cache at Job objects creation.
