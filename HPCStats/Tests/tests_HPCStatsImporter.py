@@ -64,9 +64,9 @@ class TestsHPCStatsImporter(HPCStatsTestCase):
     def setUp(self):
         self.filename = 'fake'
         self.cluster = 'testcluster'
-        MockConfigParser.conf = CONFIG.copy()
         HPCStatsConf.__bases__ = (MockConfigParser, object)
         self.conf = HPCStatsConf(self.filename, self.cluster)
+        self.conf.conf = CONFIG.copy()
         self.importer = HPCStatsImporter(self.conf, self.cluster)
 
     def test_init(self):
@@ -84,7 +84,7 @@ class TestsHPCStatsImporter(HPCStatsTestCase):
         """HPCStatsImporter.run() raise exception when hpcstatsdb section is
            missing.
         """
-        del MockConfigParser.conf['hpcstatsdb']
+        del self.conf.conf['hpcstatsdb']
 
         self.assertRaisesRegexp(
                HPCStatsConfigurationException,

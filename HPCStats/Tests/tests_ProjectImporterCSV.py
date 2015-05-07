@@ -63,9 +63,9 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
     def setUp(self):
         self.filename = 'fake'
         self.cluster = 'testcluster'
-        MockConfigParser.conf = CONFIG
         HPCStatsConf.__bases__ = (MockConfigParser, object)
         self.conf = HPCStatsConf(self.filename, self.cluster)
+        self.conf.conf = CONFIG
         self.app = None
         self.db = None
         self.importer = ProjectImporterCSV(self.app, self.db, self.conf)
@@ -298,9 +298,9 @@ class TestsProjectImporterCSVUpdate(HPCStatsTestCase):
     def setUp(self):
         self.filename = 'fake'
         self.cluster = 'testcluster'
-        MockConfigParser.conf = CONFIG
         HPCStatsConf.__bases__ = (MockConfigParser, object)
         self.conf = HPCStatsConf(self.filename, self.cluster)
+        self.conf.conf = CONFIG
         self.app = None
         self.db = HPCStatsDB(self.conf)
         self.db.bind()

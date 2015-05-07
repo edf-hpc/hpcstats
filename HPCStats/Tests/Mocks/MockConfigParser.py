@@ -32,25 +32,23 @@ from ConfigParser import NoSectionError, NoOptionError
 
 class MockConfigParser():
 
-    conf = None
-
     def __init__(self):
-        pass
+        self.conf = None
 
     def read(self, filename):
         pass
 
     def get(self, section, option):
-        if section not in MockConfigParser.conf.keys():
+        if section not in self.conf.keys():
             raise NoSectionError(section)
-        if option not in MockConfigParser.conf[section].keys():
+        if option not in self.conf[section].keys():
             raise NoOptionError(section, option)
-        return MockConfigParser.conf[section][option]
+        return self.conf[section][option]
 
     def sections(self):
 
-        return MockConfigParser.conf.keys()
+        return self.conf.keys()
 
     def options(self, section):
 
-        return MockConfigParser.conf[section].keys()
+        return self.conf[section].keys()
