@@ -45,6 +45,14 @@ class MockConfigParser():
             raise NoOptionError(section, option)
         return self.conf[section][option]
 
+    def getint(self, section, option):
+        value = self.get(section, option)
+        if type(value) is not int:
+            raise ValueError( \
+              "invalid literal for int() with base 10: '%s'" \
+                % (value))
+        return value
+
     def sections(self):
 
         return self.conf.keys()
