@@ -74,8 +74,10 @@ class MockPsycopg2Cursor(object):
         req = req.replace('\n','').strip()
         req_clean = re.sub(' +',' ',req)
         for reqref, req in REQS.iteritems():
+            print ("clean: %s, req: %s" % (req_clean, req))
             result = re.match(req['req'], req_clean)
             if result:
+                print ("match!")
                 self.ref = reqref
                 self.idx = 0
                 break
