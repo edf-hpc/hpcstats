@@ -119,13 +119,13 @@ class Node:
                       % (str(self)))
 
         req = """
-                INSERT INTO Node (node_name,
-                                  cluster_id,
-                                  node_partition,
-                                  node_nbCpu,
-                                  node_memory,
-                                  node_flops )
-                VALUES ( %s, %s, %s, %s, %s, %s)
+                INSERT INTO Node ( node_name,
+                                   cluster_id,
+                                   node_partition,
+                                   node_nbCpu,
+                                   node_memory,
+                                   node_flops )
+                VALUES ( %s, %s, %s, %s, %s, %s )
                 RETURNING node_id
               """
         params = ( self.name,
