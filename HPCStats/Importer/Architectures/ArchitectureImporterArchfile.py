@@ -86,7 +86,7 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
             raise HPCStatsSourceError( \
                     "missing option %s in section %s of " \
                     "architecture file" \
-                      % (section, option))
+                      % (option, section))
 
     @staticmethod
     def convert_freq(freq_str):
