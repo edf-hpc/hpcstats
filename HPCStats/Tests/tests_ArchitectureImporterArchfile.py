@@ -148,20 +148,38 @@ class TestsArchitectureImporterArchfileLoad(HPCStatsTestCase):
         """ArchitectureImporterArchfile.convert_freq() should properly convert
            frequency string into float
         """
-        freqs = { '24MHz' : 24 * 1000 ** 2,
-                  '24MHz': 24 * 1000 ** 2,
-                  '24mhz': 24 * 1000 ** 2,
-                  '24 Mhz': 24 * 1000 ** 2,
-                  '2.5GHz': 2.5 * 1000 ** 3,
-                  '3GHz' : 3 * 1000 ** 3,
-                  '1 GHz' : 1 * 1000 ** 3,
-                  '2 Ghz' : 2 * 1000 ** 3,
-                  '3' : None,
+        freqs = { '24MHz'    : 24 * 1000 ** 2,
+                  '24MHz'    : 24 * 1000 ** 2,
+                  '24mhz'    : 24 * 1000 ** 2,
+                  '24 Mhz'   : 24 * 1000 ** 2,
+                  '2.5GHz'   : 2.5 * 1000 ** 3,
+                  '3GHz'     : 3 * 1000 ** 3,
+                  '1 GHz'    : 1 * 1000 ** 3,
+                  '2 Ghz'    : 2 * 1000 ** 3,
+                  '3'        : None,
                   '5.5.5Ghz' : None,
-                  'fail' : None }
+                  'fail'     : None }
         for freq_s, freq_f in freqs.iteritems():
             self.assertEqual(ArchitectureImporterArchfile.convert_freq(freq_s),
                              freq_f)
+
+    def test_convert_mem(self):
+        """ArchitectureImporterArchfile.convert_mem() should properly convert
+           memory string into integer
+        """
+        mems = { '1MB'   : 1 * 1024 ** 2,
+                 '2GB'   : 2 * 1024 ** 3,
+                 '3TB'   : 3 * 1024 ** 4,
+                 '4 MB'  : 4 * 1024 ** 2,
+                 '5 GB'  : 5 * 1024 ** 3,
+                 '6 TB'  : 6 * 1024 ** 4,
+                 '7'     : None,
+                 '8.1GB' : None,
+                 '9  GB' : None,
+                 'fail'  : None }
+        for mem_s, mem_f in mems.iteritems():
+            self.assertEqual(ArchitectureImporterArchfile.convert_mem(mem_s),
+                             mem_f)
 
 class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
 
