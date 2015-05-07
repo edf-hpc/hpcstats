@@ -55,13 +55,13 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
     def update(self):
         """Create or update Cluster and Nodes in the database."""
 
-        if not cluster.find(self.db):
-            logging.debug("creating cluster %s", cluster)
-            cluster.save(self.db)
+        if not self.cluster.find(self.db):
+            logging.debug("creating cluster %s", self.cluster)
+            self.cluster.save(self.db)
 
         # insert or update nodes
         for node in self.nodes:
-            if node.exists_in_db(self.db):
+            if node.find(self.db):
                 logging.debug("updating node %s", node)
                 node.update(self.db)
             else:
