@@ -115,7 +115,7 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                   "TB": 1024**4 } # 1099511627776
 
         for unit, multiplier in units.iteritems():
-            match_result = re.match("^(\d+)" + unit + "$", mem_str)
+            match_result = re.match("^(\d+)\s?" + unit + "$", mem_str)
             if match_result:
                 return int(match_result.group(1)) * multiplier
         return None
