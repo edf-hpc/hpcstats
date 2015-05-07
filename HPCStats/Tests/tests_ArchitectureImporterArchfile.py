@@ -28,6 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import mock
+import copy
 from StringIO import StringIO
 
 from HPCStats.Exceptions import *
@@ -43,17 +44,36 @@ from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 
 CONFIG = {
-           'hpcstatsdb': {
-             'hostname': 'test_hostname',
-             'port':     'test_port',
-             'dbname':   'test_name',
-             'user':     'test_user',
-             'password': 'test_password',
-           },
-           'test_cluster/archfile': {
-             'file': 'fake_arch_file',
-           }
-         }
+  'hpcstatsdb': {
+    'hostname': 'test_hostname',
+    'port':     'test_port',
+    'dbname':   'test_name',
+    'user':     'test_user',
+    'password': 'test_password',
+  },
+  'test_cluster/archfile': {
+    'file': 'fake_arch_file',
+  },
+}
+
+BASIC_ARCH = {
+"test_cluster": {
+    "partitions": "group_compute",
+  },
+  "test_cluster/group_compute": {
+    "nodesets": "cn",
+    "slurm_partitions": "compute",
+  },
+  "test_cluster/group_compute/cn": {
+    "names": "cn[0001-1000]",
+    "sockets": 2,
+    "corespersocket": 6,
+    "frequency": "2.93GHz",
+    "floatinstructions":4,
+    "memory": "24GB",
+    "model": "test_model",
+  },
+}
 
 module = "HPCStats.Importer.Architectures.ArchitectureImporterArchfile"
 
@@ -83,25 +103,7 @@ class TestsArchitectureImporterArchfileLoad(HPCStatsTestCase):
         """ArchitectureImporterArchfile.load() works with simple data
         """
 
-        arch = {
-          "test_cluster": {
-            "partitions": "group_compute",
-          },
-          "test_cluster/group_compute": {
-            "nodesets": "cn", \
-            "slurm_partitions": "compute",
-          },
-          "test_cluster/group_compute/cn": {
-            "names": "cn[0001-1000]", 
-            "sockets": 2,
-            "corespersocket": 6,
-            "frequency": "2.93GHz",
-            "floatinstructions":4,
-            "memory": "24GB",
-            "model": "test_model",
-          },
-        }
-        self.importer.arch.conf = arch
+        self.importer.arch.conf = copy.deepcopy(BASIC_ARCH)
         self.importer.load()
 
         self.assertEquals(len(self.importer.nodes), 1000)
@@ -111,6 +113,36 @@ class TestsArchitectureImporterArchfileLoad(HPCStatsTestCase):
         self.assertEquals(self.importer.nodes[0].name, 'cn0001')
         self.assertEquals(self.importer.nodes[0].partition, 'group_compute')
         self.assertEquals(self.importer.partitions['cn[0001-1000]'], ['compute'])
+
+    @mock.patch("%s.ArchitectureImporterArchfile.read_arch" % (module))
+    def test_load_missing_section(self, m_read_arch):
+        """ArchitectureImporterArchfile.load() raise exception in one section
+           is missing
+        """
+
+        for section in BASIC_ARCH.keys():
+            self.importer.arch.conf = copy.deepcopy(BASIC_ARCH)
+            del self.importer.arch.conf[section]
+            self.assertRaisesRegexp(
+                   HPCStatsSourceError,
+                   "missing section %s in architecture file" % (section),
+                   self.importer.load)
+
+    @mock.patch("%s.ArchitectureImporterArchfile.read_arch" % (module))
+    def test_load_missing_option(self, m_read_arch):
+        """ArchitectureImporterArchfile.load() raise exception in one option
+           is missing
+        """
+
+        for section in BASIC_ARCH.keys():
+            for option in BASIC_ARCH[section].keys():
+                self.importer.arch.conf = copy.deepcopy(BASIC_ARCH)
+                del self.importer.arch.conf[section][option]
+                self.assertRaisesRegexp(
+                       HPCStatsSourceError,
+                       "missing option %s in section %s of architecture file" \
+                         % (option, section),
+                       self.importer.load)
 
 class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
 
