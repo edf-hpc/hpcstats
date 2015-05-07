@@ -112,4 +112,51 @@ class TestsArchitectureImporterArchfileLoad(HPCStatsTestCase):
         self.assertEquals(self.importer.nodes[0].partition, 'group_compute')
         self.assertEquals(self.importer.partitions['cn[0001-1000]'], ['compute'])
 
+class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
+
+    @mock.patch("HPCStats.DB.HPCStatsDB.psycopg2", mock_psycopg2())
+    def setUp(self):
+        self.filename = 'fake'
+        self.cluster = 'test_cluster'
+        HPCStatsConf.__bases__ = (MockConfigParser, object)
+        self.conf = HPCStatsConf(self.filename, self.cluster)
+        self.conf.conf = CONFIG.copy()
+        self.app = None
+        self.db = HPCStatsDB(self.conf)
+        self.db.bind()
+        self.importer = ArchitectureImporterArchfile(self.app,
+                                                     self.db,
+                                                     self.conf,
+                                                     self.cluster)
+
+    def test_update(self):
+        """ProjectImporterCSV.update() works with simple data
+        """
+        MockPg2.REQS = {
+          "save_cluster_cluster1": {
+            "req": "INSERT INTO Cluster \( cluster_name \) " \
+                   "VALUES \( %s \) "\
+                   "RETURNING cluster_id",
+            "res": [ [ 1 ] ],
+          },
+          "save_node_node1": {
+            "req": "INSERT INTO Node \( node_name, " \
+                                       "cluster_id, "\
+                                       "node_partition, "\
+                                       "node_nbCpu, "\
+                                       "node_memory, "\
+                                       "node_flops \) "\
+                   "VALUES \( %s, %s, %s, %s, %s, %s \) "\
+                   "RETURNING node_id",
+            "res": [ [ 1 ] ],
+          },
+        }
+        cluster1 = Cluster('cluster1')
+        node1 = Node('node1', cluster1, 'test_partition', 12, 6 * 1024 ** 3, 1)
+        self.importer.cluster = cluster1
+        self.importer.nodes = [ node1 ]
+
+        self.importer.update()
+
 loadtestcase(TestsArchitectureImporterArchfileLoad)
+loadtestcase(TestsArchitectureImporterArchfileUpdate)
