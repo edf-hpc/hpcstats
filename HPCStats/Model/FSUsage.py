@@ -81,7 +81,7 @@ class FSUsage:
         if nb_rows == 0:
             logging.debug("fsusage %s not found in DB" % (str(self)))
             self.exists = False
-        elif nb_rows == 1:
+        elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several fsusage found in DB for fsusage %s" \
                       % (str(self)))

@@ -84,7 +84,7 @@ class Project:
         if nb_rows == 0:
             logging.debug("project %s not found in DB" % (str(self)))
             return None
-        elif nb_rows == 1:
+        elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several project_id found in DB for project %s" \
                       % (str(self)))

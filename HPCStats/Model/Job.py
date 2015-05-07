@@ -126,7 +126,7 @@ class Job:
         if nb_rows == 0:
             logging.debug("job %s not found in DB" % (str(self)))
             return None
-        elif nb_rows == 1:
+        elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several job_id found in DB for job %s" \
                       % (str(self)))

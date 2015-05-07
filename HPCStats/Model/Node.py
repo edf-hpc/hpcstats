@@ -93,7 +93,7 @@ class Node:
         if nb_rows == 0:
             logging.debug("node %s not found in DB" % (str(self)))
             return None
-        elif nb_rows == 1:
+        elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several node_id found in DB for node %s" \
                       % (str(self)))

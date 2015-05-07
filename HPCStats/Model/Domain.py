@@ -76,7 +76,7 @@ class Domain:
         if nb_rows == 0:
             logging.debug("domain %s not found in DB" % (str(self)))
             self.exists = False
-        elif nb_rows == 1:
+        elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several domain found in DB for domain %s" \
                       % (str(self)))

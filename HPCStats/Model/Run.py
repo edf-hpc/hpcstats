@@ -79,7 +79,7 @@ class Run:
         if nb_rows == 0:
             logging.debug("run %s not found in DB" % (str(self)))
             self.exists = False
-        elif nb_rows == 1:
+        elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several run found in DB for run %s" \
                       % (str(self)))

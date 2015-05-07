@@ -80,7 +80,7 @@ class Filesystem:
         if nb_rows == 0:
             logging.debug("filesystem %s not found in DB" % (str(self)))
             return None
-        elif nb_rows == 1:
+        elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several filesystem_id found in DB for filesystem %s" \
                       % (str(self)))

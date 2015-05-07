@@ -79,7 +79,7 @@ class Sector:
         if nb_rows == 0:
             logging.debug("sector %s not found in DB" % (str(self)))
             self.exists = False
-        elif nb_rows == 1:
+        elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several sector found in DB for sector %s" \
                       % (str(self)))
