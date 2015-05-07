@@ -45,7 +45,7 @@ Project(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class Project:
+class Project(object):
 
     def __init__(self, sector, code, description, project_id=None):
 

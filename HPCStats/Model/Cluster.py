@@ -42,7 +42,7 @@ Cluster(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class Cluster:
+class Cluster(object):
 
     def __init__(self, name, cluster_id=None):
 

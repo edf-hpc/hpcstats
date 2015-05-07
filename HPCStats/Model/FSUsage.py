@@ -43,7 +43,7 @@ fsusage(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class FSUsage:
+class FSUsage(object):
 
     def __init__(self, filesystem, datetime, usage):
 

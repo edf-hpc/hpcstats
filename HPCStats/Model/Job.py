@@ -58,7 +58,7 @@ import os
 from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class Job:
+class Job(object):
 
     def __init__( self, account, project, business, nodeset,
                   sched_id, batch_id, name, nbcpu, state, queue,

@@ -42,7 +42,7 @@ Sector(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class Sector:
+class Sector(object):
 
     def __init__(self, domain, key, name):
 

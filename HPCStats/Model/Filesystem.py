@@ -43,7 +43,7 @@ filesystem(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class Filesystem:
+class Filesystem(object):
 
     def __init__(self, mountpoint, cluster, fs_id=None):
 

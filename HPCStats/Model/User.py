@@ -45,7 +45,7 @@ User(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class User:
+class User(object):
 
     def __init__(self, login, firstname, lastname, department, user_id=None):
 

@@ -42,7 +42,7 @@ Domain(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class Domain:
+class Domain(object):
 
     def __init__(self, key, name):
        

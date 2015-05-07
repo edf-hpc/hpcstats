@@ -47,7 +47,7 @@ Node(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class Node:
+class Node(object):
 
     def __init__(self, name, cluster, partition,
                  cpu, memory, flops, node_id=None):

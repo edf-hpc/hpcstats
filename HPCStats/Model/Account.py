@@ -46,7 +46,7 @@ from datetime import datetime
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class Account:
+class Account(object):
 
     def __init__(self, user, cluster, uid, gid, creation_date, deletion_date):
 

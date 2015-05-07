@@ -43,7 +43,7 @@ ContextAccount(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class ContextAccount:
+class ContextAccount(object):
 
     """There is no update() method in this class because all fields are the
        primary key of the table. So one field change is just another

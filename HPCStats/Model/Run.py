@@ -42,7 +42,7 @@ Run(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class Run:
+class Run(object):
 
     def __init__(self, cluster, node, job):
 

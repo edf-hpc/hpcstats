@@ -49,7 +49,7 @@ Event(
 import logging
 from HPCStats.Exceptions import HPCStatsRuntimeError, HPCStatsDBIntegrityError
 
-class Event:
+class Event(object):
 
     def __init__(self, cluster, node,
                  nb_cpu,

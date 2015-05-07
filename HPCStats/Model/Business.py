@@ -41,7 +41,7 @@ Business(
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
-class Business:
+class Business(object):
 
     def __init__(self, code, description):
 
