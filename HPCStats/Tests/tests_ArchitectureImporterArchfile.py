@@ -144,6 +144,25 @@ class TestsArchitectureImporterArchfileLoad(HPCStatsTestCase):
                          % (option, section),
                        self.importer.load)
 
+    def test_convert_freq(self):
+        """ArchitectureImporterArchfile.convert_freq() should properly convert
+           frequency string into float
+        """
+        freqs = { '24MHz' : 24 * 1000 ** 2,
+                  '24MHz': 24 * 1000 ** 2,
+                  '24mhz': 24 * 1000 ** 2,
+                  '24 Mhz': 24 * 1000 ** 2,
+                  '2.5GHz': 2.5 * 1000 ** 3,
+                  '3GHz' : 3 * 1000 ** 3,
+                  '1 GHz' : 1 * 1000 ** 3,
+                  '2 Ghz' : 2 * 1000 ** 3,
+                  '3' : None,
+                  '5.5.5Ghz' : None,
+                  'fail' : None }
+        for freq_s, freq_f in freqs.iteritems():
+            self.assertEqual(ArchitectureImporterArchfile.convert_freq(freq_s),
+                             freq_f)
+
 class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
 
     @mock.patch("HPCStats.DB.HPCStatsDB.psycopg2", mock_psycopg2())
