@@ -130,7 +130,7 @@ class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
                                                      self.cluster)
 
     def test_update(self):
-        """ProjectImporterCSV.update() works with simple data
+        """ProjectImporterCSV.update() creates cluster and node if not existing
         """
         MockPg2.REQS = {
           "save_cluster_cluster1": {
@@ -148,6 +148,31 @@ class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
                                        "node_flops \) "\
                    "VALUES \( %s, %s, %s, %s, %s, %s \) "\
                    "RETURNING node_id",
+            "res": [ [ 1 ] ],
+          },
+        }
+        cluster1 = Cluster('cluster1')
+        node1 = Node('node1', cluster1, 'test_partition', 12, 6 * 1024 ** 3, 1)
+        self.importer.cluster = cluster1
+        self.importer.nodes = [ node1 ]
+
+        self.importer.update()
+
+    def test_update_2(self):
+        """ProjectImporterCSV.update() detect existing cluster and node
+        """
+        MockPg2.REQS = {
+          "find_cluster_cluster1": {
+            "req": "SELECT cluster_id " \
+                   "FROM Cluster " \
+                   "WHERE cluster_name = %s",
+            "res": [ [ 1 ] ],
+          },
+          "find_node_node1": {
+            "req": "SELECT node_id " \
+                   "FROM Node " \
+                   "WHERE node_name = %s " \
+                   "AND cluster_id = %s",
             "res": [ [ 1 ] ],
           },
         }
