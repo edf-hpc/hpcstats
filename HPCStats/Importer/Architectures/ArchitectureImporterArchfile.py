@@ -94,9 +94,13 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
            string format is not valid.
         """
         units = { "MHz": 1000**2,
-                  "GHz": 1000**3 }
+                  "Mhz": 1000**2,
+                  "mhz": 1000**2,
+                  "GHz": 1000**3,
+                  "Ghz": 1000**3,
+                  "ghz": 1000**3 }
         for unit, multiplier in units.iteritems():
-            match_result = re.match("^((\d+.)?\d+)" + unit + "$", freq_str)
+            match_result = re.match("^((\d+\.)?\d+)\s?" + unit + "$", freq_str)
             if match_result:
                 return float(match_result.group(1)) * multiplier
         return None
