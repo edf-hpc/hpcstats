@@ -45,6 +45,9 @@ class HPCStatsConf(ConfigParser.ConfigParser, object):
         self.read(filename)
 
     def get(self, section, option):
+        """Try to get option value in section of configuration. Raise
+           HPCStatsConfigurationException if not found.
+        """
         try:
             return super(HPCStatsConf, self).get(section, option)
         except ConfigParser.NoSectionError:
@@ -53,6 +56,15 @@ class HPCStatsConf(ConfigParser.ConfigParser, object):
         except ConfigParser.NoOptionError:
             raise HPCStatsConfigurationException( \
                     "option %s not found in section %s" % (option, section))
+
+    def get_default(self, section, option, default):
+        """Try to get option value in section of configuration. Return default
+           if not found.
+        """
+        try:
+            return self.get(section, option)
+        except HPCStatsConfigurationException:
+            return default
 
     def get_clusters_list(self):
         """Returns the list of clusters in configuration file. If any problem
