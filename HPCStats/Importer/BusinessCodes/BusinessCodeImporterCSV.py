@@ -27,15 +27,13 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-from HPCStats.Importer.BusinessCodes.BusinessCodeImporter import BusinessCodeImporter
-from HPCStats.Model.Business import Business
-from HPCStats.Model.ContextAccount import ContextAccount
-import ConfigParser
 import os
 import logging
 import csv
-import psycopg2
-import codecs
+from HPCStats.Exceptions import *
+from HPCStats.Importer.BusinessCodes.BusinessCodeImporter import BusinessCodeImporter
+from HPCStats.Model.Business import Business
+from HPCStats.Model.ContextAccount import ContextAccount
 
 class BusinessCodeImporterCSV(BusinessCodeImporter):
 
@@ -43,44 +41,48 @@ class BusinessCodeImporterCSV(BusinessCodeImporter):
 
         super(BusinessCodeImporterCSV, self).__init__(app, db, config, cluster)
 
-        business_section = self.cluster.name + "/business"
+        business_section = "business"
         self._business_file = config.get(business_section, "file")
 
+        self.businesses = None
+
+    def load(self):
+        """Load BusinessCodes from CSV files in businesses attribute. Raise
+           HPCStatsSourceError if error in encountered.
+        """
+
+        self.businesses = []
+
         if not os.path.isfile(self._business_file):
-            logging.error("business file %s does not exist", self._business_file)
-            raise RuntimeError
+            raise HPCStatsSourceError( \
+                    "business CSV file %s does not exist" \
+                      % (self._business_file))
 
-        #In first delete all entries in business table and his dependances 
-        logging.debug("Delete all business entries in db")
-        delete_contexts_with_business(self.db)
-        delete_business(self.db)
-        self.db.commit()
+        with open(self._business_file, 'r') as csvfile:
 
-        b_file = open(self._business_file, 'r')
-        # savepoint is used to considere exceptions and commit only at the end
-        db.cur.execute("SAVEPOINT my_savepoint;")
-        with b_file as csvfile:
             file_reader = csv.reader(csvfile, delimiter=';', quotechar='|')
             for row in file_reader:
-                # Delete BOM
-                if '\xef\xbb\xbf' in row [0]:
-                    row[0] = row[0].replace('\xef\xbb\xbf','')
-                code = Business( key = row[0],
-                                 description = row[1])
-                try:
-                    if not code.already_exist(self.db):
-                        code.save(self.db)
-                        if not code.get_description():
-                            logging.debug("add new business entry with key : %s, without description", code.get_key())
-                        else:
-                            logging.debug("add new business entry with key : %s, and description : %s", \
-                                           code.get_key(), \
-                                           code.get_description())
-                        db.cur.execute("SAVEPOINT my_savepoint;")
-                    else :
-                        logging.debug("code %s not added, already exist", code.get_key())
-                except psycopg2.DataError:
-                    logging.error("impossible to add BUSINESS entry in database : (%s) du to encoding error", row)
-                    db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                    pass
+                if len(row) != 2:
+                    raise HPCStatsSourceError( \
+                            "business line format in CSV is invalid")
+                code = row[0].strip()
+                description = row[1].strip()
+                if len(code) == 0:
+                    raise HPCStatsSourceError( \
+                            "business code in CSV is empty")
+                if len(description) == 0:
+                    raise HPCStatsSourceError( \
+                            "description of business code %s in CSV is empty" \
+                              % (code))
+                business = Business(code, description)
+                self.businesses.append(business)
+
+    def update(self):
+        """Create or update BusinessCodes in database."""
+
+        for business in self.businesses:
+            if not business.existing(self.db):
+                business.save(self.db)
+            else:
+                business.update(self.db)
         self.db.commit()

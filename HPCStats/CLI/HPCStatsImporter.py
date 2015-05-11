@@ -82,6 +82,8 @@ class HPCStatsImporter(HPCStatsApp):
 
         logging.info("updating business codes")
         self.business = BusinessCodeImporterFactory().factory(self, db, self.conf)
+        self.business.load()
+        self.business.update()
 
         if self.cluster_name == 'all':
             clusters = self.conf.get_clusters_list()
