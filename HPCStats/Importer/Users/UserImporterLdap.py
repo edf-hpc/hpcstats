@@ -52,6 +52,25 @@ class UserImporterLdap(UserImporter):
         self._ldapcert = config.get(ldap_section, "cert")
         self._ldapgroup = config.get(ldap_section, "group")
        
+        seld.ldap_attr_name = config.get_default(ldap_section,
+                                                 'attr_name',
+                                                 'cn')
+        self.ldap_attr_member = config.get_default(ldap_section,
+                                                   'attr_member',
+                                                   'memberUid')
+        self.ldap_attr_department = config.get_default(ldap_section,
+                                                       'attr_department',
+                                                       'department')
+        self.ldap_rdn_people = config.get_default(ldap_section,
+                                                  'rdn_people',
+                                                  'ou=people')
+        self.ldap_rdn_groups = config.get_default(ldap_section,
+                                                  'rdn_groups',
+                                                  'ou=groups')
+
+        self.ldap_dn_groups = self.ldap_rdn_people + ',' + self._ldapbase
+        self.ldap_dn_people = self.ldap_rdn_groups + ',' + self._ldapbase
+
         try:            
             ldap.set_option(ldap.OPT_X_TLS_CACERTFILE, self._ldapcert)
             self._ldapconn = ldap.initialize(self._ldapurl)
@@ -83,38 +102,25 @@ class UserImporterLdap(UserImporter):
      
         
     def get_members_from_group(self, group):
-            if self.cluster.name != 'casanova':
-              self._ldap_users = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"(&(objectclass=posixGroup)(cn=" + group + "))", ["memberUid"])
-            else:
-              self._ldap_users = self._ldapconn.search_s(self._ldapbase,ldap.SCOPE_SUBTREE,"(&(objectclass=posixGroup)(cn=" + group + "))", ["member"])
-
-            return self._ldap_users    
+            return self._ldapconn.search_s(self.ldap_dn_groups,
+                                           ldap.SCOPE_SUBTREE,
+                                           "(&(objectclass=posixGroup)(cn=" + group + "))",
+                                           [self.ldap_attr_member])
     
     def get_user_from_id(self, uid):
-        if self.cluster.name == 'casanova':
-            self._ldappeople = "ou=people,dc=calibre,dc=edf,dc=fr"
-            def_member = "member=uid="
-            def_department = "department"
-            def_keys = ["uid","uidNumber","gidNumber","cn","createTimestamp"]
-            def_ldapuser = str(uid).lower() + "," + self._ldappeople
-        else:
-            self._ldappeople = "ou=Personnes,dc=der,dc=edf,dc=fr"
-            def_member = "memberUid="
-            def_department = "departmentNumber"
-            def_keys = ["uid","uidNumber","gidNumber","sn","createTimestamp", "givenName","departmentNumber"]
-            def_ldapuser = str(uid).upper()
+
+        def_keys = ["uid","uidNumber","gidNumber","sn","createTimestamp", "givenName","departmentNumber"]
+        def_ldapuser = str(uid) + "," + self._ldappeople
         # get ldap user info attribut defined by def_keys
-        self._ldap_users_info = self._ldapconn.search_s(self._ldappeople, \
+        self._ldap_users_info = self._ldapconn.search_s(self.ldap_dn_people, \
                                                        ldap.SCOPE_SUBTREE,
                                                        "uid=" + str(uid),\
                                                        def_keys)
         # get secondary group of the user to define departement values
-        secondary_group = self._ldapconn.search_s(self._ldapbase,\
+        secondary_group = self._ldapconn.search_s(self.ldap_dn_groups,\
                                                   ldap.SCOPE_SUBTREE, \
-                                                  "(&(" + \
-                                                  def_member + \
-                                                  def_ldapuser + \
-                                                  ")(cn=*dp*))",["isMemberOf"])
+                                                  "(&(" + self.ldap_attr_member + "=" + def_ldapuser + ")(cn=*dp*))",
+                                                  ["isMemberOf"])
         if len(secondary_group) is 1:
             match = re.match(r"cn=(.+)-dp-(.+),ou(.+)",secondary_group[-1][0]).groups()
             direction = match[0]
@@ -123,14 +129,10 @@ class UserImporterLdap(UserImporter):
         else:
             match_department = "OMITTED"
         if len(self._ldap_users_info) > 0:
-            self._ldap_users_info[0][1][def_department] = [match_department]
+            self._ldap_users_info[0][1][self.ldap_attr_department] = [match_department]
         return self._ldap_users_info
 
     def get_all_users(self):
-        if self.cluster.name != 'casanova':
-           _attr = "memberUid"
-        else:
-           _attr = "member"
 
         users = []
         self._members = self.get_members_from_group(self._ldapgroup)
@@ -139,32 +141,25 @@ class UserImporterLdap(UserImporter):
             logging.info("item0 => %s :" % (item[0]))
 
             if item[1] != {}:
-                logging.info("item1 => %s \n" % (' '.join(item[1][_attr])))
+                logging.info("item1 => %s \n" % (' '.join(item[1][self.ldap_attr_member])))
 
-                for member in item[1][_attr]:
-                    if self.cluster.name != 'casanova':
-                      user_info = self.get_user_from_id(member)
+                for member in item[1][self.ldap_attr_member]:
+                    if "=" in member:
+                        member_login = member.split(",")[0].split("=")[1]
                     else:
-                      user_info = self.get_user_from_id(member.split(",")[0].split("=")[1])
+                        member_login = member
+                    user_info = self.get_user_from_id(member.split(",")[0].split("=")[1])
                     if len(user_info) >= 1:
                         lu = user_info[0][1]
                         for clef, valeur in user_info[0][1].items():
                            logging.info("%s : %s" % (clef, valeur[0]))
-                           
-                        if self.cluster.name == "casanova":
-                            def_department = 'department'
-                            def_name = lu["cn"][0]
-                        else:
-                            def_department = 'departmentNumber'
-                            try :
-                                def_name = lu["givenName"][0] + " " + lu["sn"][0]
-                            except KeyError as ke:
-                                def_name = lu["sn"][0]
+
+                        def_name = lu[self.ldap_attr_name][0]
 
                         createTimestamp = lu["createTimestamp"][0]
                         logging.info("createTimestamp => %s" % (createTimestamp))
-                        if def_department in lu.keys():
-                            _department = lu[def_department][0]
+                        if self.ldap_attr_department in lu.keys():
+                            _department = lu[self.ldap_attr_department][0]
                         else:
                             _department = "OMITTED"
                         user = User( name = def_name,
@@ -208,19 +203,9 @@ class UserImporterLdap(UserImporter):
                     user.set_creation_date(datetime.now())
                     boolean = True
                 # update departement column if necesary
-                if self.cluster.name == "casanova":
-                    def_department = 'department'
-                    user_name = user_from_ldap[0][1]["cn"][0]
-                else:
-                    def_department = 'departmentNumber'
-                    try :
-                        def_name = user_from_ldap[0][1]["givenName"][0] \
-                                   + user_from_ldap[0][1]["sn"][0]
-                    except KeyError as ke:
-                        def_name = user_from_ldap[0][1]["sn"][0]
-                        user_name = def_name
-                if def_department in user_from_ldap[0][1].keys():
-                    user_department = user_from_ldap[0][1][def_department][0]
+                user_name = user_from_ldap[0][1][self.ldap_attr_name][0]
+                if self.ldap_attr_department in user_from_ldap[0][1].keys():
+                    user_department = user_from_ldap[0][1][self.ldap_attr_department][0]
                 else:
                     user_department = "OMITTED"
                 if user.get_department() != user_department:
