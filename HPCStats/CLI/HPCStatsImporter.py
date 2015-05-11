@@ -118,6 +118,14 @@ class HPCStatsImporter(HPCStatsApp):
         if cluster is None or cluster.cluster_id is None:
             raise HPCStatsRuntimeError("problem in DB with cluster %s" % (str(cluster)))
 
+        logging.info("updating users for cluster %s" % (cluster.name))
+        try:
+          self.users = UserImporterFactory().factory(self, db, config, cluster)
+          self.users.update_users()
+          db.commit()
+        except RuntimeError:
+            logging.error("error occured on %s users update." % (cluster.name))
+
         logging.info("updating context for cluster %s from stats file" % (cluster.name))
         try:
             self.context = ContextImporterFactory().factory(self, db, config, cluster)
@@ -147,14 +155,6 @@ class HPCStatsImporter(HPCStatsApp):
             db.commit()
         except RuntimeError:
             logging.error("error occured on %s events update." % (cluster.name))
-
-        logging.info("updating users for cluster %s" % (cluster.name))
-        try:
-          self.users = UserImporterFactory().factory(self, db, config, cluster)
-          self.users.update_users()
-          db.commit()
-        except RuntimeError:
-            logging.error("error occured on %s users update." % (cluster.name))
 
         logging.info("updating jobs for cluster %s" % (cluster.name))
         try:
