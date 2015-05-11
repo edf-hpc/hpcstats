@@ -45,7 +45,7 @@ class Business(object):
 
     def __init__(self, code, description):
 
-        self.code
+        self.code = code
         self.description = description
         self.exists = None
 
