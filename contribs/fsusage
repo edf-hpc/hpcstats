@@ -1,0 +1,102 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2011-2015 EDF SA
+# Contact:
+#       CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
+#       1, Avenue du General de Gaulle
+#       92140 Clamart
+#
+# Authors: CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
+#
+# This file is part of HPCStats.
+#
+# HPCStats is free software: you can redistribute in and/or
+# modify it under the terms of the GNU General Public License,
+# version 2, as published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with HPCStats. If not, see
+# <http://www.gnu.org/licenses/>.
+#
+# On Calibre systems, the complete text of the GNU General
+# Public License can be found in `/usr/share/common-licenses/GPL'.
+
+import ConfigParser
+import logging
+import logging.handlers
+import os
+import sys
+import csv
+from datetime import datetime
+
+logger = None
+conf = None
+
+def init_logger():
+    """Initialize logger to syslog with proper format"""
+
+    global logger
+
+    logger = logging.getLogger('hpcstats')
+    logger.setLevel(logging.INFO)
+    handler = logging.handlers.SysLogHandler(address='/dev/log')
+    formatter = logging.Formatter('%(name)s: %(levelname)s: %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+def read_conf():
+    """Read configuration file of the script"""
+
+    global logger
+    global conf
+
+    conf_file = '/etc/hpcstats/fsusage.conf'
+    if not os.path.exists(conf_file):
+        logger.critical("configuration file %s does not exist", conf_file)
+        sys.exit(1)
+    conf = ConfigParser.ConfigParser()
+    conf.read(conf_file)
+
+def main():
+    """Main function of the script"""
+
+    init_logger()
+    read_conf()
+
+    fs_s = conf.get('global','fs')
+    filesystems = fs_s.split(',')
+    csv_fpath = conf.get('global','csv')
+    now = datetime.now().isoformat()
+
+    with open(csv_fpath, 'a') as csv_file:
+        csv_writer = csv.writer(csv_file, delimiter=',',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for fs in filesystems:
+            try:
+                statfs = os.statvfs(fs)
+                bsize = statfs[0]
+                blocks = statfs[2] * bsize / 1024
+                bfree = statfs[3] * bsize / 1024
+                bavail = statfs[4] * bsize / 1024
+                bused = blocks - bfree
+                bpercent = round(float(bused)*100 / float(bused + bfree), 2)
+               
+                inodes = statfs[5]
+                ifree = statfs[6]
+                iavail = statfs[7]
+                iused = inodes - ifree
+                ipercent = round(float(iused)*100 / float(iused + ifree), 2)
+    
+                csv_writer.writerow([fs, now, bpercent, ipercent])
+    
+            except OSError, err:
+                logger.error("error while running statvfs() on %s: %s", fs, err)
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2011-2015 EDF SA
+# Contact:
+#       CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
+#       1, Avenue du General de Gaulle
+#       92140 Clamart
+#
+# Authors: CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
+#
+# This file is part of HPCStats.
+#
+# HPCStats is free software: you can redistribute in and/or
+# modify it under the terms of the GNU General Public License,
+# version 2, as published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with HPCStats. If not, see
+# <http://www.gnu.org/licenses/>.
+#
+# On Calibre systems, the complete text of the GNU General
+# Public License can be found in `/usr/share/common-licenses/GPL'.
+
+import ConfigParser
+import subprocess
+from string import Template
+
+conf = None
+
+def read_conf():
+    """Main function of the script"""
+
+    global conf
+
+    conf_file = '/etc/hpcstats/jobstats.conf'
+    conf = ConfigParser.ConfigParser()
+    conf.read(CONF_FILE)
+
+def main():
+    """Main function of the script"""
+
+    global conf
+
+    read_conf()
+    tpl_fpath = conf.get('global','tpl')
+    script_fpath = conf.get('global','script')
+    sub_cmd = conf.get('global','subcmd')
+
+    section = 'vars'
+    params = ['name',
+              'ntasks',
+              'error',
+              'output',
+              'partition',
+              'time',
+              'qos',
+              'wckey',
+              'fs',
+              'log']
+
+    tpl_vars = dict()
+
+    for param in params:
+        tpl_vars[param] = conf.get(section, param)
+
+    script_content = None
+    with open(tpl_fpath, 'r') as tpl_fh:
+        tpl_content = tpl_fh.read()
+        script_content = Template(tpl_content).safe_substitute(tpl_vars)
+
+    with open(script_fpath, 'w+') as script_fh:
+        script_fh.write(script_content)
+
+    subprocess.check_call([sub_cmd, script_fpath])
+
+if __name__ == '__main__':
+    main()
