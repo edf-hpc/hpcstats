@@ -63,6 +63,16 @@ def read_conf():
     conf = ConfigParser.ConfigParser()
     conf.read(conf_file)
 
+def truncate(fpath, maxsize):
+    """Truncate first third of the file if its size is over maxsize MB"""
+    statinfo = os.stat(fpath)
+    size = statinfo.st_size
+    if size > maxsize * 1024**2:
+        lines = open(fpath).readlines()
+        # remove first third of the file
+        nb_lines = len(lines)/3
+        open(fpath, 'w').writelines(lines[nb_lines:-1])
+
 def main():
     """Main function of the script"""
 
@@ -72,7 +82,10 @@ def main():
     fs_s = conf.get('global','fs')
     filesystems = fs_s.split(',')
     csv_fpath = conf.get('global','csv')
+    maxsize = conf.getint('global','maxsize')
     now = datetime.now().isoformat()
+
+    truncate(csv_fpath, maxsize)
 
     with open(csv_fpath, 'a') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=',',
