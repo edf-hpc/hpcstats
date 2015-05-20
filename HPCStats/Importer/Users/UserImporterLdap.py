@@ -27,40 +27,39 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-from HPCStats.Importer.Users.UserImporter import UserImporter
-from HPCStats.Model.User import User
 import ldap
-from datetime import datetime, date
 import base64
 import logging
 import sys
 import re
+from datetime import date
+from HPCStats.Exceptions import *
+from HPCStats.Utils import decypher
+from HPCStats.Importer.Users.UserImporter import UserImporter
+from HPCStats.Model.User import User
+from HPCStats.Model.Account import Account, load_unclosed_users_accounts, nb_existing_accounts
 
 class UserImporterLdap(UserImporter):
 
+    """This UserImporter is a bit tricky since it also has to calculate start
+       and end datetime of users' Accounts. For this purpose, the load() method
+       must first get all user accounts that are currently defined w/o end
+       datetime in database to find out if they have disapeared or not in LDAP
+       directory. If yes, update the account end datetime with todays date.
+    """
     def __init__(self, app, db, config, cluster):
 
         super(UserImporterLdap, self).__init__(app, db, config, cluster)
 
-        ldap_section = self.cluster.name + "/ldap"
+        ldap_section = self.cluster.name + '/ldap'
 
-        self._ldapurl = config.get(ldap_section,"url")
-        self._ldapbase = config.get(ldap_section,"basedn")
-        self._ldapdn = config.get(ldap_section,"dn")
-        self._ldaphash = config.get(ldap_section,"phash")
-        self._auth_cert = config.get(ldap_section, "auth_cert")
-        self._ldapcert = config.get(ldap_section, "cert")
-        self._ldapgroup = config.get(ldap_section, "group")
-       
-        seld.ldap_attr_name = config.get_default(ldap_section,
-                                                 'attr_name',
-                                                 'cn')
-        self.ldap_attr_member = config.get_default(ldap_section,
-                                                   'attr_member',
-                                                   'memberUid')
-        self.ldap_attr_department = config.get_default(ldap_section,
-                                                       'attr_department',
-                                                       'department')
+        self._ldapurl = config.get(ldap_section, 'url')
+        self._ldapbase = config.get(ldap_section, 'basedn')
+        self._ldapdn = config.get(ldap_section, 'dn')
+        self._ldaphash = config.get(ldap_section, 'phash')
+        self.ldap_password = base64.b64decode(decypher(base64.b64decode(self._ldaphash)))
+        self._ldapcert = config.get_default(ldap_section, 'cert', None)
+        self._ldapgroup = config.get(ldap_section, 'group')
         self.ldap_rdn_people = config.get_default(ldap_section,
                                                   'rdn_people',
                                                   'ou=people')
@@ -70,181 +69,260 @@ class UserImporterLdap(UserImporter):
 
         self.ldap_dn_groups = self.ldap_rdn_people + ',' + self._ldapbase
         self.ldap_dn_people = self.ldap_rdn_groups + ',' + self._ldapbase
+        self.group_dpt_search = config.get(ldap_section, 'group_dpt_search')
+        self.group_dpt_regexp = config.get(ldap_section, 'group_dpt_regexp')
 
-        try:            
+        self.users_acct_ldap = None
+        self.users_acct_db = None
+
+        self.ldap_conn = None
+
+    def load(self):
+        """Load (User,Account) tuples from both LDAP directoy and DB."""
+
+        self.load_ldap()
+        self.load_db()
+
+    def load_ldap(self):
+        """Load (User,Account) tuples from LDAP directory."""
+
+        self.users_acct_ldap = []
+
+        if self._ldapcert is not None:
             ldap.set_option(ldap.OPT_X_TLS_CACERTFILE, self._ldapcert)
-            self._ldapconn = ldap.initialize(self._ldapurl)
-            self._ldapconn.simple_bind(self._ldapdn, base64.b64decode(self.decypher(base64.b64decode(self._ldaphash))))
-        except ldap.SERVER_DOWN as e:
-            logging.error("connection to LDAP failed: %s", e)
-            raise RuntimeError
+        try:
+            self.ldap_conn = ldap.initialize(self._ldapurl)
+            self.ldap_conn.simple_bind(self._ldapdn, self.ldap_password)
+        except ldap.SERVER_DOWN, err:
+            raise HPCStatsSourceError( \
+                    "unable to connect to LDAP server: %s" % (err))
 
-    def create_user_from_db(self, db_user):
-        user = User( name = db_user[0],
-            login = db_user[1],
-            cluster_name = db_user[2],
-            department = db_user[3],
-            uid = db_user[6],
-            gid = db_user[7],
-            creation_date = db_user[4],
-            deletion_date = db_user[5])
-        return user
+        self.users_acct_ldap = self.get_group_members(self._ldapgroup)
 
-    def get_all_users_from_db(self, db):
-        users_from_db = []
-        cur = db.cur
-        cur.execute("SELECT * FROM users WHERE cluster = %s",
-            (self.cluster.name,) )
-        results = cur.fetchall()
-        for user in results:
-            users_from_db.append(self.create_user_from_db(user))
-        return users_from_db
-     
-        
-    def get_members_from_group(self, group):
-            return self._ldapconn.search_s(self.ldap_dn_groups,
+    def get_group_members(self, group):
+        """Return the list of (Users,Account) tuples members of a group in LDAP
+           directory.
+        """
+
+        search = "(&(objectclass=posixGroup)(cn=" + group + "))"
+        logging.debug("search in: %s %s", self.ldap_dn_groups, search)
+
+        members = self.ldap_conn.search_s(self.ldap_dn_groups,
+                                          ldap.SCOPE_SUBTREE,
+                                          search,
+                                          [ 'member', 'memberUid' ])
+        # Structure of members is a list of tuples whose 1st member is a
+        # string dn and 2nd member is a dict with all attributes for this dn.
+        #
+        # Here is an example:
+        # [ (dn1, {'attr1': 'val1', 'attr2': 'val2' }),
+        #   (dn2, {'attr1': 'val3', 'attr2': 'val4' }) ]
+        #
+        # Uncomment the following line to see content of members in debug
+        # mode:
+        #logging.debug("members: %s", members)
+        #
+        # There should be only one result for the group search. Check this
+        # or raise HPCStatsSourceError.
+
+        nb_results = len(members)
+        if nb_results == 0:
+            raise HPCStatsSourceError( \
+                    "no result found for group %s in base %s",
+                    group, self.ldap_dn_groups)
+        if nb_results > 1:
+            raise HPCStatsSourceError( \
+                    "too much results (%d) found for group %s in base %s",
+                    nb_results, group, self.ldap_dn_groups)
+
+        # Then the goal is to extract the list of user logins out of search
+        # result.
+        #
+        # Groups members could be represented using 2 different attributes in
+        # LDAP directories:
+        #
+        #  - member: the value is a dn
+        #  - memberUid: the value is just the login of the POSIX user
+        #
+        # We have to handle both cases properly here.
+
+        logins = None
+        # get attributes of 1st search result, the only one to consider
+        first_res_attr = members[0][1]
+        if first_res_attr.has_key('member'):
+            # Extract the logins out of a list of dn strings and append it to
+            # logins. Here is an example:
+            # [ 'uid=foo,ou=people,dc=company,dc=tld',
+            #   'uid=bar,ou=people,dc=company,dc=tld' ]
+            # -> [ 'foo', 'bar']
+            logins = [ member.split(',')[0].split('=')[1]
+                       for member in first_res_attr['member'] ]
+        if first_res_attr.has_key('memberUid'):
+            logins = first_res_attr['memberUid']
+
+        # Uncomment the following line to see content of logins in debug
+        # mode:
+        #logging.debug("logins: %s", logins)
+
+        members = [ self.get_user_account_from_login(login)
+                    for login in logins ]
+        return members
+
+    def get_user_account_from_login(self, login):
+        """Returns (User,Account) objects tuple with information found in LDAP
+           for the login in parameter.
+        """
+
+        def_keys = [ "uid", "uidNumber", "gidNumber",
+                     "sn", "createTimestamp", "givenName" ]
+
+        userdn = "uid=%s,%s" % (login, self.ldap_dn_people)
+        search = "uid=%s" % (login)
+
+        logging.debug("search in: %s %s", self.ldap_dn_people, search)
+        user_res = self.ldap_conn.search_s(self.ldap_dn_people,
                                            ldap.SCOPE_SUBTREE,
-                                           "(&(objectclass=posixGroup)(cn=" + group + "))",
-                                           [self.ldap_attr_member])
-    
-    def get_user_from_id(self, uid):
+                                           search)
 
-        def_keys = ["uid","uidNumber","gidNumber","sn","createTimestamp", "givenName","departmentNumber"]
-        def_ldapuser = str(uid) + "," + self._ldappeople
-        # get ldap user info attribut defined by def_keys
-        self._ldap_users_info = self._ldapconn.search_s(self.ldap_dn_people, \
-                                                       ldap.SCOPE_SUBTREE,
-                                                       "uid=" + str(uid),\
-                                                       def_keys)
-        # get secondary group of the user to define departement values
-        secondary_group = self._ldapconn.search_s(self.ldap_dn_groups,\
-                                                  ldap.SCOPE_SUBTREE, \
-                                                  "(&(" + self.ldap_attr_member + "=" + def_ldapuser + ")(cn=*dp*))",
-                                                  ["isMemberOf"])
-        if len(secondary_group) is 1:
-            match = re.match(r"cn=(.+)-dp-(.+),ou(.+)",secondary_group[-1][0]).groups()
-            direction = match[0]
-            group = match[1]
-            match_department = direction + '-' + group
+        # Structure of user_res is a list of tuples whose 1st member is a
+        # string dn and 2nd member is a dict with all attributes for this dn.
+        #
+        # Here is an example:
+        # [ (dn1, {'attr1': 'val1', 'attr2': 'val2' }),
+        #   (dn2, {'attr1': 'val3', 'attr2': 'val4' }) ]
+        #
+        # Uncomment the following line to see content of members in debug
+        # mode:
+        #logging.debug("user_res: %s", user_res)
+        #
+        # There should be only one result for the group search. Check this
+        # or raise HPCStatsSourceError.
+
+        nb_results = len(user_res)
+        if nb_results == 0:
+            raise HPCStatsSourceError( \
+                    "no result found for user %s in base %s",
+                    login, self.ldap_dn_people)
+        if nb_results > 1:
+            raise HPCStatsSourceError( \
+                    "too much results (%d) found for user %s in base %s",
+                    nb_results, login, self.ldap_dn_people)
+
+        # Then extract information from attributes of 1st result
+
+        user_attr = user_res[0][1]
+
+        firstname_attr = 'givenName'
+        # Firstname is optional, set to None (with warning) if not found.
+        if user_attr.has_key(firstname_attr):
+            firstname = user_attr[firstname_attr][0]
         else:
-            match_department = "OMITTED"
-        if len(self._ldap_users_info) > 0:
-            self._ldap_users_info[0][1][self.ldap_attr_department] = [match_department]
-        return self._ldap_users_info
+            firstname = None
+            logging.warning("dn %s does not have %s attribute on %s",
+                            userdn, firstname_attr, self._ldapurl)
 
-    def get_all_users(self):
+        lastname = user_attr['sn'][0]
+        uid = int(user_attr['uidNumber'][0])
+        gid = int(user_attr['gidNumber'][0])
 
-        users = []
-        self._members = self.get_members_from_group(self._ldapgroup)
-        logging.info("list of uidMembers : %s" % (self._members))
-        for item in self._members:
-            logging.info("item0 => %s :" % (item[0]))
+        department = self.get_user_department(user, login)
 
-            if item[1] != {}:
-                logging.info("item1 => %s \n" % (' '.join(item[1][self.ldap_attr_member])))
+        user = User(login, firstname, lastname, department):
+        account = Account(user, self.cluster, uid, gid, None, None):
+        return (user, account)
 
-                for member in item[1][self.ldap_attr_member]:
-                    if "=" in member:
-                        member_login = member.split(",")[0].split("=")[1]
-                    else:
-                        member_login = member
-                    user_info = self.get_user_from_id(member.split(",")[0].split("=")[1])
-                    if len(user_info) >= 1:
-                        lu = user_info[0][1]
-                        for clef, valeur in user_info[0][1].items():
-                           logging.info("%s : %s" % (clef, valeur[0]))
+    def get_user_department(self, userdn, login):
+        """Search for user department based on its groups membership."""
 
-                        def_name = lu[self.ldap_attr_name][0]
+        # Then search users groups in LDAP
+        search = "(&(|(member=%s)(memberUid=%s))(cn=%s))" \
+                   % (userdn, login, self.group_dpt_search)
+        logging.debug("search in: %s %s", self.ldap_dn_groups, search)
+        user_groups = self.ldap_conn.search_s(self.ldap_dn_groups,
+                                              ldap.SCOPE_SUBTREE,
+                                              search,
+                                              ["isMemberOf"])
 
-                        createTimestamp = lu["createTimestamp"][0]
-                        logging.info("createTimestamp => %s" % (createTimestamp))
-                        if self.ldap_attr_department in lu.keys():
-                            _department = lu[self.ldap_attr_department][0]
-                        else:
-                            _department = "OMITTED"
-                        user = User( name = def_name,
-                                    login = lu["uid"][0].lower(),
-                                    cluster_name = self.cluster.name,
-                                    uid = lu["uidNumber"][0],
-                                    gid = lu["gidNumber"][0],
-                                    department = _department,
-                                    creation_date = datetime.strptime(createTimestamp[:14], "%Y%m%d%H%M%S"))
-                        users.append(user)
-                    else:
-                        logging.debug("user %s not found in defined OU" % (member))
-        return users
+        # Structure of user_groups is a list of tuples whose 1st member is a
+        # string dn and 2nd member is a dict with all attributes for this dn.
+        #
+        # Here is an example:
+        # [ (dn1, {'attr1': 'val1', 'attr2': 'val2' }),
+        #   (dn2, {'attr1': 'val3', 'attr2': 'val4' }) ]
+        #
+        # Uncomment the following line to see content of members in debug
+        # mode:
+        #logging.debug("user_groups: %s", user_groups)
 
-    def update_users(self):
-        users = self.get_all_users()
-        users_db = self.get_all_users_from_db(self.db)
+        department = None
+        for user_group in user_groups:
+            group_name = user_group[0] # group name in dn on result
+            match = re.match(self.group_dpt_regexp, group_name)
+            if match:
+                m_groups = match.groups()
+                direction = m_groups[0]
+                subdirection = m_groups[1]
+                department = direction + '-' + subdirection
+                break
 
-        # scrutation of the db users table
-        for user in users_db:
-            boolean = False
-            user_from_ldap = self.get_user_from_id(user.get_login())
-            # verify if user still exist 
-            if not (user_from_ldap):
-                # update deletion date if necessary
-                if not user.get_deletion_date():
-                    logging.debug("updating deletion date for user : %s set from null to now", \
-                                   user.get_login())
-                    user.set_deletion_date(datetime.now())
-                    boolean = True
+        # if department not found, just print warning
+        if not department:
+            logging.warning("department not found for user %s (%s) on " \
+                            "cluster %s!", login, name, self.cluster.name)
+
+        return department
+
+    def load_db(self):
+        """Load (User,Account) tuples w/o account deletion date from DB."""
+
+        self.users_acct_db = load_unclosed_users_accounts(self.db,
+                                                          self.cluster)
+
+    def update(self):
+        """Update Users and Accounts in DB based on what has been loaded from
+           LDAP directory and current DB content.
+        """
+
+        new_date = get_default_new_date()
+        for user, account in self.users_acct_ldap:
+            if not user.find(self.db):
+                # the user nor the account do not exist, create them.
+                user.save(self.db)
+                account.creation_date = new_date
+                account.save(self.db)
             else:
-                # traite the case of user be back in the group
-                if user.get_deletion_date(): 
-                    logging.debug("updating deletion date for user : %s set from %s to null", \
-                                   user.get_login(), \
-                                   user.get_deletion_date())
-                    user.set_deletion_date(None)
-                    logging.debug("updating creation date for user : %s set from %s to now", \
-                                   user.get_login(), \
-                                   user.get_creation_date())
-                    user.set_creation_date(datetime.now())
-                    boolean = True
-                # update departement column if necesary
-                user_name = user_from_ldap[0][1][self.ldap_attr_name][0]
-                if self.ldap_attr_department in user_from_ldap[0][1].keys():
-                    user_department = user_from_ldap[0][1][self.ldap_attr_department][0]
+                # update user name, firstname and department
+                user.update(self.db)
+                # user already exists, check account
+                if not account.existing(self.db):
+                    account.creation_date = new_date
+                    account.save(self.db)
                 else:
-                    user_department = "OMITTED"
-                if user.get_department() != user_department:
-                    logging.debug("updating department for user %s set from %s to %s", \
-                                       user.get_login(), \
-                                       user.get_department(), \
-                                       user_department)
-                    user.set_department(user_department)
-                    boolean = True
-                # update name column if necesary
-                if user.get_name() != user_name: 
-                    logging.debug("updating name for user %s set from %s to %s", \
-                                   user.get_login(), \
-                                   user.get_name(), \
-                                   user_name)
-                    user.set_name(user_name)
-                    boolean = True
-            if boolean is True:
-                logging.debug("update user %s on cluster %s", \
-                               user.get_login(),
-                               self.cluster.name)
-                try :
-                    user.update(self.db)
-                except :
-                    logging.error("problem occured on user update")
+                    # user and account already exists. In this case, we have
+                    # to load the account to check its deletion date and get
+                    # its creation date. If its deletion date is not None, it
+                    # means the account has been re-opened. In this case, we
+                    # simply remove its deletion date.
+                    account.load(self.db)
+                    if account.deletion_date is not None
+                        account.deletion_date = None
+                        account.update(self.db)
 
-        #create users
-        for user in users: # scrutation of ldap list users
-            if not user.exists_in_db(self.db):
-                user.set_creation_date(datetime.now())
-                logging.debug("creating user %s", user)
-                user.save(self.db) 
+        users_ldap = [ user for user, account in self.users_acct_ldap ]
 
-    def decypher(self, s):
-        x = []
-        for i in xrange(len(s)):
-            j = ord(s[i])
-            if j >= 33 and j <= 126:
-                x.append(chr(33 + ((j + 14) % 94)))
-            else:
-                x.append(s[i])
-        return ''.join(x)
+        for user, account in self.users_acct_db:
+            if user not in users_ldap:
+                account.deletion_date = date.today()
+                account.update(self.db)
+
+    def get_default_new_date(self):
+        """Returns the date that is used as creation date for new accounts.
+           If there is no account for this cluster in DB yet, we consider this
+           is an import from scratch and the creation date is epoch. Else the
+           creation date is today.
+        """
+
+        if nb_existing_accounts(self.db, self.cluster) == 0:
+            return date(1970, 1, 1)
+        else:
+            return date.today()

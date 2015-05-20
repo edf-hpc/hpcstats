@@ -121,7 +121,8 @@ class HPCStatsImporter(HPCStatsApp):
         logging.info("updating users for cluster %s" % (cluster.name))
         try:
           self.users = UserImporterFactory().factory(self, db, config, cluster)
-          self.users.update_users()
+          self.users.load()
+          self.users.update()
           db.commit()
         except RuntimeError:
             logging.error("error occured on %s users update." % (cluster.name))
