@@ -106,6 +106,39 @@ class Account(object):
             self.exists = True
         return self.exists
 
+    def load(self, db):
+        """Load the Account based on the content of the DB and set objects
+           attributes accordingly. It calls existing() method if needed and
+           raises HPCStatsRuntimeError if the Account is not found in DB.
+        """
+
+        if self.exists is None: # not checked yet
+            self.existing(db)
+        if self.exists is False:
+            raise HPCStatsRuntimeError(
+                    "could not update load %s since not found in database" \
+                      % (str(self)))
+
+        req = """
+                SELECT account_uid,
+                       account_gid,
+                       account_creation,
+                       account_deletion
+                  FROM Account
+                 WHERE userhpc_id = %s
+                   AND cluster_id = %s
+              """
+        params = ( self.user.user_id,
+                   self.cluster.cluster_id )
+        cur = db.cur
+        cur.execute(req, params)
+        # We know here there is only one result thanks to existing() method
+        result = cur.fetchone()
+        self.uid = result[0]
+        self.gid = result[1]
+        self.creation_date = result[2]
+        self.deletion_date = result[3]
+
     def save(self, db):
         """Insert Account in database. It first makes sure that the Account
            does not already exist in database yet by calling Account.existing()
