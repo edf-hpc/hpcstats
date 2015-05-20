@@ -203,3 +203,16 @@ class Account(object):
         cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
+
+def nb_existing_accounts(db, cluster):
+    """Return the number of existing account for the cluster in DB."""
+
+    req = """
+            SELECT account_uid
+              FROM Account
+             WHERE cluster_id = %s
+          """
+    params = ( cluster.cluster_id, )
+    cur = db.cur
+    cur.execute(req, params)
+    return cur.rowcount
