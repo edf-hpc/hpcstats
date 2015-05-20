@@ -45,6 +45,7 @@ Account(
 from datetime import datetime
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
+from HPCStats.Model.User import User
 
 class Account(object):
 
@@ -203,6 +204,46 @@ class Account(object):
         cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
+
+def load_unclosed_users_accounts(db, cluster):
+    """Load (User,Account) tuples w/o account deletion date on cluster from
+       DB.
+    """
+
+    tuples = []
+    req = """
+            SELECT User.userhpc_id,
+                   userhpc_login,
+                   userhpc_name,
+                   userhpc_firstname,
+                   userhpc_departement,
+                   account_uid,
+                   account_gid,
+                   account_creation
+             FROM User,
+                  Account
+            WHERE Account.cluster_id = %s
+              AND Account.userhpc_id = User.userhpc_id
+              AND Account.account_deletion = NULL
+          """
+    params = ( cluster.cluster_id, )
+    db.cur.execute(req, params)
+    results = db.cur.fetchall()
+
+    for result in results:
+        user_id = result[0]
+        login = result[1]
+        lastname = result[2]
+        firstname = result[3]
+        department = result[4]
+        uid = result[5]
+        gid = result[6]
+        creation = result[7]
+        user = User(login, firstname, lastname, department, user_id=user_id)
+        account = Account(user, cluster, uid, gid, creation, None):
+        tuples.append((user, account))
+
+    return tuples
 
 def nb_existing_accounts(db, cluster):
     """Return the number of existing account for the cluster in DB."""
