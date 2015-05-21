@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
-from HPCStats.Importer.Usage.FSUsageImporterSSH import FSUsageImporterSSH
+from HPCStats.Importer.FSUsage.FSUsageImporterSSH import FSUsageImporterSSH
 
 class FSUsageImporterFactory(object):
 
@@ -36,10 +36,9 @@ class FSUsageImporterFactory(object):
         pass
 
     def factory(self, app, db, config, cluster):
-        #try:
-            config.items(cluster.name + "/usage")
-            #logging.info("Usage section exist on config file for cluster %s", cluster.name)
+        if config.get(cluster.name, "fsusage") == "ssh":
             return FSUsageImporterClusterSSH(app, db, config, cluster)
-        #except:
-            logging.error("Error on usage section or options on %s config file", cluster.name)
-
+        else:
+            logging.critical("TO BE CODED")
+            # Throw Exception
+        return None

@@ -46,7 +46,7 @@ class FSUsageImporterSSH(FSUsageImporter):
 
         super(FSUsageImporterSSH, self).__init__(app, db, config, cluster)
 
-        usage_section = self.cluster.name + "/usage"
+        usage_section = self.cluster.name + "/fsusage"
 
         self._fshost = config.get(usage_section,"host")
         self._fsname = config.get(usage_section,"name")
