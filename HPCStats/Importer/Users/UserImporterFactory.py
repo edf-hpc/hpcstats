@@ -37,9 +37,7 @@ class UserImporterFactory(object):
         pass
 
     def factory(self, app, db, config, cluster):
-        if config.get(cluster.name, "users") == "ldap+slurm":
-            return UserImporterLdapSlurm(app, db, config, cluster)
-        elif config.get(cluster.name, "users") == "ldap":
+        if config.get(cluster.name, "users") == "ldap":
             return UserImporterLdap(app, db, config, cluster)
         else:
             logging.critical("TO BE CODED")
