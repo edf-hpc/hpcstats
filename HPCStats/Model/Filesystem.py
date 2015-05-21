@@ -57,6 +57,11 @@ class Filesystem(object):
                    ( self.mountpoint,
                      self.cluster.name )
 
+    def __eq__(self, other):
+
+        return other.mountpoint == self.mountpoint and \
+               other.cluster == self.cluster
+
     def find(self, db):
         """Search the Filesystem in the database based on its mountpoint and
            cluster. If exactly one filesystem matches in database, set fs_id
