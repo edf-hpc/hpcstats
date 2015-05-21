@@ -41,6 +41,7 @@ fsusage(
 """
 
 import logging
+from datetime import datetime
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class FSUsage(object):
@@ -120,3 +121,22 @@ class FSUsage(object):
         cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
+
+
+def get_last_fsusage_datetime(db, cluster, fs):
+    """Get the datetime of the last fsusage for the fs in DB."""
+
+    req = """
+            SELECT MAX(fsusage_time) AS last_usage
+              FROM fsusage
+             WHERE cluster_id = %s
+               AND filesystem_id = %s
+          """
+    params = ( cluster.cluster_id,
+               fs.id )
+    cur = self.db.cur
+    cur.execute(req, params)
+    if cur.rowcount == 0:
+        return datetime(1970, 1, 1, 0, 0)
+    else:
+        return cur.fetchone()[0]
