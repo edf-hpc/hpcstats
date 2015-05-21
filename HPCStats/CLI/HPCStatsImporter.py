@@ -36,7 +36,7 @@ from HPCStats.Importer.Jobs.JobImporterFactory import JobImporterFactory
 from HPCStats.Importer.Users.UserImporterFactory import UserImporterFactory
 from HPCStats.Importer.Architectures.ArchitectureImporterFactory import ArchitectureImporterFactory
 from HPCStats.Importer.Events.EventImporterFactory import EventImporterFactory
-from HPCStats.Importer.Usage.UsageImporterFactory import UsageImporterFactory
+from HPCStats.Importer.FSUsage.FSUsageImporterFactory import FSUsageImporterFactory
 from HPCStats.Importer.MountPoint.MountPointImporterFactory import MountPointImporterFactory
 from HPCStats.Importer.Contexts.ContextImporterFactory import ContextImporterFactory
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory import BusinessCodeImporterFactory
@@ -144,7 +144,7 @@ class HPCStatsImporter(HPCStatsApp):
 
         logging.info("updating filesystem usage for cluster %s" % (cluster.name))
         try:
-            self.fsusage = UsageImporterFactory().factory(self, db, config, cluster)
+            self.fsusage = FSUsageImporterFactory().factory(self, db, config, cluster)
             db.commit()
         except RuntimeError:
             logging.error("error occured on %s filesystem usage update." % (cluster.name))

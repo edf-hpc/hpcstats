@@ -27,19 +27,29 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import logging
-from HPCStats.Importer.Usage.UsageImporterCluster import UsageImporterCluster
+from HPCStats.Importer.Importer import Importer
 
-class UsageImporterFactory(object):
+class FSUsageImporter(Importer):
 
-    def __init__(self):
-        pass
+    def __init__(self, app, db, config, cluster):
 
-    def factory(self, app, db, config, cluster):
-        #try:
-            config.items(cluster.name + "/usage")
-            #logging.info("Usage section exist on config file for cluster %s", cluster.name)
-            return UsageImporterCluster(app, db, config, cluster)
-        #except:
-            logging.error("Error on usage section or options on %s config file", cluster.name)
+        super(FSUsageImporter, self).__init__(app, db, config, cluster)
 
+    def get_last_home_usage_timestamp(self):
+        last_usage_timestamp = 0
+        req = """
+            SELECT MAX(id_usage) AS last_usage
+            FROM filesystem_usage, filesystem
+            WHERE filesystem_usage.fs_id=filesystem.id
+            AND filesystem.clustername = %s
+            AND filesystem.type = %s
+              ; """
+        datas = (self.cluster.name,
+                 self._fs_type,)
+        cur = self.db.cur
+        cur.execute(req, datas)
+        results = cur.fetchall()
+        for usage in results:
+            if last_home_usage_timestamp < usage[0]:
+                last_home_usage_timestamp = usage[0]
+        return last_home_usage_timestamp

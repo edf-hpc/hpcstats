@@ -36,15 +36,15 @@ import paramiko
 import errno
 import socket
 import csv
-from HPCStats.Importer.Usage.UsageImporter import UsageImporter
+from HPCStats.Importer.FSUsage.FSUsageImporter import FSUsageImporter
 from HPCStats.Model.Filesystem import Filesystem
 from HPCStats.Model.FSUsage import FSUsage
 
-class UsageImporterCluster(UsageImporter):
+class FSUsageImporterSSH(FSUsageImporter):
 
     def __init__(self, app, db, config, cluster):
 
-        super(UsageImporter, self).__init__(app, db, config, cluster)
+        super(FSUsageImporterSSH, self).__init__(app, db, config, cluster)
 
         usage_section = self.cluster.name + "/usage"
 
