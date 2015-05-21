@@ -227,8 +227,8 @@ class UserImporterLdap(UserImporter):
 
         department = self.get_user_department(user, login)
 
-        user = User(login, firstname, lastname, department):
-        account = Account(user, self.cluster, uid, gid, None, None):
+        user = User(login, firstname, lastname, department)
+        account = Account(user, self.cluster, uid, gid, None, None)
         return (user, account)
 
     def get_user_department(self, userdn, login):
@@ -304,7 +304,7 @@ class UserImporterLdap(UserImporter):
                     # means the account has been re-opened. In this case, we
                     # simply remove its deletion date.
                     account.load(self.db)
-                    if account.deletion_date is not None
+                    if account.deletion_date is not None:
                         account.deletion_date = None
                         account.update(self.db)
 

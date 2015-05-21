@@ -240,7 +240,7 @@ def load_unclosed_users_accounts(db, cluster):
         gid = result[6]
         creation = result[7]
         user = User(login, firstname, lastname, department, user_id=user_id)
-        account = Account(user, cluster, uid, gid, creation, None):
+        account = Account(user, cluster, uid, gid, creation, None)
         tuples.append((user, account))
 
     return tuples
