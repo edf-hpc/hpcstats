@@ -37,7 +37,6 @@ from HPCStats.Importer.Users.UserImporterFactory import UserImporterFactory
 from HPCStats.Importer.Architectures.ArchitectureImporterFactory import ArchitectureImporterFactory
 from HPCStats.Importer.Events.EventImporterFactory import EventImporterFactory
 from HPCStats.Importer.FSUsage.FSUsageImporterFactory import FSUsageImporterFactory
-from HPCStats.Importer.MountPoint.MountPointImporterFactory import MountPointImporterFactory
 from HPCStats.Importer.Contexts.ContextImporterFactory import ContextImporterFactory
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory import BusinessCodeImporterFactory
 from HPCStats.Importer.Projects.ProjectImporterFactory import ProjectImporterFactory
@@ -132,15 +131,6 @@ class HPCStatsImporter(HPCStatsApp):
             self.context = ContextImporterFactory().factory(self, db, config, cluster)
         except RuntimeError:
             logging.error("error occured on %s context update." % (cluster.name))
-
-        logging.info("updating mounted filesystem for cluster %s" % (cluster.name))
-        try:
-            self.mounts = MountPointImporterFactory().factory(self, db, config, cluster)
-            if self.mounts:
-                self.mounts.update_mount_point()
-                db.commit()
-        except RuntimeError:
-            logging.error("error occured on %s mounted filesystem update." (cluster.name))
 
         logging.info("updating filesystem usage for cluster %s" % (cluster.name))
         try:
