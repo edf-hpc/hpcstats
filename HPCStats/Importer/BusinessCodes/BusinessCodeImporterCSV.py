@@ -44,8 +44,6 @@ class BusinessCodeImporterCSV(BusinessCodeImporter):
         business_section = "business"
         self._business_file = config.get(business_section, "file")
 
-        self.businesses = None
-
     def load(self):
         """Load BusinessCodes from CSV files in businesses attribute. Raise
            HPCStatsSourceError if error in encountered.

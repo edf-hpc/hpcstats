@@ -34,3 +34,15 @@ class BusinessCodeImporter(Importer):
     def __init__(self, app, db, config, cluster):
 
         super(BusinessCodeImporter, self).__init__(app, db, config, cluster)
+
+        self.businesses = None
+
+    def find(self, search):
+        """Search for a Business over the list of Businesses loaded by importer
+           in self.businesses attribute. Returns None if not found.
+        """
+
+        for business in self.businesses:
+            if business == search:
+                return business
+        return None
