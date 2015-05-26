@@ -35,3 +35,37 @@ class ProjectImporter(Importer):
 
         super(ProjectImporter, self).__init__(app, db, config, None)
 
+        self.domains = None
+        self.sectors = None
+        self.projects = None
+
+    def find_project(self, search):
+        """Search for a Project over the list of Projects loaded by importer
+           in self.projects attribute. Returns None if not found.
+        """
+
+        for project in self.projects:
+            if project == search:
+                return project
+        return None
+
+    def find_domain(self, search):
+        """Search for a Domain over the list of Domains loaded by importer
+           in self.domains attribute. Returns None if not found.
+        """
+
+        for domain in self.domains:
+            if domain == search:
+                return domain
+        return None
+
+    def find_sector(self, search):
+        """Search for a Sector over the list of Sectors loaded by importer
+           in self.sectors attribute. Returns None if not found.
+        """
+
+        for sector in self.sectors:
+            if sector == search:
+                return sector
+        return None
+

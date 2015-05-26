@@ -75,38 +75,6 @@ class ProjectImporterCSV(ProjectImporter):
         projects_section = "projects"
         self.csv_file = config.get(projects_section, "file")
 
-        self.domains = None
-        self.sectors = None
-        self.projects = None
-
-    def find_project(self, code):
-        """Find a Project with same code among the list of domains in
-           attributes.
-        """
-
-        for project in self.projects:
-            if project.code == code:
-                return project
-        return None
-
-    def find_domain(self, domain):
-        """Find a Domain among the list of domains in attributes.
-        """
-
-        for xdomain in self.domains:
-            if xdomain == domain:
-                return xdomain
-        return None
-
-    def find_sector(self, sector):
-        """Find a Sector among the list of sectors in attributes.
-        """
-
-        for xsector in self.sectors:
-            if xsector == sector:
-                return xsector
-        return None
-
     def load(self):
         """Open CSV file and load project out of it.
            Raises Exceptions if error is found in the file.
@@ -132,12 +100,6 @@ class ProjectImporterCSV(ProjectImporter):
 
                 project_code = row[0]
                 project_name = row[1]
-
-                # check for duplicate project and raise error if found
-                if self.find_project(project_code):
-                    raise HPCStatsSourceError( \
-                              "duplicated project code %s in CSV file" \
-                                  % (project_code))
 
                 # domains
                 domain_str = row[2]
@@ -201,15 +163,17 @@ class ProjectImporterCSV(ProjectImporter):
                     sector = new_sector
                     self.sectors.append(sector)
 
-                # update Project table with first and seconds columns of the
-                # file because of constrains of database, it is impossible to
-                # add project with domain reference and no sector reference.
-                # Need both or any.in case of domain reference exist but sector
-                # referance doesn't exist, None value is set for both (see
-                # first if condition).
+                # Create the Project and search for it among the already
+                # existing ones. If found, raise HPCStatsSourceError
                 project = Project(sector=sector,
                                   code=project_code,
                                   description=project_name)
+                # check for duplicate project and raise error if found
+                if self.find_project(project):
+                    raise HPCStatsSourceError( \
+                              "duplicated project code %s in CSV file" \
+                                  % (project_code))
+
                 self.projects.append(project)
 
         return self.projects
