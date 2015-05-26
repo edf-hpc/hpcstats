@@ -60,10 +60,14 @@ class Project(object):
            sector = "unknown"
         else:
            sector = self.sector
-        return "sector %s [%s]: %s" \
+        return "project %s [%s]: %s" \
                  % (self.code,
                     self.sector.key,
                     self.description)
+
+    def __eq__(self, other):
+
+        return other.code == self.code
 
     def find(self, db):
         """Search the Project in the database based on its code. If exactly
