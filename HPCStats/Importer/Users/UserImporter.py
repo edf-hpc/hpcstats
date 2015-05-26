@@ -34,26 +34,3 @@ class UserImporter(Importer):
     def __init__(self, app, db, config, cluster):
 
         super(UserImporter, self).__init__(app, db, config, cluster)
-
-    def _get_unknown_users(self, db):
-        req = """
-            SELECT distinct(uid)
-              FROM jobs
-             WHERE clustername = %s
-               AND uid NOT IN (SELECT uid FROM users WHERE users.cluster = %s); """
-        datas = (self.cluster.name, self.cluster.name)
-
-        cur = db.cur
-        #print cur.mogrify(req, datas)
-        cur.execute(req, datas)
-
-        unknown_users = []
-
-        while (1):
-
-            row = cur.fetchone()
-            if row == None: break
-            uid = int(row[0])
-            unknown_users.append(uid)
-
-        return unknown_users;
