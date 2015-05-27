@@ -83,6 +83,17 @@ class UserImporterLdap(UserImporter):
         self.load_ldap()
         self.load_db()
 
+        # merge everying into self.users and self.accounts attributes
+
+        for user, account in self.users_acct_ldap:
+            self.accounts.append(account)
+            self.users.append(user)
+
+        for user, account in self.users_acct_db:
+            if user not in self.users:
+                self.users.append(user)
+                self.accounts.append(account)
+
     def load_ldap(self):
         """Load (User,Account) tuples from LDAP directory."""
 

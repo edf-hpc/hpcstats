@@ -34,3 +34,26 @@ class UserImporter(Importer):
     def __init__(self, app, db, config, cluster):
 
         super(UserImporter, self).__init__(app, db, config, cluster)
+
+        self.users = None
+        self.accounts = None
+
+    def find_user(self, search):
+        """Search for a User over the list of Users loaded by importer
+           in self.users attribute. Returns None if not found.
+        """
+
+        for user in self.users:
+            if user == search:
+                return user
+        return None
+
+    def find_account(self, search):
+        """Search for an Account over the list of Accounts loaded by importer
+           in self.accounts attribute. Returns None if not found.
+        """
+
+        for account in self.accounts:
+            if account == search:
+                return account
+        return None
