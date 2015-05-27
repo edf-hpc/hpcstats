@@ -27,12 +27,6 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-from HPCStats.Importer.Contexts.ContextImporter import ContextImporter
-from HPCStats.Model.Domain import Domain
-from HPCStats.Model.Sector import Sector
-from HPCStats.Model.Project import Project
-from HPCStats.Model.Business import Business
-from HPCStats.Model.ContextAccount import ContextAccount
 import ConfigParser
 import os
 import logging
@@ -41,6 +35,13 @@ import psycopg2
 import codecs
 import re
 import string
+from HPCStats.Exceptions import *
+from HPCStats.Importer.Contexts.ContextImporter import ContextImporter
+from HPCStats.Model.Domain import Domain
+from HPCStats.Model.Sector import Sector
+from HPCStats.Model.Project import Project
+from HPCStats.Model.Business import Business
+from HPCStats.Model.ContextAccount import ContextAccount
 
 class ContextImporterCSV(ContextImporter):
 
@@ -48,85 +49,112 @@ class ContextImporterCSV(ContextImporter):
 
         super(ContextImporterCSV, self).__init__(app, db, config, cluster)
 
-        context_section = self.cluster.name + "/context"
-        self._context_file = config.get(context_section, "file")
+        section = self.cluster.name + "/context"
+        self.ctx_fpath = config.get(section, "file")
+
+        self.contexts = None # loaded contexts
+
+    def load(self):
+        """Load the ContextAccounts from a CSV file.
+           The CSV file must be formatted like the following:
+
+           <login>;<firstname>;<lastname>;<department>;<date>;<date>; \
+           <projects_list>;<businesses_list>
+
+           Columns numbers are:
+           0       1           2          3            4      5      \
+           6               7
+
+           The project codes and business codes in the lists are separated by
+           '|' character.
+
+           The importer does not actually care about columns 1-5. They were
+           present in original file so we have to deal with them.
+        """
+
+        self.contexts = []
 
         if not os.path.isfile(self._context_file):
-            logging.error("context file %s does not exist", self._context_file)
-            raise RuntimeError
+            raise HPCStatsSourceError( \
+                    "CSV context file %s does not exist" % (self.ctx_fpath))
 
-        # delete all contexts entries in databases for cluster
-        logging.debug("Delete all context entries in db for cluster %s", self.cluster.name)
-        delete_contexts(self.db, self.cluster.name)
-        self.db.commit()
+        with open(self.ctx_fpath, 'r') as csvfile:
 
-        p_file = open(self._context_file, 'r')
-        # save point is used to considere exception and commit in database only at the end
-        db.cur.execute("SAVEPOINT my_savepoint;")
-        with p_file as csvfile:
-            file_reader = csv.reader(csvfile, delimiter=';', quotechar='|')
-            for row in file_reader:
-                # Delete BOM
-                 if '\xef\xbb\xbf' in row [0]:
-                     row[0] = row[0].replace('\xef\xbb\xbf','')
-                 logging.debug("update projects and business codes for user : %s", row[0].lower())
-                 # a new context is set in database for all projects attached AND for all business attached.
-                 # new line is set with a project referance OR a business referance.
-                 if row[6]:
-                     for project_name in re.split('\|',row[6]):
-                         project = Project()
-                         try:
-                             project.project_from_name(self.db, project_name)
-                             context = Context(login = row[0].lower(),
-                                               job = None,
-                                               project = project.get_id(),
-                                               business = None,
-                                               cluster = self.cluster.name)
-                             try:
-                                 context.save(self.db)
-                                 logging.debug("add context : %s", context)
-                                 #self.db.commit()
-                                 db.cur.execute("SAVEPOINT my_savepoint;")
-                             except psycopg2.DataError:
-                                 logging.error("impossible to add CONTEXT entry in database : (%s), du to encoding error", row)
-                                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                                 pass
-                             except psycopg2.IntegrityError:
-                                 logging.error("impossible to add CONTEXT entry in database : (%s), du to relations error", row)
-                                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                                 pass
-                         except:
-                             logging.error("context rejected. Project %s does not exist", project_name)
-                             db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                             pass
-                 if row[7]:
-                     for code in re.split('\|',row[7]):
-                         business = Business()
-                         try:
-                             business.business_from_key(self.db, code)
-                             context = Context(login = row[0].lower(),
-                                               job = None,
-                                               project = None,
-                                               business = business.get_id(),
-                                               cluster = self.cluster.name)
-                             try:
-                                 context.save(self.db)
-                                 logging.debug("add context : %s", context)
-                                 #self.db.commit()
-                                 db.cur.execute("SAVEPOINT my_savepoint;")
-                             except psycopg2.DataError:
-                                 logging.error("impossible to add CONTEXT entry in database : (%s), du to encoding error", row)
-                                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                                 pass
-                             except psycopg2.IntegrityError:
-                                 logging.error("impossible to add CONTEXT entry in database : (%s), du to relations error", row)
-                                 db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                                 pass
-                         except:
-                             logging.error("context rejected. Business %s does not exist", code)
-                             db.cur.execute("ROLLBACK TO SAVEPOINT my_savepoint;")
-                             pass
-                 if not row[6] and not row[7]:
-                     logging.error("line : %s rejected - not code or project associate", row)
+            csvreader = csv.reader(csvfile, delimiter=';')
+            for row in csvreader:
+
+                if len(row) != 8:
+                    raise HPCStatsSourceError( \
+                            "context line format in CSV is invalid")
+
+                login = row[0]
+                projects_s = row[6]
+                businesses_s = row[7]
+
+                if len(login) == 0:
+                    raise HPCStatsSourceError( \
+                            "login CSV is empty")
+
+                if len(projects_s) == 0:
+                    raise HPCStatsSourceError( \
+                            "projects list in CSV is empty")
+
+                if len(businesses_s) == 0:
+                    raise HPCStatsSourceError( \
+                            "business codes list in CSV is empty")
+
+                projects = project_s.split('|')
+                businesses = businesses_s.split('|')
+
+                searched_user = User(login, None, None, None)
+                searched_account = Account(searched_user, self.cluster, None, None, None, None)
+                account = self.app.users.find_account(searched_account)
+
+                if account is None:
+                    raise HPCStatsSourceError( \
+                            "account for login %s on cluster %s not found " \
+                            "in loaded accounts" \
+                              % (login, self.cluster.name) )
+
+                for project_code in projects:
+
+                    if len(project_code) == 0:
+                        raise HPCStatsSourceError( \
+                                "empty project code in list %s from" \
+                                  % (projects_s) )
+
+                    searched_project = Project(None, project_code, None)
+                    project = self.app.projects.find_project(searched_project)
+
+                    if project is None:
+                        raise HPCStatsSourceError( \
+                                "project code %s not found in loaded " \
+                                "projects" \
+                                  % (project_code) )
+
+                    for business_code in businesses:
+
+                        if len(business_code) == 0:
+                            raise HPCStatsSourceError( \
+                                    "empty business code in list %s from CSV" \
+                                      % (business_s) )
+
+                        searched_business = Business(business_code, None)
+                        business = self.app.business.find(searched_business)
+
+                        if business is None:
+                            raise HPCStatsSourceError( \
+                                    "business code %s not found in loaded " \
+                                    "business codes" \
+                                      % (business_code) )
+
+                        context = ContextAccount(account, business, project)
+                        self.contexts.append(context)
+
+    def update(self):
+        """Update loaded ContextAccounts in DB."""
+
+        for context in self.contexts:
+            if not context.existing(self.db):
+                context.save(self.db)
         self.db.commit()
-        p_file.close()
