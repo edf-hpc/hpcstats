@@ -39,7 +39,7 @@ from HPCStats.Model.Sector import Sector
 from HPCStats.Model.Project import Project
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Mocks.Utils import mock_open
-import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for REQS
+import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
 from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 
@@ -309,7 +309,7 @@ class TestsProjectImporterCSVUpdate(HPCStatsTestCase):
     def test_update(self):
         """ProjectImporterCSV.update() works with simple data
         """
-        MockPg2.REQS = {
+        MockPg2.PG_REQS = {
           #"exist_domain_dom1": {
           #  "req": "SELECT domain_id FROM Domain WHERE domain_id = %s",
           #  "res": [],

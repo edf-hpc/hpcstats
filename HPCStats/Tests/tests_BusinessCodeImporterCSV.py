@@ -38,7 +38,7 @@ from HPCStats.Model.Cluster import Cluster
 from HPCStats.Model.Business import Business
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Mocks.Utils import mock_open
-import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for REQS
+import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
 from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 
@@ -189,7 +189,7 @@ class TestsBusinessCodeImporterCSVUpdate(HPCStatsTestCase):
     def test_update_not_exists(self):
         """ProjectImporterCSV.update() works when business code does not exist
         """
-        MockPg2.REQS = { }
+        MockPg2.PG_REQS = { }
         business1 = Business('code1', 'business description 1')
         self.importer.businesses = [ business1 ]
         self.importer.update()
@@ -199,7 +199,7 @@ class TestsBusinessCodeImporterCSVUpdate(HPCStatsTestCase):
         """ProjectImporterCSV.update() call Business.save() when business code
            does not exist
         """
-        MockPg2.REQS = { }
+        MockPg2.PG_REQS = { }
         business1 = Business('code1', 'business description 1')
         self.importer.businesses = [ business1 ]
         self.importer.update()
@@ -208,7 +208,7 @@ class TestsBusinessCodeImporterCSVUpdate(HPCStatsTestCase):
     def test_update_exists(self):
         """ProjectImporterCSV.update() works when business code exists
         """
-        MockPg2.REQS = {
+        MockPg2.PG_REQS = {
           "existing_business_code1": {
             "req": "SELECT business_code " \
                    "FROM Business "\
@@ -225,7 +225,7 @@ class TestsBusinessCodeImporterCSVUpdate(HPCStatsTestCase):
         """ProjectImporterCSV.update() call Business.update() when business
            code exists
         """
-        MockPg2.REQS = {
+        MockPg2.PG_REQS = {
           "existing_business_code1": {
             "req": "SELECT business_code " \
                    "FROM Business "\

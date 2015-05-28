@@ -39,7 +39,7 @@ from HPCStats.Model.Cluster import Cluster
 from HPCStats.Model.Node import Node
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Mocks.Utils import mock_open
-import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for REQS
+import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
 from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 
@@ -201,7 +201,7 @@ class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
     def test_update(self):
         """ProjectImporterCSV.update() creates cluster and node if not existing
         """
-        MockPg2.REQS = {
+        MockPg2.PG_REQS = {
           "save_cluster_cluster1": {
             "req": "INSERT INTO Cluster \( cluster_name \) " \
                    "VALUES \( %s \) "\
@@ -230,7 +230,7 @@ class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
     def test_update_2(self):
         """ProjectImporterCSV.update() detect existing cluster and node
         """
-        MockPg2.REQS = {
+        MockPg2.PG_REQS = {
           "find_cluster_cluster1": {
             "req": "SELECT cluster_id " \
                    "FROM Cluster " \

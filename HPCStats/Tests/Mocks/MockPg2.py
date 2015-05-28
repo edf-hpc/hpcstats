@@ -31,7 +31,7 @@ import mock
 import re
 
 # must be defined by tests
-REQS = None
+PG_REQS = None
 
 class MockPsycopg2(object):
 
@@ -73,7 +73,7 @@ class MockPsycopg2Cursor(object):
         self.ref = None
         req = req.replace('\n','').strip()
         req_clean = re.sub(' +',' ',req)
-        for reqref, req in REQS.iteritems():
+        for reqref, req in PG_REQS.iteritems():
             print ("clean: %s, req: %s" % (req_clean, req))
             result = re.match(req['req'], req_clean)
             if result:
@@ -84,13 +84,13 @@ class MockPsycopg2Cursor(object):
 
     def fetchall(self):
         if self.ref is not None:
-            return REQS[self.ref]['res']
+            return PG_REQS[self.ref]['res']
         else:
             return []
 
     def fetchone(self):
         if self.ref is not None:
-            results = REQS[self.ref]['res']
+            results = PG_REQS[self.ref]['res']
             if len(results) > self.idx:
                 result = results[self.idx]
                 self.idx += 1
@@ -100,7 +100,7 @@ class MockPsycopg2Cursor(object):
     @property
     def rowcount(self):
         if self.ref is not None:
-            return len(REQS[self.ref]['res'])
+            return len(PG_REQS[self.ref]['res'])
         else:
             return 0
 
