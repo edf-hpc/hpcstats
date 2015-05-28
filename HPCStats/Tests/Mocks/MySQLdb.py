@@ -54,8 +54,11 @@ class MockMySQLdbCursor(object):
         req = req.replace('\n','').strip()
         req_clean = re.sub(' +',' ',req)
         for reqref, req in MY_REQS.iteritems():
+            print("clean: '%s'" % (req_clean))
+            print("req  : '%s'" % (req['req']))
             result = re.match(req['req'], req_clean)
             if result:
+                print ("match!")
                 self.ref = reqref
                 self.idx = 0
                 break
@@ -87,7 +90,7 @@ class MockMySQLdbConnect(object):
         self.port = port
         self._cursor = MockMySQLdbCursor()
 
-    def cursor(self, stuff):
+    def cursor(self, stuff=None):
 
         return self._cursor
 
