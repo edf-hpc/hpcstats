@@ -36,3 +36,17 @@ class ArchitectureImporter(Importer):
         super(ArchitectureImporter, self).__init__(app, db, config, None)
 
         self.cluster_name = cluster_name
+
+        self.cluster = None
+        self.nodes = None
+        self.partitions = None
+
+    def find_node(self, search):
+        """Search for a Node over the list of Nodes loaded by importer
+           in self.nodes attribute. Returns None if not found.
+        """
+
+        for node in self.nodes:
+            if node == search:
+                return node
+        return None

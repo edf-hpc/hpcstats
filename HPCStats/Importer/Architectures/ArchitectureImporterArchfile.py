@@ -48,10 +48,6 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
         self.archfile = config.get(archfile_section, "file")
         self.arch = None # ConfigParser object
 
-        self.cluster = None
-        self.nodes = None
-        self.partitions = None
-
     def update(self):
         """Create or update Cluster and Nodes in the database."""
 
