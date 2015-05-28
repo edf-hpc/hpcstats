@@ -31,6 +31,6 @@ from HPCStats.Tests.Mocks.ArchitectureImporter import MockArchitectureImporter
 
 class MockApp(object):
 
-    def __init__(self):
+    def __init__(self, db, config, cluster_name):
 
-        self.arch = MockArchitectureImporter()
+        self.arch = MockArchitectureImporter(self, db, config, cluster_name)

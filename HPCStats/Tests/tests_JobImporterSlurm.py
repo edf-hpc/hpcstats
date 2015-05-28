@@ -53,7 +53,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         self.db = 'testdb'
         self.conf = MockConf(CONFIG, 'testcluster')
         self.cluster = Cluster('testcluster')
-        self.app = MockApp()
+        self.app = MockApp(self.db, self.conf, self.cluster.name)
         MockMySQLdb.MY_REQS = {
           'get_assocs': {
             'req': "SELECT id_assoc, user " \
