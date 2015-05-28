@@ -70,6 +70,11 @@ class Node(object):
                      self.flops / float(1000**3),
                      self.memory / 1024**3 )
 
+    def __eq__(self, other):
+
+        return other.name == self.name and \
+               other.cluster == self.cluster
+
     def find(self, db):
         """Search the Node in the database based on its name and cluster. If
            exactly one node matches in database, set node_id attribute properly
