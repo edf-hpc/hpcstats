@@ -32,6 +32,7 @@ import mock
 from HPCStats.Model.Cluster import Cluster
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
+import HPCStats.Tests.Mocks.MySQLdb as MockMySQLdb # for MY_REQS
 from HPCStats.Tests.Mocks.MySQLdb import mock_mysqldb
 from HPCStats.Tests.Mocks.Conf import MockConf
 from HPCStats.Tests.Mocks.App import MockApp
@@ -53,6 +54,14 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         self.conf = MockConf(CONFIG, 'testcluster')
         self.cluster = Cluster('testcluster')
         self.app = MockApp()
+        MockMySQLdb.MY_REQS = {
+          'get_assocs': {
+            'req': "SELECT id_assoc, user " \
+                   "FROM .*_assoc_table " \
+                   "WHERE user != '';",
+            'res': [ { 'id_assoc': 1, 'user': 'toto' } ]
+          },
+        }
         self.importer = JobImporterSlurm(self.app,
                                          self.db,
                                          self.conf,

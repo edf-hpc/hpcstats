@@ -30,6 +30,8 @@
 import mock
 import re
 
+MY_REQS = None
+
 class MockMySQLdb(object):
 
     """Class with static methods to mock all used functions in MySQLdb module"""
@@ -44,11 +46,6 @@ class MockMySQLdb(object):
 
 class MockMySQLdbCursor(object):
 
-    req_references = { "get_assocs": "SELECT id_assoc, user FROM .*_assoc_table WHERE user != '';" }
-    req_results = {
-        "get_assocs": [ { 'id_assoc': 1, 'user': 'toto' } ]
-    }
-
     def __init__(self):
         pass
 
@@ -56,8 +53,8 @@ class MockMySQLdbCursor(object):
         self.ref = None
         req = req.replace('\n','').strip()
         req_clean = re.sub(' +',' ',req)
-        for reqref, reqpattern in MockMySQLdbCursor.req_references.iteritems():
-            result = re.match(reqpattern, req_clean)
+        for reqref, req in MY_REQS.iteritems():
+            result = re.match(req['req'], req_clean)
             if result:
                 self.ref = reqref
                 break
@@ -65,7 +62,7 @@ class MockMySQLdbCursor(object):
 
     def fetchall(self):
         if self.ref is not None:
-            return MockMySQLdbCursor.req_results[self.ref]
+            return MY_REQS[self.ref]['res']
         else:
             return []
 
