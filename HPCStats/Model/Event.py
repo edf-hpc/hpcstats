@@ -37,11 +37,10 @@ Event(
   event_nbCpu  integer NOT NULL,
   event_start  timestamp NOT NULL,
   event_end    timestamp NOT NULL,
-  node_name    character varying(30) NOT NULL,
-  cluster_name character varying(30) NOT NULL,
-  CONSTRAINT Event_pkey PRIMARY KEY (event_id, node_name, cluster_name)
-  CONSTRAINT FK_Event_node_name FOREIGN KEY (node_name, cluster_name)
-    REFERENCES Node(node_name, cluster_name);
+  node_id      integer NOT NULL,
+  cluster_id   integer NOT NULL,
+  CONSTRAINT Event_pkey PRIMARY KEY (event_id, node_id, cluster_id),
+  CONSTRAINT Event_unique UNIQUE (node_id, cluster_id, event_start)
 )
 
 """
@@ -86,25 +85,24 @@ class Event(object):
                self.reason == other.reason
 
     def find(self, db):
-        """Search the Event in the database based on the node name, the cluster
-           name and the start datetime. If exactly one event matches in
+        """Search the Event in the database based on the node, the cluster,
+           the start and the end datetime. If exactly one event matches in
            database, set event_id attribute properly and returns its value.
            If more than one event matches, raises HPCStatsDBIntegrityError.
            If no event is found, returns None.
         """
 
-        cur = db.cur
         req = """
                 SELECT Event.event_id
                   FROM Event
-                 WHERE Event.node_name = %s
-                   AND Event.cluster_name = %s
+                 WHERE Event.node_id = %s
+                   AND Event.cluster_id = %s
                    AND Event.event_start = %s
               """
-        params = ( self.node,
-                   self.cluster,
-                   self.start_datetime,
-                   self.end_datetime )
+        params = ( self.node.node_id,
+                   self.cluster.cluster_id,
+                   self.start_datetime )
+        cur = db.cur
         cur.execute(req, params)
         nb_events = cur.rowcount
         if nb_events == 0:
@@ -138,17 +136,18 @@ class Event(object):
 	cur = db.cur
         req = """
                 INSERT INTO Event (
-                              node_name,
-                              cluster_name,
+                              node_id,
+                              cluster_id,
                               event_type,
                               event_reason,
                               event_nbCpu,
                               event_start,
                               event_end )
                 VALUES ( %s, %s, %s, %s, %s, %s, %s)
+                RETURNING event_id
               """
-        params = ( self.node,
-                   self.cluster,
+        params = ( self.node.node_id,
+                   self.cluster.cluster_id,
                    self.nb_cpu,
                    self.event_type,
                    self.reason,
@@ -158,38 +157,11 @@ class Event(object):
         cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
+        self.event_id = cur.fetchone()[0]
     
-    def update_end_datetime(self, db):
-        """Update the end datetime of the Event. The event_id attribute must be
-           set for the Event, either by passing this id to __init__() or by
-           calling Event.find() method previously. If event_id attribute is
-           not set, it raises HPCStatsRuntimeError.
-        """
-
-        if self.event_id is None:
-            raise HPCStatsRuntimeError(
-                    "could not update event %s since not found in database" \
-                      % (str(self)))
-
-        req = """
-                UPDATE Event
-                   SET event_end = %s
-                 WHERE event_id = %s
-                   AND node_name = %s
-                   AND cluster_name = %s
-              """
-        params = ( self.end_datetime,
-                   self.event_id,
-                   self.node,
-                   self.cluster )
- 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
-
-    def update_reason(self, db):
-        """Update the reason of the Event. The event_id attribute must be set
-           for the Event, either by passing this id to __init__() or by calling
+    def update(self, db):
+        """Update the Event in DB. The event_id attribute must be set for the
+           Event, either by passing this id to __init__() or by calling
            Event.find() method previously. If event_id attribute is not set, it
            raises HPCStatsRuntimeError.
         """
@@ -201,17 +173,26 @@ class Event(object):
 
         req = """
                 UPDATE Event
-                   SET event_reason = %s
+                   SET event_end = %s,
+                       event_type = %s
+                       event_reason = %s,
+                       event_nbCpu = %s
+                       event_start = %s
+                       event_end = %s
                  WHERE event_id = %s
-                   AND node_name = %s
-                   AND cluster_name = %s
+                   AND node_id = %s
+                   AND cluster_id = %s
               """
-        params = (
-            self.reason,
-            self.event_id,
-            self.node,
-            self.cluster )
-
+        params = ( self.end_datetime,
+                   self.event_type,
+                   self.reason,
+                   self.nb_cpu,
+                   self.start_datetime,
+                   self.end_datetime,
+                   self.event_id,
+                   self.node.node_id,
+                   self.cluster.cluster_id )
+ 
         cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
@@ -221,3 +202,79 @@ class Event(object):
         """
 
         self.end_datetime = event.end_datetime
+
+
+def get_datetime_end_last_event(db, cluster):
+    """Returns the end datetime of the last event on the cluster in DB. Returns
+       None if no event found.
+    """
+
+    req = """
+            SELECT MAX(event_end) AS last
+              FROM Event
+             WHERE cluster_id = %s
+          """
+    params = ( cluster.cluster_id, )
+    cur = db.cur
+    cur.execute(req, params)
+    if cur.rowcount == 0:
+        return None
+    db_row = cur.fetchone()
+    return db_row[0]
+
+def get_datetime_start_oldest_unfinished_event(db, cluster):
+    """Returns the start datetime of the oldest event on the cluster in DB.
+       Returns None if no unfinished event found.
+    """
+
+    req = """
+            SELECT MIN(event_start)
+              FROM Event
+             WHERE cluster_id = %s
+               AND event_end IS NULL
+              """
+    params = ( cluster.cluster_id, )
+    cur = db.cur
+    cur.execute(req, params)
+    if cur.rowcount == 0:
+        return None
+    db_row = cur.fetchone()
+    return db_row[0]
+
+def get_unfinished_events(db, cluster):
+    """Get the list of unfinished Events on the cluster out of DB. Returns None
+       if no unfinished event found.
+    """
+    req = """
+            SELECT event_id,
+                   node_name,
+                   event_type,
+                   event_reason,
+                   event_nbCpu,
+                   event_start
+             FROM Events
+             WHERE cluster_id = %s
+               AND event_end IS NULL
+          """
+    params = ( cluster.cluster_id, )
+    cur = db.cur
+    cur.execute(req, params)
+
+    events = []
+    while (1):
+        db_row = cur.fetchone()
+        if db_row == None: break
+        event = Event( event_id = db_row[0],
+                       node = db_row[1],
+                       cluster = self.cluster.name,
+                       event_type = db_row[2],
+                       reason = db_row[3],
+                       nb_cpu = db_row[4],
+                       start_datetime = db_row[5],
+                       end_datetime = None )
+        events.append(event)
+
+    if len(events) == 0:
+        return None
+
+    return events
