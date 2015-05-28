@@ -57,6 +57,7 @@ class MockMySQLdbCursor(object):
             result = re.match(req['req'], req_clean)
             if result:
                 self.ref = reqref
+                self.idx = 0
                 break
         pass
 
@@ -65,6 +66,15 @@ class MockMySQLdbCursor(object):
             return MY_REQS[self.ref]['res']
         else:
             return []
+
+    def fetchone(self):
+        if self.ref is not None:
+            results = MY_REQS[self.ref]['res']
+            if len(results) > self.idx:
+                result = results[self.idx]
+                self.idx += 1
+                return result
+        return None
 
 class MockMySQLdbConnect(object):
 
