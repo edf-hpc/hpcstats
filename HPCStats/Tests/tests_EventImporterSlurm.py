@@ -47,21 +47,31 @@ from HPCStats.Tests.Mocks.Conf import MockConf
 from HPCStats.Tests.Mocks.App import MockApp
 
 CONFIG = {
-           'hpcstatsdb': {
-             'hostname': 'test_hostname',
-             'port':     'test_port',
-             'dbname':   'test_name',
-             'user':     'test_user',
-             'password': 'test_password',
-           },
-           'testcluster/slurm': {
-             'host': 'dbhost',
-             'port': 3128,
-             'name': 'dbname',
-             'user': 'dbuser',
-             'password': 'dbpassword',
-           }
-         }
+  'hpcstatsdb': {
+    'hostname': 'test_hostname',
+    'port':     'test_port',
+    'dbname':   'test_name',
+    'user':     'test_user',
+    'password': 'test_password',
+  },
+  'testcluster/slurm': {
+    'host': 'dbhost',
+    'port': 3128,
+    'name': 'dbname',
+    'user': 'dbuser',
+    'password': 'dbpassword',
+  }
+}
+
+MockMySQLdb.MY_REQS['get_events'] = {
+  'req': "SELECT time_start, time_end, node_name, cpu_count, " \
+                "state, reason " \
+         "FROM .*_event_table " \
+         "WHERE node_name <> '' " \
+         "AND time_start >= UNIX_TIMESTAMP(.*) " \
+         "ORDER BY time_start",
+  'res': [],
+}
 
 class TestsEventImporterSlurm(HPCStatsTestCase):
 
@@ -96,20 +106,10 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         e1_end_ts = time.mktime(e1_end.timetuple())
 
         node_name = 'node1'
-        MockMySQLdb.MY_REQS = {
-          'get_events': {
-            'req': "SELECT time_start, time_end, node_name, cpu_count, " \
-                          "state, reason " \
-                   "FROM .*_event_table " \
-                   "WHERE node_name <> '' " \
-                   "AND time_start >= UNIX_TIMESTAMP(.*) " \
-                   "ORDER BY time_start",
-            'res': [
-              [ e1_start_ts, e1_end_ts,
-                node_name, 16, 35, 'reason1' ],
-            ]
-          }
-        }
+        MockMySQLdb.MY_REQS['get_events']['res'] = \
+          [
+            [ e1_start_ts, e1_end_ts,  node_name, 16, 35, 'reason1' ],
+          ]
 
         self.app.arch.nodes = [ Node(node_name, self.cluster, 'partition1', 16, 8, 0), ]
         self.importer.load()
@@ -133,20 +133,10 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         e1_end_ts = time.mktime(e1_end.timetuple())
 
         node_name = 'node1'
-        MockMySQLdb.MY_REQS = {
-          'get_events': {
-            'req': "SELECT time_start, time_end, node_name, cpu_count, " \
-                          "state, reason " \
-                   "FROM .*_event_table " \
-                   "WHERE node_name <> '' " \
-                   "AND time_start >= UNIX_TIMESTAMP(.*) " \
-                   "ORDER BY time_start",
-            'res': [
-              [ e1_start_ts, e1_end_ts,
-                node_name, 16, 35, 'reason1' ],
-            ]
-          }
-        }
+        MockMySQLdb.MY_REQS['get_events']['res'] = \
+          [
+            [ e1_start_ts, e1_end_ts,  node_name, 16, 35, 'reason1' ],
+          ]
 
         self.app.arch.nodes = []
         self.assertRaisesRegexp(

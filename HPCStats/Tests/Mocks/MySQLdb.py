@@ -30,7 +30,8 @@
 import mock
 import re
 
-MY_REQS = None
+# the requests and results are then defined by tests themselves.
+MY_REQS = dict()
 
 class MockMySQLdb(object):
 

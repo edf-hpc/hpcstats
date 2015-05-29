@@ -37,13 +37,22 @@ from HPCStats.Tests.Mocks.MySQLdb import mock_mysqldb
 from HPCStats.Tests.Mocks.Conf import MockConf
 from HPCStats.Tests.Mocks.App import MockApp
 
-CONFIG = { 'testcluster/slurm':
-             { 'host': 'dbhost',
-               'port': 3128,
-               'name': 'dbname',
-               'user': 'dbuser',
-               'password': 'dbpassword' }
-         }
+CONFIG = {
+  'testcluster/slurm': {
+    'host': 'dbhost',
+    'port': 3128,
+    'name': 'dbname',
+    'user': 'dbuser',
+    'password': 'dbpassword'
+  }
+}
+
+MockMySQLdb.MY_REQS['get_assocs'] = {
+  'req': "SELECT id_assoc, user " \
+         "FROM .*_assoc_table " \
+         "WHERE user != '';",
+  'res': []
+}
 
 class TestsJobImporterSlurm(HPCStatsTestCase):
 
@@ -54,14 +63,8 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         self.conf = MockConf(CONFIG, 'testcluster')
         self.cluster = Cluster('testcluster')
         self.app = MockApp(self.db, self.conf, self.cluster.name)
-        MockMySQLdb.MY_REQS = {
-          'get_assocs': {
-            'req': "SELECT id_assoc, user " \
-                   "FROM .*_assoc_table " \
-                   "WHERE user != '';",
-            'res': [ { 'id_assoc': 1, 'user': 'toto' } ]
-          },
-        }
+        MockMySQLdb.MY_REQS['get_assocs']['res'] = \
+          [ { 'id_assoc': 1, 'user': 'toto' } ]
         self.importer = JobImporterSlurm(self.app,
                                          self.db,
                                          self.conf,
