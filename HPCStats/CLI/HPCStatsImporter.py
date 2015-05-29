@@ -105,119 +105,40 @@ class HPCStatsImporter(HPCStatsApp):
         # for other importers.
         #
         logging.info("updating architecture for cluster %s" % (cluster_name))
-        try:
-            self.arch = ArchitectureImporterFactory().factory(self, db, self.conf, cluster_name)
-            self.arch.load()
-            self.arch.update()
-            cluster = self.arch.cluster
-        except RuntimeError:
-            logging.error("error occured on %s architecture update." % (cluster_name))
+        self.arch = ArchitectureImporterFactory().factory(self, db, self.conf, cluster_name)
+        self.arch.load()
+        self.arch.update()
+
+        cluster = self.arch.cluster
 
         # check that cluster has been properly created and initialized
         if cluster is None or cluster.cluster_id is None:
             raise HPCStatsRuntimeError("problem in DB with cluster %s" % (str(cluster)))
 
         logging.info("updating users for cluster %s" % (cluster.name))
-        try:
-          self.users = UserImporterFactory().factory(self, db, config, cluster)
-          self.users.load()
-          self.users.update()
-          db.commit()
-        except RuntimeError:
-            logging.error("error occured on %s users update." % (cluster.name))
+        self.users = UserImporterFactory().factory(self, db, config, cluster)
+        self.users.load()
+        self.users.update()
 
         logging.info("updating context for cluster %s from stats file" % (cluster.name))
-        try:
-            self.context = ContextImporterFactory().factory(self, db, config, cluster)
-        except RuntimeError:
-            logging.error("error occured on %s context update." % (cluster.name))
+        self.context = ContextImporterFactory().factory(self, db, config, cluster)
+        self.context.load()
+        self.context.update()
 
         logging.info("updating filesystem usage for cluster %s" % (cluster.name))
-        try:
-            self.fsusage = FSUsageImporterFactory().factory(self, db, config, cluster)
-            db.commit()
-        except RuntimeError:
-            logging.error("error occured on %s filesystem usage update." % (cluster.name))
+        self.fsusage = FSUsageImporterFactory().factory(self, db, config, cluster)
+        self.fsusage.load()
+        self.fsusage.update()
 
         logging.info("updating events for cluster %s" % (cluster.name))
-        try:
-            self.events = EventImporterFactory().factory(self, db, config, cluster)
-            self.events.update_events()
-            db.commit()
-        except RuntimeError:
-            logging.error("error occured on %s events update." % (cluster.name))
+        self.events = EventImporterFactory().factory(self, db, config, cluster)
+        self.events.load()
+        self.events.update()
 
         logging.info("updating jobs for cluster %s" % (cluster.name))
-        try:
-            self.jobs = JobImporterFactory().factory(self, db, config, cluster)
-            # The last updated job in hpcstatsdb for this cluster
-            last_updated_id = self.jobs.get_last_job_id()
-            # The unfinished jobs in hpcstatsdb for this cluster
-            ids = self.jobs.get_unfinished_job_id()
-
-            jobs_to_update = ['not_empty']
-            new_jobs = ['not_empty']
-
-            offset = 0
-            max_jobs = 100000
-
-            logging.debug("Get jobs to update")
-            jobs_to_update = self.jobs.get_job_information_from_dbid_job_list(ids)
-            for job in jobs_to_update:
-                offset = offset + 1
-                if not offset % 10:
-                    logging.debug("update job push %d" % offset)
-                job.update(db)
-            offset = 0
-            while new_jobs:
-                logging.debug("get %d new jobs starting at offset %d" % (max_jobs, offset))
-                new_jobs = self.jobs.get_job_for_id_above(last_updated_id, offset, max_jobs)
-                for job in new_jobs:
-                    offset = offset + 1
-                    if not offset % 10000:
-                        logging.debug("create job push %d" % offset)
-                    job.save(db)
-                    # get wckeys from job to insert in context tab.
-                    wckey = self.jobs.get_wckey_from_job(job._id_job)
-                    if wckey != None and wckey != '*' and wckey != '' and wckey.find(":") >= 0 :
-                        logging.debug("get wc_key %s" % (wckey))
-                        context = Context()
-                        # get pareo and business from job
-                        try:
-                            pareo = wckey.split(":")[0]
-                        except :
-                            pareo = None
-                            logging.debug("pareo value is unavailable")
-                        try:
-                            business = wckey.split(":")[1]
-                        except:
-                            business = None
-                            logging.debug("business value is unavailable")
-                        # verify if pareo and business exist
-                        try:
-                            context.set_project(get_pareo_id(db, pareo))
-                        except:
-                            context.set_project(None)
-                            logging.debug("pareo does not exist")
-                        try:
-                            context.set_business(get_business_id(db, business))
-                        except:
-                            context.set_business(None)
-                            logging.debug("business does not exist")
-                        # create context if you have one or both
-                        if context.get_business() or context.get_project():
-                            context.set_login(job._login)
-                            context.set_job(job._db_id)
-                            context.set_cluster(cluster.name)
-                            context.save(db)
-                            logging.debug("create new context : %s" % context)
-                        else:
-                            logging.debug("abort creating context")
-                    else:
-                        logging.debug("no wc_keys available for this job")
-            db.commit()
-        except :
-            logging.error("error occured on %s jobs update." % (cluster.name))
+        self.jobs = JobImporterFactory().factory(self, db, config, cluster)
+        self.jobs.load()
+        self.jobs.update()
 
     def cleanup(self):
         """Clean-up the application before exit."""
