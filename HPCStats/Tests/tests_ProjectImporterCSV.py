@@ -56,6 +56,32 @@ CONFIG = {
            },
          }
 
+MockPg2.PG_REQS['exist_domain_dom1'] = {
+  'req': "SELECT domain_id FROM Domain WHERE domain_id = %s",
+  'res': [],
+}
+
+MockPg2.PG_REQS['save_domain_dom1'] = {
+  'req': "INSERT INTO Domain \( domain_id, domain_name \) " \
+         "VALUES \( %s, %s \)",
+  'res': [],
+}
+
+MockPg2.PG_REQS['find_project_code1'] = {
+  'req': "SELECT project_id FROM Project WHERE project_code = %s",
+  'res': [],
+}
+
+MockPg2.PG_REQS['save_project_code1'] = {
+  'req': "INSERT INTO Project \( project_code, " \
+                                "project_description, "\
+                                "sector_key, "\
+                                "domain_id \) "\
+         "VALUES \( %s, %s, %s, %s \) "\
+         "RETURNING project_id",
+  'res': [],
+}
+
 module = "HPCStats.Importer.Projects.ProjectImporterCSV"
 
 class TestsProjectImporterCSVLoad(HPCStatsTestCase):
@@ -309,30 +335,8 @@ class TestsProjectImporterCSVUpdate(HPCStatsTestCase):
     def test_update(self):
         """ProjectImporterCSV.update() works with simple data
         """
-        MockPg2.PG_REQS = {
-          #"exist_domain_dom1": {
-          #  "req": "SELECT domain_id FROM Domain WHERE domain_id = %s",
-          #  "res": [],
-          #},
-          #"save_domain_dom1": {
-          #  "req": "INSERT INTO Domain \( domain_id, domain_name \) " \
-          #         "VALUES \( %s, %s \)",
-          #  "res": [],
-          #},
-          #"find_project_code1": {
-          #  "req": "SELECT project_id FROM Project WHERE project_code = %s",
-          #  "res": [],
-          #},
-          "save_project_code1": {
-            "req": "INSERT INTO Project \( project_code, " \
-                                          "project_description, "\
-                                          "sector_key, "\
-                                          "domain_id \) "\
-                   "VALUES \( %s, %s, %s, %s \) "\
-                   "RETURNING project_id",
-            "res": [ [ 1 ] ],
-          },
-        }
+        MockPg2.PG_REQS['save_project_code1']['res'] = \
+          [ [ 1 ] ]
         domain1 = Domain('dom1', 'domain name 1')
         sector1 = Sector(domain1, 'sect1', 'sector name 1')
         project1 = Project(sector1, 'code1', 'project description 1')

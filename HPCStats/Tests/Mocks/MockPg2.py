@@ -30,8 +30,8 @@
 import mock
 import re
 
-# must be defined by tests
-PG_REQS = None
+# the requests and results are then defined by tests themselves.
+PG_REQS = dict()
 
 class MockPsycopg2(object):
 

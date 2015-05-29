@@ -75,6 +75,40 @@ BASIC_ARCH = {
   },
 }
 
+MockPg2.PG_REQS['save_cluster_cluster1'] = {
+  'req': "INSERT INTO Cluster \( cluster_name \) " \
+         "VALUES \( %s \) "\
+         "RETURNING cluster_id",
+  'res': [],
+}
+
+MockPg2.PG_REQS['save_node_node1'] = {
+  'req': "INSERT INTO Node \( node_name, " \
+                             "cluster_id, " \
+                             "node_partition, " \
+                             "node_nbCpu, " \
+                             "node_memory, " \
+                             "node_flops \) " \
+          "VALUES \( %s, %s, %s, %s, %s, %s \) " \
+          "RETURNING node_id",
+  'res': [],
+}
+
+MockPg2.PG_REQS['find_cluster_cluster1'] = {
+  'req': "SELECT cluster_id " \
+           "FROM Cluster " \
+          "WHERE cluster_name = %s",
+  'res': [],
+}
+
+MockPg2.PG_REQS['find_node_node1'] = {
+  'req': "SELECT node_id " \
+         "FROM Node " \
+         "WHERE node_name = %s " \
+           "AND cluster_id = %s",
+  'res': [],
+}
+
 module = "HPCStats.Importer.Architectures.ArchitectureImporterArchfile"
 
 class TestsArchitectureImporterArchfileLoad(HPCStatsTestCase):
@@ -201,25 +235,10 @@ class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
     def test_update(self):
         """ProjectImporterCSV.update() creates cluster and node if not existing
         """
-        MockPg2.PG_REQS = {
-          "save_cluster_cluster1": {
-            "req": "INSERT INTO Cluster \( cluster_name \) " \
-                   "VALUES \( %s \) "\
-                   "RETURNING cluster_id",
-            "res": [ [ 1 ] ],
-          },
-          "save_node_node1": {
-            "req": "INSERT INTO Node \( node_name, " \
-                                       "cluster_id, "\
-                                       "node_partition, "\
-                                       "node_nbCpu, "\
-                                       "node_memory, "\
-                                       "node_flops \) "\
-                   "VALUES \( %s, %s, %s, %s, %s, %s \) "\
-                   "RETURNING node_id",
-            "res": [ [ 1 ] ],
-          },
-        }
+        MockPg2.PG_REQS['save_cluster_cluster1']['res'] = \
+          [ [ 1 ] ]
+        MockPg2.PG_REQS['save_node_node1']['res'] = \
+          [ [ 1 ] ]
         cluster1 = Cluster('cluster1')
         node1 = Node('node1', cluster1, 'test_partition', 12, 6 * 1024 ** 3, 1)
         self.importer.cluster = cluster1
@@ -230,21 +249,10 @@ class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
     def test_update_2(self):
         """ProjectImporterCSV.update() detect existing cluster and node
         """
-        MockPg2.PG_REQS = {
-          "find_cluster_cluster1": {
-            "req": "SELECT cluster_id " \
-                   "FROM Cluster " \
-                   "WHERE cluster_name = %s",
-            "res": [ [ 1 ] ],
-          },
-          "find_node_node1": {
-            "req": "SELECT node_id " \
-                   "FROM Node " \
-                   "WHERE node_name = %s " \
-                   "AND cluster_id = %s",
-            "res": [ [ 1 ] ],
-          },
-        }
+        MockPg2.PG_REQS['find_cluster_cluster1']['res'] = \
+          [ [ 1 ] ]
+        MockPg2.PG_REQS['find_node_node1']['res'] = \
+          [ [ 1 ] ]
         cluster1 = Cluster('cluster1')
         node1 = Node('node1', cluster1, 'test_partition', 12, 6 * 1024 ** 3, 1)
         self.importer.cluster = cluster1
