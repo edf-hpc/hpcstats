@@ -68,10 +68,27 @@ MockMySQLdb.MY_REQS['get_events'] = {
                 "state, reason " \
          "FROM .*_event_table " \
          "WHERE node_name <> '' " \
-         "AND time_start >= UNIX_TIMESTAMP(.*) " \
+         "AND time_start >= UNIX_TIMESTAMP\(%s\) " \
          "ORDER BY time_start",
   'res': [],
 }
+
+MockPg2.PG_REQS['get_end_last_event'] = {
+  'req': "SELECT MAX\(event_end\) AS last " \
+         "FROM Event " \
+         "WHERE cluster_id = %s",
+  'res': []
+}
+
+MockPg2.PG_REQS['get_start_oldest_unfinised_event'] = {
+  'req': "SELECT MIN\(event_start\) " \
+          "FROM Event " \
+         "WHERE cluster_id = %s " \
+           "AND event_end IS NULL",
+  'res': []
+}
+
+module = 'HPCStats.Importer.Events.EventImporterSlurm',
 
 class TestsEventImporterSlurm(HPCStatsTestCase):
 
@@ -95,8 +112,7 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         """
         pass
 
-    @mock.patch('HPCStats.Importer.Events.EventImporterSlurm.MySQLdb',
-                mock_mysqldb())
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     def test_load_simple(self):
         """EventImporterSlurm.load() works with simple data."""
 
@@ -121,8 +137,44 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         self.assertEquals(event.event_type, 'ALLOCATED+RES')
         self.assertEquals(event.reason, 'reason1')
 
-    @mock.patch('HPCStats.Importer.Events.EventImporterSlurm.MySQLdb',
-                mock_mysqldb())
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    @mock.patch("%s.EventImporterSlurm.get_new_events" % (module))
+    def test_load_search_datetime(self, mock_new_events):
+        """EventImporterSlurm.load() must search new events starting from
+           correct datetime."""
+
+        # Both datetimes are defined, search must be done with start datetime
+        # of oldest unfinished event.
+        d1 = datetime(2015, 3, 2, 15, 59, 59)
+        d2 = datetime(2015, 3, 2, 16, 0, 0)
+        d1_ts = time.mktime(d1.timetuple())
+        d2_ts = time.mktime(d2.timetuple())
+
+        MockPg2.PG_REQS['get_end_last_event']['res'] = [ [ d1_ts ] ]
+        MockPg2.PG_REQS['get_start_oldest_unfinised_event']['res'] = [ [ d2_ts ] ]
+
+        self.importer.load()
+        mock_new_events.assert_called_with(d2_ts)
+
+        # None unfinished event, search must be done with end datetime of last
+        # event.
+        MockPg2.PG_REQS['get_end_last_event']['res'] = [ [ d1_ts ] ]
+        MockPg2.PG_REQS['get_start_oldest_unfinised_event']['res'] = [ ]
+
+        self.importer.load()
+        mock_new_events.assert_called_with(d1_ts)
+
+        default_datetime = datetime(1970, 1, 1, 1, 0)
+        default_ts = time.mktime(default_datetime.timetuple())
+
+        # No event in DB: search starting from epoch.
+        MockPg2.PG_REQS['get_end_last_event']['res'] = [ ]
+        MockPg2.PG_REQS['get_start_oldest_unfinised_event']['res'] = [ ]
+
+        self.importer.load()
+        mock_new_events.assert_called_with(default_ts)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     def test_load_unfound_node(self):
         """EventImporterSlurm.load() raises Exception if one event is linked to
            a node not loaded by ArchitectureImporter."""
