@@ -173,7 +173,7 @@ class EventImporterSlurm(EventImporter):
                         "event node %s not found in loaded nodes" \
                           % (node_name))
             nb_cpu = row[3]
-            event_type = self._txt_slurm_reason(row[4])
+            event_type = self.txt_slurm_event_type(row[4])
             reason = row[5]
 
             event = Event( node=node,
@@ -251,7 +251,7 @@ class EventImporterSlurm(EventImporter):
             else:
                 event.save(self.db)
 
-    def _txt_slurm_reason(self, reason_uid):
+    def txt_slurm_event_type(self, reason_uid):
         """Convert reason_uid integer that holds node state in Slurm bitmap
            convention to string representing this state into human readable
            format.
