@@ -31,6 +31,7 @@ from datetime import datetime
 import time
 import mock
 
+from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Model.Cluster import Cluster
 from HPCStats.Model.Node import Node
 from HPCStats.Importer.Events.EventImporterSlurm import EventImporterSlurm
@@ -86,7 +87,7 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
 
     @mock.patch('HPCStats.Importer.Events.EventImporterSlurm.MySQLdb',
                 mock_mysqldb())
-    def test_init(self):
+    def test_load_simple(self):
         """EventImporterSlurm.load() works with simple data."""
 
         e1_start = datetime(2015, 3, 2, 15, 59, 59)
@@ -119,5 +120,38 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         self.assertEquals(event.nb_cpu, 16)
         self.assertEquals(event.event_type, 'ALLOCATED+RES')
         self.assertEquals(event.reason, 'reason1')
+
+    @mock.patch('HPCStats.Importer.Events.EventImporterSlurm.MySQLdb',
+                mock_mysqldb())
+    def test_load_unfound_node(self):
+        """EventImporterSlurm.load() raises Exception if one event is linked to
+           a node not loaded by ArchitectureImporter."""
+
+        e1_start = datetime(2015, 3, 2, 15, 59, 59)
+        e1_end = datetime(2015, 3, 2, 16, 0, 0)
+        e1_start_ts = time.mktime(e1_start.timetuple())
+        e1_end_ts = time.mktime(e1_end.timetuple())
+
+        node_name = 'node1'
+        MockMySQLdb.MY_REQS = {
+          'get_events': {
+            'req': "SELECT time_start, time_end, node_name, cpu_count, " \
+                          "state, reason " \
+                   "FROM .*_event_table " \
+                   "WHERE node_name <> '' " \
+                   "AND time_start >= UNIX_TIMESTAMP(.*) " \
+                   "ORDER BY time_start",
+            'res': [
+              [ e1_start_ts, e1_end_ts,
+                node_name, 16, 35, 'reason1' ],
+            ]
+          }
+        }
+
+        self.app.arch.nodes = []
+        self.assertRaisesRegexp(
+               HPCStatsSourceError,
+               "event node %s not found in loaded nodes" % (node_name),
+               self.importer.load)
 
 loadtestcase(TestsEventImporterSlurm)
