@@ -198,21 +198,30 @@ class EventImporterSlurm(EventImporter):
 
         event_index = 0
         nb_events = len(events)
+        logging.debug("merge: nb_events: %d", nb_events)
 
         # iterate over the list of new events
         while event_index < nb_events - 1:
 
             event = events[event_index]
-
+            logging.debug("merge: current event_index: %d", event_index)
             # find the next event in the list for the same node
             next_event_index = event_index + 1
 
-            while next_event_index < nb_events and \
-                  events[next_event_index].node != event.node:
-                next_event_index += 1
+            while next_event_index < nb_events:
+                next_event = events[next_event_index]
+                if next_event.node == event.node and \
+                   next_event.start_datetime == event.end_datetime and \
+                   next_event.event_type == event.event_type:
+                    break
+                else:
+                    next_event_index += 1
 
-            # if search index is at the end of the list, next event has not been found
-            if next_event_index != nb_events:
+            logging.debug("merge: computed next_event_index: %d",
+                          next_event_index)
+            # If search index is at the end of the list, it means the next
+            # event has not been found in the list..
+            if next_event_index == nb_events:
                 logging.debug("no event to merge: %d (%s, %s → %s)",
                                event_index,
                                event.node,
@@ -222,16 +231,15 @@ class EventImporterSlurm(EventImporter):
                 event_index += 1
             else:
                 next_event = events[next_event_index]
-                if event.end_datetime == next_event.start_datetime and \
-                     event.event_type == next_event.event_type:
-                    logging.debug("merging %s (%d) with %s (%d)",
-                                   event,
-                                   event_index,
-                                   next_event,
-                                   next_event_index )
-                    event.end_datetime = next_event.end_datetime
-                    # remove the next event out of the list
-                    events.pop(next_event_index)
+                logging.debug("merging %s (%d) with %s (%d)",
+                               event,
+                               event_index,
+                               next_event,
+                               next_event_index )
+                event.end_datetime = next_event.end_datetime
+                # remove the next event out of the list
+                events.pop(next_event_index)
+                nb_events -= 1
         return events
 
     def update(self):
