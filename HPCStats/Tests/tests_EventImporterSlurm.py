@@ -34,6 +34,7 @@ import mock
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Model.Cluster import Cluster
 from HPCStats.Model.Node import Node
+from HPCStats.Model.Event import Event
 from HPCStats.Importer.Events.EventImporterSlurm import EventImporterSlurm
 from HPCStats.DB.HPCStatsDB import HPCStatsDB
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
@@ -88,7 +89,7 @@ MockPg2.PG_REQS['get_start_oldest_unfinised_event'] = {
   'res': []
 }
 
-module = 'HPCStats.Importer.Events.EventImporterSlurm',
+module = 'HPCStats.Importer.Events.EventImporterSlurm'
 
 class TestsEventImporterSlurm(HPCStatsTestCase):
 
@@ -195,5 +196,61 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
                HPCStatsSourceError,
                "event node %s not found in loaded nodes" % (node_name),
                self.importer.load)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_merge_successive_events(self):
+        """EventImporterSlurm.merge_successive_events()
+        """
+
+        e1_start = datetime(2015, 3, 2, 16,  0, 0)
+        e1_end   = datetime(2015, 3, 2, 16, 10, 0)
+        e2_start = datetime(2015, 3, 2, 16, 10, 0)
+        e2_end   = datetime(2015, 3, 2, 16, 20, 0)
+        e3_start = datetime(2015, 3, 2, 16, 20, 0)
+        e3_end   = datetime(2015, 3, 2, 16, 30, 0)
+
+        node1 = [ Node('node1', self.cluster, 'partition1', 16, 8, 0), ]
+        node2 = [ Node('node2', self.cluster, 'partition1', 16, 8, 0), ]
+
+        # 3 successive events on one node with same type, they must be merged
+        # into one event.
+        events = [
+          Event(self.cluster, node1, 4, e1_start, e1_end, 'type1', 'reason1'),
+          Event(self.cluster, node1, 4, e2_start, e2_end, 'type1', 'reason1'),
+          Event(self.cluster, node1, 4, e3_start, e3_end, 'type1', 'reason1'),
+        ]
+        merged = self.importer.merge_successive_events(events)
+        self.assertEquals(1, len(merged))
+        self.assertEquals(merged[0].start_datetime, e1_start)
+        self.assertEquals(merged[0].end_datetime, e3_end)
+        self.assertEquals(merged[0].event_type, 'type1')
+        self.assertEquals(merged[0].reason, 'reason1')
+
+        # 3 successive events on one node node1 with same type, with one event
+        # on another node node2 in the middle: all events on node1 must be
+        # merged while the other event on node2 must stay as is.
+        events = [
+          Event(self.cluster, node1, 4, e1_start, e1_end, 'type1', 'reason1'),
+          Event(self.cluster, node2, 4, e2_start, e2_end, 'type1', 'reason1'),
+          Event(self.cluster, node1, 4, e2_start, e2_end, 'type1', 'reason1'),
+          Event(self.cluster, node1, 4, e3_start, e3_end, 'type1', 'reason1'),
+        ]
+        merged = self.importer.merge_successive_events(events)
+        self.assertEquals(2, len(merged))
+        self.assertEquals(merged[0].start_datetime, e1_start)
+        self.assertEquals(merged[0].end_datetime, e3_end)
+        self.assertEquals(merged[1].end_datetime, e2_end)
+        self.assertEquals(merged[0].node, node1)
+        self.assertEquals(merged[1].node, node2)
+
+        # 3 successive events on node1 but with different types, they must not
+        # be merged.
+        events = [
+          Event(self.cluster, node1, 4, e1_start, e1_end, 'type1', 'reason1'),
+          Event(self.cluster, node1, 4, e2_start, e2_end, 'type2', 'reason1'),
+          Event(self.cluster, node1, 4, e3_start, e3_end, 'type1', 'reason1'),
+        ]
+        merged = self.importer.merge_successive_events(events)
+        self.assertEquals(3, len(merged))
 
 loadtestcase(TestsEventImporterSlurm)
