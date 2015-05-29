@@ -32,6 +32,7 @@ import _mysql_exceptions
 import logging
 from datetime import datetime
 from ClusterShell.NodeSet import NodeSet
+from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.Events.EventImporter import EventImporter
 from HPCStats.Model.Event import Event, get_datetime_end_last_event, get_datetime_start_oldest_unfinished_event, get_unfinished_events
 from HPCStats.Model.Node import Node
