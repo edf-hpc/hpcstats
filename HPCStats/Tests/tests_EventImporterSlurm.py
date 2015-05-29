@@ -199,7 +199,8 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     def test_merge_successive_events(self):
-        """EventImporterSlurm.merge_successive_events()
+        """EventImporterSlurm.merge_successive_events() should merge successive
+           events in the list if they are on the same node w/ same type.
         """
 
         e1_start = datetime(2015, 3, 2, 16,  0, 0)
@@ -252,5 +253,20 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         ]
         merged = self.importer.merge_successive_events(events)
         self.assertEquals(3, len(merged))
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_txt_slurm_event_type(self):
+        """EventImporterSlurm.txt_slurm_event_type() should give the
+           appropriate human readable string represation of an event type
+           according to its hex bitmap value.
+        """
+
+        tests = [ ( 0x0001, 'DOWN' ),
+                  ( 0x0004, 'ERROR' ),
+                  ( 0x0012, 'IDLE+NET' ),
+                  ( 0x8535, 'MIXED+NET+RES+RESUME+COMPLETING+MAINT' ) ]
+        for value, expected in tests:
+            txt = self.importer.txt_slurm_event_type(value)
+            self.assertEquals(txt, expected)
 
 loadtestcase(TestsEventImporterSlurm)
