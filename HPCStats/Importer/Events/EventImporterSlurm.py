@@ -30,6 +30,7 @@
 import MySQLdb
 import _mysql_exceptions
 import logging
+import time
 from datetime import datetime
 from ClusterShell.NodeSet import NodeSet
 from HPCStats.Exceptions import HPCStatsSourceError
@@ -70,7 +71,50 @@ class EventImporterSlurm(EventImporter):
                           self.cluster.name, \
                           error)
 
-        # datetimes parameters
+        # Define the datetime from which the search must be done in Slurm DB.
+        # Variables here are float timestamps since epoch, not Python Datetime
+        # objects.
+        #
+        # The datetime used for search is the start datetime of the oldest
+        # unfinished event if it exists. Else it is the end datetime of the
+        # last finished event. Else (no event in DB) it is epoch.
+        #
+        # Consider the following status in HPCstats DB, where:
+        #  - e1 is the last finished event
+        #  - e2 is the oldest unfinised event
+        #
+        #     t0   t1     t2
+        # e1  +-----------+
+        # e2       +
+        #
+        # -> Result: t1 because we have to search for e2 in source to check if
+        #               it finally has a end datetime as of now.
+        #
+        #     t0   t1     t2
+        # e1       +------+
+        # e2  +
+        #
+        # -> Result: t0 because we have to search for e2 in source to check if
+        #               it finally has a end datetime as of now.
+        #
+        #     t0   t1     t2
+        # e1  +----+
+        # e2              +
+        #
+        # -> Result: t2 because there is no reason to find in source a new
+        #               event that would have started between t1 and t2.
+        #
+        #     t0   t1
+        # e1  +----+
+        # e2  (none)
+        #
+        # -> Result: t1
+        #
+        # e1  (none)
+        # e2  (none)
+        #
+        # -> Result: epoch
+
         datetime_end_last_event = get_datetime_end_last_event(self.db, self.cluster)
         datetime_start_oldest_unfinished_event = get_datetime_start_oldest_unfinished_event(self.db, self.cluster)
 
@@ -79,14 +123,16 @@ class EventImporterSlurm(EventImporter):
         elif datetime_end_last_event:
             datetime_search = datetime_end_last_event
         else:
-            datetime_search = datetime.fromtimestamp(0)
+            default_datetime = datetime.fromtimestamp(0)
+            datetime_search = time.mktime(default_datetime.timetuple())
 
         # get all events since datetime_search
         self.events = self.get_new_events(datetime_search)
 
     def get_new_events(self, start):
-        """Get all new Events from Slurm DB since start datetime. Returns a
-           list of Events. The list is empty if none found.
+        """Get all new Events from Slurm DB since start datetime. Parameter
+           start must be a float timestamp since epoch. Returns a list of
+           Events. The list is empty if none found.
         """
 
         events = []

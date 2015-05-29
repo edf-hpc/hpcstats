@@ -205,8 +205,8 @@ class Event(object):
 
 
 def get_datetime_end_last_event(db, cluster):
-    """Returns the end datetime of the last event on the cluster in DB. Returns
-       None if no event found.
+    """Returns the end datetime (as a float timestamp since epoch) of the
+       last event on the cluster in DB. Returns None if no event found.
     """
 
     req = """
@@ -223,8 +223,9 @@ def get_datetime_end_last_event(db, cluster):
     return db_row[0]
 
 def get_datetime_start_oldest_unfinished_event(db, cluster):
-    """Returns the start datetime of the oldest event on the cluster in DB.
-       Returns None if no unfinished event found.
+    """Returns the start datetime (as a float timestamp since epoch) of the
+       oldest event on the cluster in DB. Returns None if no unfinished event
+       found.
     """
 
     req = """
