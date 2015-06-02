@@ -93,8 +93,22 @@ MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
            "AND assoc.id_assoc = job.id_assoc " \
            "AND qos.id = job.id_qos " \
       "ORDER BY id_job",
-  'res': []
+  'res': [],
+}
 
+MockPg2.PG_REQS['get_batchid_oldest_unfinished'] = {
+  'req': "SELECT MIN\(job_batch_id\) AS last_id " \
+           "FROM Job " \
+          "WHERE cluster_id = %s " \
+            "AND \(job_start IS NULL " \
+             "OR job_end IS NULL\)",
+  'res': [],
+}
+MockPg2.PG_REQS['get_batchid_last'] = {
+  'req': "SELECT MAX\(job_batch_id\) AS last_id " \
+           "FROM Job "  \
+          "WHERE cluster_id = %s",
+  'res': [],
 }
 
 module = 'HPCStats.Importer.Jobs.JobImporterSlurm'
@@ -137,7 +151,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         node2 = Node('node2', self.cluster, 'partition1', 4, 4, 0)
 
         a1_create = datetime(2010, 1, 1, 12, 0, 0)
-        user1 = User('login1', 'firstname1', 'lastname1', 'department1')
+        user1 = User('user1', 'firstname1', 'lastname1', 'department1')
         account1 = Account(user1, self.cluster, 1000, 1000, a1_create, None)
 
         domain1 = Domain('domain1', 'domain 1')
@@ -158,5 +172,41 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         self.app.projects.projects = [ project1 ]
         self.app.business.businesses = [ business1 ]
         self.importer.load()
+        self.assertEquals(len(self.importer.jobs), 1)
+        self.assertEquals(len(self.importer.runs), 2)
+        job = self.importer.jobs[0]
+
+        self.assertEquals(job.nbcpu, 4)
+        self.assertEquals(job.state, 'RUNNING')
+        self.assertEquals(job.name, 'job1')
+        self.assertEquals(job.queue, 'partition1-qos1')
+        self.assertEquals(job.account, account1)
+        self.assertEquals(job.project, project1)
+        self.assertEquals(job.business, business1)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    @mock.patch("%s.JobImporterSlurm.get_jobs_after_batchid" % (module))
+    def test_load_search_batchid(self, mock_get_jobs):
+        """JobImporterSlurm.load() must search jobs after correct batch_id."""
+
+        MockPg2.PG_REQS['get_batchid_oldest_unfinished']['res'] = [ [ 2 ] ]
+        MockPg2.PG_REQS['get_batchid_last']['res'] = [ [ 3 ] ]
+
+        self.importer.load()
+        mock_get_jobs.assert_called_with(2)
+
+        # None unfinished job, search must be done with batch_id of lasti job.
+        MockPg2.PG_REQS['get_batchid_oldest_unfinished']['res'] = [ ]
+        MockPg2.PG_REQS['get_batchid_last']['res'] = [ [ 4 ] ]
+
+        self.importer.load()
+        mock_get_jobs.assert_called_with(4)
+
+        # No job in DB: search starting -1.
+        MockPg2.PG_REQS['get_batchid_oldest_unfinished']['res'] = [ ]
+        MockPg2.PG_REQS['get_batchid_last']['res'] = [ ]
+
+        self.importer.load()
+        mock_get_jobs.assert_called_with(-1)
 
 loadtestcase(TestsJobImporterSlurm)
