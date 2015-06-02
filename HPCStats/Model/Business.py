@@ -56,6 +56,10 @@ class Business(object):
            description = self.description
         return self.code + " - " + description
 
+    def __eq__(self, other):
+
+        return other.code == self.code
+
     def existing(self, db):
         """Returns True if the business already exists in database (with same
            code), or False if not.
