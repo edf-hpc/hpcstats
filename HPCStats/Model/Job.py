@@ -60,9 +60,8 @@ from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Job(object):
 
-    def __init__( self, account, project, business, nodeset,
-                  sched_id, batch_id, name, nbcpu, state, queue,
-                  submission, start, end, job_id=None):
+    def __init__( self, account, project, business, sched_id, batch_id, name,
+                  nbcpu, state, queue, submission, start, end, job_id=None):
 
         self.job_id = job_id
         self.sched_id = sched_id # user interface ID
@@ -79,7 +78,6 @@ class Job(object):
         self.account = account
         self.project = project
         self.business = business
-        self.nodeset = nodeset
 
     def __str__(self):
 
@@ -187,21 +185,6 @@ class Job(object):
         #print cur.mogrify(req, params)
         cur.execute(req, params)
         self.job_id = cur.fetchone()[0]
-        # TODO: Run creation should be done in JobImporter, not here
-        try:
-            if self.nodeset is not None:
-                for node_name in NodeSet(self.nodeset):
-                    node = Node(node_name, self.cluster, "", 0, 0, 0)
-                    node_id = node.find()
-                    if node_id is None:
-                        raise HPCStatsDBIntegrityError(
-                                "unable to find node %s for job %s" \
-                                  % (node_name, str(self)))
-
-                    run = Run(self.cluster, node, self)
-                    run.save()
-        except NodeSetParseRangeError as e:
-            logging.error("could not parse nodeset %s", self.nodeset)
         
     def update(self, db):
         """Update Job sched_id, nbcpu, name, state, queue, submission, start and
@@ -238,24 +221,6 @@ class Job(object):
         cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
-
-        # TODO: Run creation should be done in JobImporter, not here
-        try:
-            if self.nodeset is not None:
-                for node_name in NodeSet(self.nodeset):
-                    # fake temporary Node just to get the node
-                    node = Node(node_name, self.account.cluster, "", 0, 0, 0)
-                    node_id = node.find()
-                    if node_id is None:
-                        raise HPCStatsDBIntegrityError(
-                                "unable to find node %s for job %s" \
-                                  % (node_name, str(self)))
-
-                    run = Run(self.account.cluster, node, self)
-                    if not run.existing():
-                        run.save()
-        except NodeSetParseRangeError as e:
-            logging.error("could not parse nodeset %s", self.nodeset)
 
 def get_batchid_oldest_unfinished_job(db, cluster):
     """Return the batch_id of the oldest unfinished job recorded in
