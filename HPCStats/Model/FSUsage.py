@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the fsusage table:
+fsusage table in HPCStatsDB:
 
 fsusage(
   fsusage_time  timestamp NOT NULL,
@@ -45,25 +45,26 @@ from datetime import datetime
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class FSUsage(object):
+    """Model class for the fsusage table."""
 
-    def __init__(self, filesystem, datetime, usage):
+    def __init__(self, filesystem, timestamp, usage):
 
         self.filesystem = filesystem
-        self.datetime = datetime
+        self.timestamp = timestamp
         self.usage = usage
         self.exists = None
 
     def __str__(self):
 
-        return "FSUsage %s [%s]: at %s %s% usage" % \
+        return "FSUsage %s [%s]: at %s %s%% usage" % \
                    ( self.filesystem.name,
                      self.filesystem.cluster.name,
-                     self.datetime,
+                     self.timestamp,
                      self.usage )
 
     def existing(self, db):
         """Returns True if the FSUsage already exists in database (same cluster,
-           filesystem and datetime), or False if not.
+           filesystem and timestamp), or False if not.
         """
 
         req = """
@@ -75,19 +76,19 @@ class FSUsage(object):
               """
         params = ( self.filesystem.cluster.cluster_id,
                    self.filesystem.fs_id,
-                   self.datetime )
+                   self.timestamp )
         cur = db.cur
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("fsusage %s not found in DB" % (str(self)))
+            logging.debug("fsusage %s not found in DB", str(self))
             self.exists = False
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several fsusage found in DB for fsusage %s" \
                       % (str(self)))
         else:
-            logging.debug("fsusage %s found in DB" % (str(self)))
+            logging.debug("fsusage %s found in DB", str(self))
             self.exists = True
         return self.exists
 
@@ -115,15 +116,14 @@ class FSUsage(object):
               """
         params = ( self.filesystem.fs_id,
                    self.filesystem.cluster.cluster_id,
-                   self.datetime,
+                   self.timestamp,
                    self.usage )
 
         cur = db.cur
         #print cur.mogrify(req, params)
         cur.execute(req, params)
 
-
-def get_last_fsusage_datetime(db, cluster, fs):
+def get_last_fsusage_datetime(db, cluster, filesystem):
     """Get the datetime of the last fsusage for the fs in DB."""
 
     req = """
@@ -133,8 +133,8 @@ def get_last_fsusage_datetime(db, cluster, fs):
                AND filesystem_id = %s
           """
     params = ( cluster.cluster_id,
-               fs.id )
-    cur = self.db.cur
+               filesystem.fs_id )
+    cur = db.cur
     cur.execute(req, params)
     if cur.rowcount == 0:
         return datetime(1970, 1, 1, 0, 0)

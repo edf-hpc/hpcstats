@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the Sector table:
+Sector table in HPCStatsDB:
 
 Sector(
   sector_key    character varying(5) NOT NULL,
@@ -43,6 +43,8 @@ import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Sector(object):
+
+    """Model class for the Sector table."""
 
     def __init__(self, domain, key, name):
 
@@ -77,14 +79,14 @@ class Sector(object):
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("sector %s not found in DB" % (str(self)))
+            logging.debug("sector %s not found in DB", str(self))
             self.exists = False
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several sector found in DB for sector %s" \
                       % (str(self)))
         else:
-            logging.debug("sector %s found in DB" % (str(self)))
+            logging.debug("sector %s found in DB", str(self))
             self.exists = True
         return self.exists
 

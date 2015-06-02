@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the Cluster table:
+Cluster table in HPCStatsDB:
 
 Cluster(
   cluster_id   SERIAL,
@@ -43,6 +43,7 @@ import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Cluster(object):
+    """Model class for Cluster table"""
 
     def __init__(self, name, cluster_id=None):
 
@@ -74,7 +75,7 @@ class Cluster(object):
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("cluster %s not found in DB" % (str(self)))
+            logging.debug("cluster %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -82,9 +83,9 @@ class Cluster(object):
                       % (str(self)))
         else:
             self.cluster_id = cur.fetchone()[0]
-            logging.debug("cluster %s found in DB with id %d" \
-                            % (str(self),
-                               self.cluster_id))
+            logging.debug("cluster %s found in DB with id %d",
+                          str(self),
+                          self.cluster_id )
             return self.cluster_id
 
     def save(self, db):

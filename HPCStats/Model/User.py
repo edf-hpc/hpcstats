@@ -28,9 +28,9 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the User table:
+Userhpc table in HPCStatsDB:
 
-User(
+Userhpc(
   userhpc_id         SERIAL,
   userhpc_login      character varying(30) NOT NULL,
   userhpc_name       character varying(30) NOT NULL,
@@ -46,6 +46,8 @@ import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class User(object):
+
+    """Model class for the Userhpc table."""
 
     def __init__(self, login, firstname, lastname, department, user_id=None):
 
@@ -81,7 +83,7 @@ class User(object):
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("user %s not found in DB" % (str(self)))
+            logging.debug("user %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -89,9 +91,9 @@ class User(object):
                       % (str(self)))
         else:
             self.user_id = cur.fetchone()[0]
-            logging.debug("user %s found in DB with id %d" \
-                            % (str(self),
-                               self.user_id))
+            logging.debug("user %s found in DB with id %d",
+                          str(self),
+                          self.user_id )
             return self.user_id
 
     def save(self, db):

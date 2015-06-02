@@ -27,6 +27,8 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""Collection of utility functions widely used accross HPCStats."""
+
 def decypher(encoded):
     """Decypher the string in parameter."""
 

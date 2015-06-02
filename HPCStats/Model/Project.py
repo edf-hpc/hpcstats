@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the Project table:
+Project table in HPCStatsDB:
 
 Project(
   project_id          SERIAL,
@@ -46,6 +46,7 @@ import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Project(object):
+    """Model class for the Project table"""
 
     def __init__(self, sector, code, description, project_id=None):
 
@@ -56,10 +57,7 @@ class Project(object):
         self.sector = sector
 
     def __str__(self):
-        if self.sector is None:
-           sector = "unknown"
-        else:
-           sector = self.sector
+
         return "project %s [%s]: %s" \
                  % (self.code,
                     self.sector.key,
@@ -86,7 +84,7 @@ class Project(object):
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("project %s not found in DB" % (str(self)))
+            logging.debug("project %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -94,9 +92,9 @@ class Project(object):
                       % (str(self)))
         else:
             self.project_id = cur.fetchone()[0]
-            logging.debug("project %s found in DB with id %d" \
-                            % (str(self),
-                               self.project_id))
+            logging.debug("project %s found in DB with id %d",
+                          str(self),
+                          self.project_id )
             return self.project_id
 
     def save(self, db):

@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the Account table:
+Account table in HPCStatsDB:
 
 Account(
   account_uid      integer NOT NULL,
@@ -42,12 +42,12 @@ Account(
 
 """
 
-from datetime import datetime
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 from HPCStats.Model.User import User
 
 class Account(object):
+    """Model class for the Account table."""
 
     def __init__(self, user, cluster, uid, gid, creation_date, deletion_date):
 
@@ -62,13 +62,13 @@ class Account(object):
     def __str__(self):
 
         if self.creation_date == None:
-           creation_date = "unknown"
+            creation_date = "unknown"
         else:
-           creation_date = self.creation_date.strftime('%Y-%m-%d')
+            creation_date = self.creation_date.strftime('%Y-%m-%d')
         if self.deletion_date == None:
-           deletion_date = "unknown"
+            deletion_date = "unknown"
         else:
-           deletion_date = self.deletion_date.strftime('%Y-%m-%d')
+            deletion_date = self.deletion_date.strftime('%Y-%m-%d')
 
         return self.user.login \
                + " (" + str(self.uid) + "|" + str(self.gid) + "): " \
@@ -96,14 +96,14 @@ class Account(object):
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("account %s not found in DB" % (str(self)))
+            logging.debug("account %s not found in DB", str(self))
             self.exists = False
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several account found in DB for account %s" \
                       % (str(self)))
         else:
-            logging.debug("account %s found in DB" % (str(self)))
+            logging.debug("account %s found in DB", str(self))
             self.exists = True
         return self.exists
 

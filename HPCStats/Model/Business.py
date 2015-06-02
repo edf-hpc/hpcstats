@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the Business table:
+Business table in HPCStatsDB:
 
 Business(
   business_code        character varying(30) NOT NULL,
@@ -43,6 +43,8 @@ from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Business(object):
 
+    """Model class for the Business table."""
+
     def __init__(self, code, description):
 
         self.code = code
@@ -51,9 +53,9 @@ class Business(object):
 
     def __str__(self):
         if self.description == None:
-           description = "(empty)"
+            description = "(empty)"
         else:
-           description = self.description
+            description = self.description
         return self.code + " - " + description
 
     def __eq__(self, other):
@@ -75,14 +77,14 @@ class Business(object):
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("business %s not found in DB" % (str(self)))
+            logging.debug("business %s not found in DB", str(self))
             self.exists = False
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several businesses found in DB for account %s" \
                       % (str(self)))
         else:
-            logging.debug("business %s found in DB" % (str(self)))
+            logging.debug("business %s found in DB", str(self))
             self.exists = True
         return self.exists
 

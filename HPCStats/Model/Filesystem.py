@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the filesystem table:
+filesystem table in HPCStatsDB:
 
 filesystem(
   filesystem_id   SERIAL,
@@ -44,6 +44,7 @@ import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Filesystem(object):
+    """Model class for the filesystem table."""
 
     def __init__(self, mountpoint, cluster, fs_id=None):
 
@@ -83,7 +84,7 @@ class Filesystem(object):
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("filesystem %s not found in DB" % (str(self)))
+            logging.debug("filesystem %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -91,9 +92,9 @@ class Filesystem(object):
                       % (str(self)))
         else:
             self.fs_id = cur.fetchone()[0]
-            logging.debug("filesystem %s found in DB with id %d" \
-                            % (str(self),
-                               self.fs_id))
+            logging.debug("filesystem %s found in DB with id %d",
+                          str(self),
+                          self.fs_id )
             return self.fs_id
 
     def save(self, db):

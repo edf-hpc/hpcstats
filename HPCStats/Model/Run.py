@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the Run table:
+Run table in HPCStatsDB:
 
 Run(
   job_id         integer NOT NULL,
@@ -43,6 +43,8 @@ import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Run(object):
+
+    """Model class for the Run table."""
 
     def __init__(self, cluster, node, job):
 
@@ -77,14 +79,14 @@ class Run(object):
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("run %s not found in DB" % (str(self)))
+            logging.debug("run %s not found in DB", str(self))
             self.exists = False
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several run found in DB for run %s" \
                       % (str(self)))
         else:
-            logging.debug("run %s found in DB" % (str(self)))
+            logging.debug("run %s found in DB", str(self))
             self.exists = True
         return self.exists
 

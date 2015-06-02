@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the Cluster table:
+Job table in HPCStatsDB:
 
 Job(
   job_id         SERIAL,
@@ -51,14 +51,12 @@ Job(
 
 """
 
-from datetime import datetime
 import logging
-import string
-import os
-from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Job(object):
+
+    """Model class for the Cluster table."""
 
     def __init__( self, account, project, business, sched_id, batch_id, name,
                   nbcpu, state, queue, submission, start, end, job_id=None):
@@ -84,21 +82,21 @@ class Job(object):
         # format datetimes strings
         submission = self.submission.strftime('%Y-%m-%d %H:%M:%S')
         if self.start is None:
-           start = "notyet"
+            start = "notyet"
         else:
-           start = self.start.strftime('%Y-%m-%d %H:%M:%S')
+            start = self.start.strftime('%Y-%m-%d %H:%M:%S')
         if self.end is None:
-           end = "notyet"
+            end = "notyet"
         else:
-           end = self.end.strftime('%Y-%m-%d %H:%M:%S')
+            end = self.end.strftime('%Y-%m-%d %H:%M:%S')
 
         return "job %d on %s(%d) by %s: state:%s queue:%s %s/%s/%s" % \
                ( self.sched_id,
                  self.account.cluster.name,
                  self.nbcpu,
-                 self.user.login,
+                 self.account.user.login,
                  self.state,
-                 self.squeue,
+                 self.queue,
                  submission,
                  start,
                  end )
@@ -122,7 +120,7 @@ class Job(object):
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("job %s not found in DB" % (str(self)))
+            logging.debug("job %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -130,9 +128,9 @@ class Job(object):
                       % (str(self)))
         else:
             self.job_id = cur.fetchone()[0]
-            logging.debug("job %s found in DB with id %d" \
-                            % (str(self),
-                               self.job_id))
+            logging.debug("job %s found in DB with id %d",
+                          str(self),
+                          self.job_id )
             return self.job_id
 
     def save(self, db):

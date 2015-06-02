@@ -28,7 +28,7 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the Event table:
+Event table in HPCStatsDB:
 
 Event(
   event_id     SERIAL,
@@ -50,6 +50,8 @@ from HPCStats.Exceptions import HPCStatsRuntimeError, HPCStatsDBIntegrityError
 
 class Event(object):
 
+    """Model class for the Event table."""
+
     def __init__(self, cluster, node,
                  nb_cpu,
                  start_datetime,
@@ -68,6 +70,7 @@ class Event(object):
         self.reason = reason
 
     def __str__(self):
+
         return "event on node %s[%s]/%d (%s) : %s → %s" % \
                    ( self.node,
                      self.cluster,
@@ -77,7 +80,8 @@ class Event(object):
                      self.end_datetime )
 
     def __eq__(self, other):
-        return self.node_name == other.node_name and \
+
+        return self.node == other.node and \
                self.nb_cpu == other.nb_cpu and \
                self.start_datetime == other.start_datetime and \
                self.end_datetime == other.end_datetime and \
@@ -106,7 +110,7 @@ class Event(object):
         cur.execute(req, params)
         nb_events = cur.rowcount
         if nb_events == 0:
-            logging.debug("event %s not found in DB" % (str(self)))
+            logging.debug("event %s not found in DB", str(self))
             return None
         elif nb_events > 1:
             raise HPCStatsDBIntegrityError(
@@ -114,9 +118,9 @@ class Event(object):
                       % (str(self)))
         else:
             self.event_id = cur.fetchone()[0]
-            logging.debug("event %s found in DB with id %d" \
-                            % (str(self),
-                               self.event_id))
+            logging.debug("event %s found in DB with id %d",
+                          str(self),
+                          self.event_id )
             return self.event_id
 
     def save(self, db):
@@ -133,7 +137,7 @@ class Event(object):
                     "database" \
                       % (str(self)))
 
-	cur = db.cur
+        cur = db.cur
         req = """
                 INSERT INTO Event (
                               node_id,
@@ -151,8 +155,8 @@ class Event(object):
                    self.nb_cpu,
                    self.event_type,
                    self.reason,
-                   self.event_start,
-                   self.event_end )
+                   self.start_datetime,
+                   self.end_datetime )
  
         cur = db.cur
         #print cur.mogrify(req, params)
@@ -264,10 +268,11 @@ def get_unfinished_events(db, cluster):
     events = []
     while (1):
         db_row = cur.fetchone()
-        if db_row == None: break
+        if db_row == None:
+            break
         event = Event( event_id = db_row[0],
                        node = db_row[1],
-                       cluster = self.cluster.name,
+                       cluster = cluster.name,
                        event_type = db_row[2],
                        reason = db_row[3],
                        nb_cpu = db_row[4],

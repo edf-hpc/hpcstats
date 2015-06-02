@@ -28,14 +28,15 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Model class for the ContextAccount table:
+ContextAccount table in HPCStatsDB:
 
 ContextAccount(
   userhpc_id    character varying(30) NOT NULL,
   cluster_id    integer NOT NULL,
   business_code character varying(30) NOT NULL,
   project_id    integer NOT NULL,
-  CONSTRAINT ContextAccount_pkey PRIMARY KEY (userhpc_id, cluster_id, business_code, project_id)
+  CONSTRAINT ContextAccount_pkey PRIMARY KEY (userhpc_id, cluster_id,
+                                              business_code, project_id)
 )
 
 """
@@ -45,7 +46,9 @@ from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class ContextAccount(object):
 
-    """There is no update() method in this class because all fields are the
+    """Model class for ContextAccount table.
+
+       There is no update() method in this class because all fields are the
        primary key of the table. So one field change is just another
        ContextAccount, not an updated one.
     """
@@ -89,7 +92,7 @@ class ContextAccount(object):
         cur.execute(req, params)
         nb_rows = cur.rowcount
         if nb_rows == 0:
-            logging.debug("contextaccount %s not found in DB" % (str(self)))
+            logging.debug("contextaccount %s not found in DB", str(self))
             self.exists = False
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -97,7 +100,7 @@ class ContextAccount(object):
                     "contextaccount %s" \
                       % (str(self)))
         else:
-            logging.debug("contextaccount %s found in DB" % (str(self)))
+            logging.debug("contextaccount %s found in DB", str(self))
             self.exists = True
         return self.exists
 
