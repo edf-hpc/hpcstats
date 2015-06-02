@@ -256,3 +256,41 @@ class Job(object):
                         run.save()
         except NodeSetParseRangeError as e:
             logging.error("could not parse nodeset %s", self.nodeset)
+
+def get_batchid_oldest_unfinished_job(db, cluster):
+    """Return the batch_id of the oldest unfinished job recorded in
+       HPCStats DB. Returns None if not found.
+    """
+
+    req = """
+            SELECT MIN(job_batch_id) AS last_id
+            FROM Job
+            WHERE cluster_id = %s
+              AND (job_start IS NULL
+               OR  job_end IS NULL)
+          """
+    params = ( cluster.cluster_id, )
+    cur = db.cur
+    cur.execute(req, params)
+    if cur.rowcount == 0:
+        return None
+    db_row = cur.fetchone()
+    return db_row[0]
+
+def get_batchid_last_job(db, cluster):
+    """Return the batch_id of the last job recorded in HPCStats DB.
+       Returns None if not found.
+    """
+
+    req = """
+            SELECT MAX(job_batch_id) AS last_id
+            FROM Job
+            WHERE cluster_id = %s
+          """
+    params = ( cluster.cluster_id, )
+    cur = db.cur
+    cur.execute(req, params)
+    if cur.rowcount == 0:
+        return None
+    db_row = cur.fetchone()
+    return db_row[0]
