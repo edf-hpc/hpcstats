@@ -160,6 +160,11 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
 
         business1 = Business('business1', 'business description 1')
 
+        self.app.arch.nodes = [ node1, node2 ]
+        self.app.users.accounts = [ account1 ]
+        self.app.projects.projects = [ project1 ]
+        self.app.business.businesses = [ business1 ]
+
         MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
           [
             [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
@@ -167,10 +172,6 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
               'job1', 'project1:business1' ],
           ]
 
-        self.app.arch.nodes = [ node1, node2 ]
-        self.app.users.accounts = [ account1 ]
-        self.app.projects.projects = [ project1 ]
-        self.app.business.businesses = [ business1 ]
         self.importer.load()
         self.assertEquals(len(self.importer.jobs), 1)
         self.assertEquals(len(self.importer.runs), 2)
@@ -208,5 +209,237 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
 
         self.importer.load()
         mock_get_jobs.assert_called_with(-1)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_account_not_found(self):
+        """JobImporterSlurm.load() raises exception when account not found"""
+
+        j1_submit = datetime(2015, 3, 2, 16, 0, 1)
+        j1_start = datetime(2015, 3, 2, 16, 0, 2)
+        j1_end = datetime(2015, 3, 2, 16, 0, 3)
+        j1_submit_ts = time.mktime(j1_submit.timetuple())
+        j1_start_ts = time.mktime(j1_start.timetuple())
+        j1_end_ts = time.mktime(j1_end.timetuple())
+
+        node1 = Node('node1', self.cluster, 'partition1', 4, 4, 0)
+
+        domain1 = Domain('domain1', 'domain 1')
+        sector1 = Sector(domain1, 'sector1', 'sector 1')
+        project1 = Project(sector1, 'project1', 'description project 1')
+
+        business1 = Business('business1', 'business description 1')
+
+        self.app.arch.nodes = [ node1 ]
+        self.app.users.accounts = [ ]
+        self.app.projects.projects = [ project1 ]
+        self.app.business.businesses = [ business1 ]
+
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
+          [
+            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
+              2, 4, 'partition1', 'qos1', 1, 'node1', 'user1',
+              'job1', 'project1:business1' ],
+          ]
+
+        self.assertRaisesRegexp(
+               HPCStatsSourceError,
+               "account user1 not found in loaded account",
+               self.importer.load)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_invalid_wckey(self):
+        """JobImporterSlurm.load() raises exception when format of wckey is
+           invalid.
+        """
+
+        j1_submit = datetime(2015, 3, 2, 16, 0, 1)
+        j1_start = datetime(2015, 3, 2, 16, 0, 2)
+        j1_end = datetime(2015, 3, 2, 16, 0, 3)
+        j1_submit_ts = time.mktime(j1_submit.timetuple())
+        j1_start_ts = time.mktime(j1_start.timetuple())
+        j1_end_ts = time.mktime(j1_end.timetuple())
+
+        node1 = Node('node1', self.cluster, 'partition1', 4, 4, 0)
+
+        a1_create = datetime(2010, 1, 1, 12, 0, 0)
+        user1 = User('user1', 'firstname1', 'lastname1', 'department1')
+        account1 = Account(user1, self.cluster, 1000, 1000, a1_create, None)
+
+        domain1 = Domain('domain1', 'domain 1')
+        sector1 = Sector(domain1, 'sector1', 'sector 1')
+        project1 = Project(sector1, 'project1', 'description project 1')
+
+        business1 = Business('business1', 'business description 1')
+
+        self.app.arch.nodes = [ node1 ]
+        self.app.users.accounts = [ account1 ]
+        self.app.projects.projects = [ project1 ]
+        self.app.business.businesses = [ business1 ]
+
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
+          [
+            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
+              2, 4, 'partition1', 'qos1', 1, 'node1', 'user1',
+              'job1', 'fail' ],
+          ]
+
+        self.assertRaisesRegexp(
+               HPCStatsSourceError,
+               "format of wckey fail is not valid",
+               self.importer.load)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_project_not_found(self):
+        """JobImporterSlurm.load() raises exception when project not found."""
+
+        j1_submit = datetime(2015, 3, 2, 16, 0, 1)
+        j1_start = datetime(2015, 3, 2, 16, 0, 2)
+        j1_end = datetime(2015, 3, 2, 16, 0, 3)
+        j1_submit_ts = time.mktime(j1_submit.timetuple())
+        j1_start_ts = time.mktime(j1_start.timetuple())
+        j1_end_ts = time.mktime(j1_end.timetuple())
+
+        node1 = Node('node1', self.cluster, 'partition1', 4, 4, 0)
+
+        a1_create = datetime(2010, 1, 1, 12, 0, 0)
+        user1 = User('user1', 'firstname1', 'lastname1', 'department1')
+        account1 = Account(user1, self.cluster, 1000, 1000, a1_create, None)
+
+        business1 = Business('business1', 'business description 1')
+
+        self.app.arch.nodes = [ node1 ]
+        self.app.users.accounts = [ account1 ]
+        self.app.projects.projects = [ ]
+        self.app.business.businesses = [ business1 ]
+
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
+          [
+            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
+              2, 4, 'partition1', 'qos1', 1, 'node1', 'user1',
+              'job1', 'project1:business1' ],
+          ]
+
+        self.assertRaisesRegexp(
+               HPCStatsSourceError,
+               "project project1 not found in loaded projects",
+               self.importer.load)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_business_not_found(self):
+        """JobImporterSlurm.load() raises exception when business not found."""
+
+        j1_submit = datetime(2015, 3, 2, 16, 0, 1)
+        j1_start = datetime(2015, 3, 2, 16, 0, 2)
+        j1_end = datetime(2015, 3, 2, 16, 0, 3)
+        j1_submit_ts = time.mktime(j1_submit.timetuple())
+        j1_start_ts = time.mktime(j1_start.timetuple())
+        j1_end_ts = time.mktime(j1_end.timetuple())
+
+        node1 = Node('node1', self.cluster, 'partition1', 4, 4, 0)
+
+        a1_create = datetime(2010, 1, 1, 12, 0, 0)
+        user1 = User('user1', 'firstname1', 'lastname1', 'department1')
+        account1 = Account(user1, self.cluster, 1000, 1000, a1_create, None)
+
+        domain1 = Domain('domain1', 'domain 1')
+        sector1 = Sector(domain1, 'sector1', 'sector 1')
+        project1 = Project(sector1, 'project1', 'description project 1')
+
+        self.app.arch.nodes = [ node1 ]
+        self.app.users.accounts = [ account1 ]
+        self.app.projects.projects = [ project1 ]
+        self.app.business.businesses = [ ]
+
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
+          [
+            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
+              2, 4, 'partition1', 'qos1', 1, 'node1', 'user1',
+              'job1', 'project1:business1' ],
+          ]
+
+        self.assertRaisesRegexp(
+               HPCStatsSourceError,
+               "business code business1 not found in loaded business codes",
+               self.importer.load)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_invalid_nodelist(self):
+        """JobImporterSlurm.load() raises exception when format of nodelist
+           is invalid.
+        """
+
+        j1_submit = datetime(2015, 3, 2, 16, 0, 1)
+        j1_start = datetime(2015, 3, 2, 16, 0, 2)
+        j1_end = datetime(2015, 3, 2, 16, 0, 3)
+        j1_submit_ts = time.mktime(j1_submit.timetuple())
+        j1_start_ts = time.mktime(j1_start.timetuple())
+        j1_end_ts = time.mktime(j1_end.timetuple())
+
+        node1 = Node('node1', self.cluster, 'partition1', 4, 4, 0)
+
+        a1_create = datetime(2010, 1, 1, 12, 0, 0)
+        user1 = User('user1', 'firstname1', 'lastname1', 'department1')
+        account1 = Account(user1, self.cluster, 1000, 1000, a1_create, None)
+
+        domain1 = Domain('domain1', 'domain 1')
+        sector1 = Sector(domain1, 'sector1', 'sector 1')
+        project1 = Project(sector1, 'project1', 'description project 1')
+
+        business1 = Business('business1', 'business description 1')
+
+        self.app.arch.nodes = [ node1 ]
+        self.app.users.accounts = [ account1 ]
+        self.app.projects.projects = [ project1 ]
+        self.app.business.businesses = [ business1 ]
+
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
+          [
+            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
+              2, 4, 'partition1', 'qos1', 1, 'nodelistfail[5-4]', 'user1',
+              'job1', 'project1:business1' ],
+          ]
+
+        self.assertRaisesRegexp(
+               HPCStatsSourceError,
+               "could not parse nodeset nodelistfail\[5\-4\] for job 0",
+               self.importer.load)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_node_not_found(self):
+        """JobImporterSlurm.load() raises exception when node not found."""
+
+        j1_submit = datetime(2015, 3, 2, 16, 0, 1)
+        j1_start = datetime(2015, 3, 2, 16, 0, 2)
+        j1_end = datetime(2015, 3, 2, 16, 0, 3)
+        j1_submit_ts = time.mktime(j1_submit.timetuple())
+        j1_start_ts = time.mktime(j1_start.timetuple())
+        j1_end_ts = time.mktime(j1_end.timetuple())
+
+        a1_create = datetime(2010, 1, 1, 12, 0, 0)
+        user1 = User('user1', 'firstname1', 'lastname1', 'department1')
+        account1 = Account(user1, self.cluster, 1000, 1000, a1_create, None)
+
+        domain1 = Domain('domain1', 'domain 1')
+        sector1 = Sector(domain1, 'sector1', 'sector 1')
+        project1 = Project(sector1, 'project1', 'description project 1')
+
+        business1 = Business('business1', 'business description 1')
+
+        self.app.arch.nodes = [ ]
+        self.app.users.accounts = [ account1 ]
+        self.app.projects.projects = [ project1 ]
+        self.app.business.businesses = [ business1 ]
+
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
+          [
+            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
+              2, 4, 'partition1', 'qos1', 1, 'node1', 'user1',
+              'job1', 'project1:business1' ],
+          ]
+
+        self.assertRaisesRegexp(
+               HPCStatsSourceError,
+               "unable to find node node1 for job 0 in loaded nodes",
+               self.importer.load)
 
 loadtestcase(TestsJobImporterSlurm)
