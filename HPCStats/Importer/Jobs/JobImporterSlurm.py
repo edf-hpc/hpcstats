@@ -30,7 +30,7 @@
 import MySQLdb
 import _mysql_exceptions
 from datetime import datetime
-from ClusterShell.NodeSet import NodeSet
+from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 import logging
 import os
 from HPCStats.Exceptions import HPCStatsSourceError
