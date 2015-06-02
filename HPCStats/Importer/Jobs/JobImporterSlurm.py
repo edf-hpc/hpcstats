@@ -33,8 +33,15 @@ from datetime import datetime
 from ClusterShell.NodeSet import NodeSet
 import logging
 import os
+from HPCStats.Exceptions import *
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
-from HPCStats.Model.Job import Job
+from HPCStats.Model.Job import Job, get_batchid_oldest_unfinished_job, get_batchid_last_job
+from HPCStats.Model.Node import Node
+from HPCStats.Model.Run import Run
+from HPCStats.Model.User import User
+from HPCStats.Model.Account import Account
+from HPCStats.Model.Project import Project
+from HPCStats.Model.Business import Business
 
 class JobImporterSlurm(JobImporter):
 
@@ -42,193 +49,253 @@ class JobImporterSlurm(JobImporter):
 
         super(JobImporterSlurm, self).__init__(app, db, config, cluster)
 
-        slurm_section = self.cluster.name + "/slurm"
+        section = self.cluster.name + '/slurm'
 
-        self._dbhost = config.get(slurm_section,"host")
-        self._dbport = int(config.get(slurm_section,"port"))
-        self._dbname = config.get(slurm_section,"name")
-        self._dbuser = config.get(slurm_section,"user")
-        self._dbpass = config.get(slurm_section,"password")
+        self._dbhost = config.get(section, 'host')
+        self._dbport = int(config.get(section, 'port'))
+        self._dbname = config.get(section, 'name')
+        self._dbuser = config.get(section, 'user')
+        self._dbpass = config.get(section, 'password')
+
+        self.conn = None
+        self.cur = None
+
+    def load(self):
+        """Load jobs from Slurm DB."""
+
+        self.jobs = []
+
         try:
-            self._conn = MySQLdb.connect( host = self._dbhost,
-                                          user = self._dbuser,
-                                          passwd = self._dbpass,
-                                          db = self._dbname,
-                                          port = self._dbport )
-        except _mysql_exceptions.OperationalError as e:
-            logging.error("connection to Slurm DBD MySQL failed: %s", e)
-            raise RuntimeError
-        self._cur = self._conn.cursor(MySQLdb.cursors.DictCursor)
+            self.conn = MySQLdb.connect( host=self._dbhost,
+                                         user=self._dbuser,
+                                         passwd=self._dbpass,
+                                         db=self._dbname,
+                                         port=self._dbport )
+            self.cur = self.conn.cursor()
+        except _mysql_exceptions.OperationalError as error:
+            raise HPCStatsSourceError( \
+                    "connection to Slurm DBD MySQL failed: %s", error)
 
         # get partitions list for nodes from ArchitectureImporter
         self._partitions = self.app.arch.partitions
 
-        # The id_assoc dict attribute is used as associations ID/login mapping
-        # cache at Job objects creation.
-        self.id_assoc = None
-        self.fill_id_assoc()
+        # Determine the batchid_search
+        batchid_oldest_unfinished_job = get_batchid_oldest_unfinished_job(self.db, self.cluster)
+        batchid_last_job = get_batchid_last_job(self.db, self.cluster)
+        if batchid_oldest_unfinished_job:
+            batchid_search = batchid_oldest_unfinished_job
+        elif batchid_last_job:
+            batchid_search = batchid_last_job
+        else:
+            batchid_search = -1
 
-    def request_jobs_since_job_id(self, job_id, offset, max_jobs):
+        self.get_jobs_after_batchid(batchid_search)
+
+    def get_jobs_after_batchid(self, batchid):
+        """Fill the jobs attribute with the list of Jobs found in Slurm DB
+           whose id_job is over or equals to the batchid in parameter.
+        """
+
+        self.jobs = []
+        self.runs = []
+
         req = """
-            SELECT id_job,
-                   job_db_inx,
-                   id_user,
-                   id_group,
-                   time_submit,
-                   time_start,
-                   time_end,
-                   nodes_alloc,
-                   cpus_alloc,
-                   partition,
-                   qos.name AS qos,
-                   state,
-                   nodelist,
-                   id_assoc,
-                   job_name
-             FROM %s_job_table job,
-                  qos_table qos
-             WHERE id_job > %%s
-               AND qos.id = job.id_qos
-             ORDER BY job_db_inx
-             LIMIT %%s, %%s; """ % (self.cluster.name)
-        datas = (job_id, offset, max_jobs)
-        self._cur.execute(req, datas)
-        results = self._cur.fetchall()
-        return results
+                SELECT id_job,
+                       job_db_inx,
+                       id_user,
+                       id_group,
+                       time_submit,
+                       time_start,
+                       time_end,
+                       nodes_alloc,
+                       cpus_alloc,
+                       partition,
+                       qos.name AS qos,
+                       state,
+                       nodelist,
+                       assoc.user,
+                       job_name,
+                       wckey
+                  FROM %s_job_table job,
+                       %s_assoc_table assoc,
+                       qos_table qos
+                 WHERE id_job >= %%s
+                   AND assoc.id_assoc = job.id_assoc
+                   AND qos.id = job.id_qos
+              ORDER BY id_job
+              """ % (self.cluster.name, self.cluster.name)
+        params = ( batchid, )
+        self.cur.execute(req, params)
+        while (1):
+            row = self.cur.fetchone()
+            if row == None: break
 
-    def request_job_from_dbid(self, job_dbid):
-        req = """
-            SELECT id_job,
-                   job_db_inx,
-                   id_user,
-                   id_group,
-                   time_submit,
-                   time_start,
-                   time_end,
-                   nodes_alloc,
-                   cpus_alloc,
-                   partition,
-                   qos.name AS qos,
-                   state,
-                   nodelist,
-                   id_assoc,
-                   job_name
-            FROM %s_job_table job,
-                  qos_table qos
-            WHERE job_db_inx = %%s
-              AND qos.id = job.id_qos
-            ORDER BY job_db_inx; """ % (self.cluster.name)
-        datas = (job_dbid)
-        self._cur.execute(req, datas)
-        results = self._cur.fetchall()
-        return results
+            batch_id = row[0]
+            sched_id = row[1]
 
-    def get_job_information_from_dbid_job_list(self, ids_job):
-        jobs = []
-        for id_job in ids_job:
-            result = self.request_job_from_dbid(id_job)
-            jobs.append(self.job_from_information(result[0]))
-        #self._filter(jobs)
-        return jobs
+            submission_t = row[4]
+            if submission_t == 0:
+                submission = None
+            else:
+                submission = datetime.fromtimestamp(submission_t)
 
-    def get_job_for_id_above(self, id_job, offset, max_jobs):
-        jobs = []
-        results = self.request_jobs_since_job_id(id_job, offset, max_jobs)
-        for result in results:
-            jobs.append(self.job_from_information(result))
-        #self._filter(jobs)
-        return jobs
+            start_t = row[5]
+            if start_t == 0:
+                start = None
+            else:
+                start = datetime.fromtimestamp(start_t)
 
-    def job_from_information(self, res):
-        # manage a case where slurmdbd puts a weird value '(null)' in nodelist
-        str_nodelist = res["nodelist"]
-        if str_nodelist == "(null)" or str_nodelist == "None assigned" :
-            str_nodelist = None
+            end_t = row[6]
+            if end_t == 0:
+                end = None
+            else:
+                end = datetime.fromtimestamp(end_t)
+
+            name = row[14]
+            nbcpu = row[8]
+            state = self.get_job_state_from_slurm_state(row[11]),
+
+            nodelist = row[12]
+            if nodelist == "(null)" or nodelist == "None assigned" :
+                nodelist = None
+
+            partition = self.job_partition(sched_id, row[9], nodelist)
+            qos = row[10]
+            queue = "%s-%s" % (partition, qos)
+
+            login = row[13]
+            searched_user = User(login, None, None, None)
+            searched_account = Account(searched_user, self.cluster, None, None, None, None)
+            account = self.app.users.find_account(searched_account)
+
+            wckey = row[15]
+            wckey_items = wckey.split(':')
+            if len(wckey_items) != 2:
+                raise HPCStatsSourceError( \
+                        "format of wckey %s is not valid" \
+                          % (wckey))
+
+            project_code = wckey_items[0]
+            searched_project = Project(None, project_code, None)
+            project = self.app.projects.find_project(searched_project)
+            if project is None:
+                raise HPCStatsSourceError( \
+                        "project %s not found in loaded projects" \
+                          % (project_code))
+
+            business_code = wckey_items[1]
+            searched_business = Business(business_code, None)
+            business = self.app.business.find(searched_business)
+            if business is None:
+                raise HPCStatsSourceError( \
+                        "business code %s not found in loaded business codes" \
+                          % (business_code))
+
+            job = Job(account, project, business, sched_id, batch_id, name,
+                      nbcpu, state, queue, submission, start, end)
+            self.jobs.append(job)
+
+            if nodelist is not None:
+                try:
+                    nodeset = NodeSet(nodelist)
+                except NodeSetParseRangeError as e:
+                    raise HPCStatsSourceError( \
+                            "could not parse nodeset %s for job %s" \
+                              % (nodelist, batch_id))
+
+                for nodename in nodeset:
+                    searched_node = Node(nodename, self.cluster, None, None, None, None)
+                    node = self.app.arch.find_node(searched_node)
+                    if node is None:
+                        raise HPCStatsSourceError(
+                                "unable to find node %s for job %s in loaded nodes" \
+                                  % (nodename, batch_id))
+
+                    run = Run(self.cluster, node, job)
+                    self.runs.append(run)
+
+    def job_partition(self, job_id, partitions_str, nodelist):
+        """Return one partition name depending on the partition field and the
+           nodelist job record in Slurm DB.
+        """
 
         # manage case where partitions is a list
-        str_partition = None
-        str_partitions_lst = res["partition"]
-        lst_partitions = str_partitions_lst.split(",")
-        if len(lst_partitions) == 1:
-            str_partition = lst_partitions[0]
+        job_partitions = partitions_str.split(',')
+        if len(job_partitions) == 1:
+            partition = job_partitions[0]
         else:
-            # if nodelist is None, arbitrary choose the first partition out of the list
-            if not str_nodelist:
-                str_partition = lst_partitions[0]
+            # If nodelist is None, arbitrary choose the first partition out of
+            # the list
+            if not nodelist:
+                partition = job_partitions[0]
             else:
                 # look for the actual running partition of the job
                 # through self._partitions
-                ns_job = NodeSet(str_nodelist)
-                logging.info("trying to find the actual running partition for job %d with list %s and nodes %s (%d)",
-                              res["id_job"],
-                              str_partitions_lst,
-                              str_nodelist,
-                              len(ns_job) )
-                for str_part_nodeset in self._partitions.keys():
-                    ns_part = NodeSet(str_part_nodeset)
-                    if len(ns_job.intersection(ns_part)) == len(ns_job):
+                nodeset_job = NodeSet(nodelist)
+                logging.debug("trying to find the actual running partition " \
+                              "for job %d with list %s and nodes %s (%d)",
+                              job_id,
+                              job_partitions,
+                              nodelist,
+                              len(nodeset_job) )
+
+                for nodelist_parts, partitions in self._partitions.iteritems():
+                    nodeset_parts = NodeSet(nodelist_parts)
+                    intersect = nodeset_job.intersection(nodeset_parts)
+                    if len(intersect) == len(nodeset_job):
                         # iterate over job's partitions list
-                        for str_tmp_partition in lst_partitions:
-                            if str_tmp_partition in self._partitions[str_part_nodeset]:
-                                 logging.info("job %d found partition %s in list %s which intersect for nodes %s",
-                                               res["id_job"],
-                                               str_tmp_partition,
-                                               str_partitions_lst,
-                                               str_nodelist )
+                        for xpart in job_partitions:
+                            if xpart in partitions:
+                                 logging.debug("job %d found partition %s " \
+                                               "in list %s which intersect " \
+                                               "for nodes %s",
+                                               job_id,
+                                               xpart,
+                                               partitions,
+                                               job_nodelist )
                                  # partition found
-                                 str_partition = str_tmp_partition
+                                 partition = xpart
                     else:
-                        logging.debug("job %d nodes %s do not entirely intersect with %s (%d != %d)",
-                                       res["id_job"],
-                                       str_nodelist,
-                                       str_part_nodeset,
-                                       len(ns_job),
-                                       len(ns_job.intersection(ns_part)) )
+                        logging.debug("job %d nodes %s do not entirely " \
+                                      "intersect with %s (%d != %d)",
+                                       job_id,
+                                       nodelist,
+                                       nodelist_parts,
+                                       len(nodeset_job),
+                                       len(intersect) )
 
-            if str_partition == None:
-                logging.error("job %d did not found partition in list %s which intersect for nodes %s",
-                               res["id_job"],
-                               str_partitions_lst,
+            if partition_str is None:
+                logging.error("job %d did not found partition in list %s " \
+                              "which intersect for nodes %s",
+                               job_id,
+                               partitions_str,
                                str_nodelist )
-                str_partition = "UNKNOWN"
+                partition = "UNKNOWN"
 
-        job = Job(  id_job = res["id_job"],
-                    sched_id = str(res["job_db_inx"]),
-                    uid = int(res["id_user"]),
-                    gid = int(res["id_group"]),
-                    submission_datetime = datetime.fromtimestamp(res["time_submit"]),
-                    running_datetime = datetime.fromtimestamp(res["time_start"]),
-                    end_datetime = datetime.fromtimestamp(res["time_end"]),
-                    nb_procs = res["cpus_alloc"],
-                    nb_hosts =  res["nodes_alloc"],
-                    running_queue = str_partition+"-"+res["qos"],
-                    nodes = str_nodelist,
-                    state = self.get_job_state_from_slurm_state(res["state"]),
-                    cluster_name = self.cluster.name,
-                    login = self.id_assoc[res["id_assoc"]],
-                    name = res["job_name"])
-        return job
+        return partition
 
-    """
-        From slurm.h.inc
-            enum job_states {
-            JOB_PENDING, /* queued waiting for initiation */
-            JOB_RUNNING, /* allocated resources and executing */
-            JOB_SUSPENDED, /* allocated resources, execution suspended */
-            JOB_COMPLETE, /* completed execution successfully */
-            JOB_CANCELLED, /* cancelled by user */
-            JOB_FAILED, /* completed execution unsuccessfully */
-            JOB_TIMEOUT, /* terminated on reaching time limit */
-            JOB_NODE_FAIL, /* terminated on node failure */
-            JOB_PREEMPTED, /* terminated due to preemption */
-            JOB_END /* not a real state, last entry in table */
-            };
-            #define JOB_RESIZING    0x2000  /* Size of job about to change, flag set
-                                             * before calling accounting functions
-                                             * immediately before job changes size */
-
-    """
     def get_job_state_from_slurm_state(self, state):
+        """Returns the human readable job state textual representation
+           corresponding to the numeric state in parameter.
+
+           From slurm.h.inc
+             enum job_states {
+             JOB_PENDING, /* queued waiting for initiation */
+             JOB_RUNNING, /* allocated resources and executing */
+             JOB_SUSPENDED, /* allocated resources, execution suspended */
+             JOB_COMPLETE, /* completed execution successfully */
+             JOB_CANCELLED, /* cancelled by user */
+             JOB_FAILED, /* completed execution unsuccessfully */
+             JOB_TIMEOUT, /* terminated on reaching time limit */
+             JOB_NODE_FAIL, /* terminated on node failure */
+             JOB_PREEMPTED, /* terminated due to preemption */
+             JOB_END /* not a real state, last entry in table */
+             };
+             #define JOB_RESIZING    0x2000  /* Size of job about to change, flag set
+                                              * before calling accounting functions
+                                              * immediately before job changes size */
+
+        """
         slurm_state = {
             0:"PENDING", # queued waiting for initiation
             1:"RUNNING", # allocated resources and executing
@@ -246,79 +313,15 @@ class JobImporterSlurm(JobImporter):
         }
         return slurm_state[state]
 
-    def _filter(self, jobs):
-        job_filter = JobFilterSlurmNoStartTime(self, jobs)
-        job_filter.run()
+    def update(self):
+        """Update and save loaded Jobs in HPCStats DB."""
 
-    def get_wckey_from_job(self, id_job):
-        req = """
-            SELECT wckey
-            FROM %s_job_table
-            WHERE id_job = %%s
-            """ % (self.cluster.name)
-        data = (id_job)
-        cur = self._conn.cursor()
-        cur.execute(req, data)
-        result = cur.fetchone()
-        return result[0]
-
-    def fill_id_assoc(self):
-        """Fill id_assoc dict attribute with data coming from SlurmDBD."""
-
-        self.id_assoc = {}
-        req = """
-             SELECT id_assoc, user
-             FROM %s_assoc_table
-             WHERE user != '';
-        """ % (self.cluster.name)
-        self._cur.execute(req)
-        results = self._cur.fetchall()
-        for ii in results:
-            self.id_assoc[ii['id_assoc']] = ii['user']
-
-class JobFilterSlurmNoStartTime:
-
-    def __init__(self, job_importer, jobs):
-
-        self._name = "SlurmNoStartTime"
-        self._description = "Filter job imported from SlurmDBD with no time_start"
-        self._slurmdbd_cur = job_importer._cur
-        self._jobs = jobs
-
-    def __str__(self):
-        return "JobFilter %s (%d jobs)" % (self._name, len(self._jobs))
-
-    def run(self):
-        for job in self._jobs:
-            if not self._filter_job(job):
-                self._jobs.remove(job)
-                logging.info("job %s removed from import", job)
-
-    def _filter_job(self, job):
-
-        if job.get_state() != 'PENDING' and \
-           job.get_running_datetime() == datetime(1970,1,1,1,0,0):
-
-            sql = """
-                SELECT id_step,
-                       time_start
-                FROM %s_step_table
-                WHERE job_db_inx = %%s
-                ORDER BY id_step; """ % (job.get_cluster_name())
-
-            data = (job.get_db_id(),)
-            self._slurmdbd_cur.execute(sql, data)
-            row = self._slurmdbd_cur.fetchone()
-            if row == None:
-                logging.info("job %s has no first step.", job)
-                return None
+        for job in self.jobs:
+            if job.find(self.db):
+                job.update(self.db)
             else:
-                step_id = row[0]
-                step_start = datetime.fromtimestamp(row[1])
-                logging.info("job %s has first step started at %s",
-                              job,
-                              step_start )
-                job.set_running_datetime(step_start)
-                return job
-        else:
-            return job
+                job.save(self.db)
+
+        for run in self.runs:
+            if not run.existing(self.db):
+                run.save(self.db)

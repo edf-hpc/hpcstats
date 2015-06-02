@@ -35,37 +35,5 @@ class JobImporter(Importer):
 
         super(JobImporter, self).__init__(app, db, config, cluster)
 
-    def get_last_job_id(self):
-        """Returns the last inserted id_job in HPCStats DB."""
-
-        last_job_id = 0
-        req = """
-            SELECT MAX(id_job) AS last_id
-            FROM jobs
-            WHERE clustername = %s; """
-        datas = (self.cluster.name,)
-        cur = self._db.cur
-        cur.execute(req, datas)
-        results = cur.fetchall()
-        for job in results:
-            if last_job_id < job[0]:
-                last_job_id = job[0]
-        return last_job_id
-
-    def get_unfinished_job_id(self):
-        """Returns the list of sched_id of unfinished jobs in HPCStats DB."""
-
-        unfinished_job_dbid = []
-        req = """
-            SELECT sched_id
-            FROM jobs
-            WHERE clustername = %s
-              AND (   state = 'PENDING'
-                   OR state = 'RUNNING' ); """
-        datas = (self.cluster.name,)
-        cur = self._db.cur
-        cur.execute(req, datas)
-        results = cur.fetchall()
-        for job in results:
-            unfinished_job_dbid.append(job[0])
-        return unfinished_job_dbid
+        self.jobs = None
+        self.runs = None
