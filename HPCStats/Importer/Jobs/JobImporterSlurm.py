@@ -153,7 +153,7 @@ class JobImporterSlurm(JobImporter):
 
             name = row[14]
             nbcpu = row[8]
-            state = self.get_job_state_from_slurm_state(row[11]),
+            state = self.get_job_state_from_slurm_state(row[11])
 
             nodelist = row[12]
             if nodelist == "(null)" or nodelist == "None assigned" :
@@ -167,6 +167,10 @@ class JobImporterSlurm(JobImporter):
             searched_user = User(login, None, None, None)
             searched_account = Account(searched_user, self.cluster, None, None, None, None)
             account = self.app.users.find_account(searched_account)
+            if account is None:
+                raise HPCStatsSourceError( \
+                        "account %s not found in loaded accounts" \
+                          % (login))
 
             wckey = row[15]
             wckey_items = wckey.split(':')
