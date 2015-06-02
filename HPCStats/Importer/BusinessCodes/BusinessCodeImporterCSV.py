@@ -37,9 +37,9 @@ from HPCStats.Model.ContextAccount import ContextAccount
 
 class BusinessCodeImporterCSV(BusinessCodeImporter):
 
-    def __init__(self, app, db, config, cluster):
+    def __init__(self, app, db, config):
 
-        super(BusinessCodeImporterCSV, self).__init__(app, db, config, cluster)
+        super(BusinessCodeImporterCSV, self).__init__(app, db, config)
 
         business_section = "business"
         self._business_file = config.get(business_section, "file")

@@ -74,7 +74,7 @@ class TestsBusinessCodeImporterCSVLoad(HPCStatsTestCase):
         self.conf.conf = CONFIG
         self.app = None
         self.db = None
-        self.importer = BusinessCodeImporterCSV(self.app, self.db, self.conf, self.cluster)
+        self.importer = BusinessCodeImporterCSV(self.app, self.db, self.conf)
 
     def test_init(self):
         """ProjectImporterCSV.__init__() runs w/o problem
@@ -191,7 +191,7 @@ class TestsBusinessCodeImporterCSVUpdate(HPCStatsTestCase):
         self.app = None
         self.db = HPCStatsDB(self.conf)
         self.db.bind()
-        self.importer = BusinessCodeImporterCSV(self.app, self.db, self.conf, self.cluster)
+        self.importer = BusinessCodeImporterCSV(self.app, self.db, self.conf)
 
     def test_update_not_exists(self):
         """ProjectImporterCSV.update() works when business code does not exist

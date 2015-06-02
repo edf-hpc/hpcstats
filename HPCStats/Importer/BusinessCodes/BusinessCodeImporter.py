@@ -31,9 +31,9 @@ from HPCStats.Importer.Importer import Importer
 
 class BusinessCodeImporter(Importer):
 
-    def __init__(self, app, db, config, cluster):
+    def __init__(self, app, db, config):
 
-        super(BusinessCodeImporter, self).__init__(app, db, config, cluster)
+        super(BusinessCodeImporter, self).__init__(app, db, config, None)
 
         self.businesses = None
 
