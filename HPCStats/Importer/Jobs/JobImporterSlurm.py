@@ -33,7 +33,7 @@ from datetime import datetime
 from ClusterShell.NodeSet import NodeSet
 import logging
 import os
-from HPCStats.Exceptions import *
+from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Model.Job import Job, get_batchid_oldest_unfinished_job, get_batchid_last_job
 from HPCStats.Model.Node import Node
