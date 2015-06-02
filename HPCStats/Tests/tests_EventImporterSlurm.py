@@ -102,7 +102,7 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         self.conf.conf = CONFIG.copy()
         self.db = HPCStatsDB(self.conf)
         self.db.bind()
-        self.app = MockApp(self.db, self.conf, self.cluster.name)
+        self.app = MockApp(self.db, self.conf, self.cluster)
         self.importer = EventImporterSlurm(self.app,
                                            self.db,
                                            self.conf,

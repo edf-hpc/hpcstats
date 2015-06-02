@@ -27,12 +27,10 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-from HPCStats.Tests.Mocks.ArchitectureImporter import MockArchitectureImporter
-from HPCStats.Tests.Mocks.UserImporter import MockUserImporter
+from HPCStats.Importer.Users.UserImporter import UserImporter
 
-class MockApp(object):
+class MockUserImporter(UserImporter):
 
-    def __init__(self, db, config, cluster):
+    def __init__(self, app, db, config, cluster):
 
-        self.arch = MockArchitectureImporter(self, db, config, cluster.name)
-        self.users = MockUserImporter(self, db, config, cluster)
+        super(MockUserImporter, self).__init__(app, db, config, cluster)
