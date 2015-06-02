@@ -27,17 +27,39 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+from datetime import datetime
+import time
 import mock
 
+from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Model.Cluster import Cluster
+from HPCStats.Model.Node import Node
+from HPCStats.Model.User import User
+from HPCStats.Model.Account import Account
+from HPCStats.Model.Project import Project
+from HPCStats.Model.Sector import Sector
+from HPCStats.Model.Domain import Domain
+from HPCStats.Model.Business import Business
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
+from HPCStats.DB.HPCStatsDB import HPCStatsDB
+from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
+from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
+import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
+from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
 import HPCStats.Tests.Mocks.MySQLdb as MockMySQLdb # for MY_REQS
 from HPCStats.Tests.Mocks.MySQLdb import mock_mysqldb
 from HPCStats.Tests.Mocks.Conf import MockConf
 from HPCStats.Tests.Mocks.App import MockApp
 
 CONFIG = {
+  'hpcstatsdb': {
+    'hostname': 'test_hostname',
+    'port':     'test_port',
+    'dbname':   'test_name',
+    'user':     'test_user',
+    'password': 'test_password',
+  },
   'testcluster/slurm': {
     'host': 'dbhost',
     'port': 3128,
@@ -47,24 +69,48 @@ CONFIG = {
   }
 }
 
-MockMySQLdb.MY_REQS['get_assocs'] = {
-  'req': "SELECT id_assoc, user " \
-         "FROM .*_assoc_table " \
-         "WHERE user != '';",
+MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
+  'req': "SELECT id_job, " \
+                "job_db_inx, " \
+                "id_user, " \
+                "id_group, " \
+                "time_submit, " \
+                "time_start, " \
+                "time_end, " \
+                "nodes_alloc, " \
+                "cpus_alloc, " \
+                "partition, " \
+                "qos.name AS qos, " \
+                "state, " \
+                "nodelist, " \
+                "assoc.user, " \
+                "job_name, " \
+                "wckey " \
+          "FROM .*_job_table job, "\
+               ".*_assoc_table assoc, " \
+               "qos_table qos " \
+         "WHERE id_job >= %s " \
+           "AND assoc.id_assoc = job.id_assoc " \
+           "AND qos.id = job.id_qos " \
+      "ORDER BY id_job",
   'res': []
+
 }
+
+module = 'HPCStats.Importer.Jobs.JobImporterSlurm'
 
 class TestsJobImporterSlurm(HPCStatsTestCase):
 
-    @mock.patch('HPCStats.Importer.Jobs.JobImporterSlurm.MySQLdb',
-                mock_mysqldb())
+    @mock.patch("HPCStats.DB.HPCStatsDB.psycopg2", mock_psycopg2())
     def setUp(self):
-        self.db = 'testdb'
-        self.conf = MockConf(CONFIG, 'testcluster')
+        self.filename = 'fake'
         self.cluster = Cluster('testcluster')
-        self.app = MockApp(self.db, self.conf, self.cluster.name)
-        MockMySQLdb.MY_REQS['get_assocs']['res'] = \
-          [ { 'id_assoc': 1, 'user': 'toto' } ]
+        HPCStatsConf.__bases__ = (MockConfigParser, object)
+        self.conf = HPCStatsConf(self.filename, self.cluster)
+        self.conf.conf = CONFIG.copy()
+        self.db = HPCStatsDB(self.conf)
+        self.db.bind()
+        self.app = MockApp(self.db, self.conf, self.cluster)
         self.importer = JobImporterSlurm(self.app,
                                          self.db,
                                          self.conf,
@@ -75,5 +121,42 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         """
         self.assertEquals(self.importer._dbhost,
                           self.conf.conf[self.cluster.name + '/slurm']['host'])
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load(self):
+        """JobImporterSlurm.load() works with simple data."""
+
+        j1_submit = datetime(2015, 3, 2, 16, 0, 1)
+        j1_start = datetime(2015, 3, 2, 16, 0, 2)
+        j1_end = datetime(2015, 3, 2, 16, 0, 3)
+        j1_submit_ts = time.mktime(j1_submit.timetuple())
+        j1_start_ts = time.mktime(j1_start.timetuple())
+        j1_end_ts = time.mktime(j1_end.timetuple())
+
+        node1 = Node('node1', self.cluster, 'partition1', 4, 4, 0)
+        node2 = Node('node2', self.cluster, 'partition1', 4, 4, 0)
+
+        a1_create = datetime(2010, 1, 1, 12, 0, 0)
+        user1 = User('login1', 'firstname1', 'lastname1', 'department1')
+        account1 = Account(user1, self.cluster, 1000, 1000, a1_create, None)
+
+        domain1 = Domain('domain1', 'domain 1')
+        sector1 = Sector(domain1, 'sector1', 'sector 1')
+        project1 = Project(sector1, 'project1', 'description project 1')
+
+        business1 = Business('business1', 'business description 1')
+
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
+          [
+            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
+              2, 4, 'partition1', 'qos1', 1, 'node[1-2]', 'user1',
+              'job1', 'project1:business1' ],
+          ]
+
+        self.app.arch.nodes = [ node1, node2 ]
+        self.app.users.accounts = [ account1 ]
+        self.app.projects.projects = [ project1 ]
+        self.app.business.businesses = [ business1 ]
+        self.importer.load()
 
 loadtestcase(TestsJobImporterSlurm)
