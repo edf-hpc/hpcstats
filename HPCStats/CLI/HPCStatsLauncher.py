@@ -36,7 +36,7 @@ from HPCStats.CLI.HPCStatsImporter import HPCStatsImporter
 from HPCStats.CLI.HPCStatsReporter import HPCStatsReporter
 from HPCStats.CLI.HPCStatsArgumentParser import HPCStatsArgumentParser
 
-class HPCStatsLauncher(object)
+class HPCStatsLauncher(object):
 
     """HPCStats application factory. It basically parses the arguments, set
        various global and general parameters, creates the configuration object
