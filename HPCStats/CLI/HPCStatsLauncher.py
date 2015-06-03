@@ -57,7 +57,7 @@ class HPCStatsLauncher(object):
 
         # locale to format numbers
         # TODO: load locale output of the environment
-        locale.setlocale(locale.LC_ALL, 'fr_FR')
+        locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
 
         # enable debug mode
         logging_level = logging.INFO
