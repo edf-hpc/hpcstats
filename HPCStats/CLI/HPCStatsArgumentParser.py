@@ -64,7 +64,8 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
 
         parser_imp.add_argument("--cluster",
                                 dest='cluster',
-                                nargs='1',
+                                nargs=1,
+                                required=True,
                                 help="Cluster to import data from. " \
                                      "Could be one cluster name or " \
                                      "special value all for all " \
@@ -74,7 +75,8 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
 
         parser_rep.add_argument("--cluster",
                                 dest='cluster',
-                                nargs='1',
+                                nargs=1,
+                                required=True,
                                 help="Cluster to report data about" )
 
         parser_rep.add_argument("--interval",
