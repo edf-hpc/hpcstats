@@ -77,15 +77,13 @@ class HPCStatsLauncher(object):
         conf = HPCStatsConf(args.conf, args.cluster)
         cluster_name = args.cluster
 
-        if action == "importer":
+        if action == "import":
             self.app = HPCStatsImporter(conf, cluster_name)
-        elif action == "reporter":
+        elif action == "report":
             template = args.template
             interval = args.interval
             self.app = HPCStatsReporter(conf, cluster_name,
                                         template, interval)
-        else:
-            raise NotImplemented
 
     def run(self):
         """Run the application and catch all exceptions."""
