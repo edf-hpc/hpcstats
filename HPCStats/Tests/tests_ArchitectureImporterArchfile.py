@@ -61,8 +61,8 @@ BASIC_ARCH = {
     "partitions": "group_compute",
   },
   "test_cluster/group_compute": {
-    "nodesets": "cn",
-    "slurm_partitions": "compute",
+    "nodegroups": "cn",
+    "job_partitions": "compute",
   },
   "test_cluster/group_compute/cn": {
     "names": "cn[0001-1000]",
