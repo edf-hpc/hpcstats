@@ -28,7 +28,6 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
-from HPCStats.Importer.Users.UserImporterLdapSlurm import UserImporterLdapSlurm
 from HPCStats.Importer.Users.UserImporterLdap import UserImporterLdap
 
 class UserImporterFactory(object):
