@@ -42,7 +42,17 @@ class HPCStatsConf(ConfigParser.ConfigParser, object):
 
         self.cluster = cluster
         self.filename = filename
-        self.read(filename)
+
+    def read(self):
+        """Check if configuration file exists and then read it. Raises
+           HPCStatsConfigurationException if configuration file does not exist.
+        """
+
+        if not os.path.exists(self.filename):
+            raise HPCStatsConfigurationException(
+                    "file %s does not exist" % (self.filename))
+
+        super(HPCStatsConf, self).read(self.filename)
 
     def get(self, section, option):
         """Try to get option value in section of configuration. Raise

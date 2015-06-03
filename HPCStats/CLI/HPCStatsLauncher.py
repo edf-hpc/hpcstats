@@ -75,6 +75,13 @@ class HPCStatsLauncher(object):
 
         action = args.action
         conf = HPCStatsConf(args.conf, args.cluster)
+
+        try:
+            conf.read()
+        except HPCStatsConfigurationException, err:
+            logging.error("Configuration Error: %s", err)
+            self.exit()
+
         cluster_name = args.cluster
 
         if action == "import":
