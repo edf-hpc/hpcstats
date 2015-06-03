@@ -157,4 +157,3 @@ class ContextImporterCSV(ContextImporter):
         for context in self.contexts:
             if not context.existing(self.db):
                 context.save(self.db)
-        self.db.commit()

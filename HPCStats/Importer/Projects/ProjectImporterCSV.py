@@ -183,7 +183,6 @@ class ProjectImporterCSV(ProjectImporter):
            database.
         """
 
-        # savepoint is used to considere exceptions and commit in database only at the end.
         for domain in self.domains:
              if domain.existing(self.db):
                  domain.update(self.db)
@@ -199,4 +198,3 @@ class ProjectImporterCSV(ProjectImporter):
                 project.update(self.db)
             else:
                 project.save(self.db)
-        self.db.commit()

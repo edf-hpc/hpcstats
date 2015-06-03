@@ -77,20 +77,5 @@ class HPCStatsDB(object):
         """ Disconnect from the database """
         self._conn.close()
 
-    def execute(self, req, datas):
-        try:
-            logging.debug(datas)
-            self.cur.execute(req, datas)
-        except:
-            logging.error("can't execute, rollback launch")
-            self.cur.rollback()
-            self.commit()
-            pass
-        else:
-            self.commit()
-
-    def get_conn(self):
-        return self._conn
-
     def commit(self):
         self._conn.commit()

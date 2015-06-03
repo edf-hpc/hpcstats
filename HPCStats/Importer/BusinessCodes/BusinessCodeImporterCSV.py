@@ -83,4 +83,3 @@ class BusinessCodeImporterCSV(BusinessCodeImporter):
                 business.save(self.db)
             else:
                 business.update(self.db)
-        self.db.commit()

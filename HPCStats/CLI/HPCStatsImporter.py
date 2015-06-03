@@ -94,6 +94,7 @@ class HPCStatsImporter(HPCStatsApp):
         for cluster_name in clusters:
             self.import_cluster_data(cluster_name)
 
+        db.commit()
         db.unbind()
 
     def import_cluster_data(self, cluster_name):
