@@ -34,5 +34,3 @@ class MockArchitectureImporter(ArchitectureImporter):
     def __init__(self, app, db, config, cluster_name):
 
         super(MockArchitectureImporter, self).__init__(app, db, config, cluster_name)
-
-        self.partitions = { 'nodes[001-100]': ['compute', ] }
