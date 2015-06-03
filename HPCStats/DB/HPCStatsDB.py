@@ -30,6 +30,8 @@
 import logging
 import psycopg2
 
+from HPCStats.Exceptions import HPCStatsRuntimeError
+
 class HPCStatsDB(object):
 
     def __init__(self, conf):
@@ -62,7 +64,12 @@ class HPCStatsDB(object):
                    "user= %(dbuser)s " \
                    "password= %(dbpassword)s" \
                      % (self.database)
-        self._conn = psycopg2.connect(conn_str)
+        try:
+            self._conn = psycopg2.connect(conn_str)
+        except psycopg2.OperationalError, err:
+            raise HPCStatsRuntimeError( \
+                    "Error while trying to connect on HPCStats DB: %s" \
+                      % (err))
         self.cur = self._conn.cursor()
         return self.cur, self._conn
 
