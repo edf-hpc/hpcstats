@@ -105,7 +105,7 @@ class HPCStatsLauncher(object):
             self.exit()
 
 
-    def exit():
+    def exit(self):
         """Clean-up the application and exit the program with error return
            node.
         """
