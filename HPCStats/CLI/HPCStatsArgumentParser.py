@@ -43,7 +43,7 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
         #                  choices=['import', 'report'],
         #                  help="name of the action to perform")
         self.add_argument("-c", "--conf",
-                          dest="configuration_filename",
+                          dest="conf",
                           default="/etc/hpcstats/hpcstats.conf",
                           help="HPCStats configuration file")
 
