@@ -39,6 +39,14 @@ class ArchitectureImporter(Importer):
 
         self.cluster = None
         self.nodes = None
+
+        # The partition attribute is a dict whose keys are nodelists and
+        # values are lists of job partitions. Ex:
+        #
+        # {
+        #   'compute[001-100]': [ 'prod', 'compute' ],
+        #   'bigmem[01-10]'   : [ 'bigmem' ],
+        # }
         self.partitions = None
 
     def find_node(self, search):

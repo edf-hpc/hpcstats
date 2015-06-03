@@ -295,4 +295,11 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
                "unable to find node node1 for job 0 in loaded nodes",
                self.importer.load)
 
+    def test_job_partition(self):
+        """JobImporterSlurm.job_partition() must return correct partition for
+           based on job partition list and its nodelist.
+        """
+        partition = self.importer.job_partition(0, 'partition1,partition2', 'node[1-100]')
+        self.assertEquals(partition, 'partition1')
+
 loadtestcase(TestsJobImporterSlurm)
