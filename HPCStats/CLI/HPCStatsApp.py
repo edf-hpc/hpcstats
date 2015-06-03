@@ -43,6 +43,18 @@ class HPCStatsApp(object):
         self.cluster_name = cluster_name
         self.cluster = None # Cluster object created later in apps run()
 
+    def new_db(self):
+        """Returns a new HPCStatsDB object."""
+
+        # Instantiate connexion to db
+        db = HPCStatsDB(self.conf)
+        db.bind()
+        logging.debug("db information %s %s %s %s %s" % db.infos())
+        return db
+
+    def run_check(self):
+        """Pre-run checks"""
+
         # dump configuration in debug mode
         for section in self.conf.sections():
             logging.debug("conf: %s", section)
@@ -54,15 +66,6 @@ class HPCStatsApp(object):
         if self.cluster_name != 'all':
             # check presence of cluster in configuration
             self.conf.check_cluster()
-
-    def new_db(self):
-        """Returns a new HPCStatsDB object."""
-
-        # Instantiate connexion to db
-        db = HPCStatsDB(self.conf)
-        db.bind()
-        logging.debug("db information %s %s %s %s %s" % db.infos())
-        return db
 
     def run(self):
 

@@ -70,6 +70,8 @@ class HPCStatsImporter(HPCStatsApp):
     def run(self):
         """Run HPCStats Importer application."""
 
+        self.run_check()
+
         db = self.new_db()
 
         # import projects and business code that are globals and not related

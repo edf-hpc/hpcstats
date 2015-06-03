@@ -98,16 +98,16 @@ class HPCStatsLauncher(object):
         try:
             self.app.run()
         except HPCStatsConfigurationException, err:
-            logging.error("Configuration Error: ", err)
+            logging.error("Configuration Error: %s", err)
             self.exit()
         except HPCStatsDBIntegrityError, err:
-            logging.error("DB Integrity Error: ", err)
+            logging.error("DB Integrity Error: %s", err)
             self.exit()
         except HPCStatsSourceError, err:
-            logging.error("Source Error: ", err)
+            logging.error("Source Error: %s", err)
             self.exit()
         except HPCStatsRuntimeError, err:
-            logging.error("Runtime Error: ", err)
+            logging.error("Runtime Error: %s", err)
             self.exit()
 
 

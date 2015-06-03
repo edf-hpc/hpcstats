@@ -54,6 +54,8 @@ class HPCStatsReporter(HPCStatsApp):
     def run(self):
         """Run HPCStats Reporter application."""
 
+        self.run_check()
+
         logging.debug("running on cluster %s with interval %s" \
                       % (self.cluster_name, self.interval))
 
