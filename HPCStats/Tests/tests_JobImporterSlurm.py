@@ -299,7 +299,29 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         """JobImporterSlurm.job_partition() must return correct partition for
            based on job partition list and its nodelist.
         """
-        partition = self.importer.job_partition(0, 'partition1,partition2', 'node[1-100]')
-        self.assertEquals(partition, 'partition1')
+
+        # Only one element in job partition list: it must be returned whatever
+        # the nodelist and ArchitectureImporter job partitions
+        self.app.arch.partitions = { }
+        result = self.importer.job_partition(0, 'partition2', 'node[1-100]')
+        self.assertEquals(result, 'partition2')
+
+        # Multiple elements but None nodelist: it must return arbitrary the
+        # first partition
+        self.app.arch.partitions = { }
+        result = self.importer.job_partition(0, 'partition1,partition2', None)
+        self.assertEquals(result, 'partition1')
+
+        # Multiple elements in partition and defined nodelist: it must return
+        # a corresponding partition loaded by ArchitectureImporter and
+        # associated to a nodelist that fully intersects
+        self.app.arch.partitions = { 'node[1-100]': [ 'partitionX', 'partition2'] }
+        result = self.importer.job_partition(0, 'partition1,partition2', 'node[1-100]')
+        self.assertEquals(result, 'partition2')
+
+        self.app.arch.partitions = { 'node[1-99]': [ 'partition1' ],
+                                     'node[1-100],bm[1-10]': [ 'partitionX', 'partition2' ] }
+        result = self.importer.job_partition(0, 'partition1,partition2', 'node[1-100]')
+        self.assertEquals(result, 'partition2')
 
 loadtestcase(TestsJobImporterSlurm)
