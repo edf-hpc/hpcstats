@@ -35,5 +35,5 @@ import sys
 from HPCStats.CLI.HPCStatsLauncher import HPCStatsLauncher
 
 if __name__ == '__main__':
-    launcher = HPCStatsLauncher(sys.args)
+    launcher = HPCStatsLauncher(sys.argv)
     launcher.run()
