@@ -134,8 +134,6 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
            while loading data from sources. It sets attributes cluster, nodes
            and partitions with loaded data.
         """
-        # [ivanoe]
-        # nodes=nodes1,nodes2,nodes3
 
         self.cluster = Cluster(self.cluster_name)
         self.nodes = []
@@ -149,9 +147,9 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
 
             part_sect = self.cluster.name + "/" + partition
 
-            nodegroups = config_get(part_sect, "nodesets").split(',')
-            slurm_partitions = config_get(part_sect, "slurm_partitions") \
-                                   .split(',')
+            nodegroups = config_get(part_sect, "nodegroups").split(',')
+            job_partitions = config_get(part_sect, "job_partitions") \
+                               .split(',')
 
             nodeset_part = NodeSet() # nodeset for the partitions attribute
 
@@ -211,4 +209,4 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                                     flops=flops)
                     self.nodes.append(new_node)
 
-            self.partitions[str(nodeset_part)] = slurm_partitions
+            self.partitions[str(nodeset_part)] = job_partitions
