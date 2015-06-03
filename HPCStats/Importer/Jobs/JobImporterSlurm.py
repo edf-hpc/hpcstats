@@ -76,8 +76,6 @@ class JobImporterSlurm(JobImporter):
             raise HPCStatsSourceError( \
                     "connection to Slurm DBD MySQL failed: %s", error)
 
-        # get partitions list for nodes from ArchitectureImporter
-        self._partitions = self.app.arch.partitions
 
         # Determine the batchid_search
         batchid_oldest_unfinished_job = get_batchid_oldest_unfinished_job(self.db, self.cluster)
@@ -221,7 +219,33 @@ class JobImporterSlurm(JobImporter):
     def job_partition(self, job_id, partitions_str, nodelist):
         """Return one partition name depending on the partition field and the
            nodelist job record in Slurm DB.
+
+           The partitions_str parameter is the partition field from Slurm DB
+           job table. It is a string that represents a comma-separated list of
+           partitions. Ex: 'partition1,partition2'
+
+           The nodelist parameter is the nodelist field from Slurm DB job
+           table. It a string that represents the nodeset allocated to the job.
+           Ex: 'node[001-100]'
+
+           If this partition list has only one element, this element is the
+           resulting partition to record in HPCStatsDB. If this list has
+           multiple elements, the function looks through the nodelist to find
+           the coresponding partition loaded by ArchitectureImporter.
+
+           If the nodelist is not specified, the function arbitrary select the
+           first element of the partition list.
+
+           Else, it searches through the job partitions loaded by
+           ArchitectureImporter to find the list of job partitions whose
+           nodelist totally intersects with job's nodelist. Once found, it
+           searches the partition over the list and returns it if found.
         """
+
+        partition = None
+
+        # get partitions list for nodes from ArchitectureImporter
+        arch_partitions = self.app.arch.partitions
 
         # manage case where partitions is a list
         job_partitions = partitions_str.split(',')
@@ -230,7 +254,7 @@ class JobImporterSlurm(JobImporter):
         else:
             # If nodelist is None, arbitrary choose the first partition out of
             # the list
-            if not nodelist:
+            if nodelist is None:
                 partition = job_partitions[0]
             else:
                 # look for the actual running partition of the job
@@ -243,7 +267,7 @@ class JobImporterSlurm(JobImporter):
                               nodelist,
                               len(nodeset_job) )
 
-                for nodelist_parts, partitions in self._partitions.iteritems():
+                for nodelist_parts, partitions in arch_partitions.iteritems():
                     nodeset_parts = NodeSet(nodelist_parts)
                     intersect = nodeset_job.intersection(nodeset_parts)
                     if len(intersect) == len(nodeset_job):
@@ -256,7 +280,7 @@ class JobImporterSlurm(JobImporter):
                                                job_id,
                                                xpart,
                                                partitions,
-                                               job_nodelist )
+                                               nodelist )
                                  # partition found
                                  partition = xpart
                     else:
@@ -268,7 +292,7 @@ class JobImporterSlurm(JobImporter):
                                        len(nodeset_job),
                                        len(intersect) )
 
-            if partition_str is None:
+            if partition is None:
                 logging.error("job %d did not found partition in list %s " \
                               "which intersect for nodes %s",
                                job_id,
