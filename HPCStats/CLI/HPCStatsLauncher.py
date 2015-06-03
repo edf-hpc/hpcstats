@@ -32,6 +32,7 @@ import logging
 import locale
 
 from HPCStats.Exceptions import *
+from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.CLI.HPCStatsImporter import HPCStatsImporter
 from HPCStats.CLI.HPCStatsReporter import HPCStatsReporter
 from HPCStats.CLI.HPCStatsArgumentParser import HPCStatsArgumentParser
