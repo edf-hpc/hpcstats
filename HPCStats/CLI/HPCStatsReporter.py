@@ -35,12 +35,8 @@ from dateutil.relativedelta import relativedelta # debian package: python-dateut
 from mako.template import Template # debian package: python-mako
 from multiprocessing import Pool
 
-from HPCStats.CLI.ReportOptionParser import ReportOptionParser
-from HPCStats.CLI.Config import HPCStatsConfig
-from HPCStats.DB.DB import HPCStatsDB
+from HPCStats.CLI.HPCStatsApp import HPCStatsApp
 from HPCStats.Model.Cluster import Cluster
-from HPCStats.Finder.JobFinder import JobFinder
-from HPCStats.Finder.UserFinder import UserFinder
 
 class HPCStatsReporter(HPCStatsApp):
 
