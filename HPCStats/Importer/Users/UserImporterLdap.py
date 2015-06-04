@@ -80,6 +80,9 @@ class UserImporterLdap(UserImporter):
     def load(self):
         """Load (User,Account) tuples from both LDAP directoy and DB."""
 
+        self.users = []
+        self.accounts = []
+
         self.load_ldap()
         self.load_db()
 
