@@ -7,7 +7,7 @@ CREATE TABLE Userhpc(
         userhpc_id         SERIAL,
         userhpc_login      character varying(30) NOT NULL,
         userhpc_name       character varying(30) NOT NULL,
-        userhpc_firstname  character varying(30) NOT NULL,
+        userhpc_firstname  character varying(30),
         userhpc_department character varying(30),
         CONSTRAINT Userhpc_pkey PRIMARY KEY (userhpc_id),
         CONSTRAINT Userhpc_unique UNIQUE (userhpc_login)
@@ -43,7 +43,7 @@ CREATE TABLE Account(
         account_uid      integer NOT NULL,
         account_gid      integer NOT NULL,
         account_creation date NOT NULL,
-        account_deletion date NOT NULL,
+        account_deletion date,
         userhpc_id       integer NOT NULL,
         cluster_id       integer NOT NULL,
         CONSTRAINT Account_pkey PRIMARY KEY (userhpc_id, cluster_id)
