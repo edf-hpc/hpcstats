@@ -80,7 +80,7 @@ class HPCStatsDB(object):
 
         try:
             self.cur.execute(req, params)
-        except psycopg2.DataError, err:
+        except (psycopg2.DataError, psycopg2.ProgrammingError), err:
             raise HPCStatsDBIntegrityError( \
                     "error while executing request: %s" % (err))
 
