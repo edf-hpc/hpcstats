@@ -238,7 +238,7 @@ class UserImporterLdap(UserImporter):
         uid = int(user_attr['uidNumber'][0])
         gid = int(user_attr['gidNumber'][0])
 
-        department = self.get_user_department(user, login)
+        department = self.get_user_department(userdn, login)
 
         user = User(login, firstname, lastname, department)
         account = Account(user, self.cluster, uid, gid, None, None)
