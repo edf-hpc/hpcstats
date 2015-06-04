@@ -92,12 +92,12 @@ class HPCStatsImporter(HPCStatsApp):
             clusters = [ self.cluster_name ]
 
         for cluster_name in clusters:
-            self.import_cluster_data(cluster_name)
+            self.import_cluster_data(db, cluster_name)
 
         db.commit()
         db.unbind()
 
-    def import_cluster_data(self, cluster_name):
+    def import_cluster_data(self, db, cluster_name):
         """Import from sources all data specific to a cluster."""
 
         cluster = None
