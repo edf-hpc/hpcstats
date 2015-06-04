@@ -34,22 +34,3 @@ class FSUsageImporter(Importer):
     def __init__(self, app, db, config, cluster):
 
         super(FSUsageImporter, self).__init__(app, db, config, cluster)
-
-    def get_last_home_usage_timestamp(self):
-        last_usage_timestamp = 0
-        req = """
-            SELECT MAX(id_usage) AS last_usage
-            FROM filesystem_usage, filesystem
-            WHERE filesystem_usage.fs_id=filesystem.id
-            AND filesystem.clustername = %s
-            AND filesystem.type = %s
-              ; """
-        datas = (self.cluster.name,
-                 self._fs_type,)
-        cur = self.db.cur
-        cur.execute(req, datas)
-        results = cur.fetchall()
-        for usage in results:
-            if last_home_usage_timestamp < usage[0]:
-                last_home_usage_timestamp = usage[0]
-        return last_home_usage_timestamp
