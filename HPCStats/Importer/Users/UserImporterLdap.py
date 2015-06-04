@@ -67,8 +67,8 @@ class UserImporterLdap(UserImporter):
                                                   'rdn_groups',
                                                   'ou=groups')
 
-        self.ldap_dn_groups = self.ldap_rdn_people + ',' + self._ldapbase
-        self.ldap_dn_people = self.ldap_rdn_groups + ',' + self._ldapbase
+        self.ldap_dn_people = self.ldap_rdn_people + ',' + self._ldapbase
+        self.ldap_dn_groups = self.ldap_rdn_groups + ',' + self._ldapbase
         self.group_dpt_search = config.get(ldap_section, 'group_dpt_search')
         self.group_dpt_regexp = config.get(ldap_section, 'group_dpt_regexp')
 
