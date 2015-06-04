@@ -46,14 +46,14 @@ class TestsHPCStatsArgumentParser(HPCStatsTestCase):
     def test_report(self):
         """HPCStatsArgumentParser.parse_args() w/ report action
         """
-        argv = ['report']
+        argv = ['report', '--cluster', 'test']
         args = self.parser.parse_args(argv)
         self.assertEquals(args.action, 'report')
 
     def test_import(self):
         """HPCStatsArgumentParser.parse_args() w/ import action
         """
-        argv = ['import']
+        argv = ['import', '--cluster', 'test']
         args = self.parser.parse_args(argv)
         self.assertEquals(args.action, 'import')
 
