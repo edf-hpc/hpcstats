@@ -28,6 +28,8 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
+
+from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.Contexts.ContextImporterCSV import ContextImporterCSV
 
 class ContextImporterFactory(object):
@@ -36,8 +38,12 @@ class ContextImporterFactory(object):
         pass
 
     def factory(self, app, db, config, cluster):
-        if config.get(cluster.name, "context") == "csv":
+
+        implem = config.get(cluster.name, 'context')
+
+        if implem == "csv":
             return ContextImporterCSV(app, db, config, cluster)
         else:
-            logging.critical("TO BE CODED")
-        return None
+            raise HPCStatsConfigurationException( \
+                    "ContextImporter %s is not implemented" \
+                      % (implem))

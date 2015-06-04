@@ -28,6 +28,8 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
+
+from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.Events.EventImporterSlurm import EventImporterSlurm
 
 class EventImporterFactory(object):
@@ -36,9 +38,12 @@ class EventImporterFactory(object):
         pass
 
     def factory(self, app, db, config, cluster):
-        if config.get(cluster.name, "events") == "slurm": ## Slurm
+
+        implem = config.get(cluster.name, 'events')
+
+        if implem == "slurm":
             return EventImporterSlurm(app, db, config, cluster)
         else:
-            logging.critical("TO BE CODED")
-            # Throw Exception
-        return None
+            raise HPCStatsConfigurationException( \
+                    "EventImporter %s is not implemented" \
+                      % (implem))

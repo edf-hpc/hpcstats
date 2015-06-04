@@ -28,6 +28,8 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
+
+from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.Users.UserImporterLdap import UserImporterLdap
 
 class UserImporterFactory(object):
@@ -36,9 +38,12 @@ class UserImporterFactory(object):
         pass
 
     def factory(self, app, db, config, cluster):
-        if config.get(cluster.name, "users") == "ldap":
+
+        implem = config.get(cluster.name, 'users')
+
+        if implem == "ldap":
             return UserImporterLdap(app, db, config, cluster)
         else:
-            logging.critical("TO BE CODED")
-            # Throw Exception
-        return None
+            raise HPCStatsConfigurationException( \
+                    "UserImporter %s is not implemented" \
+                      % (implem))

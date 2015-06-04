@@ -28,6 +28,8 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
+
+from HPCStats.Importer.Projects.ProjectImporterCSV import ProjectImporterCSV
 from HPCStats.Importer.Architectures.ArchitectureImporterArchfile import ArchitectureImporterArchfile
 
 class ArchitectureImporterFactory(object):
@@ -36,9 +38,12 @@ class ArchitectureImporterFactory(object):
         pass
 
     def factory(self, app, db, config, cluster_name):
-        if config.get(cluster_name, "architecture") == "archfile":
+
+        implem = config.get(cluster_name, 'architecture')
+
+        if implem == "archfile":
             return ArchitectureImporterArchfile(app, db, config, cluster_name)
         else:
-            logging.critical("TO BE CODED")
-            # Throw Exception
-        return None
+            raise HPCStatsConfigurationException( \
+                    "ArchitectureImporter %s is not implemented" \
+                      % (implem))

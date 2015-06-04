@@ -28,6 +28,8 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
+
+from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.Projects.ProjectImporterCSV import ProjectImporterCSV
 
 class ProjectImporterFactory(object):
@@ -36,8 +38,12 @@ class ProjectImporterFactory(object):
         pass
 
     def factory(self, app, db, config):
-        if config.get('globals', 'projects') == "csv":
+
+        implem = config.get('globals', 'projects')
+
+        if implem == "csv":
             return ProjectImporterCSV(app, db, config)
         else:
-            logging.critical("TO BE CODED")
-        return None
+            raise HPCStatsConfigurationException( \
+                    "ProjectImporter %s is not implemented" \
+                      % (implem))

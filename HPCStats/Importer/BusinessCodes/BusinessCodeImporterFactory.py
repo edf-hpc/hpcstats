@@ -28,6 +28,8 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
+
+from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV import BusinessCodeImporterCSV
 
 class BusinessCodeImporterFactory(object):
@@ -35,9 +37,13 @@ class BusinessCodeImporterFactory(object):
     def __init__(self):
         pass
 
-    def factory(self, app, db, config, cluster):
-        if config.get(cluster.name, "business") == "csv":
-            return BusinessCodeImporterCSV(app, db, config, cluster)
+    def factory(self, app, db, config):
+
+        implem = config.get('globals', 'business')
+
+        if implem == "csv":
+            return BusinessCodeImporterCSV(app, db, config)
         else:
-            logging.critical("TO BE CODED")
-        return None
+            raise HPCStatsConfigurationException( \
+                    "BusinessCodeImporter %s is not implemented" \
+                      % (implem))
