@@ -79,9 +79,8 @@ class User(object):
                  WHERE userhpc_login = %s
               """
         params = ( self.login, )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("user %s not found in DB", str(self))
             return None
@@ -90,7 +89,7 @@ class User(object):
                     "several user_id found in DB for user %s" \
                       % (str(self)))
         else:
-            self.user_id = cur.fetchone()[0]
+            self.user_id = db.cur.fetchone()[0]
             logging.debug("user %s found in DB with id %d",
                           str(self),
                           self.user_id )
@@ -123,10 +122,9 @@ class User(object):
                    self.lastname,
                    self.department )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
-        self.user_id = cur.fetchone()[0]
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
+        self.user_id = db.cur.fetchone()[0]
 
     def update(self, db):
         """Update User firstname, lastname and departement fields in database.
@@ -150,6 +148,5 @@ class User(object):
                    self.department,
                    self.user_id )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)

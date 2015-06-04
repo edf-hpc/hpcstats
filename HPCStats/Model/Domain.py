@@ -72,9 +72,8 @@ class Domain(object):
                  WHERE domain_id = %s
               """
         params = ( self.key, )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("domain %s not found in DB", str(self))
             self.exists = False
@@ -108,9 +107,8 @@ class Domain(object):
               """
         params = ( self.key,
                    self.name )
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
         self.exists = True
 
     def update(self, db):
@@ -132,6 +130,5 @@ class Domain(object):
               """
         params = ( self.name,
                    self.key )
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)

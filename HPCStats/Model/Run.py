@@ -75,9 +75,8 @@ class Run(object):
         params = ( self.cluster.cluster_id,
                    self.node.node_id,
                    self.job.job_id )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("run %s not found in DB", str(self))
             self.exists = False
@@ -114,7 +113,6 @@ class Run(object):
                    self.node.node_id,
                    self.cluster.cluster_id )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
         self.exists = True

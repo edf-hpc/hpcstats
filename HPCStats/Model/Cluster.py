@@ -71,9 +71,8 @@ class Cluster(object):
                  WHERE cluster_name = %s
               """
         params = ( self.name, )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("cluster %s not found in DB", str(self))
             return None
@@ -82,7 +81,7 @@ class Cluster(object):
                     "several cluster_id found in DB for cluster %s" \
                       % (str(self)))
         else:
-            self.cluster_id = cur.fetchone()[0]
+            self.cluster_id = db.cur.fetchone()[0]
             logging.debug("cluster %s found in DB with id %d",
                           str(self),
                           self.cluster_id )
@@ -109,10 +108,9 @@ class Cluster(object):
               """
         params = ( self.name, )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
-        self.cluster_id = cur.fetchone()[0]
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
+        self.cluster_id = db.cur.fetchone()[0]
 
     def get_nb_cpus(self, db):
         """Returns the total number of CPUs available on the cluster"""
@@ -130,10 +128,9 @@ class Cluster(object):
               """
         params = ( self.cluster_id, )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
-        return cur.fetchone()[0]
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
+        return db.cur.fetchone()[0]
 
     def get_min_datetime(self, db):
         """Returns the start datetime of the oldest started and unfinished
@@ -154,10 +151,9 @@ class Cluster(object):
               """
         params = ( self.cluster_id, )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
-        return cur.fetchone()[0]
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
+        return db.cur.fetchone()[0]
 
    
     def get_nb_accounts(self, db, creation_date):
@@ -181,11 +177,10 @@ class Cluster(object):
               """
         params = (creation_date, self.cluster_id )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
         
-        return cur.fetchone()[0]
+        return db.cur.fetchone()[0]
 
     def get_nb_active_users(self, db, start, end):
         """Returns the total number of users who have run job(s) on the cluster
@@ -207,8 +202,7 @@ class Cluster(object):
                         OR (job_start <= %s AND job_end >= %s))
               """
         params = (self.cluster_id, start, end, start, end, start, end)
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
         
-        return cur.fetchone()[0]
+        return db.cur.fetchone()[0]

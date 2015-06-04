@@ -93,9 +93,8 @@ class Node(object):
         params = ( self.name,
                    self.cluster.cluster_id )
 
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
 
         if nb_rows == 0:
             logging.debug("node %s not found in DB", str(self))
@@ -105,7 +104,7 @@ class Node(object):
                     "several node_id found in DB for node %s" \
                       % (str(self)))
         else:
-            self.node_id = cur.fetchone()[0]
+            self.node_id = db.cur.fetchone()[0]
             logging.debug("node %s found in DB with id %d",
                           str(self),
                           self.node_id )
@@ -142,10 +141,9 @@ class Node(object):
                    self.memory,
                    self.flops )
  
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
-        self.node_id = cur.fetchone()[0]
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
+        self.node_id = db.cur.fetchone()[0]
 
     def update(self, db):
         """Update Node partition, cpu, memory and flops fields in database.
@@ -170,6 +168,5 @@ class Node(object):
                    self.flops,
                    self.node_id )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)

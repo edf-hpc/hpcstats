@@ -80,9 +80,8 @@ class Filesystem(object):
         params = ( self.mountpoint,
                    self.cluster.cluster_id )
 
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("filesystem %s not found in DB", str(self))
             return None
@@ -91,7 +90,7 @@ class Filesystem(object):
                     "several filesystem_id found in DB for filesystem %s" \
                       % (str(self)))
         else:
-            self.fs_id = cur.fetchone()[0]
+            self.fs_id = db.cur.fetchone()[0]
             logging.debug("filesystem %s found in DB with id %d",
                           str(self),
                           self.fs_id )
@@ -120,7 +119,6 @@ class Filesystem(object):
         params = ( self.mountpoint,
                    self.cluster.cluster_id )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
-        self.fs_id = cur.fetchone()[0]
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
+        self.fs_id = db.cur.fetchone()[0]

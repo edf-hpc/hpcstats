@@ -106,9 +106,8 @@ class Event(object):
         params = ( self.node.node_id,
                    self.cluster.cluster_id,
                    self.start_datetime )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_events = cur.rowcount
+        db.execute(req, params)
+        nb_events = db.cur.rowcount
         if nb_events == 0:
             logging.debug("event %s not found in DB", str(self))
             return None
@@ -117,7 +116,7 @@ class Event(object):
                     "several event_id found for event %s" \
                       % (str(self)))
         else:
-            self.event_id = cur.fetchone()[0]
+            self.event_id = db.cur.fetchone()[0]
             logging.debug("event %s found in DB with id %d",
                           str(self),
                           self.event_id )
@@ -137,7 +136,6 @@ class Event(object):
                     "database" \
                       % (str(self)))
 
-        cur = db.cur
         req = """
                 INSERT INTO Event (
                               node_id,
@@ -158,10 +156,9 @@ class Event(object):
                    self.start_datetime,
                    self.end_datetime )
  
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
-        self.event_id = cur.fetchone()[0]
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
+        self.event_id = db.cur.fetchone()[0]
     
     def update(self, db):
         """Update the Event in DB. The event_id attribute must be set for the
@@ -197,9 +194,8 @@ class Event(object):
                    self.node.node_id,
                    self.cluster.cluster_id )
  
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
 
     def merge_event(self, event):
         """Set Event end datetime equals to event in parameter end datetime.
@@ -219,11 +215,10 @@ def get_datetime_end_last_event(db, cluster):
              WHERE cluster_id = %s
           """
     params = ( cluster.cluster_id, )
-    cur = db.cur
-    cur.execute(req, params)
-    if cur.rowcount == 0:
+    db.execute(req, params)
+    if db.cur.rowcount == 0:
         return None
-    db_row = cur.fetchone()
+    db_row = db.cur.fetchone()
     return db_row[0]
 
 def get_datetime_start_oldest_unfinished_event(db, cluster):
@@ -239,11 +234,10 @@ def get_datetime_start_oldest_unfinished_event(db, cluster):
                AND event_end IS NULL
               """
     params = ( cluster.cluster_id, )
-    cur = db.cur
-    cur.execute(req, params)
-    if cur.rowcount == 0:
+    db.execute(req, params)
+    if db.cur.rowcount == 0:
         return None
-    db_row = cur.fetchone()
+    db_row = db.cur.fetchone()
     return db_row[0]
 
 def get_unfinished_events(db, cluster):
@@ -262,12 +256,11 @@ def get_unfinished_events(db, cluster):
                AND event_end IS NULL
           """
     params = ( cluster.cluster_id, )
-    cur = db.cur
-    cur.execute(req, params)
+    db.execute(req, params)
 
     events = []
     while (1):
-        db_row = cur.fetchone()
+        db_row = db.cur.fetchone()
         if db_row == None:
             break
         event = Event( event_id = db_row[0],

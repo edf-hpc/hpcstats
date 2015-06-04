@@ -77,9 +77,8 @@ class FSUsage(object):
         params = ( self.filesystem.cluster.cluster_id,
                    self.filesystem.fs_id,
                    self.timestamp )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("fsusage %s not found in DB", str(self))
             self.exists = False
@@ -119,9 +118,8 @@ class FSUsage(object):
                    self.timestamp,
                    self.usage )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
 
 def get_last_fsusage_datetime(db, cluster, filesystem):
     """Get the datetime of the last fsusage for the fs in DB."""
@@ -134,9 +132,8 @@ def get_last_fsusage_datetime(db, cluster, filesystem):
           """
     params = ( cluster.cluster_id,
                filesystem.fs_id )
-    cur = db.cur
-    cur.execute(req, params)
-    if cur.rowcount == 0:
+    db.execute(req, params)
+    if db.cur.rowcount == 0:
         return datetime(1970, 1, 1, 0, 0)
     else:
-        return cur.fetchone()[0]
+        return db.cur.fetchone()[0]

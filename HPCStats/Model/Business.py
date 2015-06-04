@@ -73,9 +73,8 @@ class Business(object):
                  WHERE business_code = %s
               """
         params = ( self.code, )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("business %s not found in DB", str(self))
             self.exists = False
@@ -108,9 +107,8 @@ class Business(object):
                 VALUES (%s, %s)
               """
         params = ( self.code, self.description )
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
         self.exists = True
 
     def update(self, db):
@@ -132,6 +130,5 @@ class Business(object):
               """
         params = ( self.description,
                    self.code )
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)

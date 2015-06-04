@@ -75,9 +75,8 @@ class Sector(object):
                    AND domain_id = %s
               """
         params = ( self.key, self.domain.key )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("sector %s not found in DB", str(self))
             self.exists = False
@@ -113,9 +112,8 @@ class Sector(object):
         params = ( self.key,
                    self.name,
                    self.domain.key )
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
         self.exists = True
 
     def update(self, db):
@@ -139,6 +137,5 @@ class Sector(object):
         params = ( self.name,
                    self.key,
                    self.domain.key )
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)

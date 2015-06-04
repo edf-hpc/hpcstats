@@ -80,9 +80,8 @@ class Project(object):
                  WHERE project_code = %s
               """
         params = ( self.code, )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("project %s not found in DB", str(self))
             return None
@@ -91,7 +90,7 @@ class Project(object):
                     "several project_id found in DB for project %s" \
                       % (str(self)))
         else:
-            self.project_id = cur.fetchone()[0]
+            self.project_id = db.cur.fetchone()[0]
             logging.debug("project %s found in DB with id %d",
                           str(self),
                           self.project_id )
@@ -128,10 +127,9 @@ class Project(object):
                    self.sector.key,
                    domain_key )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
-        self.project_id = cur.fetchone()[0]
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
+        self.project_id = db.cur.fetchone()[0]
 
     def update(self, db):
         """Update Project description field in database. Raises
@@ -150,6 +148,5 @@ class Project(object):
         params = ( self.description,
                    self.project_id )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)

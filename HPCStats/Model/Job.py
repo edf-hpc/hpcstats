@@ -116,9 +116,8 @@ class Job(object):
               """
         params = ( self.account.cluster.cluster_id,
                    self.batch_id )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("job %s not found in DB", str(self))
             return None
@@ -127,7 +126,7 @@ class Job(object):
                     "several job_id found in DB for job %s" \
                       % (str(self)))
         else:
-            self.job_id = cur.fetchone()[0]
+            self.job_id = db.cur.fetchone()[0]
             logging.debug("job %s found in DB with id %d",
                           str(self),
                           self.job_id )
@@ -179,10 +178,9 @@ class Job(object):
                    self.project.project_id,
                    self.business.code )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
-        self.job_id = cur.fetchone()[0]
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
+        self.job_id = db.cur.fetchone()[0]
         
     def update(self, db):
         """Update Job sched_id, nbcpu, name, state, queue, submission, start and
@@ -216,9 +214,8 @@ class Job(object):
                    self.end,
                    self.job_id )
 
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
 
 def get_batchid_oldest_unfinished_job(db, cluster):
     """Return the batch_id of the oldest unfinished job recorded in
@@ -233,11 +230,10 @@ def get_batchid_oldest_unfinished_job(db, cluster):
                OR  job_end IS NULL)
           """
     params = ( cluster.cluster_id, )
-    cur = db.cur
-    cur.execute(req, params)
-    if cur.rowcount == 0:
+    db.execute(req, params)
+    if db.cur.rowcount == 0:
         return None
-    db_row = cur.fetchone()
+    db_row = db.cur.fetchone()
     return db_row[0]
 
 def get_batchid_last_job(db, cluster):
@@ -251,9 +247,8 @@ def get_batchid_last_job(db, cluster):
             WHERE cluster_id = %s
           """
     params = ( cluster.cluster_id, )
-    cur = db.cur
-    cur.execute(req, params)
-    if cur.rowcount == 0:
+    db.execute(req, params)
+    if db.cur.rowcount == 0:
         return None
-    db_row = cur.fetchone()
+    db_row = db.cur.fetchone()
     return db_row[0]

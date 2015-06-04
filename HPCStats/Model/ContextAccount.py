@@ -88,9 +88,8 @@ class ContextAccount(object):
                    self.account.user.userhpc_id,
                    self.business.code,
                    self.project.project_id )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("contextaccount %s not found in DB", str(self))
             self.exists = False
@@ -129,7 +128,6 @@ class ContextAccount(object):
                    self.account.user.user_id,
                    self.business.code,
                    self.project.project_id )
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
         self.exists = True

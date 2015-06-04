@@ -92,9 +92,8 @@ class Account(object):
               """
         params = ( self.user.user_id,
                    self.cluster.cluster_id )
-        cur = db.cur
-        cur.execute(req, params)
-        nb_rows = cur.rowcount
+        db.execute(req, params)
+        nb_rows = db.cur.rowcount
         if nb_rows == 0:
             logging.debug("account %s not found in DB", str(self))
             self.exists = False
@@ -131,10 +130,9 @@ class Account(object):
               """
         params = ( self.user.user_id,
                    self.cluster.cluster_id )
-        cur = db.cur
-        cur.execute(req, params)
+        db.execute(req, params)
         # We know here there is only one result thanks to existing() method
-        result = cur.fetchone()
+        result = db.cur.fetchone()
         self.uid = result[0]
         self.gid = result[1]
         self.creation_date = result[2]
@@ -169,9 +167,8 @@ class Account(object):
                    self.deletion_date,
                    self.user.user_id,
                    self.cluster.cluster_id )
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
         self.exists = True
 
     def update(self, db):
@@ -201,9 +198,8 @@ class Account(object):
                    self.deletion_date,
                    self.user.user_id,
                    self.cluster.cluster_id )
-        cur = db.cur
-        #print cur.mogrify(req, params)
-        cur.execute(req, params)
+        #print db.cur.mogrify(req, params)
+        db.execute(req, params)
 
 def load_unclosed_users_accounts(db, cluster):
     """Load (User,Account) tuples w/o account deletion date on cluster from
@@ -227,7 +223,7 @@ def load_unclosed_users_accounts(db, cluster):
               AND Account.account_deletion = NULL
           """
     params = ( cluster.cluster_id, )
-    db.cur.execute(req, params)
+    db.execute(req, params)
     results = db.cur.fetchall()
 
     for result in results:
@@ -254,6 +250,5 @@ def nb_existing_accounts(db, cluster):
              WHERE cluster_id = %s
           """
     params = ( cluster.cluster_id, )
-    cur = db.cur
-    cur.execute(req, params)
-    return cur.rowcount
+    db.execute(req, params)
+    return db.cur.rowcount
