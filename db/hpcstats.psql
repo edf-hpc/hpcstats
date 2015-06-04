@@ -99,14 +99,14 @@ CREATE TABLE Business(
 
 CREATE TABLE Sector(
         sector_key    character varying(5) NOT NULL,
-        sector_name   character varying(25),
+        sector_name   character varying(50),
         domain_id     character varying(4) NOT NULL,
         CONSTRAINT Sector_pkey PRIMARY KEY (sector_key, domain_id)
 );
 
 CREATE TABLE Domain(
         domain_id   character varying(4) NOT NULL,
-        domain_name character varying(30),
+        domain_name character varying(50),
         CONSTRAINT Domain_pkey PRIMARY KEY (domain_id),
         CONSTRAINT Domain_unique UNIQUE (domain_name)
 );
