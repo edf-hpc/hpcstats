@@ -119,27 +119,27 @@ class HPCStatsImporter(HPCStatsApp):
             raise HPCStatsRuntimeError("problem in DB with cluster %s" % (str(cluster)))
 
         logging.info("updating users for cluster %s" % (cluster.name))
-        self.users = UserImporterFactory().factory(self, db, config, cluster)
+        self.users = UserImporterFactory().factory(self, db, self.conf, cluster)
         self.users.load()
         self.users.update()
 
         logging.info("updating context for cluster %s from stats file" % (cluster.name))
-        self.context = ContextImporterFactory().factory(self, db, config, cluster)
+        self.context = ContextImporterFactory().factory(self, db, self.conf, cluster)
         self.context.load()
         self.context.update()
 
         logging.info("updating filesystem usage for cluster %s" % (cluster.name))
-        self.fsusage = FSUsageImporterFactory().factory(self, db, config, cluster)
+        self.fsusage = FSUsageImporterFactory().factory(self, db, self.conf, cluster)
         self.fsusage.load()
         self.fsusage.update()
 
         logging.info("updating events for cluster %s" % (cluster.name))
-        self.events = EventImporterFactory().factory(self, db, config, cluster)
+        self.events = EventImporterFactory().factory(self, db, self.conf, cluster)
         self.events.load()
         self.events.update()
 
         logging.info("updating jobs for cluster %s" % (cluster.name))
-        self.jobs = JobImporterFactory().factory(self, db, config, cluster)
+        self.jobs = JobImporterFactory().factory(self, db, self.conf, cluster)
         self.jobs.load()
         self.jobs.update()
 
