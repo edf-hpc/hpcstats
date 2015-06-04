@@ -74,7 +74,7 @@ class ContextImporterCSV(ContextImporter):
 
         self.contexts = []
 
-        if not os.path.isfile(self._context_file):
+        if not os.path.isfile(self.ctx_fpath):
             raise HPCStatsSourceError( \
                     "CSV context file %s does not exist" % (self.ctx_fpath))
 
