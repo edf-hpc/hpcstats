@@ -93,7 +93,7 @@ CREATE TABLE Project(
 
 CREATE TABLE Business(
         business_code        character varying(30) NOT NULL,
-        business_description text NOT NULL,
+        business_description text,
         CONSTRAINT Business_pkey PRIMARY KEY (business_code)
 );
 

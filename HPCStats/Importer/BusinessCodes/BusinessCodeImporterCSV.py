@@ -69,9 +69,7 @@ class BusinessCodeImporterCSV(BusinessCodeImporter):
                     raise HPCStatsSourceError( \
                             "business code in CSV is empty")
                 if len(description) == 0:
-                    raise HPCStatsSourceError( \
-                            "description of business code %s in CSV is empty" \
-                              % (code))
+                    description = None
                 business = Business(code, description)
                 self.businesses.append(business)
 
