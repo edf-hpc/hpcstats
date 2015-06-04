@@ -59,8 +59,8 @@ class User(object):
 
     def __str__(self):
 
-        return self.firstname + " " + self.lastname \
-               + " [" + self.department + "] " + self.login
+        return str(self.firstname) + " " + str(self.lastname) \
+               + " [" + str(self.department) + "] " + str(self.login)
 
     def __eq__(self, other):
 
@@ -127,7 +127,7 @@ class User(object):
         self.user_id = db.cur.fetchone()[0]
 
     def update(self, db):
-        """Update User firstname, lastname and departement fields in database.
+        """Update User firstname, lastname and department fields in database.
            Raises HPCStatsRuntimeError is user_id is None.
         """
 
