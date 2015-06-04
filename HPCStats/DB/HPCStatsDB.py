@@ -30,7 +30,7 @@
 import logging
 import psycopg2
 
-from HPCStats.Exceptions import HPCStatsRuntimeError
+from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class HPCStatsDB(object):
 
@@ -72,6 +72,17 @@ class HPCStatsDB(object):
                       % (err))
         self.cur = self._conn.cursor()
         return self.cur, self._conn
+
+    def execute(self, req, params):
+        """Execute SQL request req with params. Raises HPCStatsDBIntegrityError
+           in case of problem.
+        """
+
+        try:
+            self.cur.execute(req, params)
+        except psycopg2.DataError, err:
+            raise HPCStatsDBIntegrityError( \
+                    "error while executing request: %s" % (err))
 
     def unbind(self):
         """ Disconnect from the database """
