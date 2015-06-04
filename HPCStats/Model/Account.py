@@ -208,18 +208,18 @@ def load_unclosed_users_accounts(db, cluster):
 
     tuples = []
     req = """
-            SELECT User.userhpc_id,
+            SELECT Userhpc.userhpc_id,
                    userhpc_login,
                    userhpc_name,
                    userhpc_firstname,
-                   userhpc_departement,
+                   userhpc_department,
                    account_uid,
                    account_gid,
                    account_creation
-             FROM User,
+             FROM Userhpc,
                   Account
             WHERE Account.cluster_id = %s
-              AND Account.userhpc_id = User.userhpc_id
+              AND Account.userhpc_id = Userhpc.userhpc_id
               AND Account.account_deletion = NULL
           """
     params = ( cluster.cluster_id, )
