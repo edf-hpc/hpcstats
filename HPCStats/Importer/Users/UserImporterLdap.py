@@ -118,10 +118,15 @@ class UserImporterLdap(UserImporter):
         search = "(&(objectclass=posixGroup)(cn=" + group + "))"
         logging.debug("search in: %s %s", self.ldap_dn_groups, search)
 
-        members = self.ldap_conn.search_s(self.ldap_dn_groups,
-                                          ldap.SCOPE_SUBTREE,
-                                          search,
-                                          [ 'member', 'memberUid' ])
+        try:
+            members = self.ldap_conn.search_s(self.ldap_dn_groups,
+                                              ldap.SCOPE_SUBTREE,
+                                              search,
+                                              [ 'member', 'memberUid' ])
+        except ldap.NO_SUCH_OBJECT, err:
+            raise HPCStatsSourceError( \
+                    "no result found for group %s in base %s" \
+                       % (group, self.ldap_dn_groups))
         # Structure of members is a list of tuples whose 1st member is a
         # string dn and 2nd member is a dict with all attributes for this dn.
         #
@@ -137,14 +142,10 @@ class UserImporterLdap(UserImporter):
         # or raise HPCStatsSourceError.
 
         nb_results = len(members)
-        if nb_results == 0:
-            raise HPCStatsSourceError( \
-                    "no result found for group %s in base %s",
-                    group, self.ldap_dn_groups)
         if nb_results > 1:
             raise HPCStatsSourceError( \
-                    "too much results (%d) found for group %s in base %s",
-                    nb_results, group, self.ldap_dn_groups)
+                    "too much results (%d) found for group %s in base %s" \
+                      % (sults, group, self.ldap_dn_groups))
 
         # Then the goal is to extract the list of user logins out of search
         # result.
@@ -191,9 +192,14 @@ class UserImporterLdap(UserImporter):
         search = "uid=%s" % (login)
 
         logging.debug("search in: %s %s", self.ldap_dn_people, search)
-        user_res = self.ldap_conn.search_s(self.ldap_dn_people,
-                                           ldap.SCOPE_SUBTREE,
-                                           search)
+        try:
+            user_res = self.ldap_conn.search_s(self.ldap_dn_people,
+                                               ldap.SCOPE_SUBTREE,
+                                               search)
+        except ldap.NO_SUCH_OBJECT, err:
+            raise HPCStatsSourceError( \
+                    "no result found for user %s in base %s" \
+                    % (login, self.ldap_dn_people))
 
         # Structure of user_res is a list of tuples whose 1st member is a
         # string dn and 2nd member is a dict with all attributes for this dn.
@@ -210,14 +216,10 @@ class UserImporterLdap(UserImporter):
         # or raise HPCStatsSourceError.
 
         nb_results = len(user_res)
-        if nb_results == 0:
-            raise HPCStatsSourceError( \
-                    "no result found for user %s in base %s",
-                    login, self.ldap_dn_people)
         if nb_results > 1:
             raise HPCStatsSourceError( \
-                    "too much results (%d) found for user %s in base %s",
-                    nb_results, login, self.ldap_dn_people)
+                    "too much results (%d) found for user %s in base %s" \
+                    % (nb_results, login, self.ldap_dn_people))
 
         # Then extract information from attributes of 1st result
 
