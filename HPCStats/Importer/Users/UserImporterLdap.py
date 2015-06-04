@@ -299,7 +299,7 @@ class UserImporterLdap(UserImporter):
            LDAP directory and current DB content.
         """
 
-        new_date = get_default_new_date()
+        new_date = self.get_default_new_date()
         for user, account in self.users_acct_ldap:
             if not user.find(self.db):
                 # the user nor the account do not exist, create them.
