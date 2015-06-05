@@ -39,6 +39,7 @@ import errno
 import socket
 import csv
 import tempfile
+from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.FSUsage.FSUsageImporter import FSUsageImporter
 from HPCStats.Model.Filesystem import Filesystem
 from HPCStats.Model.FSUsage import FSUsage
@@ -90,7 +91,12 @@ class FSUsageImporterSSH(FSUsageImporter):
         os.close(tmp_fh) # immediately close since we do not need it
 
         # download file through SFTP
-        sftp.get(self.fsfile, tmp_fpath)
+        try:
+            sftp.get(self.fsfile, tmp_fpath)
+        except IOError, err:
+            raise HPCStatsSourceError( \
+                    "Error while downloading file %s by SFTP: %s" \
+                      % (self.fsfile, err))
 
         # close sftp and ssh since we do not need them anymore.
         sftp.close()
