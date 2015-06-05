@@ -68,7 +68,7 @@ class ContextAccount(object):
                   % ( self.account.cluster.name,
                       self.account.user.login,
                       self.business.code,
-                      self.project.name )
+                      self.project )
 
 
     def existing(self, db):
@@ -85,7 +85,7 @@ class ContextAccount(object):
                    AND project_id = %s
               """
         params = ( self.account.cluster.cluster_id,
-                   self.account.user.userhpc_id,
+                   self.account.user.user_id,
                    self.business.code,
                    self.project.project_id )
         db.execute(req, params)
