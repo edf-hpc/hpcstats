@@ -162,8 +162,7 @@ class TestsBusinessCodeImporterCSVLoad(HPCStatsTestCase):
 
     @mock.patch("%s.os.path.isfile" % module)
     def test_load_business_empty_description(self, m_isfile):
-        """BusinessCodeImporterCSV.load() raise exception when business
-           description is empty
+        """BusinessCodeImporterCSV.load() set description to None when empty.
         """
 
         m_isfile.return_value = True
@@ -174,10 +173,8 @@ class TestsBusinessCodeImporterCSVLoad(HPCStatsTestCase):
 
             m_open = mock_open(data=StringIO(csv))
             with mock.patch("%s.open" % (module), m_open, create=True):
-                self.assertRaisesRegexp(
-                       HPCStatsSourceError,
-                       "description of business code code1 in CSV is empty",
-                       self.importer.load)
+                self.importer.load()
+                self.assertIsNone(self.importer.businesses[0].description)
 
 class TestsBusinessCodeImporterCSVUpdate(HPCStatsTestCase):
 
