@@ -106,7 +106,7 @@ class FSUsageImporterSSH(FSUsageImporter):
             csvreader = csv.reader(csvfile, delimiter=',')
             for row in csvreader:
                 mountpoint = row[0]
-                logtime = datetime.strptime("%Y-%m-%dT%H:%M:%S.%fZ", row[1])
+                logtime = datetime.strptime(row[1], "%Y-%m-%dT%H:%M:%S.%fZ")
                 bpercent = float(row[2])
                 ipercent = float(row[3])
                 newfs = Filesystem(mountpoint, self.cluster)
