@@ -37,11 +37,13 @@ import re
 import string
 from HPCStats.Exceptions import *
 from HPCStats.Importer.Contexts.ContextImporter import ContextImporter
+from HPCStats.Model.ContextAccount import ContextAccount
 from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Sector import Sector
 from HPCStats.Model.Project import Project
 from HPCStats.Model.Business import Business
-from HPCStats.Model.ContextAccount import ContextAccount
+from HPCStats.Model.User import User
+from HPCStats.Model.Account import Account
 
 class ContextImporterCSV(ContextImporter):
 
@@ -103,7 +105,7 @@ class ContextImporterCSV(ContextImporter):
                     raise HPCStatsSourceError( \
                             "business codes list in CSV is empty")
 
-                projects = project_s.split('|')
+                projects = projects_s.split('|')
                 businesses = businesses_s.split('|')
 
                 searched_user = User(login, None, None, None)
