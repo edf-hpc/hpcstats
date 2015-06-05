@@ -42,7 +42,7 @@ class FSUsageImporterFactory(object):
         implem = config.get(cluster.name, 'fsusage')
 
         if implem == "ssh":
-            return FSUsageImporterClusterSSH(app, db, config, cluster)
+            return FSUsageImporterSSH(app, db, config, cluster)
         else:
             raise HPCStatsConfigurationException( \
                     "FSUsageImporter %s is not implemented" \
