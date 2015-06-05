@@ -33,10 +33,12 @@ import time
 import base64
 import logging
 import sys
+import os
 import paramiko
 import errno
 import socket
 import csv
+import tempfile
 from HPCStats.Importer.FSUsage.FSUsageImporter import FSUsageImporter
 from HPCStats.Model.Filesystem import Filesystem
 from HPCStats.Model.FSUsage import FSUsage
@@ -85,7 +87,7 @@ class FSUsageImporterSSH(FSUsageImporter):
         sftp = ssh.open_sftp()
 
         (tmp_fh, tmp_fpath) = tempfile.mkstemp()
-        tmp_fh.close() # immediately close since we do not need it
+        os.close(tmp_fh) # immediately close since we do not need it
 
         # download file through SFTP
         sftp.get(self.fsfile, tmp_fpath)
