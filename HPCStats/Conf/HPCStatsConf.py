@@ -34,11 +34,17 @@ import sys
 
 from HPCStats.Exceptions import HPCStatsConfigurationException
 
+
+
 class HPCStatsConf(ConfigParser.ConfigParser, object):
 
     def __init__(self, filename, cluster):
 
-        super(HPCStatsConf, self).__init__()
+        defaults = {
+          'ldap': { 'strict_user_membership': True },
+        }
+
+        super(HPCStatsConf, self).__init__(defaults)
 
         self.cluster = cluster
         self.filename = filename

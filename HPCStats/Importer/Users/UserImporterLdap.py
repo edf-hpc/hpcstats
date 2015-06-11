@@ -72,6 +72,8 @@ class UserImporterLdap(UserImporter):
         self.group_dpt_search = config.get(ldap_section, 'group_dpt_search')
         self.group_dpt_regexp = config.get(ldap_section, 'group_dpt_regexp')
 
+        self.strict_user_membership = config.getboolean('ldap', 'strict_user_membership')
+
         self.users_acct_ldap = None
         self.users_acct_db = None
 
@@ -181,11 +183,18 @@ class UserImporterLdap(UserImporter):
 
         members = [ self.get_user_account_from_login(login)
                     for login in logins ]
+        # Filter out None eventually returned by get_user_account_from_login()
+        members = filter(None, members)
         return members
 
     def get_user_account_from_login(self, login):
         """Returns (User,Account) objects tuple with information found in LDAP
            for the login in parameter.
+
+           When no account could be found in LDAP directory for the login, if
+           strict_user_membership attribute is True, this function raises an
+           HPCStatsSourceError exception. If the attribute is False, None is
+           returned.
         """
 
         def_keys = [ "uid", "uidNumber", "gidNumber",
@@ -200,9 +209,13 @@ class UserImporterLdap(UserImporter):
                                                ldap.SCOPE_SUBTREE,
                                                search)
         except ldap.NO_SUCH_OBJECT, err:
-            raise HPCStatsSourceError( \
-                    "no result found for user %s in base %s" \
-                    % (login, self.ldap_dn_people))
+            msg = "no result found for user %s in base %s" \
+                    % (login, self.ldap_dn_people)
+            if self.strict_user_membership:
+                raise HPCStatsSourceError(msg)
+            else:
+                logging.warning(msg)
+                return None
 
         # Structure of user_res is a list of tuples whose 1st member is a
         # string dn and 2nd member is a dict with all attributes for this dn.
@@ -220,9 +233,13 @@ class UserImporterLdap(UserImporter):
 
         nb_results = len(user_res)
         if nb_results == 0:
-            raise HPCStatsSourceError( \
-                    "no result found for user %s in base %s" \
-                    % (login, self.ldap_dn_people))
+            msg = "no result found for user %s in base %s" \
+                    % (login, self.ldap_dn_people)
+            if self.strict_user_membership:
+                raise HPCStatsSourceError(msg)
+            else:
+                logging.warning(msg)
+                return None
         if nb_results > 1:
             raise HPCStatsSourceError( \
                     "too much results (%d) found for user %s in base %s" \
