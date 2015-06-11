@@ -57,6 +57,8 @@ class JobImporterSlurm(JobImporter):
         self._dbuser = config.get(section, 'user')
         self._dbpass = config.get(section, 'password')
 
+        self.uppercase_accounts = config.get_default(section, 'uppercase_accounts', False, bool)
+
         self.conn = None
         self.cur = None
 
@@ -162,6 +164,9 @@ class JobImporterSlurm(JobImporter):
             queue = "%s-%s" % (partition, qos)
 
             login = row[13]
+            if self.uppercase_accounts:
+                login = login.upper()
+
             searched_user = User(login, None, None, None)
             searched_account = Account(searched_user, self.cluster, None, None, None, None)
             account = self.app.users.find_account(searched_account)
