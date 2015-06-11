@@ -69,7 +69,10 @@ class JobImporterSlurm(JobImporter):
           config.get_default('constraints',
                              'strict_job_businesscode_binding',
                              True, bool)
-
+        self.strict_job_wckey_format = \
+          config.get_default('constraints',
+                             'strict_job_wckey_format',
+                             True, bool)
         self.conn = None
         self.cur = None
 
@@ -198,31 +201,35 @@ class JobImporterSlurm(JobImporter):
             else:
                 wckey_items = wckey.split(':')
                 if len(wckey_items) != 2:
-                    raise HPCStatsSourceError( \
-                            "format of wckey %s is not valid" \
-                              % (wckey))
-
-                project_code = wckey_items[0]
-                searched_project = Project(None, project_code, None)
-                project = self.app.projects.find_project(searched_project)
-                if project is None:
-                    msg = "project %s not found in loaded projects" \
-                            % (project_code)
-                    if self.strict_job_project_binding == True:
+                    msg = "format of wckey %s is not valid" % (wckey)
+                    if self.strict_job_wckey_format == True:
                         raise HPCStatsSourceError(msg)
                     else:
                         logging.error(msg)
+                        project = None
+                        business = None
+                else:
+                    project_code = wckey_items[0]
+                    searched_project = Project(None, project_code, None)
+                    project = self.app.projects.find_project(searched_project)
+                    if project is None:
+                        msg = "project %s not found in loaded projects" \
+                                % (project_code)
+                        if self.strict_job_project_binding == True:
+                            raise HPCStatsSourceError(msg)
+                        else:
+                            logging.error(msg)
 
-                business_code = wckey_items[1]
-                searched_business = Business(business_code, None)
-                business = self.app.business.find(searched_business)
-                if business is None:
-                    msg = "business code %s not found in loaded business " \
-                          "codes" % (business_code)
-                    if self.strict_job_businesscode_binding == True:
-                        raise HPCStatsSourceError(msg)
-                    else:
-                        logging.error(msg)
+                    business_code = wckey_items[1]
+                    searched_business = Business(business_code, None)
+                    business = self.app.business.find(searched_business)
+                    if business is None:
+                        msg = "business code %s not found in loaded " \
+                              "business codes" % (business_code)
+                        if self.strict_job_businesscode_binding == True:
+                            raise HPCStatsSourceError(msg)
+                        else:
+                            logging.error(msg)
 
             job = Job(account, project, business, sched_id, batch_id, name,
                       nbcpu, state, queue, submission, start, end)
