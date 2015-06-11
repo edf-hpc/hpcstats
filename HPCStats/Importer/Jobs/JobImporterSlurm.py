@@ -176,27 +176,32 @@ class JobImporterSlurm(JobImporter):
                           % (login))
 
             wckey = row[15]
-            wckey_items = wckey.split(':')
-            if len(wckey_items) != 2:
-                raise HPCStatsSourceError( \
-                        "format of wckey %s is not valid" \
-                          % (wckey))
 
-            project_code = wckey_items[0]
-            searched_project = Project(None, project_code, None)
-            project = self.app.projects.find_project(searched_project)
-            if project is None:
-                raise HPCStatsSourceError( \
-                        "project %s not found in loaded projects" \
-                          % (project_code))
+            if wckey is None:
+                project = None
+                business = None
+            else:
+                wckey_items = wckey.split(':')
+                if len(wckey_items) != 2:
+                    raise HPCStatsSourceError( \
+                            "format of wckey %s is not valid" \
+                              % (wckey))
 
-            business_code = wckey_items[1]
-            searched_business = Business(business_code, None)
-            business = self.app.business.find(searched_business)
-            if business is None:
-                raise HPCStatsSourceError( \
-                        "business code %s not found in loaded business codes" \
-                          % (business_code))
+                project_code = wckey_items[0]
+                searched_project = Project(None, project_code, None)
+                project = self.app.projects.find_project(searched_project)
+                if project is None:
+                    raise HPCStatsSourceError( \
+                            "project %s not found in loaded projects" \
+                              % (project_code))
+
+                business_code = wckey_items[1]
+                searched_business = Business(business_code, None)
+                business = self.app.business.find(searched_business)
+                if business is None:
+                    raise HPCStatsSourceError( \
+                            "business code %s not found in loaded business codes" \
+                              % (business_code))
 
             job = Job(account, project, business, sched_id, batch_id, name,
                       nbcpu, state, queue, submission, start, end)
