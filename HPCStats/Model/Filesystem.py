@@ -74,7 +74,7 @@ class Filesystem(object):
         req = """
                 SELECT filesystem_id
                   FROM filesystem
-                 WHERE filename_name = %s
+                 WHERE filesystem_name = %s
                    AND cluster_id = %s
               """
         params = ( self.mountpoint,
