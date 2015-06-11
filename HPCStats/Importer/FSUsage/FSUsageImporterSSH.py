@@ -149,6 +149,6 @@ class FSUsageImporterSSH(FSUsageImporter):
 
         for fsusage in self.fsusages:
             # save only new fsusag, ie. with datetime over last datetime in DB
-            if fsusage.timestamp > \
-               last_fs_usage_datetimes[fsusage.filesystem.mountpoint]:
+            last = last_fs_usage_datetimes[fsusage.filesystem.mountpoint]
+            if last is None or fsusage.timestamp > last:
                 fsusage.save()
