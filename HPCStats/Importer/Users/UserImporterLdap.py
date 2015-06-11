@@ -72,7 +72,11 @@ class UserImporterLdap(UserImporter):
         self.group_dpt_search = config.get(ldap_section, 'group_dpt_search')
         self.group_dpt_regexp = config.get(ldap_section, 'group_dpt_regexp')
 
-        self.strict_user_membership = config.getboolean('ldap', 'strict_user_membership')
+        self.strict_user_membership = config.get_default( \
+                                               'ldap',
+                                               'strict_user_membership',
+                                               True,
+                                               bool)
 
         self.users_acct_ldap = None
         self.users_acct_db = None

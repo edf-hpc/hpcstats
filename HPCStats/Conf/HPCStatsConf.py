@@ -40,11 +40,7 @@ class HPCStatsConf(ConfigParser.ConfigParser, object):
 
     def __init__(self, filename, cluster):
 
-        defaults = {
-          'ldap': { 'strict_user_membership': True },
-        }
-
-        super(HPCStatsConf, self).__init__(defaults)
+        super(HPCStatsConf, self).__init__()
 
         self.cluster = cluster
         self.filename = filename
