@@ -177,6 +177,10 @@ class JobImporterSlurm(JobImporter):
 
             wckey = row[15]
 
+            # empty wckey must be considered as None
+            if wckey == '':
+                wckey = None
+
             if wckey is None:
                 project = None
                 business = None
