@@ -42,7 +42,7 @@ import tempfile
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.FSUsage.FSUsageImporter import FSUsageImporter
 from HPCStats.Model.Filesystem import Filesystem
-from HPCStats.Model.FSUsage import FSUsage
+from HPCStats.Model.FSUsage import FSUsage, get_last_fsusage_datetime
 
 class FSUsageImporterSSH(FSUsageImporter):
 
