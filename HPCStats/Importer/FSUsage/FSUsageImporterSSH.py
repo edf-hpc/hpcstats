@@ -132,7 +132,7 @@ class FSUsageImporterSSH(FSUsageImporter):
                 self.fsusages.append(fsusage)
 
         # sort fsusages by datetime in asc. order
-        self.fsusages.sort(key=attrgetter('datetime'))
+        self.fsusages.sort(key=attrgetter('timestamp'))
 
     def update(self):
         """Update Filesystems and FSUsage in DB."""
@@ -149,6 +149,6 @@ class FSUsageImporterSSH(FSUsageImporter):
 
         for fsusage in self.fsusages:
             # save only new fsusag, ie. with datetime over last datetime in DB
-            if fsusage.datetime > \
+            if fsusage.timestamp > \
                last_fs_usage_datetimes[fsusage.filesystem.mountpoint]:
                 fsusage.save()
