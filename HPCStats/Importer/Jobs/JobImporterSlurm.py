@@ -107,7 +107,7 @@ class JobImporterSlurm(JobImporter):
                        time_end,
                        nodes_alloc,
                        cpus_alloc,
-                       partition,
+                       job.partition,
                        qos.name AS qos,
                        state,
                        nodelist,
