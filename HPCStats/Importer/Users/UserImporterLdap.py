@@ -219,13 +219,16 @@ class UserImporterLdap(UserImporter):
         # or raise HPCStatsSourceError.
 
         nb_results = len(user_res)
+        if nb_results == 0:
+            raise HPCStatsSourceError( \
+                    "no result found for user %s in base %s" \
+                    % (login, self.ldap_dn_people))
         if nb_results > 1:
             raise HPCStatsSourceError( \
                     "too much results (%d) found for user %s in base %s" \
                     % (nb_results, login, self.ldap_dn_people))
 
         # Then extract information from attributes of 1st result
-
         user_attr = user_res[0][1]
 
         firstname_attr = 'givenName'
