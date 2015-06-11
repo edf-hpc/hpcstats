@@ -114,7 +114,7 @@ class Filesystem(object):
                 INSERT INTO filesystem ( filesystem_name,
                                          cluster_id )
                 VALUES ( %s, %s)
-                RETURNING cluster_id
+                RETURNING filesystem_id
               """
         params = ( self.mountpoint,
                    self.cluster.cluster_id )
