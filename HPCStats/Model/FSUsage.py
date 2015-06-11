@@ -56,9 +56,8 @@ class FSUsage(object):
 
     def __str__(self):
 
-        return "FSUsage %s [%s]: at %s %s%% usage" % \
-                   ( self.filesystem.name,
-                     self.filesystem.cluster.name,
+        return "FSUsage %s: at %s %s%% usage" % \
+                   ( self.filesystem,
                      self.timestamp,
                      self.usage )
 
