@@ -74,7 +74,7 @@ class JobImporterSlurm(JobImporter):
             self.cur = self.conn.cursor()
         except _mysql_exceptions.OperationalError as error:
             raise HPCStatsSourceError( \
-                    "connection to Slurm DBD MySQL failed: %s", error)
+                    "connection to Slurm DBD MySQL failed: %s" % (error))
 
 
         # Determine the batchid_search

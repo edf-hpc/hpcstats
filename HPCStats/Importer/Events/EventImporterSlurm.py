@@ -68,7 +68,7 @@ class EventImporterSlurm(EventImporter):
             self.cur = self.conn.cursor()
         except _mysql_exceptions.OperationalError as error:
             raise HPCStatsSourceError( \
-                    "connection to Slurm DBD MySQL failed: %s", error)
+                    "connection to Slurm DBD MySQL failed: %s" % (error))
 
         # Define the datetime from which the search must be done in Slurm DB.
         # Variables here are float timestamps since epoch, not Python Datetime
