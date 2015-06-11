@@ -57,7 +57,18 @@ class JobImporterSlurm(JobImporter):
         self._dbuser = config.get(section, 'user')
         self._dbpass = config.get(section, 'password')
 
-        self.uppercase_accounts = config.get_default(section, 'uppercase_accounts', False, bool)
+        self.uppercase_accounts = \
+          config.get_default(section,
+                             'uppercase_accounts',
+                             False, bool)
+        self.strict_job_project_binding = \
+          config.get_default('constraints',
+                             'strict_job_project_binding',
+                             True, bool)
+        self.strict_job_businesscode_binding = \
+          config.get_default('constraints',
+                             'strict_job_businesscode_binding',
+                             True, bool)
 
         self.conn = None
         self.cur = None
@@ -195,17 +206,23 @@ class JobImporterSlurm(JobImporter):
                 searched_project = Project(None, project_code, None)
                 project = self.app.projects.find_project(searched_project)
                 if project is None:
-                    raise HPCStatsSourceError( \
-                            "project %s not found in loaded projects" \
-                              % (project_code))
+                    msg = "project %s not found in loaded projects" \
+                            % (project_code)
+                    if self.strict_job_project_binding == True:
+                        raise HPCStatsSourceError(msg)
+                    else:
+                        logging.error(msg)
 
                 business_code = wckey_items[1]
                 searched_business = Business(business_code, None)
                 business = self.app.business.find(searched_business)
                 if business is None:
-                    raise HPCStatsSourceError( \
-                            "business code %s not found in loaded business codes" \
-                              % (business_code))
+                    msg = "business code %s not found in loaded business " \
+                          "codes" % (business_code)
+                    if self.strict_job_businesscode_binding == True:
+                        raise HPCStatsSourceError(msg)
+                    else:
+                        logging.error(msg)
 
             job = Job(account, project, business, sched_id, batch_id, name,
                       nbcpu, state, queue, submission, start, end)
