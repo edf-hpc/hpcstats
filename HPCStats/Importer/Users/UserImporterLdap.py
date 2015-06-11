@@ -73,7 +73,7 @@ class UserImporterLdap(UserImporter):
         self.group_dpt_regexp = config.get(ldap_section, 'group_dpt_regexp')
 
         self.strict_user_membership = config.get_default( \
-                                               'ldap',
+                                               'constraints',
                                                'strict_user_membership',
                                                True,
                                                bool)
