@@ -60,12 +60,17 @@ class HPCStatsConf(ConfigParser.ConfigParser, object):
 
         super(HPCStatsConf, self).read(self.filename)
 
-    def get(self, section, option):
+    def get(self, section, option, option_type=str):
         """Try to get option value in section of configuration. Raise
            HPCStatsConfigurationException if not found.
         """
         try:
-            return super(HPCStatsConf, self).get(section, option)
+            if option_type is bool:
+                return super(HPCStatsConf, self).getboolean(section, option)
+            if option_type is int:
+                return super(HPCStatsConf, self).getint(section, option)
+            else:
+                return super(HPCStatsConf, self).get(section, option)
         except ConfigParser.NoSectionError:
             raise HPCStatsConfigurationException( \
                     "section %s not found" % (section))
@@ -73,12 +78,12 @@ class HPCStatsConf(ConfigParser.ConfigParser, object):
             raise HPCStatsConfigurationException( \
                     "option %s not found in section %s" % (option, section))
 
-    def get_default(self, section, option, default):
+    def get_default(self, section, option, default, option_type=str):
         """Try to get option value in section of configuration. Return default
            if not found.
         """
         try:
-            return self.get(section, option)
+            return self.get(section, option, option_type)
         except HPCStatsConfigurationException:
             return default
 
