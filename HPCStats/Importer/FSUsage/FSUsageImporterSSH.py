@@ -57,6 +57,9 @@ class FSUsageImporterSSH(FSUsageImporter):
         self.ssh_pkey = config.get(section, 'pkey')
         self.fsfile = config.get(section, 'file')
 
+        self.timestamp_fmt = config.get_default(section, 'timestamp_fmt',
+                                                '%Y-%m-%dT%H:%M:%S.%fZ')
+
         self.filesystems = None # loaded filesystems
         self.fsusages = None    # loaded fsusages
 
@@ -109,7 +112,7 @@ class FSUsageImporterSSH(FSUsageImporter):
             for row in csvreader:
                 mountpoint = row[0]
                 try:
-                    logtime = datetime.strptime(row[1], "%Y-%m-%dT%H:%M:%S.%fZ")
+                    logtime = datetime.strptime(row[1], self.timestamp_fmt)
                 except ValueError, err:
                     raise HPCStatsSourceError( \
                             "error while parsing log time: %s" % (err))
