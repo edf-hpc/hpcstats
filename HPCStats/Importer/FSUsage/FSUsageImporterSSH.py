@@ -61,7 +61,9 @@ class FSUsageImporterSSH(FSUsageImporter):
         self.fsusages = None    # loaded fsusages
 
     def load(self):
-        """Load Filesystems and FSUsages from CSV logfile read through SSH."""
+        """Load Filesystems and FSUsages from CSV logfile read through SSH.
+           Raises HPCStatsSourceError if any error is encountered.
+        """
  
         self.filesystems = []
         self.fsusages = []
@@ -106,7 +108,11 @@ class FSUsageImporterSSH(FSUsageImporter):
             csvreader = csv.reader(csvfile, delimiter=',')
             for row in csvreader:
                 mountpoint = row[0]
-                logtime = datetime.strptime(row[1], "%Y-%m-%dT%H:%M:%S.%fZ")
+                try:
+                    logtime = datetime.strptime(row[1], "%Y-%m-%dT%H:%M:%S.%fZ")
+                except ValueError, err:
+                    raise HPCStatsSourceError( \
+                            "error while parsing log time: %s" % (err))
                 bpercent = float(row[2])
                 ipercent = float(row[3])
                 newfs = Filesystem(mountpoint, self.cluster)
