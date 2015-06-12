@@ -308,7 +308,7 @@ class UserImporterLdap(UserImporter):
         # if department not found, just print warning
         if not department:
             logging.warning("department not found for user %s (%s) on " \
-                            "cluster %s!", login, name, self.cluster.name)
+                            "cluster %s!", login, userdn, self.cluster.name)
 
         return department
 
