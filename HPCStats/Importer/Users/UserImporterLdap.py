@@ -151,10 +151,14 @@ class UserImporterLdap(UserImporter):
         # or raise HPCStatsSourceError.
 
         nb_results = len(members)
+        if nb_results == 0:
+            raise HPCStatsSourceError( \
+                    "no result found for group %s in base %s" \
+                      % (group, self.ldap_dn_groups))
         if nb_results > 1:
             raise HPCStatsSourceError( \
                     "too much results (%d) found for group %s in base %s" \
-                      % (sults, group, self.ldap_dn_groups))
+                      % (nb_results, group, self.ldap_dn_groups))
 
         # Then the goal is to extract the list of user logins out of search
         # result.
