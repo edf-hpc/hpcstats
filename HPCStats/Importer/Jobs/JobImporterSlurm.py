@@ -123,8 +123,8 @@ class JobImporterSlurm(JobImporter):
         self.runs = []
 
         req = """
-                SELECT id_job,
-                       job_db_inx,
+                SELECT job_db_inx,
+                       id_job,
                        id_user,
                        id_group,
                        time_submit,
