@@ -55,7 +55,7 @@ class Run(object):
 
     def __str__(self):
 
-        return "run on %d [%s] for job %d" % \
+        return "run on %s [%s] for job %d" % \
                ( self.node.name,
                  self.cluster.name,
                  self.job.sched_id )
