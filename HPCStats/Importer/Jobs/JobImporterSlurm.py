@@ -241,8 +241,8 @@ class JobImporterSlurm(JobImporter):
                         else:
                             logging.error(msg)
 
-            job = Job(account, project, business, sched_id, batch_id, name,
-                      nbcpu, state, queue, submission, start, end)
+            job = Job(account, project, business, sched_id, str(batch_id),
+                      name, nbcpu, state, queue, submission, start, end)
             self.jobs.append(job)
 
             if nodelist is not None:
