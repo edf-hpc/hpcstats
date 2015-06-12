@@ -33,8 +33,8 @@ CREATE TABLE Job(
         job_end        timestamp,
         userhpc_id     integer NOT NULL,
         cluster_id     integer NOT NULL,
-        project_id     integer NOT NULL,
-        business_code  character varying(30) NOT NULL,
+        project_id     integer,
+        business_code  character varying(30),
         CONSTRAINT Job_pkey PRIMARY KEY (job_id),
         CONSTRAINT Job_unique UNIQUE (job_batch_id, cluster_id)
 );
