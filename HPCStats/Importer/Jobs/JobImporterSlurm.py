@@ -174,6 +174,12 @@ class JobImporterSlurm(JobImporter):
             else:
                 end = datetime.fromtimestamp(end_t)
 
+            # Some jobs in Slurm DBD have an end but no start. Typically, this
+            # concernes the jobs that have been cancelled before starting. For
+            # these jobs, we set the start equal to the end.
+            if start is None and end is not None:
+                start = end
+
             name = row[14]
             nbcpu = row[8]
             state = self.get_job_state_from_slurm_state(row[11])
