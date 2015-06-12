@@ -117,7 +117,8 @@ class FSUsageImporterSSH(FSUsageImporter):
                     raise HPCStatsSourceError( \
                             "error while parsing log time: %s" % (err))
                 bpercent = float(row[2])
-                ipercent = float(row[3])
+                if len(row) == 4:
+                    ipercent = float(row[3])
                 newfs = Filesystem(mountpoint, self.cluster)
                 fs = None
                 # search if fs not already defined
