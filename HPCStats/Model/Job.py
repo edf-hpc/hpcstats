@@ -164,6 +164,16 @@ class Job(object):
                 RETURNING job_id
               """
 
+        if self.project is None:
+            project_id = None
+        else:
+            project_id = self.project.project_id
+
+        if self.business is None:
+            business_code = None
+        else:
+            business_code = self.business.code
+
         params = ( self.sched_id,
                    self.batch_id,
                    self.name,
@@ -175,8 +185,8 @@ class Job(object):
                    self.end,
                    self.account.cluster.cluster_id,
                    self.account.user.user_id,
-                   self.project.project_id,
-                   self.business.code )
+                   project_id,
+                   business_code )
 
         #print db.cur.mogrify(req, params)
         db.execute(req, params)
