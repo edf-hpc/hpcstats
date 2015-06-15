@@ -74,7 +74,7 @@ CREATE TABLE Event(
         event_reason character varying(100),
         event_nbCpu  integer NOT NULL,
         event_start  timestamp NOT NULL,
-        event_end    timestamp NOT NULL,
+        event_end    timestamp,
         node_id      integer NOT NULL,
         cluster_id   integer NOT NULL,
         CONSTRAINT Event_pkey PRIMARY KEY (event_id, node_id),
