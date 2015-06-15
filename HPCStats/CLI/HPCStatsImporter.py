@@ -140,8 +140,7 @@ class HPCStatsImporter(HPCStatsApp):
 
         logging.info("updating jobs for cluster %s" % (cluster.name))
         self.jobs = JobImporterFactory().factory(self, db, self.conf, cluster)
-        self.jobs.load()
-        self.jobs.update()
+        self.jobs.load_update_window()
 
     def cleanup(self):
         """Clean-up the application before exit."""

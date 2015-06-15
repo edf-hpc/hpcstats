@@ -57,6 +57,11 @@ class JobImporterSlurm(JobImporter):
         self._dbuser = config.get(section, 'user')
         self._dbpass = config.get(section, 'password')
 
+        self.window_size = \
+          config.get_default(section,
+                             'window_size',
+                             0, int)
+
         self.uppercase_accounts = \
           config.get_default(section,
                              'uppercase_accounts',
@@ -81,14 +86,13 @@ class JobImporterSlurm(JobImporter):
                              'strict_job_wckey_format',
                              True, bool)
 
-
         self.conn = None
         self.cur = None
 
-    def load(self):
-        """Load jobs from Slurm DB."""
-
-        self.jobs = []
+    def connect_db(self):
+        """Connect to Slurm MySQL database and set conn and cur attribute
+           accordingly. Raises HPCStatsSourceError if error is encountered.
+        """
 
         try:
             self.conn = MySQLdb.connect( host=self._dbhost,
@@ -101,8 +105,11 @@ class JobImporterSlurm(JobImporter):
             raise HPCStatsSourceError( \
                     "connection to Slurm DBD MySQL failed: %s" % (error))
 
+    def get_search_batch_id(self):
+        """Determine and return the oldest batch_id to search for update in
+           Slurm database.
+        """
 
-        # Determine the batchid_search
         batchid_oldest_unfinished_job = get_batchid_oldest_unfinished_job(self.db, self.cluster)
         batchid_last_job = get_batchid_last_job(self.db, self.cluster)
         if batchid_oldest_unfinished_job:
@@ -112,15 +119,54 @@ class JobImporterSlurm(JobImporter):
         else:
             batchid_search = -1
 
-        self.get_jobs_after_batchid(batchid_search)
+        return batchid_search
 
-    def get_jobs_after_batchid(self, batchid):
+    def load_update_window(self):
+        """Load and update job in windowed mode until there is more job to load
+           in Slurm database.
+        """
+        nb_loaded = -1
+
+        self.connect_db()
+        batch_id = self.get_search_batch_id()
+
+        while nb_loaded != 0:
+            self.load_window(batch_id)
+            nb_loaded = len(self.jobs)
+            logging.debug("%d jobs loaded for Slurm", nb_loaded)
+            # get batch_id for next loop iteration
+            batch_id = self.jobs[-1].batch_id
+            self.update()
+
+    def load_window(self, batch_id):
+        """Load a limited amount of jobs (limite to the window size) starting
+           from the batch_id in parameter and fill jobs list attribute
+           accordingly.
+        """
+
+        self.jobs = []
+        self.get_jobs_after_batchid(batch_id, self.window_size)
+
+    def load(self):
+        """Load jobs from Slurm DB."""
+
+        self.jobs = []
+        self.connect_db()
+        batch_id = self.get_search_batch_id()
+        self.get_jobs_after_batchid(batch_id)
+
+    def get_jobs_after_batchid(self, batchid, window_size=0):
         """Fill the jobs attribute with the list of Jobs found in Slurm DB
            whose id_job is over or equals to the batchid in parameter.
         """
 
         self.jobs = []
         self.runs = []
+
+        if window_size:
+            limit = "LIMIT %d" % (window_size)
+        else:
+            limit = ''
 
         req = """
                 SELECT job_db_inx,
@@ -142,11 +188,11 @@ class JobImporterSlurm(JobImporter):
                   FROM %s_job_table job,
                        %s_assoc_table assoc,
                        qos_table qos
-                 WHERE id_job >= %%s
+                 WHERE job_db_inx >= %%s
                    AND assoc.id_assoc = job.id_assoc
                    AND qos.id = job.id_qos
-              ORDER BY id_job
-              """ % (self.cluster.name, self.cluster.name)
+              ORDER BY job_db_inx %s
+              """ % (self.cluster.name, self.cluster.name, limit)
         params = ( batchid, )
         self.cur.execute(req, params)
         while (1):
