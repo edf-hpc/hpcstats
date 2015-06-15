@@ -150,9 +150,9 @@ class Event(object):
               """
         params = ( self.node.node_id,
                    self.cluster.cluster_id,
-                   self.nb_cpu,
                    self.event_type,
                    self.reason,
+                   self.nb_cpu,
                    self.start_datetime,
                    self.end_datetime )
  
