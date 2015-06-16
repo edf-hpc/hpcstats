@@ -93,6 +93,11 @@ class JobImporterSlurm(JobImporter):
         self.conn = None
         self.cur = None
 
+        self.unknown_accounts = []
+        self.invalid_wckeys = []
+        self.unknown_projects = []
+        self.unknown_businesses = []
+
     def connect_db(self):
         """Connect to Slurm MySQL database and set conn and cur attribute
            accordingly. Raises HPCStatsSourceError if error is encountered.
@@ -255,7 +260,8 @@ class JobImporterSlurm(JobImporter):
                         % (login)
                 if self.strict_job_account_binding == True:
                     raise HPCStatsSourceError(msg)
-                else:
+                elif login not in self.unknown_accounts:
+                    self.unknown_accounts.append(login)
                     logging.warning(msg)
                     continue
 
@@ -274,10 +280,11 @@ class JobImporterSlurm(JobImporter):
                     msg = "format of wckey %s is not valid" % (wckey)
                     if self.strict_job_wckey_format == True:
                         raise HPCStatsSourceError(msg)
-                    else:
+                    elif wckey not in self.invalid_wckeys:
+                        self.invalid_wckeys.append(wckey)
                         logging.warning(msg)
-                        project = None
-                        business = None
+                    project = None
+                    business = None
                 else:
                     project_code = wckey_items[0]
                     searched_project = Project(None, project_code, None)
@@ -287,18 +294,21 @@ class JobImporterSlurm(JobImporter):
                                 % (project_code)
                         if self.strict_job_project_binding == True:
                             raise HPCStatsSourceError(msg)
-                        else:
+                        elif project_code not in self.unknown_projects:
+                            self.unknown_projects.append(project_code)
                             logging.warning(msg)
 
                     business_code = wckey_items[1]
                     searched_business = Business(business_code, None)
                     business = self.app.business.find(searched_business)
+
                     if business is None:
                         msg = "business code %s not found in loaded " \
                               "business codes" % (business_code)
                         if self.strict_job_businesscode_binding == True:
                             raise HPCStatsSourceError(msg)
-                        else:
+                        elif business_code not in self.unknown_businesses:
+                            self.unknown_businesses.append(business_code)
                             logging.warning(msg)
 
             job = Job(account, project, business, sched_id, str(batch_id),
