@@ -256,7 +256,7 @@ class JobImporterSlurm(JobImporter):
                 if self.strict_job_account_binding == True:
                     raise HPCStatsSourceError(msg)
                 else:
-                    logging.error(msg)
+                    logging.warning(msg)
                     continue
 
             wckey = row[15]
@@ -275,7 +275,7 @@ class JobImporterSlurm(JobImporter):
                     if self.strict_job_wckey_format == True:
                         raise HPCStatsSourceError(msg)
                     else:
-                        logging.error(msg)
+                        logging.warning(msg)
                         project = None
                         business = None
                 else:
@@ -288,7 +288,7 @@ class JobImporterSlurm(JobImporter):
                         if self.strict_job_project_binding == True:
                             raise HPCStatsSourceError(msg)
                         else:
-                            logging.error(msg)
+                            logging.warning(msg)
 
                     business_code = wckey_items[1]
                     searched_business = Business(business_code, None)
@@ -299,7 +299,7 @@ class JobImporterSlurm(JobImporter):
                         if self.strict_job_businesscode_binding == True:
                             raise HPCStatsSourceError(msg)
                         else:
-                            logging.error(msg)
+                            logging.warning(msg)
 
             job = Job(account, project, business, sched_id, str(batch_id),
                       name, nbcpu, state, queue, submission, start, end)
