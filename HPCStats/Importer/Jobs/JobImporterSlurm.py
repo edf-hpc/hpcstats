@@ -73,6 +73,10 @@ class JobImporterSlurm(JobImporter):
                              '')
         self.uppercase_exceptions = exceptions_str.split(',')
 
+        self.strict_job_account_binding = \
+          config.get_default('constraints',
+                             'strict_job_account_binding',
+                             True, bool)
         self.strict_job_project_binding = \
           config.get_default('constraints',
                              'strict_job_project_binding',
@@ -247,9 +251,13 @@ class JobImporterSlurm(JobImporter):
             searched_account = Account(searched_user, self.cluster, None, None, None, None)
             account = self.app.users.find_account(searched_account)
             if account is None:
-                raise HPCStatsSourceError( \
-                        "account %s not found in loaded accounts" \
-                          % (login))
+                msg = "account %s not found in loaded accounts" \
+                        % (login)
+                if self.strict_job_account_binding == True:
+                    raise HPCStatsSourceError(msg)
+                else:
+                    logging.error(msg)
+                    continue
 
             wckey = row[15]
 
