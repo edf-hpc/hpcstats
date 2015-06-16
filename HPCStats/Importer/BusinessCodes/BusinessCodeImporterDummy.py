@@ -28,25 +28,23 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import logging
+from HPCStats.Importer.BusinessCodes.BusinessCodeImporter import BusinessCodeImporter
 
-from HPCStats.Exceptions import HPCStatsConfigurationException
-from HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy import BusinessCodeImporterDummy
-from HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV import BusinessCodeImporterCSV
+class BusinessCodeImporterDummy(BusinessCodeImporter):
 
-class BusinessCodeImporterFactory(object):
+    def __init__(self, app, db, config):
 
-    def __init__(self):
+        super(BusinessCodeImporterDummy, self).__init__(app, db, config)
+
+    def load(self):
+        """Dummy BusinessCodes load."""
+
+        logging.debug("BusinessCodeImporterDummy load")
+        self.businesses = []
         pass
 
-    def factory(self, app, db, config):
+    def update(self):
+        """Dummy BusinessCodes update."""
 
-        implem = config.get_default('globals', 'business', 'dummy')
-
-        if implem == 'dummy':
-            return BusinessCodeImporterDummy(app, db, config)
-        elif implem == 'csv':
-            return BusinessCodeImporterCSV(app, db, config)
-        else:
-            raise HPCStatsConfigurationException( \
-                    "BusinessCodeImporter %s is not implemented" \
-                      % (implem))
+        logging.debug("BusinessCodeImporterDummy update")
+        pass
