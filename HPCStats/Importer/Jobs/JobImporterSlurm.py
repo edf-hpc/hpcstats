@@ -279,7 +279,7 @@ class JobImporterSlurm(JobImporter):
                     self.unknown_accounts.append(login)
                     self.nb_excluded_jobs += 1
                     logging.warning(msg)
-                    continue
+                continue
 
             wckey = row[15]
 
