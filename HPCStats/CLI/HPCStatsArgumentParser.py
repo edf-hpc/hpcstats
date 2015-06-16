@@ -58,8 +58,8 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
 
         parser_imp.add_argument("--projects",
                                 dest="projects",
-                                help="import projects relaed data " \
-                                     "(projects, sectors and domains)",
+                                help="import projects related data " \
+                                     "(projects and domains)",
                                 action="store_true")
 
         parser_imp.add_argument("--cluster",

@@ -39,7 +39,6 @@ from HPCStats.Exceptions import *
 from HPCStats.Importer.Contexts.ContextImporter import ContextImporter
 from HPCStats.Model.ContextAccount import ContextAccount
 from HPCStats.Model.Domain import Domain
-from HPCStats.Model.Sector import Sector
 from HPCStats.Model.Project import Project
 from HPCStats.Model.Business import Business
 from HPCStats.Model.User import User

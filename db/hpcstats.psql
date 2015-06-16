@@ -85,7 +85,6 @@ CREATE TABLE Project(
         project_id          SERIAL,
         project_code        character varying(30) NOT NULL,
         project_description text,
-        sector_key          character varying(5),
         domain_id           character varying(4),
         CONSTRAINT Project_pkey PRIMARY KEY (project_id),
         CONSTRAINT Project_unique UNIQUE (project_code)
@@ -95,13 +94,6 @@ CREATE TABLE Business(
         business_code        character varying(30) NOT NULL,
         business_description text,
         CONSTRAINT Business_pkey PRIMARY KEY (business_code)
-);
-
-CREATE TABLE Sector(
-        sector_key    character varying(5) NOT NULL,
-        sector_name   character varying(50),
-        domain_id     character varying(4) NOT NULL,
-        CONSTRAINT Sector_pkey PRIMARY KEY (sector_key, domain_id)
 );
 
 CREATE TABLE Domain(
@@ -146,9 +138,7 @@ ALTER TABLE ONLY Account ADD CONSTRAINT FK_Account_userhpc_id FOREIGN KEY (userh
 ALTER TABLE ONLY Account ADD CONSTRAINT FK_Account_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
 ALTER TABLE ONLY Node ADD CONSTRAINT FK_Node_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
 ALTER TABLE ONLY Event ADD CONSTRAINT FK_Event_node_id FOREIGN KEY (node_id, cluster_id) REFERENCES Node(node_id, cluster_id);
-ALTER TABLE ONLY Project ADD CONSTRAINT FK_Project_sector_key FOREIGN KEY (sector_key, domain_id) REFERENCES Sector(sector_key, domain_id);
 ALTER TABLE ONLY Project ADD CONSTRAINT FK_Project_domain_id FOREIGN KEY (domain_id) REFERENCES Domain(domain_id);
-ALTER TABLE ONLY Sector ADD CONSTRAINT FK_Sector_domain_id FOREIGN KEY (domain_id) REFERENCES Domain(domain_id);
 ALTER TABLE ONLY filesystem ADD CONSTRAINT FK_filesystem_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
 ALTER TABLE ONLY fsusage ADD CONSTRAINT FK_fsusage_filesystem_id FOREIGN KEY (filesystem_id, cluster_id) REFERENCES filesystem(filesystem_id, cluster_id);
 ALTER TABLE ONLY fsusage ADD CONSTRAINT FK_fsusage_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);

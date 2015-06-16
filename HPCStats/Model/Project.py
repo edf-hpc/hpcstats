@@ -34,7 +34,6 @@ Project(
   project_id          SERIAL,
   project_code        character varying(30) NOT NULL,
   project_description text,
-  sector_key          character varying(5),
   domain_id           character varying(4),
   CONSTRAINT Project_pkey PRIMARY KEY (project_id),
   CONSTRAINT Project_unique UNIQUE (project_code)
@@ -48,19 +47,19 @@ from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 class Project(object):
     """Model class for the Project table"""
 
-    def __init__(self, sector, code, description, project_id=None):
+    def __init__(self, domain, code, description, project_id=None):
 
         self.project_id = project_id
         self.code = code
         self.description = description
 
-        self.sector = sector
+        self.domain = domain
 
     def __str__(self):
 
         return "project %s [%s]: %s" \
                  % (self.code,
-                    self.sector.key,
+                    self.domain,
                     self.description)
 
     def __eq__(self, other):
@@ -113,19 +112,14 @@ class Project(object):
         req = """
                 INSERT INTO Project ( project_code,
                                       project_description,
-                                      sector_key,
                                       domain_id )
-                VALUES ( %s, %s, %s, %s )
+                VALUES ( %s, %s, %s )
                 RETURNING project_id
               """
 
-        # domain_key is None if sector has no domain
-        domain_key = getattr(self.sector.domain, 'key', None)
-
         params = ( self.code,
                    self.description,
-                   self.sector.key,
-                   domain_key )
+                   self.domain.key )
 
         #print db.cur.mogrify(req, params)
         db.execute(req, params)

@@ -53,7 +53,6 @@
 
 from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
 from HPCStats.Model.Domain import Domain
-from HPCStats.Model.Sector import Sector
 from HPCStats.Model.Project import Project
 from HPCStats.Model.ContextAccount import ContextAccount
 from HPCStats.Exceptions import HPCStatsRuntimeError, HPCStatsSourceError
@@ -78,7 +77,7 @@ class ProjectImporterCSV(ProjectImporter):
     def load(self):
         """Open CSV file and load project out of it.
            Raises Exceptions if error is found in the file.
-           Returns the list of Projects with their Domains and Sectors.
+           Returns the list of Projects with their Domains.
         """
 
         if not os.path.isfile(self.csv_file):
@@ -89,7 +88,6 @@ class ProjectImporterCSV(ProjectImporter):
         delimiters = '\[|]'
 
         self.domains = []
-        self.sectors = []
         self.projects = []
 
         with open(self.csv_file, 'r') as csvfile:
@@ -132,40 +130,9 @@ class ProjectImporterCSV(ProjectImporter):
                     domain = new_domain
                     self.domains.append(domain)
 
-                # sectors
-                sector_str = row[3]
-                sector_m = re.match(r"\[(.*)\](.*)", sector_str)
-                if sector_m:
-                    sector_key = sector_m.group(1)
-                    sector_name = sector_m.group(2)
-                else:
-                    raise HPCStatsSourceError( \
-                            "Project CSV %s sector format is invalid" \
-                              % (project_code))
-                sector_key = sector_key.strip()
-                sector_name = sector_name.strip()
-                if len(sector_key) == 0:
-                    raise HPCStatsSourceError( \
-                            "Project CSV %s sector key is empty" \
-                              % (project_code))
-                if len(sector_name) == 0:
-                    raise HPCStatsSourceError( \
-                            "Project CSV %s sector name is empty" \
-                              % (project_code))
-
-                # Create the Sector and search for it among the already
-                # existing ones. If not found, append to the list of Sectors.
-                new_sector = Sector(domain=domain,
-                                    key=sector_key,
-                                    name=sector_name)
-                sector = self.find_sector(new_sector)
-                if sector is None:
-                    sector = new_sector
-                    self.sectors.append(sector)
-
                 # Create the Project and search for it among the already
                 # existing ones. If found, raise HPCStatsSourceError
-                project = Project(sector=sector,
+                project = Project(domain=domain,
                                   code=project_code,
                                   description=project_name)
                 # check for duplicate project and raise error if found
@@ -179,8 +146,7 @@ class ProjectImporterCSV(ProjectImporter):
         return self.projects
 
     def update(self):
-        """Update loaded project (with associated sectors and domains) in
-           database.
+        """Update loaded project (with associated domains) in database.
         """
 
         for domain in self.domains:
@@ -188,11 +154,6 @@ class ProjectImporterCSV(ProjectImporter):
                  domain.update(self.db)
              else:
                  domain.save(self.db)
-        for sector in self.sectors:
-            if sector.existing(self.db):
-                sector.update(self.db)
-            else:
-                sector.save(self.db)
         for project in self.projects:
             if project.find(self.db):
                 project.update(self.db)
