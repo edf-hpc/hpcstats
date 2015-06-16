@@ -37,14 +37,12 @@ from HPCStats.Importer.Users.UserImporterFactory import UserImporterFactory
 from HPCStats.Importer.Architectures.ArchitectureImporterFactory import ArchitectureImporterFactory
 from HPCStats.Importer.Events.EventImporterFactory import EventImporterFactory
 from HPCStats.Importer.FSUsage.FSUsageImporterFactory import FSUsageImporterFactory
-from HPCStats.Importer.Contexts.ContextImporterFactory import ContextImporterFactory
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory import BusinessCodeImporterFactory
 from HPCStats.Importer.Projects.ProjectImporterFactory import ProjectImporterFactory
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
 from HPCStats.Model.Cluster import Cluster
 from HPCStats.Model.Project import Project
 from HPCStats.Model.Business import Business
-from HPCStats.Model.ContextAccount import ContextAccount
 
 class HPCStatsImporter(HPCStatsApp):
 
@@ -57,7 +55,6 @@ class HPCStatsImporter(HPCStatsApp):
         super(HPCStatsImporter, self).__init__(conf, cluster_name)
 
         # all importer objects
-        self.context = None
         self.business = None
         self.projects = None
         self.arch = None
@@ -122,11 +119,6 @@ class HPCStatsImporter(HPCStatsApp):
         self.users = UserImporterFactory().factory(self, db, self.conf, cluster)
         self.users.load()
         self.users.update()
-
-        logging.info("updating context for cluster %s from stats file" % (cluster.name))
-        self.context = ContextImporterFactory().factory(self, db, self.conf, cluster)
-        self.context.load()
-        self.context.update()
 
         logging.info("updating filesystem usage for cluster %s" % (cluster.name))
         self.fsusage = FSUsageImporterFactory().factory(self, db, self.conf, cluster)

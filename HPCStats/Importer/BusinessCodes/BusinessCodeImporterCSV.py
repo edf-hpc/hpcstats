@@ -33,7 +33,6 @@ import csv
 from HPCStats.Exceptions import *
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporter import BusinessCodeImporter
 from HPCStats.Model.Business import Business
-from HPCStats.Model.ContextAccount import ContextAccount
 
 class BusinessCodeImporterCSV(BusinessCodeImporter):
 

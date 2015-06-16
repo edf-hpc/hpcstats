@@ -54,7 +54,6 @@
 from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
 from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Project import Project
-from HPCStats.Model.ContextAccount import ContextAccount
 from HPCStats.Exceptions import HPCStatsRuntimeError, HPCStatsSourceError
 import ConfigParser
 import os
