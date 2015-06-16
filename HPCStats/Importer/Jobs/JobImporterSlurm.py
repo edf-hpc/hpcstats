@@ -98,6 +98,9 @@ class JobImporterSlurm(JobImporter):
         self.unknown_projects = []
         self.unknown_businesses = []
 
+        self.nb_loaded_jobs = -1
+        self.nb_excluded_jobs = -1
+
     def connect_db(self):
         """Connect to Slurm MySQL database and set conn and cur attribute
            accordingly. Raises HPCStatsSourceError if error is encountered.
@@ -135,6 +138,8 @@ class JobImporterSlurm(JobImporter):
            in Slurm database.
         """
         nb_loaded = -1
+        self.nb_loaded_jobs = 0
+        self.nb_excluded_jobs = 0
 
         self.connect_db()
         batch_id = self.get_search_batch_id()
@@ -142,7 +147,8 @@ class JobImporterSlurm(JobImporter):
         while nb_loaded != 0:
             self.load_window(batch_id)
             nb_loaded = len(self.jobs)
-            logging.debug("%d jobs loaded for Slurm", nb_loaded)
+            logging.info("%d loaded jobs (%d this iteration), %d excluded",
+                         self.nb_loaded_jobs, nb_loaded, self.nb_excluded_jobs)
             # get batch_id for next loop iteration
             batch_id = self.jobs[-1].batch_id
             self.update()
@@ -208,6 +214,8 @@ class JobImporterSlurm(JobImporter):
             row = self.cur.fetchone()
             if row == None: break
 
+            self.nb_loaded_jobs += 1
+
             batch_id = row[0]
             sched_id = row[1]
 
@@ -262,6 +270,7 @@ class JobImporterSlurm(JobImporter):
                     raise HPCStatsSourceError(msg)
                 elif login not in self.unknown_accounts:
                     self.unknown_accounts.append(login)
+                    self.nb_excluded_jobs += 1
                     logging.warning(msg)
                     continue
 
