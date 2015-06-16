@@ -27,26 +27,30 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""
+  Dummy Project importer
+"""
+
 import logging
+from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
 
-from HPCStats.Exceptions import HPCStatsConfigurationException
-from HPCStats.Importer.Projects.ProjectImporterDummy import ProjectImporterDummy
-from HPCStats.Importer.Projects.ProjectImporterCSV import ProjectImporterCSV
+class ProjectImporterDummy(ProjectImporter):
+    """Main class of this module."""
 
-class ProjectImporterFactory(object):
+    def __init__(self, app, db, config):
 
-    def __init__(self):
+        super(ProjectImporterDummy, self).__init__(app, db, config)
+
+    def load(self):
+        """Dummy Projects load."""
+
+        logging.debug("ProjectImporterDummy load")
+        self.domains = []
+        self.projects = []
         pass
 
-    def factory(self, app, db, config):
+    def update(self):
+        """Dummy Projects update."""
 
-        implem = config.get_default('globals', 'projects', 'dummy')
-
-        if implem == 'dummy':
-            return ProjectImporterDummy(app, db, config)
-        elif implem == 'csv':
-            return ProjectImporterCSV(app, db, config)
-        else:
-            raise HPCStatsConfigurationException( \
-                    "ProjectImporter %s is not implemented" \
-                      % (implem))
+        logging.debug("ProjectImporterDummy update")
+        pass
