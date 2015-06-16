@@ -50,7 +50,7 @@ class EventImporterSlurm(EventImporter):
         self._dbport = int(config.get(section,"port"))
         self._dbname = config.get(section,"name")
         self._dbuser = config.get(section,"user")
-        self._dbpass = config.get(section,"password")
+        self._dbpass = config.get_default(section, "password", None)
         self.conn = None
         self.cur = None
 
@@ -60,11 +60,16 @@ class EventImporterSlurm(EventImporter):
         """
 
         try:
-            self.conn = MySQLdb.connect( host=self._dbhost,
-                                         user=self._dbuser,
-                                         passwd=self._dbpass,
-                                         db=self._dbname,
-                                         port=self._dbport )
+            conn_params = {
+               'host': self._dbhost,
+               'user': self._dbuser,
+               'db': self._dbname,
+               'port': self._dbport,
+            }
+            if self._dbpass is not None:
+                conn_params['passwd'] = self._dbpass
+
+            self.conn = MySQLdb.connect(**conn_params)
             self.cur = self.conn.cursor()
         except _mysql_exceptions.OperationalError as error:
             raise HPCStatsSourceError( \
