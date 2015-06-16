@@ -145,12 +145,11 @@ class JobImporterSlurm(JobImporter):
         batch_id = self.get_search_batch_id()
 
         while nb_loaded != 0:
-            self.load_window(batch_id)
+            # load jobs and jump to next batch_id for next iteration
+            batch_id = self.load_window(batch_id) + 1
             nb_loaded = len(self.jobs)
             logging.info("%d loaded jobs (%d this iteration), %d excluded",
                          self.nb_loaded_jobs, nb_loaded, self.nb_excluded_jobs)
-            # get batch_id for next loop iteration
-            batch_id = self.jobs[-1].batch_id
             self.update()
 
     def load_window(self, batch_id):
@@ -160,7 +159,7 @@ class JobImporterSlurm(JobImporter):
         """
 
         self.jobs = []
-        self.get_jobs_after_batchid(batch_id, self.window_size)
+        return self.get_jobs_after_batchid(batch_id, self.window_size)
 
     def load(self):
         """Load jobs from Slurm DB."""
@@ -173,6 +172,7 @@ class JobImporterSlurm(JobImporter):
     def get_jobs_after_batchid(self, batchid, window_size=0):
         """Fill the jobs attribute with the list of Jobs found in Slurm DB
            whose id_job is over or equals to the batchid in parameter.
+           Returns the last found batch_id.
         """
 
         self.jobs = []
@@ -182,6 +182,8 @@ class JobImporterSlurm(JobImporter):
             limit = "LIMIT %d" % (window_size)
         else:
             limit = ''
+
+        last_batch_id = -1
 
         req = """
                 SELECT job_db_inx,
@@ -216,7 +218,7 @@ class JobImporterSlurm(JobImporter):
 
             self.nb_loaded_jobs += 1
 
-            batch_id = row[0]
+            batch_id = last_batch_id = row[0]
             sched_id = row[1]
 
             submission_t = row[4]
@@ -342,6 +344,8 @@ class JobImporterSlurm(JobImporter):
 
                     run = Run(self.cluster, node, job)
                     self.runs.append(run)
+
+        return last_batch_id
 
     def job_partition(self, job_id, partitions_str, nodelist):
         """Return one partition name depending on the partition field and the
