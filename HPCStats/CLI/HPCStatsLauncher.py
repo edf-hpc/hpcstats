@@ -33,6 +33,7 @@ import locale
 
 from HPCStats.Exceptions import *
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
+from HPCStats.CLI.HPCStatsChecker import HPCStatsChecker
 from HPCStats.CLI.HPCStatsImporter import HPCStatsImporter
 from HPCStats.CLI.HPCStatsReporter import HPCStatsReporter
 from HPCStats.CLI.HPCStatsArgumentParser import HPCStatsArgumentParser
@@ -83,7 +84,9 @@ class HPCStatsLauncher(object):
             logging.error("Configuration Error: %s", err)
             self.exit()
 
-        if action == "import":
+        if action == "check":
+            self.app = HPCStatsChecker(conf, cluster_name)
+        elif action == "import":
             self.app = HPCStatsImporter(conf, cluster_name)
         elif action == "report":
             template = args.template

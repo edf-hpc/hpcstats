@@ -91,3 +91,11 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
                                 default="csv",
                                 help="template to use for formatted " \
                                      "output (default: %default)")
+
+        parser_chk = subparsers.add_parser('check', help='check help')
+
+        parser_chk.add_argument("--cluster",
+                                dest='cluster',
+                                nargs=1,
+                                required=True,
+                                help="Cluster data sources to check" )
