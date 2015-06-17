@@ -175,10 +175,10 @@ class Event(object):
         req = """
                 UPDATE Event
                    SET event_end = %s,
-                       event_type = %s
+                       event_type = %s,
                        event_reason = %s,
-                       event_nbCpu = %s
-                       event_start = %s
+                       event_nbCpu = %s,
+                       event_start = %s,
                        event_end = %s
                  WHERE event_id = %s
                    AND node_id = %s
