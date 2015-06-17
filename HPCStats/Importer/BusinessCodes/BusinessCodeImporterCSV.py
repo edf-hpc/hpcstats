@@ -43,6 +43,14 @@ class BusinessCodeImporterCSV(BusinessCodeImporter):
         business_section = "business"
         self._business_file = config.get(business_section, "file")
 
+    def check(self):
+        """Check if CSV file exists and is a proper flat file."""
+
+        if not os.path.isfile(self._business_file):
+            raise HPCStatsSourceError( \
+                    "business CSV file %s does not exist" \
+                      % (self._business_file))
+
     def load(self):
         """Load BusinessCodes from CSV files in businesses attribute. Raise
            HPCStatsSourceError if error in encountered.
@@ -50,10 +58,7 @@ class BusinessCodeImporterCSV(BusinessCodeImporter):
 
         self.businesses = []
 
-        if not os.path.isfile(self._business_file):
-            raise HPCStatsSourceError( \
-                    "business CSV file %s does not exist" \
-                      % (self._business_file))
+        self.check()
 
         with open(self._business_file, 'r') as csvfile:
 

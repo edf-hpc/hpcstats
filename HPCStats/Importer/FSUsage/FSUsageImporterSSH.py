@@ -63,13 +63,10 @@ class FSUsageImporterSSH(FSUsageImporter):
         self.filesystems = None # loaded filesystems
         self.fsusages = None    # loaded fsusages
 
-    def load(self):
-        """Load Filesystems and FSUsages from CSV logfile read through SSH.
-           Raises HPCStatsSourceError if any error is encountered.
+    def connect_ssh(self):
+        """Connect through SSH to remote server and return connection handler.
+           Raises HPCStatsSourceError in case of problem.
         """
- 
-        self.filesystems = []
-        self.fsusages = []
 
         try:
             logging.debug("ssh connection to %s@%s",
@@ -85,6 +82,33 @@ class FSUsageImporterSSH(FSUsageImporter):
             raise HPCStatsSourceError( \
                     "unable to connect by SSH to %s@%s: %s" % \
                       (self.ssh_user, self.ssh_host, err))
+        return ssh
+
+    def check(self):
+        """Check if remote SSH server is available for connections and if the
+           remote CSV file can be opened. Riases HPCStatsSourceError in case of
+           problem.
+        """
+        ssh = self.connect_ssh()
+        sftp = ssh.open_sftp()
+        try:
+            sftp.open(self.fsfile, 'r')
+        except IOError, err:
+            raise HPCStatsSourceError( \
+                    "Error while opening file %s by SFTP: %s" \
+                      % (self.fsfile, err))
+        sftp.close()
+        ssh.close()
+
+    def load(self):
+        """Load Filesystems and FSUsages from CSV logfile read through SSH.
+           Raises HPCStatsSourceError if any error is encountered.
+        """
+
+        self.filesystems = []
+        self.fsusages = []
+
+        ssh = self.connect_ssh()
 
         # The remote file is accessed through SFTP. We could have used
         # Paramiko sftp.open() but iterating over a long file (line by line)

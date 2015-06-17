@@ -73,15 +73,20 @@ class ProjectImporterCSV(ProjectImporter):
         projects_section = "projects"
         self.csv_file = config.get(projects_section, "file")
 
+    def check(self):
+        """Check if CSV file exists and is a proper flat file."""
+
+        if not os.path.isfile(self.csv_file):
+            raise HPCStatsRuntimeError("CSV file %s does not exist" \
+                                       % (self.csv_file))
+
     def load(self):
         """Open CSV file and load project out of it.
            Raises Exceptions if error is found in the file.
            Returns the list of Projects with their Domains.
         """
 
-        if not os.path.isfile(self.csv_file):
-            raise HPCStatsRuntimeError("CSV file %s does not exist" \
-                                       % (self.csv_file))
+        self.check()
 
         # define projects delimiters in csv file for domains and sectors values
         delimiters = '\[|]'

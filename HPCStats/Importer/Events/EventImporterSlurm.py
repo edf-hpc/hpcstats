@@ -54,9 +54,9 @@ class EventImporterSlurm(EventImporter):
         self.conn = None
         self.cur = None
 
-    def load(self):
-        """Load Events from Slurm DB and store them into self.events
-           list attribute.
+    def connect_db(self):
+        """Connect to cluster Slurm database and set conn/cur attribute
+           accordingly. Raises HPCStatsSourceError in case of problem.
         """
 
         try:
@@ -74,6 +74,25 @@ class EventImporterSlurm(EventImporter):
         except _mysql_exceptions.OperationalError as error:
             raise HPCStatsSourceError( \
                     "connection to Slurm DBD MySQL failed: %s" % (error))
+
+    def disconnect_db(self):
+        """Disconnect from cluster Slurm database."""
+
+        self.cur.close()
+        self.conn.close()
+
+    def check(self):
+        """Check if cluster Slurm database is available for connection."""
+
+        self.connect_db()
+        self.disconnect_db()
+
+    def load(self):
+        """Load Events from Slurm DB and store them into self.events
+           list attribute.
+        """
+
+        self.connect_db()
 
         # Define the datetime from which the search must be done in Slurm DB.
         # Variables here are float timestamps since epoch, not Python Datetime

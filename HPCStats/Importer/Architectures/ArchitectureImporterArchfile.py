@@ -48,6 +48,16 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
         self.archfile = config.get(archfile_section, "file")
         self.arch = None # ConfigParser object
 
+    def check(self):
+        """Checks if archfile actually exists or raises HPCStatsSourceError if
+           not.
+        """
+
+        if not os.path.isfile(self.archfile):
+            raise HPCStatsSourceError( \
+                    "Architecture file %s does not exist" \
+                      % (self.archfile))
+
     def update(self):
         """Create or update Cluster and Nodes in the database."""
 
@@ -120,11 +130,7 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
         """Check if archfile actually exists then reads it and set arch
            attribute. Raises HPCStatsSourceError on error.
         """
-        if not os.path.isfile(self.archfile):
-            raise HPCStatsSourceError( \
-                    "Architecture file %s does not exist" \
-                      % (self.archfile))
-
+        self.check()
         self.arch = ConfigParser.ConfigParser()
         self.arch.read(self.archfile)
 

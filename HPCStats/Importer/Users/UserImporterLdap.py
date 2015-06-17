@@ -83,6 +83,25 @@ class UserImporterLdap(UserImporter):
 
         self.ldap_conn = None
 
+    def connect_ldap(self):
+        """Connect to LDAP directory and set ldap_conn attribute accordingly.
+           Raises HPCStatsSourceError in case of error.
+        """
+
+        if self._ldapcert is not None:
+            ldap.set_option(ldap.OPT_X_TLS_CACERTFILE, self._ldapcert)
+        try:
+            self.ldap_conn = ldap.initialize(self._ldapurl)
+            self.ldap_conn.simple_bind(self._ldapdn, self.ldap_password)
+        except ldap.SERVER_DOWN, err:
+            raise HPCStatsSourceError( \
+                    "unable to connect to LDAP server: %s" % (err))
+
+    def check(self):
+        """Check the LDAP directory is available for connections."""
+
+        self.connect_ldap()
+
     def load(self):
         """Load (User,Account) tuples from both LDAP directoy and DB."""
 
@@ -107,16 +126,7 @@ class UserImporterLdap(UserImporter):
         """Load (User,Account) tuples from LDAP directory."""
 
         self.users_acct_ldap = []
-
-        if self._ldapcert is not None:
-            ldap.set_option(ldap.OPT_X_TLS_CACERTFILE, self._ldapcert)
-        try:
-            self.ldap_conn = ldap.initialize(self._ldapurl)
-            self.ldap_conn.simple_bind(self._ldapdn, self.ldap_password)
-        except ldap.SERVER_DOWN, err:
-            raise HPCStatsSourceError( \
-                    "unable to connect to LDAP server: %s" % (err))
-
+        self.connect_ldap()
         self.users_acct_ldap = self.get_group_members(self._ldapgroup)
 
     def get_group_members(self, group):

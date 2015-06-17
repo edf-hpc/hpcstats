@@ -102,8 +102,8 @@ class JobImporterSlurm(JobImporter):
         self.nb_excluded_jobs = -1
 
     def connect_db(self):
-        """Connect to Slurm MySQL database and set conn and cur attribute
-           accordingly. Raises HPCStatsSourceError if error is encountered.
+        """Connect to cluster Slurm database and set conn/cur attribute
+           accordingly. Raises HPCStatsSourceError in case of problem.
         """
 
         try:
@@ -121,6 +121,18 @@ class JobImporterSlurm(JobImporter):
         except _mysql_exceptions.OperationalError as error:
             raise HPCStatsSourceError( \
                     "connection to Slurm DBD MySQL failed: %s" % (error))
+
+    def disconnect_db(self):
+        """Disconnect from cluster Slurm database."""
+
+        self.cur.close()
+        self.conn.close()
+
+    def check(self):
+        """Check if cluster Slurm database is available for connection."""
+
+        self.connect_db()
+        self.disconnect_db()
 
     def get_search_batch_id(self):
         """Determine and return the oldest batch_id to search for update in

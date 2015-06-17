@@ -41,6 +41,12 @@ class ProjectImporterDummy(ProjectImporter):
 
         super(ProjectImporterDummy, self).__init__(app, db, config)
 
+    def check(self):
+        """Dummy check"""
+
+        logging.debug("ProjectImporterDummy check")
+        pass
+
     def load(self):
         """Dummy Projects load."""
 

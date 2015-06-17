@@ -70,6 +70,43 @@ class ProjectImporterSlurm(ProjectImporter):
                   config.get_default(section, 'password', None)
         self.invalid_wckeys = []
 
+    def connect_db(self, cluster):
+        """Connect to a cluster Slurm database and set conn/cur attributes
+           accordingly.
+        """
+
+        try:
+            conn_params = {
+               'host': self.clusters_db[cluster]['dbhost'],
+               'user': self.clusters_db[cluster]['dbuser'],
+               'db':   self.clusters_db[cluster]['dbname'],
+               'port': self.clusters_db[cluster]['dbport'],
+            }
+            if self.clusters_db[cluster]['dbpass'] is not None:
+                conn_params['passwd'] = self.clusters_db[cluster]['dbpass']
+
+            self.conn = MySQLdb.connect(**conn_params)
+            self.cur = self.conn.cursor()
+        except _mysql_exceptions.OperationalError as error:
+            raise HPCStatsSourceError( \
+                    "connection to Slurm DBD MySQL failed: %s" % (error))
+
+    def disconnect_db(self):
+        """Disconnect to currently connected Slurm DB."""
+
+        self.cur.close()
+        self.conn.close()
+
+
+    def check(self):
+        """Check if all Slurm databases are available and if we connect to
+           them.
+        """
+
+        for cluster in self.clusters_db.keys():
+            self.connect_db(cluster)
+            self.disconnect_db()
+
     def load(self):
         """Connects to all known Slurm databases to extract project codes
            in jobs wckeys. Raises HPCStatsSourceError in case of error.
@@ -92,21 +129,7 @@ class ProjectImporterSlurm(ProjectImporter):
 
         logging.debug("loading project codes from %s slurm database", cluster)
 
-        try:
-            conn_params = {
-               'host': self.clusters_db[cluster]['dbhost'],
-               'user': self.clusters_db[cluster]['dbuser'],
-               'db':   self.clusters_db[cluster]['dbname'],
-               'port': self.clusters_db[cluster]['dbport'],
-            }
-            if self.clusters_db[cluster]['dbpass'] is not None:
-                conn_params['passwd'] = self.clusters_db[cluster]['dbpass']
-
-            self.conn = MySQLdb.connect(**conn_params)
-            self.cur = self.conn.cursor()
-        except _mysql_exceptions.OperationalError as error:
-            raise HPCStatsSourceError( \
-                    "connection to Slurm DBD MySQL failed: %s" % (error))
+        self.connect_db(cluster)
 
         req = """
                 SELECT DISTINCT(wckey)
