@@ -444,38 +444,71 @@ class JobImporterSlurm(JobImporter):
 
            From slurm.h.inc
              enum job_states {
-             JOB_PENDING, /* queued waiting for initiation */
-             JOB_RUNNING, /* allocated resources and executing */
-             JOB_SUSPENDED, /* allocated resources, execution suspended */
-             JOB_COMPLETE, /* completed execution successfully */
-             JOB_CANCELLED, /* cancelled by user */
-             JOB_FAILED, /* completed execution unsuccessfully */
-             JOB_TIMEOUT, /* terminated on reaching time limit */
-             JOB_NODE_FAIL, /* terminated on node failure */
-             JOB_PREEMPTED, /* terminated due to preemption */
-             JOB_END /* not a real state, last entry in table */
+               JOB_PENDING, /* queued waiting for initiation */
+               JOB_RUNNING, /* allocated resources and executing */
+               JOB_SUSPENDED, /* allocated resources, execution suspended */
+               JOB_COMPLETE, /* completed execution successfully */
+               JOB_CANCELLED, /* cancelled by user */
+               JOB_FAILED, /* completed execution unsuccessfully */
+               JOB_TIMEOUT, /* terminated on reaching time limit */
+               JOB_NODE_FAIL, /* terminated on node failure */
+               JOB_PREEMPTED, /* terminated due to preemption */
+               JOB_BOOT_FAIL, /* terminated due to preemption */
+               JOB_END /* not a real state, last entry in table */
              };
-             #define JOB_RESIZING    0x2000  /* Size of job about to change, flag set
-                                              * before calling accounting functions
-                                              * immediately before job changes size */
-
+            #define JOB_STATE_BASE  0x00ff  /* Used for job_states above */
+            #define JOB_STATE_FLAGS 0xff00  /* Used for state flags below */
+            #define JOB_COMPLETING  0x8000  /* Waiting for epilog completion */
+            #define JOB_CONFIGURING 0x4000  /* Allocated nodes booting */
+            #define JOB_RESIZING    0x2000  /* Size of job about to change, flag set
+                                             * before calling accounting functions
+                                             * immediately before job changes size */
+            #define JOB_SPECIAL_EXIT 0x1000 /* Requeue an exit job in hold */
+            #define JOB_REQUEUE_HOLD 0x0800 /* Requeue any job in hold */
+            #define JOB_REQUEUE      0x0400 /* Requeue job in completing state */
+            #define JOB_STOPPED      0x0200 /* Job is stopped state (holding resources,
+                                             * but sent SIGSTOP */
+            #define JOB_LAUNCH_FAILED 0x0100
         """
-        slurm_state = {
-            0:"PENDING", # queued waiting for initiation
-            1:"RUNNING", # allocated resources and executing
-            2:"SUSPENDED", # allocated resources, execution suspended
-            3:"COMPLETE", # completed execution successfully
-            4:"CANCELLED", # cancelled by user
-            5:"FAILED", # completed execution unsuccessfully
-            6:"TIMEOUT", # terminated on reaching time limit
-            7:"NODE_FAIL", # terminated on node failure
-            8:"PREEMPTED", # terminated due to preemption
-            9:"END", # not a real state, last entry in table
-            8192:"RESIZING" # Size of job about to change, flag set
-                            # before calling accounting functions
-                            # immediately before job changes size
-        }
-        return slurm_state[state]
+        states = [];
+
+        slurm_base_states = [
+            ( 0x0000, 'PENDING'   ),
+            ( 0x0001, 'RUNNING'   ),
+            ( 0x0002, 'SUSPENDED' ),
+            ( 0x0003, 'COMPLETE'  ),
+            ( 0x0004, 'CANCELLED' ),
+            ( 0x0005, 'FAILED'    ),
+            ( 0x0006, 'TIMEOUT'   ),
+            ( 0x0007, 'NODE_FAIL' ),
+            ( 0x0008, 'PREEMPTED' ),
+            ( 0x0009, 'BOOT_FAIL' ),
+            ( 0x000A, 'END'       ),
+        ]
+
+        slurm_extra_states = [
+            ( 0x8000, 'COMPLETING'    ),
+            ( 0x4000, 'CONFIGURING'   ),
+            ( 0x2000, 'RESIZING'      ),
+            ( 0x1000, 'SPECIAL_EXIT'  ),
+            ( 0x0800, 'REQUEUE_HOLD'  ),
+            ( 0x0400, 'REQUEUE'       ),
+            ( 0x0200, 'STOPPED'       ),
+            ( 0x0100, 'LAUNCH_FAILED' ),
+        ]
+
+        for hexval, txtstate in slurm_base_states:
+            if (state & 0xff) == hexval:
+                states.append(txtstate)
+
+        for hexval, txtstate in slurm_extra_states:
+            if state & hexval:
+                states.append(txtstate)
+
+        if not len(states):
+            states.append('UNKNOWN')
+
+        return '+'.join(states)
 
     def update(self):
         """Update and save loaded Jobs in HPCStats DB."""
