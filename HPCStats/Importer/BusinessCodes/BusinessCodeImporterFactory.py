@@ -31,6 +31,7 @@ import logging
 
 from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy import BusinessCodeImporterDummy
+from HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm import BusinessCodeImporterSlurm
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV import BusinessCodeImporterCSV
 
 class BusinessCodeImporterFactory(object):
@@ -44,6 +45,8 @@ class BusinessCodeImporterFactory(object):
 
         if implem == 'dummy':
             return BusinessCodeImporterDummy(app, db, config)
+        elif implem == 'slurm':
+            return BusinessCodeImporterSlurm(app, db, config)
         elif implem == 'csv':
             return BusinessCodeImporterCSV(app, db, config)
         else:
