@@ -277,8 +277,8 @@ class JobImporterSlurm(JobImporter):
                     raise HPCStatsSourceError(msg)
                 elif login not in self.unknown_accounts:
                     self.unknown_accounts.append(login)
-                    self.nb_excluded_jobs += 1
                     logging.warning(msg)
+                self.nb_excluded_jobs += 1
                 continue
 
             wckey = row[15]
