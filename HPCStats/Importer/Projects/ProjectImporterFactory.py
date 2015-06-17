@@ -31,6 +31,7 @@ import logging
 
 from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.Projects.ProjectImporterDummy import ProjectImporterDummy
+from HPCStats.Importer.Projects.ProjectImporterSlurm import ProjectImporterSlurm
 from HPCStats.Importer.Projects.ProjectImporterCSV import ProjectImporterCSV
 
 class ProjectImporterFactory(object):
@@ -44,6 +45,8 @@ class ProjectImporterFactory(object):
 
         if implem == 'dummy':
             return ProjectImporterDummy(app, db, config)
+        elif implem == 'slurm':
+            return ProjectImporterSlurm(app, db, config)
         elif implem == 'csv':
             return ProjectImporterCSV(app, db, config)
         else:
