@@ -266,7 +266,7 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
                   ( 0x0012, 'IDLE+NET' ),
                   ( 0x8535, 'MIXED+NET+RES+RESUME+COMPLETING+MAINT' ) ]
         for value, expected in tests:
-            txt = self.importer.txt_slurm_event_type(value)
+            txt = EventImporterSlurm.txt_slurm_event_type(value)
             self.assertEquals(txt, expected)
 
 loadtestcase(TestsEventImporterSlurm)
