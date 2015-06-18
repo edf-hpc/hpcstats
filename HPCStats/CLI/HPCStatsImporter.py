@@ -74,12 +74,12 @@ class HPCStatsImporter(HPCStatsApp):
         # import projects and business code that are globals and not related
         # to a specific cluster
         logging.info("updating projects")
-        self.projects = ProjectImporterFactory().factory(self, db, self.conf)
+        self.projects = ProjectImporterFactory.factory(self, db, self.conf)
         self.projects.load()
         self.projects.update()
 
         logging.info("updating business codes")
-        self.business = BusinessCodeImporterFactory().factory(self, db, self.conf)
+        self.business = BusinessCodeImporterFactory.factory(self, db, self.conf)
         self.business.load()
         self.business.update()
 
@@ -105,7 +105,7 @@ class HPCStatsImporter(HPCStatsApp):
         # for other importers.
         #
         logging.info("updating architecture for cluster %s" % (cluster_name))
-        self.arch = ArchitectureImporterFactory().factory(self, db, self.conf, cluster_name)
+        self.arch = ArchitectureImporterFactory.factory(self, db, self.conf, cluster_name)
         self.arch.load()
         self.arch.update()
 
@@ -116,22 +116,22 @@ class HPCStatsImporter(HPCStatsApp):
             raise HPCStatsRuntimeError("problem in DB with cluster %s" % (str(cluster)))
 
         logging.info("updating users for cluster %s" % (cluster.name))
-        self.users = UserImporterFactory().factory(self, db, self.conf, cluster)
+        self.users = UserImporterFactory.factory(self, db, self.conf, cluster)
         self.users.load()
         self.users.update()
 
         logging.info("updating filesystem usage for cluster %s" % (cluster.name))
-        self.fsusage = FSUsageImporterFactory().factory(self, db, self.conf, cluster)
+        self.fsusage = FSUsageImporterFactory.factory(self, db, self.conf, cluster)
         self.fsusage.load()
         self.fsusage.update()
 
         logging.info("updating events for cluster %s" % (cluster.name))
-        self.events = EventImporterFactory().factory(self, db, self.conf, cluster)
+        self.events = EventImporterFactory.factory(self, db, self.conf, cluster)
         self.events.load()
         self.events.update()
 
         logging.info("updating jobs for cluster %s" % (cluster.name))
-        self.jobs = JobImporterFactory().factory(self, db, self.conf, cluster)
+        self.jobs = JobImporterFactory.factory(self, db, self.conf, cluster)
         self.jobs.load_update_window()
 
     def cleanup(self):

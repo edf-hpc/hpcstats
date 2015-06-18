@@ -71,11 +71,11 @@ class HPCStatsChecker(HPCStatsApp):
         # import projects and business code that are globals and not related
         # to a specific cluster
         logging.info("checking projects sources")
-        self.projects = ProjectImporterFactory().factory(self, db, self.conf)
+        self.projects = ProjectImporterFactory.factory(self, db, self.conf)
         self.projects.check()
 
         logging.info("checking business codes sources")
-        self.business = BusinessCodeImporterFactory().factory(self, db, self.conf)
+        self.business = BusinessCodeImporterFactory.factory(self, db, self.conf)
         self.business.check()
 
         if self.cluster_name == 'all':
@@ -95,25 +95,25 @@ class HPCStatsChecker(HPCStatsApp):
         cluster = None
 
         logging.info("checking architecture source for cluster %s" % (cluster_name))
-        self.arch = ArchitectureImporterFactory().factory(self, db, self.conf, cluster_name)
+        self.arch = ArchitectureImporterFactory.factory(self, db, self.conf, cluster_name)
         self.arch.check()
 
         cluster = Cluster(cluster_name)
 
         logging.info("checking users source for cluster %s" % (cluster.name))
-        self.users = UserImporterFactory().factory(self, db, self.conf, cluster)
+        self.users = UserImporterFactory.factory(self, db, self.conf, cluster)
         self.users.check()
 
         logging.info("checking filesystem usage source for cluster %s" % (cluster.name))
-        self.fsusage = FSUsageImporterFactory().factory(self, db, self.conf, cluster)
+        self.fsusage = FSUsageImporterFactory.factory(self, db, self.conf, cluster)
         self.fsusage.check()
 
         logging.info("checking events source for cluster %s" % (cluster.name))
-        self.events = EventImporterFactory().factory(self, db, self.conf, cluster)
+        self.events = EventImporterFactory.factory(self, db, self.conf, cluster)
         self.events.check()
 
         logging.info("checking jobs source for cluster %s" % (cluster.name))
-        self.jobs = JobImporterFactory().factory(self, db, self.conf, cluster)
+        self.jobs = JobImporterFactory.factory(self, db, self.conf, cluster)
         self.jobs.check()
 
         logging.info("every sources are properly available")

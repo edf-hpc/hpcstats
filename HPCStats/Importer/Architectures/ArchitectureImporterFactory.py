@@ -44,7 +44,8 @@ class ArchitectureImporterFactory(object):
     def __init__(self):
         pass
 
-    def factory(self, app, db, config, cluster_name):
+    @staticmethod
+    def factory(app, db, config, cluster_name):
         """This method returns the appropriate ArchitectureImporter object
            depending on what is specified in configuration. In case of
            configuration error, HPCStatsConfigurationException is raised.

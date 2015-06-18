@@ -45,7 +45,8 @@ class ProjectImporterFactory(object):
     def __init__(self):
         pass
 
-    def factory(self, app, db, config):
+    @staticmethod
+    def factory(app, db, config):
         """This method returns the appropriate ProjectImporter object depending
            on what is specified in configuration. In case of configuration
            error, HPCStatsConfigurationException is raised.

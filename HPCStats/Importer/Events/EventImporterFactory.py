@@ -44,7 +44,8 @@ class EventImporterFactory(object):
     def __init__(self):
         pass
 
-    def factory(self, app, db, config, cluster):
+    @staticmethod
+    def factory(app, db, config, cluster):
         """This method returns the appropriate EventImporter object depending
            on what is specified in configuration. In case of configuration
            error, HPCStatsConfigurationException is raised.
