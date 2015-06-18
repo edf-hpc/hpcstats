@@ -37,7 +37,6 @@ from HPCStats.Model.Node import Node
 from HPCStats.Model.User import User
 from HPCStats.Model.Account import Account
 from HPCStats.Model.Project import Project
-from HPCStats.Model.Sector import Sector
 from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Business import Business
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
@@ -70,8 +69,8 @@ CONFIG = {
 }
 
 MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
-  'req': "SELECT id_job, " \
-                "job_db_inx, " \
+  'req': "SELECT job_db_inx, " \
+                "id_job, " \
                 "id_user, " \
                 "id_group, " \
                 "time_submit, " \
@@ -79,7 +78,7 @@ MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
                 "time_end, " \
                 "nodes_alloc, " \
                 "cpus_alloc, " \
-                "partition, " \
+                "job.partition, " \
                 "qos.name AS qos, " \
                 "state, " \
                 "nodelist, " \
@@ -89,10 +88,10 @@ MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
           "FROM .*_job_table job, "\
                ".*_assoc_table assoc, " \
                "qos_table qos " \
-         "WHERE id_job >= %s " \
+         "WHERE job_db_inx >= %s " \
            "AND assoc.id_assoc = job.id_assoc " \
            "AND qos.id = job.id_qos " \
-      "ORDER BY id_job",
+      "ORDER BY job_db_inx",
   'res': [],
 }
 
@@ -153,8 +152,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         account1 = Account(user1, self.cluster, 1000, 1000, a1_create, None)
 
         domain1 = Domain('domain1', 'domain 1')
-        sector1 = Sector(domain1, 'sector1', 'sector 1')
-        project1 = Project(sector1, 'project1', 'description project 1')
+        project1 = Project(domain1, 'project1', 'description project 1')
 
         business1 = Business('business1', 'business description 1')
 

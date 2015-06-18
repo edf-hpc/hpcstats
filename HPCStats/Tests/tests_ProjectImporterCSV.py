@@ -35,7 +35,6 @@ from HPCStats.Importer.Projects.ProjectImporterCSV import ProjectImporterCSV
 from HPCStats.DB.HPCStatsDB import HPCStatsDB
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.Model.Domain import Domain
-from HPCStats.Model.Sector import Sector
 from HPCStats.Model.Project import Project
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Mocks.Utils import mock_open
@@ -75,9 +74,8 @@ MockPg2.PG_REQS['find_project_code1'] = {
 MockPg2.PG_REQS['save_project_code1'] = {
   'req': "INSERT INTO Project \( project_code, " \
                                 "project_description, "\
-                                "sector_key, "\
                                 "domain_id \) "\
-         "VALUES \( %s, %s, %s, %s \) "\
+         "VALUES \( %s, %s, %s \) "\
          "RETURNING project_id",
   'res': [],
 }
@@ -118,10 +116,8 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
         project = self.importer.projects[0]
         self.assertEquals(project.code, 'code1')
         self.assertEquals(project.description, 'project description 1')
-        self.assertEquals(project.sector.key, 'sect1')
-        self.assertEquals(project.sector.name, 'sector name 1')
-        self.assertEquals(project.sector.domain.key, 'dom1')
-        self.assertEquals(project.sector.domain.name, 'domain name 1')
+        self.assertEquals(project.domain.key, 'dom1')
+        self.assertEquals(project.domain.name, 'domain name 1')
 
     @mock.patch("%s.os.path.isfile" % module)
     def test_load_multiple_lines(self, m_isfile):
@@ -146,10 +142,8 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
 
         self.assertEquals(project1.code, 'code1')
         self.assertEquals(project2.description, 'project description 2')
-        self.assertEquals(project1.sector.key, 'sect1')
-        self.assertEquals(project2.sector.name, 'sector name 2')
-        self.assertEquals(project1.sector.domain.key, 'dom1')
-        self.assertEquals(project2.sector.domain.name, 'domain name 2')
+        self.assertEquals(project1.domain.key, 'dom1')
+        self.assertEquals(project2.domain.name, 'domain name 2')
 
     @mock.patch("%s.os.path.isfile" % module)
     def test_load_domain_invalid(self, m_isfile):
@@ -208,62 +202,6 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
                        self.importer.load)
 
     @mock.patch("%s.os.path.isfile" % module)
-    def test_load_sector_invalid(self, m_isfile):
-        """ProjectImporterCSV.load() raise exception when sector format is
-           invalid
-        """
-
-        m_isfile.return_value = True
-
-        csv = "code1;project description 1;" \
-              "[dom1] domain name 1;sector name 1"
-
-        m_open = mock_open(data=StringIO(csv))
-        with mock.patch("%s.open" % (module), m_open, create=True):
-            self.assertRaisesRegexp(
-                   HPCStatsSourceError,
-                   "Project CSV code1 sector format is invalid",
-                   self.importer.load)
-
-    @mock.patch("%s.os.path.isfile" % module)
-    def test_load_sector_empty_key(self, m_isfile):
-        """ProjectImporterCSV.load() raise exception when sector key is empty
-        """
-
-        m_isfile.return_value = True
-
-        keys = [ '', " ", "      " ]
-        for key in keys:
-            csv = "code1;project description 1;" \
-                  "[dom1] domain name 1;[%s] sector name 1" % (key)
-
-            m_open = mock_open(data=StringIO(csv))
-            with mock.patch("%s.open" % (module), m_open, create=True):
-                self.assertRaisesRegexp(
-                       HPCStatsSourceError,
-                       "Project CSV code1 sector key is empty",
-                       self.importer.load)
-
-    @mock.patch("%s.os.path.isfile" % module)
-    def test_load_sector_empty_name(self, m_isfile):
-        """ProjectImporterCSV.load() raise exception when sector name is empty
-        """
-
-        m_isfile.return_value = True
-
-        names = [ '', " ", "      " ]
-        for name in names:
-            csv = "code1;project description 1;" \
-                  "[dom1] domain name 1;[sect1] %s" % (name)
-
-            m_open = mock_open(data=StringIO(csv))
-            with mock.patch("%s.open" % (module), m_open, create=True):
-                self.assertRaisesRegexp(
-                       HPCStatsSourceError,
-                       "Project CSV code1 sector name is empty",
-                       self.importer.load)
-
-    @mock.patch("%s.os.path.isfile" % module)
     def test_load_duplicate_sectors_domains(self, m_isfile):
         """ProjectImporterCSV.load() does not create duplicate sectors and
            domains
@@ -285,7 +223,6 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
             self.importer.load()
 
         self.assertEquals(len(self.importer.projects), 4)
-        self.assertEquals(len(self.importer.sectors), 3)
         self.assertEquals(len(self.importer.domains), 2)
 
         project2 = self.importer.projects[1]
@@ -293,10 +230,8 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
 
         self.assertEquals(project2.code, 'code2')
         self.assertEquals(project4.description, 'project description 4')
-        self.assertEquals(project2.sector.key, 'sect1')
-        self.assertEquals(project4.sector.name, 'sector name 3')
-        self.assertEquals(project2.sector.domain.key, 'dom1')
-        self.assertEquals(project4.sector.domain.name, 'domain name 2')
+        self.assertEquals(project2.domain.key, 'dom1')
+        self.assertEquals(project4.domain.name, 'domain name 2')
 
     @mock.patch("%s.os.path.isfile" % module)
     def test_load_duplicate_project(self, m_isfile):
@@ -338,10 +273,8 @@ class TestsProjectImporterCSVUpdate(HPCStatsTestCase):
         MockPg2.PG_REQS['save_project_code1']['res'] = \
           [ [ 1 ] ]
         domain1 = Domain('dom1', 'domain name 1')
-        sector1 = Sector(domain1, 'sect1', 'sector name 1')
-        project1 = Project(sector1, 'code1', 'project description 1')
+        project1 = Project(domain1, 'code1', 'project description 1')
         self.importer.projects = [ project1 ]
-        self.importer.sectors = [ sector1 ]
         self.importer.domains = [ domain1 ]
 
         self.importer.update()
