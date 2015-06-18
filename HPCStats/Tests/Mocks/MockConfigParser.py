@@ -53,6 +53,12 @@ class MockConfigParser():
                 % (value))
         return value
 
+    def getboolean(self, section, option):
+        value = self.get(section, option)
+        if type(value) is not bool:
+            raise ValueError("invalid boolean: '%s'" % (value))
+        return value
+
     def sections(self):
 
         return self.conf.keys()
