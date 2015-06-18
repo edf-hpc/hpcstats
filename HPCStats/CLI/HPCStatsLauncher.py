@@ -27,11 +27,13 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the HPCStatsLauncher class."""
+
 import sys
 import logging
 import locale
 
-from HPCStats.Exceptions import *
+from HPCStats.Exceptions import HPCStatsArgumentException, HPCStatsConfigurationException, HPCStatsDBIntegrityError, HPCStatsSourceError, HPCStatsRuntimeError
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.CLI.HPCStatsChecker import HPCStatsChecker
 from HPCStats.CLI.HPCStatsImporter import HPCStatsImporter

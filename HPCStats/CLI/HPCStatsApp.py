@@ -27,9 +27,10 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the HPCStatsApp class."""
+
 import logging
 from HPCStats.DB.HPCStatsDB import HPCStatsDB
-from HPCStats.Exceptions import *
 
 class HPCStatsApp(object):
 
@@ -49,7 +50,6 @@ class HPCStatsApp(object):
         # Instantiate connexion to db
         db = HPCStatsDB(self.conf)
         db.bind()
-        logging.debug("db information %s %s %s %s %s" % db.infos())
         return db
 
     def run_check(self):
@@ -68,5 +68,7 @@ class HPCStatsApp(object):
             self.conf.check_cluster()
 
     def run(self):
-
-        raise NotImplemented
+        """Run method that should be implemented by all real App classes.
+           For this abstract class, it raises NotImplementedError.
+        """
+        raise NotImplementedError

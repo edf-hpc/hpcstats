@@ -27,11 +27,12 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the HPCStatsImporter class."""
+
 import logging
 
+from HPCStats.Exceptions import HPCStatsRuntimeError
 from HPCStats.CLI.HPCStatsApp import HPCStatsApp
-from HPCStats.Exceptions import *
-
 from HPCStats.Importer.Jobs.JobImporterFactory import JobImporterFactory
 from HPCStats.Importer.Users.UserImporterFactory import UserImporterFactory
 from HPCStats.Importer.Architectures.ArchitectureImporterFactory import ArchitectureImporterFactory
@@ -39,10 +40,6 @@ from HPCStats.Importer.Events.EventImporterFactory import EventImporterFactory
 from HPCStats.Importer.FSUsage.FSUsageImporterFactory import FSUsageImporterFactory
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory import BusinessCodeImporterFactory
 from HPCStats.Importer.Projects.ProjectImporterFactory import ProjectImporterFactory
-from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
-from HPCStats.Model.Cluster import Cluster
-from HPCStats.Model.Project import Project
-from HPCStats.Model.Business import Business
 
 class HPCStatsImporter(HPCStatsApp):
 
@@ -79,7 +76,8 @@ class HPCStatsImporter(HPCStatsApp):
         self.projects.update()
 
         logging.info("updating business codes")
-        self.business = BusinessCodeImporterFactory.factory(self, db, self.conf)
+        self.business = \
+          BusinessCodeImporterFactory.factory(self, db, self.conf)
         self.business.load()
         self.business.update()
 
@@ -104,8 +102,10 @@ class HPCStatsImporter(HPCStatsApp):
         # about cluster and nodes in database and creating the Cluster object
         # for other importers.
         #
-        logging.info("updating architecture for cluster %s" % (cluster_name))
-        self.arch = ArchitectureImporterFactory.factory(self, db, self.conf, cluster_name)
+        logging.info("updating architecture for cluster %s", cluster_name)
+        self.arch = \
+          ArchitectureImporterFactory.factory(self, db, self.conf,
+                                              cluster_name)
         self.arch.load()
         self.arch.update()
 
@@ -113,24 +113,28 @@ class HPCStatsImporter(HPCStatsApp):
 
         # check that cluster has been properly created and initialized
         if cluster is None or cluster.cluster_id is None:
-            raise HPCStatsRuntimeError("problem in DB with cluster %s" % (str(cluster)))
+            raise HPCStatsRuntimeError("problem in DB with cluster %s"
+                                         % (str(cluster)))
 
-        logging.info("updating users for cluster %s" % (cluster.name))
-        self.users = UserImporterFactory.factory(self, db, self.conf, cluster)
+        logging.info("updating users for cluster %s", cluster.name)
+        self.users = \
+          UserImporterFactory.factory(self, db, self.conf, cluster)
         self.users.load()
         self.users.update()
 
-        logging.info("updating filesystem usage for cluster %s" % (cluster.name))
-        self.fsusage = FSUsageImporterFactory.factory(self, db, self.conf, cluster)
+        logging.info("updating filesystem usage for cluster %s", cluster.name)
+        self.fsusage = \
+          FSUsageImporterFactory.factory(self, db, self.conf, cluster)
         self.fsusage.load()
         self.fsusage.update()
 
-        logging.info("updating events for cluster %s" % (cluster.name))
-        self.events = EventImporterFactory.factory(self, db, self.conf, cluster)
+        logging.info("updating events for cluster %s", cluster.name)
+        self.events = \
+          EventImporterFactory.factory(self, db, self.conf, cluster)
         self.events.load()
         self.events.update()
 
-        logging.info("updating jobs for cluster %s" % (cluster.name))
+        logging.info("updating jobs for cluster %s", cluster.name)
         self.jobs = JobImporterFactory.factory(self, db, self.conf, cluster)
         self.jobs.load_update_window()
 

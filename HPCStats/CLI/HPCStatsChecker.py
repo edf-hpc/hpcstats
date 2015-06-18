@@ -27,11 +27,11 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the HPCStatsChecker class."""
+
 import logging
 
 from HPCStats.CLI.HPCStatsApp import HPCStatsApp
-from HPCStats.Exceptions import *
-
 from HPCStats.Importer.Jobs.JobImporterFactory import JobImporterFactory
 from HPCStats.Importer.Users.UserImporterFactory import UserImporterFactory
 from HPCStats.Importer.Architectures.ArchitectureImporterFactory import ArchitectureImporterFactory
@@ -39,7 +39,6 @@ from HPCStats.Importer.Events.EventImporterFactory import EventImporterFactory
 from HPCStats.Importer.FSUsage.FSUsageImporterFactory import FSUsageImporterFactory
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory import BusinessCodeImporterFactory
 from HPCStats.Importer.Projects.ProjectImporterFactory import ProjectImporterFactory
-from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
 from HPCStats.Model.Cluster import Cluster
 
 class HPCStatsChecker(HPCStatsApp):
@@ -94,26 +93,37 @@ class HPCStatsChecker(HPCStatsApp):
 
         cluster = None
 
-        logging.info("checking architecture source for cluster %s" % (cluster_name))
-        self.arch = ArchitectureImporterFactory.factory(self, db, self.conf, cluster_name)
+        logging.info("checking architecture source for cluster %s",
+                     cluster_name)
+        self.arch = \
+          ArchitectureImporterFactory.factory(self, db, self.conf,
+                                              cluster_name)
         self.arch.check()
 
         cluster = Cluster(cluster_name)
 
-        logging.info("checking users source for cluster %s" % (cluster.name))
-        self.users = UserImporterFactory.factory(self, db, self.conf, cluster)
+        logging.info("checking users source for cluster %s",
+                     cluster.name)
+        self.users = \
+          UserImporterFactory.factory(self, db, self.conf, cluster)
         self.users.check()
 
-        logging.info("checking filesystem usage source for cluster %s" % (cluster.name))
-        self.fsusage = FSUsageImporterFactory.factory(self, db, self.conf, cluster)
+        logging.info("checking filesystem usage source for cluster %s",
+                     cluster.name)
+        self.fsusage = \
+          FSUsageImporterFactory.factory(self, db, self.conf, cluster)
         self.fsusage.check()
 
-        logging.info("checking events source for cluster %s" % (cluster.name))
-        self.events = EventImporterFactory.factory(self, db, self.conf, cluster)
+        logging.info("checking events source for cluster %s",
+                     cluster.name)
+        self.events = \
+          EventImporterFactory.factory(self, db, self.conf, cluster)
         self.events.check()
 
-        logging.info("checking jobs source for cluster %s" % (cluster.name))
-        self.jobs = JobImporterFactory.factory(self, db, self.conf, cluster)
+        logging.info("checking jobs source for cluster %s",
+                     cluster.name)
+        self.jobs = \
+          JobImporterFactory.factory(self, db, self.conf, cluster)
         self.jobs.check()
 
         logging.info("every sources are properly available")

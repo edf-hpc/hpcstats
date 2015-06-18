@@ -27,16 +27,23 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the HPCStatsArgumentParser class."""
+
 import argparse
-from HPCStats.Exceptions import HPCStatsArgumentException
 
 class HPCStatsArgumentParser(argparse.ArgumentParser):
 
+    """This class inherits the Python standard ArgumentParser class, it
+       implements the CLI argument parser for the HPCStats program.
+    """
+
     def __init__(self, *args, **kwargs):
 
-        super(HPCStatsArgumentParser,self).__init__(*args, **kwargs)
+        super(HPCStatsArgumentParser, self).__init__(*args, **kwargs)
 
     def add_args(self):
+
+        """Add all arguments with their constraints to the parser."""
 
         #self.add_argument("actions",
         #                  nargs=1,
