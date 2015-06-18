@@ -55,12 +55,8 @@ from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
 from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Project import Project
 from HPCStats.Exceptions import HPCStatsRuntimeError, HPCStatsSourceError
-import ConfigParser
 import os
-import logging
 import csv
-import psycopg2
-import codecs
 import re
 
 class ProjectImporterCSV(ProjectImporter):
@@ -87,9 +83,6 @@ class ProjectImporterCSV(ProjectImporter):
         """
 
         self.check()
-
-        # define projects delimiters in csv file for domains and sectors values
-        delimiters = '\[|]'
 
         self.domains = []
         self.projects = []
@@ -154,10 +147,10 @@ class ProjectImporterCSV(ProjectImporter):
         """
 
         for domain in self.domains:
-             if domain.existing(self.db):
-                 domain.update(self.db)
-             else:
-                 domain.save(self.db)
+            if domain.existing(self.db):
+                domain.update(self.db)
+            else:
+                domain.save(self.db)
         for project in self.projects:
             if project.find(self.db):
                 project.update(self.db)

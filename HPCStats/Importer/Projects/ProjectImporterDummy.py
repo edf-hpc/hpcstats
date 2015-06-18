@@ -45,7 +45,6 @@ class ProjectImporterDummy(ProjectImporter):
         """Dummy check"""
 
         logging.debug("ProjectImporterDummy check")
-        pass
 
     def load(self):
         """Dummy Projects load."""
@@ -53,10 +52,8 @@ class ProjectImporterDummy(ProjectImporter):
         logging.debug("ProjectImporterDummy load")
         self.domains = []
         self.projects = []
-        pass
 
     def update(self):
         """Dummy Projects update."""
 
         logging.debug("ProjectImporterDummy update")
-        pass

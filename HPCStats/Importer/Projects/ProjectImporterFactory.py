@@ -27,7 +27,9 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import logging
+"""This module contains the factory design pattern class that builds the
+   appropriate ProjectImporter depending on what is specified in configuration.
+"""
 
 from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.Projects.ProjectImporterDummy import ProjectImporterDummy
@@ -36,10 +38,18 @@ from HPCStats.Importer.Projects.ProjectImporterCSV import ProjectImporterCSV
 
 class ProjectImporterFactory(object):
 
+    """This class simply delivers the factory() static method, there is not
+       point to instanciate it with an object.
+    """
+
     def __init__(self):
         pass
 
     def factory(self, app, db, config):
+        """This method returns the appropriate ProjectImporter object depending
+           on what is specified in configuration. In case of configuration
+           error, HPCStatsConfigurationException is raised.
+        """
 
         implem = config.get_default('globals', 'projects', 'dummy')
 

@@ -27,12 +27,15 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import logging
-from datetime import datetime
+"""This module contains the base class for all Event importers."""
+
 from HPCStats.Importer.Importer import Importer
-from HPCStats.Model.Event import Event
 
 class EventImporter(Importer):
+
+    """This is the base class common to all HPCStats Event importers.
+       It simply defines a common set of attributes.
+    """
 
     def __init__(self, app, db, config, cluster):
 

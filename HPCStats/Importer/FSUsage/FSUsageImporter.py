@@ -27,9 +27,15 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the base class for all FSUsage importers."""
+
 from HPCStats.Importer.Importer import Importer
 
 class FSUsageImporter(Importer):
+
+    """This is the base class common to all HPCStats FSUsage importers.
+       It simply defines a common set of attributes.
+    """
 
     def __init__(self, app, db, config, cluster):
 

@@ -27,10 +27,16 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the BusinessCodeImporterDumy class."""
+
 import logging
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporter import BusinessCodeImporter
 
 class BusinessCodeImporterDummy(BusinessCodeImporter):
+
+    """This class is dummy, it does not import any BusinessCode at all. It
+       could be used as sane default when no BusinessCode have to be imported.
+    """
 
     def __init__(self, app, db, config):
 
@@ -41,10 +47,8 @@ class BusinessCodeImporterDummy(BusinessCodeImporter):
 
         logging.debug("BusinessCodeImporterDummy load")
         self.businesses = []
-        pass
 
     def update(self):
         """Dummy BusinessCodes update."""
 
         logging.debug("BusinessCodeImporterDummy update")
-        pass

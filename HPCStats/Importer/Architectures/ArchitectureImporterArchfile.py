@@ -27,21 +27,28 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the ArchitectureImporterArchfile class."""
+
 import ConfigParser
 import re
 import os
 import logging
 from ClusterShell.NodeSet import NodeSet
-from HPCStats.Exceptions import *
+from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.Architectures.ArchitectureImporter import ArchitectureImporter
 from HPCStats.Model.Node import Node
 from HPCStats.Model.Cluster import Cluster
 
 class ArchitectureImporterArchfile(ArchitectureImporter):
 
+    """This class imports architecture related data (Cluster and Nodes)
+       from an ini flat file.
+    """
+
     def __init__(self, app, db, config, cluster_name):
 
-        super(ArchitectureImporterArchfile, self).__init__(app, db, config, cluster_name)
+        super(ArchitectureImporterArchfile, self) \
+          .__init__(app, db, config, cluster_name)
 
         archfile_section = self.cluster_name + "/archfile"
 
@@ -202,7 +209,8 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                                   nodenames,
                                   mem_str ))
 
-                model = config_get(nodegroup_sect, "model")
+                # Commented out as model are not stored in HPCStats DB anymore
+                #model = config_get(nodegroup_sect, "model")
             
                 nodeset_group = NodeSet(nodenames)
                 for nodename in nodeset_group:

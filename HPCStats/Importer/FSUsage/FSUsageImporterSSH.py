@@ -27,15 +27,13 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the FSUsageImporterSSH class."""
+
 from operator import attrgetter
 from datetime import datetime
-import time
-import base64
 import logging
-import sys
 import os
 import paramiko
-import errno
 import socket
 import csv
 import tempfile
@@ -45,6 +43,10 @@ from HPCStats.Model.Filesystem import Filesystem
 from HPCStats.Model.FSUsage import FSUsage, get_last_fsusage_datetime
 
 class FSUsageImporterSSH(FSUsageImporter):
+
+    """This class imports FSUsage data from a CSV file available through
+       SSH on a remote server.
+    """
 
     def __init__(self, app, db, config, cluster):
 
@@ -141,8 +143,10 @@ class FSUsageImporterSSH(FSUsageImporter):
                     raise HPCStatsSourceError( \
                             "error while parsing log time: %s" % (err))
                 bpercent = float(row[2])
-                if len(row) == 4:
-                    ipercent = float(row[3])
+                # This part has been commented out as inodes usage rate are not
+                # stored in HPCStats DB until now.
+                #if len(row) == 4:
+                #    ipercent = float(row[3])
                 newfs = Filesystem(mountpoint, self.cluster)
                 fs = None
                 # search if fs not already defined

@@ -27,14 +27,17 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the BusinessCodeImporterCSV class."""
+
 import os
-import logging
 import csv
-from HPCStats.Exceptions import *
+from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporter import BusinessCodeImporter
 from HPCStats.Model.Business import Business
 
 class BusinessCodeImporterCSV(BusinessCodeImporter):
+
+    """This class imports BusinessCodes from a CSV flat file."""
 
     def __init__(self, app, db, config):
 

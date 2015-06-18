@@ -27,13 +27,14 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the UserImporterLdap class."""
+
 import ldap
 import base64
 import logging
-import sys
 import re
 from datetime import date
-from HPCStats.Exceptions import *
+from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Utils import decypher
 from HPCStats.Importer.Users.UserImporter import UserImporter
 from HPCStats.Model.User import User
@@ -57,7 +58,8 @@ class UserImporterLdap(UserImporter):
         self._ldapbase = config.get(ldap_section, 'basedn')
         self._ldapdn = config.get(ldap_section, 'dn')
         self._ldaphash = config.get(ldap_section, 'phash')
-        self.ldap_password = base64.b64decode(decypher(base64.b64decode(self._ldaphash)))
+        self.ldap_password = \
+          base64.b64decode(decypher(base64.b64decode(self._ldaphash)))
         self._ldapcert = config.get_default(ldap_section, 'cert', None)
         self._ldapgroup = config.get(ldap_section, 'group')
         self.ldap_rdn_people = config.get_default(ldap_section,
@@ -142,7 +144,7 @@ class UserImporterLdap(UserImporter):
                                               ldap.SCOPE_SUBTREE,
                                               search,
                                               [ 'member', 'memberUid' ])
-        except ldap.NO_SUCH_OBJECT, err:
+        except ldap.NO_SUCH_OBJECT:
             raise HPCStatsSourceError( \
                     "no result found for group %s in base %s" \
                        % (group, self.ldap_dn_groups))
@@ -225,8 +227,8 @@ class UserImporterLdap(UserImporter):
         try:
             user_res = self.ldap_conn.search_s(self.ldap_dn_people,
                                                ldap.SCOPE_SUBTREE,
-                                               search)
-        except ldap.NO_SUCH_OBJECT, err:
+                                               search, def_keys)
+        except ldap.NO_SUCH_OBJECT:
             msg = "no result found for user %s in base %s" \
                     % (login, self.ldap_dn_people)
             if self.strict_user_membership:

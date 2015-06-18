@@ -27,12 +27,13 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the JobImporterSlurm class."""
+
 import MySQLdb
 import _mysql_exceptions
 from datetime import datetime
 from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 import logging
-import os
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Model.Job import Job, get_batchid_oldest_unfinished_job, get_batchid_last_job
@@ -44,6 +45,10 @@ from HPCStats.Model.Project import Project
 from HPCStats.Model.Business import Business
 
 class JobImporterSlurm(JobImporter):
+
+    """This JobImporter imports jobs related data from Slurm accounting
+       database.
+    """
 
     def __init__(self, app, db, config, cluster):
 
@@ -139,7 +144,8 @@ class JobImporterSlurm(JobImporter):
            Slurm database.
         """
 
-        batchid_oldest_unfinished_job = get_batchid_oldest_unfinished_job(self.db, self.cluster)
+        batchid_oldest_unfinished_job = \
+          get_batchid_oldest_unfinished_job(self.db, self.cluster)
         batchid_last_job = get_batchid_last_job(self.db, self.cluster)
         if batchid_oldest_unfinished_job:
             batchid_search = batchid_oldest_unfinished_job
@@ -231,7 +237,8 @@ class JobImporterSlurm(JobImporter):
         self.cur.execute(req, params)
         while (1):
             row = self.cur.fetchone()
-            if row == None: break
+            if row == None:
+                break
 
             self.nb_loaded_jobs += 1
 
@@ -264,7 +271,7 @@ class JobImporterSlurm(JobImporter):
 
             name = row[14]
             nbcpu = row[8]
-            state = self.get_job_state_from_slurm_state(row[11])
+            state = JobImporterSlurm.get_job_state_from_slurm_state(row[11])
 
             nodelist = row[12]
             if nodelist == "(null)" or nodelist == "None assigned" :
@@ -280,7 +287,8 @@ class JobImporterSlurm(JobImporter):
                 login = login.upper()
 
             searched_user = User(login, None, None, None)
-            searched_account = Account(searched_user, self.cluster, None, None, None, None)
+            searched_account = Account(searched_user, self.cluster,
+                                       None, None, None, None)
             account = self.app.users.find_account(searched_account)
             if account is None:
                 msg = "account %s not found in loaded accounts" \
@@ -346,17 +354,19 @@ class JobImporterSlurm(JobImporter):
             if nodelist is not None:
                 try:
                     nodeset = NodeSet(nodelist)
-                except NodeSetParseRangeError as e:
+                except NodeSetParseRangeError:
                     raise HPCStatsSourceError( \
                             "could not parse nodeset %s for job %s" \
                               % (nodelist, batch_id))
 
                 for nodename in nodeset:
-                    searched_node = Node(nodename, self.cluster, None, None, None, None)
+                    searched_node = Node(nodename, self.cluster,
+                                         None, None, None, None)
                     node = self.app.arch.find_node(searched_node)
                     if node is None:
                         raise HPCStatsSourceError(
-                                "unable to find node %s for job %s in loaded nodes" \
+                                "unable to find node %s for job %s in " \
+                                "loaded nodes" \
                                   % (nodename, batch_id))
 
                     run = Run(self.cluster, node, job)
@@ -422,15 +432,15 @@ class JobImporterSlurm(JobImporter):
                         # iterate over job's partitions list
                         for xpart in job_partitions:
                             if xpart in partitions:
-                                 logging.debug("job %d found partition %s " \
-                                               "in list %s which intersect " \
-                                               "for nodes %s",
-                                               job_id,
-                                               xpart,
-                                               partitions,
-                                               nodelist )
-                                 # partition found
-                                 partition = xpart
+                                logging.debug("job %d found partition %s " \
+                                              "in list %s which intersect " \
+                                              "for nodes %s",
+                                              job_id,
+                                              xpart,
+                                              partitions,
+                                              nodelist )
+                                # partition found
+                                partition = xpart
                     else:
                         logging.debug("job %d nodes %s do not entirely " \
                                       "intersect with %s (%d != %d)",
@@ -445,12 +455,13 @@ class JobImporterSlurm(JobImporter):
                               "which intersect for nodes %s",
                                job_id,
                                partitions_str,
-                               str_nodelist )
+                               nodelist )
                 partition = "UNKNOWN"
 
         return partition
 
-    def get_job_state_from_slurm_state(self, state):
+    @staticmethod
+    def get_job_state_from_slurm_state(state):
         """Returns the human readable job state textual representation
            corresponding to the numeric state in parameter.
 
@@ -482,7 +493,8 @@ class JobImporterSlurm(JobImporter):
                                              * but sent SIGSTOP */
             #define JOB_LAUNCH_FAILED 0x0100
         """
-        states = [];
+
+        states = []
 
         slurm_base_states = [
             ( 0x0000, 'PENDING'   ),

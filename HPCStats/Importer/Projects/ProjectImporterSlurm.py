@@ -37,7 +37,7 @@ import _mysql_exceptions
 from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
 from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Project import Project
-from HPCStats.Exceptions import HPCStatsRuntimeError, HPCStatsSourceError
+from HPCStats.Exceptions import HPCStatsSourceError
 
 class ProjectImporterSlurm(ProjectImporter):
 
@@ -70,6 +70,9 @@ class ProjectImporterSlurm(ProjectImporter):
                   config.get_default(section, 'password', None)
         self.invalid_wckeys = []
 
+        self.conn = None
+        self.cur = None
+
     def connect_db(self, cluster):
         """Connect to a cluster Slurm database and set conn/cur attributes
            accordingly.
@@ -96,7 +99,6 @@ class ProjectImporterSlurm(ProjectImporter):
 
         self.cur.close()
         self.conn.close()
-
 
     def check(self):
         """Check if all Slurm databases are available and if we connect to
@@ -140,7 +142,8 @@ class ProjectImporterSlurm(ProjectImporter):
 
         while (1):
             row = self.cur.fetchone()
-            if row == None: break
+            if row == None:
+                break
 
             wckey = row[0]
 
@@ -169,10 +172,10 @@ class ProjectImporterSlurm(ProjectImporter):
         """
 
         for domain in self.domains:
-             if domain.existing(self.db):
-                 domain.update(self.db)
-             else:
-                 domain.save(self.db)
+            if domain.existing(self.db):
+                domain.update(self.db)
+            else:
+                domain.save(self.db)
         for project in self.projects:
             if project.find(self.db):
                 project.update(self.db)

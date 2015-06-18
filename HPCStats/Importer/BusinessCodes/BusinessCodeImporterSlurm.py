@@ -65,6 +65,9 @@ class BusinessCodeImporterSlurm(BusinessCodeImporter):
 
         self.invalid_wckeys = []
 
+        self.conn = None
+        self.cur = None
+
     def connect_db(self, cluster):
         """Connect to a cluster Slurm database and set conn/cur attributes
            accordingly.
@@ -118,21 +121,7 @@ class BusinessCodeImporterSlurm(BusinessCodeImporter):
 
         logging.debug("loading business codes from %s slurm database", cluster)
 
-        try:
-            conn_params = {
-               'host': self.clusters_db[cluster]['dbhost'],
-               'user': self.clusters_db[cluster]['dbuser'],
-               'db':   self.clusters_db[cluster]['dbname'],
-               'port': self.clusters_db[cluster]['dbport'],
-            }
-            if self.clusters_db[cluster]['dbpass'] is not None:
-                conn_params['passwd'] = self.clusters_db[cluster]['dbpass']
-
-            self.conn = MySQLdb.connect(**conn_params)
-            self.cur = self.conn.cursor()
-        except _mysql_exceptions.OperationalError as error:
-            raise HPCStatsSourceError( \
-                    "connection to Slurm DBD MySQL failed: %s" % (error))
+        self.connect_db(cluster)
 
         req = """
                 SELECT DISTINCT(wckey)
@@ -143,7 +132,8 @@ class BusinessCodeImporterSlurm(BusinessCodeImporter):
 
         while (1):
             row = self.cur.fetchone()
-            if row == None: break
+            if row == None:
+                break
 
             wckey = row[0]
 

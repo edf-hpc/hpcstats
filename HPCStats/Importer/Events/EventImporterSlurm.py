@@ -27,18 +27,23 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the EventImporterSlurm class."""
+
 import MySQLdb
 import _mysql_exceptions
 import logging
 import time
 from datetime import datetime
-from ClusterShell.NodeSet import NodeSet
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.Events.EventImporter import EventImporter
-from HPCStats.Model.Event import Event, get_datetime_end_last_event, get_datetime_start_oldest_unfinished_event, get_unfinished_events
+from HPCStats.Model.Event import Event, get_datetime_end_last_event, get_datetime_start_oldest_unfinished_event
 from HPCStats.Model.Node import Node
 
 class EventImporterSlurm(EventImporter):
+
+    """This EventImporter imports Events from a cluster Slurm accounting
+       database.
+    """
 
     def __init__(self, app, db, config, cluster):
 
@@ -138,8 +143,10 @@ class EventImporterSlurm(EventImporter):
         #
         # -> Result: epoch
 
-        datetime_end_last_event = get_datetime_end_last_event(self.db, self.cluster)
-        datetime_start_oldest_unfinished_event = get_datetime_start_oldest_unfinished_event(self.db, self.cluster)
+        datetime_end_last_event = \
+          get_datetime_end_last_event(self.db, self.cluster)
+        datetime_start_oldest_unfinished_event = \
+          get_datetime_start_oldest_unfinished_event(self.db, self.cluster)
 
         if datetime_start_oldest_unfinished_event:
             datetime_search = datetime_start_oldest_unfinished_event
@@ -177,7 +184,8 @@ class EventImporterSlurm(EventImporter):
 
         while (1):
             row = self.cur.fetchone()
-            if row == None: break
+            if row == None:
+                break
 
             datetime_start = datetime.fromtimestamp(row[0])
 
@@ -196,7 +204,7 @@ class EventImporterSlurm(EventImporter):
                         "event node %s not found in loaded nodes" \
                           % (node_name))
             nb_cpu = row[3]
-            event_type = self.txt_slurm_event_type(row[4])
+            event_type = EventImporterSlurm.txt_slurm_event_type(row[4])
             reason = row[5]
 
             event = Event( node=node,
@@ -208,9 +216,10 @@ class EventImporterSlurm(EventImporter):
                            reason=reason)
             events.append(event)
 
-        return self.merge_successive_events(events)
+        return EventImporterSlurm.merge_successive_events(events)
 
-    def merge_successive_events(self, events):
+    @staticmethod
+    def merge_successive_events(events):
         """Merge successive Events in the list. For example, if the list
            contains 2 events on node A from X to Y and from Y to Z, this method
            will merge them into one event on node A from Y to Z. Ex:
@@ -274,13 +283,14 @@ class EventImporterSlurm(EventImporter):
             else:
                 event.save(self.db)
 
-    def txt_slurm_event_type(self, reason_uid):
+    @staticmethod
+    def txt_slurm_event_type(reason_uid):
         """Convert reason_uid integer that holds node state in Slurm bitmap
            convention to string representing this state into human readable
            format.
         """
 
-        states = [];
+        states = []
 
         slurm_base_states = [
             ( 0x0000, 'UNKNOWN'   ),

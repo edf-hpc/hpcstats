@@ -27,7 +27,13 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+"""This module contains the base abstract for all HPCStats importers."""
+
 class Importer(object):
+
+    """This abstract base class defines a common set of attributes
+       for all HPCStats importers.
+    """
 
     def __init__(self, app, db, config, cluster):
 

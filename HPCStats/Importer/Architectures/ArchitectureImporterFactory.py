@@ -27,17 +27,28 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import logging
+"""This module contains the factory design pattern class that builds the
+   appropriate ArchitectureImporter depending on what is specified in
+   configuration.
+"""
 
-from HPCStats.Importer.Projects.ProjectImporterCSV import ProjectImporterCSV
+from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.Architectures.ArchitectureImporterArchfile import ArchitectureImporterArchfile
 
 class ArchitectureImporterFactory(object):
+
+    """This class simply delivers the factory() static method, there is not
+       point to instanciate it with an object.
+    """
 
     def __init__(self):
         pass
 
     def factory(self, app, db, config, cluster_name):
+        """This method returns the appropriate ArchitectureImporter object
+           depending on what is specified in configuration. In case of
+           configuration error, HPCStatsConfigurationException is raised.
+        """
 
         implem = config.get(cluster_name, 'architecture')
 
