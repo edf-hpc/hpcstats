@@ -71,7 +71,6 @@ BASIC_ARCH = {
     "frequency": "2.93GHz",
     "floatinstructions":4,
     "memory": "24GB",
-    "model": "test_model",
   },
 }
 
