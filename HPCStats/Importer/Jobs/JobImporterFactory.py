@@ -34,7 +34,6 @@
 
 from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.Jobs.JobImporterSlurm import JobImporterSlurm
-from HPCStats.Importer.Jobs.JobImporterTorque import JobImporterTorque
 
 class JobImporterFactory(object):
 
@@ -55,8 +54,6 @@ class JobImporterFactory(object):
 
         if implem == "slurm":
             return JobImporterSlurm(app, db, config, cluster)
-        elif implem == "torque":
-            return JobImporterTorque(app, db, config, cluster)
         else:
             raise HPCStatsConfigurationException( \
                     "JobImporter %s is not implemented" \
