@@ -29,16 +29,14 @@
 
 import mock
 import copy
-from StringIO import StringIO
 
-from HPCStats.Exceptions import *
+from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.Architectures.ArchitectureImporterArchfile import ArchitectureImporterArchfile
 from HPCStats.DB.HPCStatsDB import HPCStatsDB
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.Model.Cluster import Cluster
 from HPCStats.Model.Node import Node
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
-from HPCStats.Tests.Mocks.Utils import mock_open
 import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
 from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
