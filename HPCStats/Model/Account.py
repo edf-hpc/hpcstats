@@ -49,7 +49,8 @@ from HPCStats.Model.User import User
 class Account(object):
     """Model class for the Account table."""
 
-    def __init__(self, user, cluster, uid, gid, creation_date, deletion_date):
+    def __init__(self, user, cluster, uid, gid, creation_date,
+                 deletion_date, exists=None):
 
         self.user = user
         self.cluster = cluster
@@ -57,7 +58,7 @@ class Account(object):
         self.gid = gid
         self.creation_date = creation_date
         self.deletion_date = deletion_date
-        self.exists = None
+        self.exists = exists
 
     def __str__(self):
 
@@ -236,7 +237,7 @@ def load_unclosed_users_accounts(db, cluster):
         gid = result[6]
         creation = result[7]
         user = User(login, firstname, lastname, department, user_id=user_id)
-        account = Account(user, cluster, uid, gid, creation, None)
+        account = Account(user, cluster, uid, gid, creation, None, exists=True)
         tuples.append((user, account))
 
     return tuples
