@@ -341,7 +341,7 @@ class UserImporterLdap(UserImporter):
 
         new_date = self.get_default_new_date()
         for user, account in self.users_acct_ldap:
-            if not user.find(self.db):
+            if user.find(self.db) is None:
                 # the user nor the account do not exist, create them.
                 user.save(self.db)
                 account.creation_date = new_date
