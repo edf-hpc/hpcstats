@@ -30,6 +30,7 @@
 from datetime import datetime
 import time
 import mock
+from datetime import date
 import base64
 
 from HPCStats.Exceptions import HPCStatsSourceError
@@ -39,7 +40,7 @@ from HPCStats.DB.HPCStatsDB import HPCStatsDB
 from HPCStats.Utils import decypher
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
-from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
+from HPCStats.Tests.Mocks.MockPg2 import init_reqs, mock_psycopg2
 import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
 from HPCStats.Tests.Mocks.MockLdap import mock_ldap
 import HPCStats.Tests.Mocks.MockLdap as MockLdap # for PG_REQS
@@ -74,6 +75,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
     def setUp(self):
         self.filename = 'fake'
         self.cluster = Cluster('testcluster')
+        self.cluster.cluster_id = 0
         HPCStatsConf.__bases__ = (MockConfigParser, object)
         self.conf = HPCStatsConf(self.filename, self.cluster)
         self.conf.conf = CONFIG.copy()
@@ -84,6 +86,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
                                          self.db,
                                          self.conf,
                                          self.cluster)
+        init_reqs()
 
     def test_init(self):
         """UserImporterLdap.__init__() initializes w/o error
@@ -92,12 +95,205 @@ class TestsUserImporterLdap(HPCStatsTestCase):
 
     @mock.patch("%s.ldap" % (module), mock_ldap())
     def test_load_simple(self):
-        """UserImporterLdap.load() should work with simple data.
+        """UserImporterLdap.load() should work with simple data from LDAP.
         """
-        ldap_config = CONFIG['testcluster/ldap']
 
         users = [ 'login1', 'login2', 'login3' ]
+        MockPg2.PG_REQS['get_unclosed_accounts'].set_assoc (
+          params=( 0, ),
+          result=[ ]
+        )
+        TestsUserImporterLdap.fill_ldap_users(users)
+        self.importer.load()
+        self.assertEquals(len(self.importer.users), 3)
+        self.assertEquals(len(self.importer.accounts), 3)
 
+    @mock.patch("%s.ldap" % (module), mock_ldap())
+    def test_load_simple2(self):
+        """UserImporterLdap.load() should work with simple data from LDAP and
+           HPCStatsDB.
+        """
+
+        users = [ 'login1', 'login2', 'login3' ]
+        TestsUserImporterLdap.fill_ldap_users(users)
+
+        creation_user4 = datetime(2015, 3, 2, 16, 0, 1)
+        MockPg2.PG_REQS['get_unclosed_accounts'].set_assoc(
+          params=( 0, ),
+          result=[ [ 0, 'login4', 'name_user4', 'firstname_user4',
+                     'department_user4', 0, 0, creation_user4 ] ]
+          )
+
+        self.importer.load()
+        self.assertEquals(len(self.importer.users), 4)
+        self.assertEquals(len(self.importer.accounts), 4)
+
+    @mock.patch("%s.ldap" % (module), mock_ldap())
+    @mock.patch("%s.User.save" % (module))
+    @mock.patch("%s.Account.save" % (module))
+    def test_load_update_new_user_other_accounts(self, m_account_save, m_user_save):
+        """UserImporterLdap.update() create new user/account found in LDAP
+           and not found in HPCStatsDB with a creation date equals to today
+           because there are already existing accounts.
+        """
+
+        users = [ 'login1' ]
+        TestsUserImporterLdap.fill_ldap_users(users)
+
+        MockPg2.PG_REQS['get_unclosed_accounts'].set_assoc(
+          params=( self.cluster.cluster_id, ),
+          result=[ ]
+          )
+        MockPg2.PG_REQS['nb_existing_accounts'].set_assoc(
+          params=( self.cluster.cluster_id, ),
+          result=[ [ 0 ], [ 1 ] ]
+          )
+
+        self.importer.load()
+        self.importer.update()
+        self.assertEquals(self.importer.accounts[0].creation_date, date.today())
+        m_user_save.assert_called_with(self.db)
+        m_account_save.assert_called_with(self.db)
+
+    @mock.patch("%s.ldap" % (module), mock_ldap())
+    @mock.patch("%s.User.save" % (module))
+    @mock.patch("%s.Account.save" % (module))
+    def test_load_update_new_user_no_account(self, m_account_save, m_user_save):
+        """UserImporterLdap.update() save new user/account found in LDAP
+           and not found in HPCStatsDB with a creation date equals to epoch
+           because there is none existing accounts
+        """
+
+        users = [ 'login1' ]
+        TestsUserImporterLdap.fill_ldap_users(users)
+
+        self.importer.load()
+        self.importer.update()
+        self.assertEquals(self.importer.accounts[0].creation_date, date(1970, 1, 1))
+        m_user_save.assert_called_with(self.db)
+        m_account_save.assert_called_with(self.db)
+
+    @mock.patch("%s.ldap" % (module), mock_ldap())
+    @mock.patch("%s.Account.update" % (module))
+    def test_load_update_close_account(self, m_account_update):
+        """UserImporterLdap.update() close account found as unclosed in
+           HPCStatsDB and not found in LDAP.
+        """
+
+        users = [ ]
+        TestsUserImporterLdap.fill_ldap_users(users)
+
+        creation_user2 = datetime(2015, 3, 2, 16, 0, 1)
+
+        MockPg2.PG_REQS['get_unclosed_accounts'].set_assoc(
+          params=( self.cluster.cluster_id, ),
+          result=[ [ 2, 'login2', 'name_user2', 'firstname_user2',
+                     'department_user2', 0, 0, creation_user2 ] ]
+          )
+
+        self.importer.load()
+        self.importer.update()
+        self.assertEquals(self.importer.accounts[0].deletion_date, date.today())
+        m_account_update.assert_called_with(self.db)
+
+    @mock.patch("%s.ldap" % (module), mock_ldap())
+    @mock.patch("%s.User.update" % (module))
+    @mock.patch("%s.Account.save" % (module))
+    def test_load_update_user_wo_account(self, m_account_save, m_user_update):
+        """UserImporterLdap.update() create account and update user found in
+           LDAP and in HPCStatsDB but w/o account on the cluster.
+        """
+
+        users = [ 'login3' ]
+        TestsUserImporterLdap.fill_ldap_users(users)
+
+        user3_id = 3
+
+        MockPg2.PG_REQS['find_user'].set_assoc(
+          params=( 'login3', ),
+          result=[ [ user3_id ] ]
+          )
+        MockPg2.PG_REQS['existing_account'].set_assoc(
+          params=( user3_id, self.cluster.cluster_id, ),
+          result=[ ]
+          )
+
+        self.importer.load()
+        self.importer.update()
+        m_user_update.assert_called_with(self.db)
+        m_account_save.assert_called_with(self.db)
+
+    @mock.patch("%s.ldap" % (module), mock_ldap())
+    @mock.patch("%s.User.update" % (module))
+    @mock.patch("%s.Account.update" % (module))
+    def test_load_update_user_w_account(self, m_account_update, m_user_update):
+        """UserImporterLdap.update() update user found in LDAP and in HPCStatsDB
+           with an unclosed account on the cluster.
+        """
+
+        users = [ 'login4' ]
+        TestsUserImporterLdap.fill_ldap_users(users)
+
+        creation_user4 = datetime(2015, 3, 2, 16, 0, 1)
+        user4_id = 4
+        MockPg2.PG_REQS['find_user'].set_assoc(
+          params=( 'login4', ),
+          result=[ [ user4_id ] ]
+          )
+        MockPg2.PG_REQS['existing_account'].set_assoc(
+          params=( user4_id, self.cluster.cluster_id, ),
+          result=[ [ 0 ] ]
+          )
+        MockPg2.PG_REQS['load_account'].set_assoc(
+          params=( user4_id, self.cluster.cluster_id, ),
+          result=[ [ 0, 0, creation_user4, None ] ]
+        )
+
+        self.importer.load()
+        self.importer.update()
+        m_user_update.assert_called_with(self.db)
+        # ensure Account.update() is not called
+        self.assertRaises(AssertionError,
+                          m_account_update.assert_called_with,
+                          self.db,
+                          None)
+
+    @mock.patch("%s.ldap" % (module), mock_ldap())
+    @mock.patch("%s.User.update" % (module))
+    @mock.patch("%s.Account.update" % (module))
+    def test_load_update_user_closed_account(self, m_account_update, m_user_update):
+        """UserImporterLdap.update() update user found in LDAP and in HPCStatsDB
+           with a closed account on the cluster.
+        """
+        users = [ 'login5' ]
+        TestsUserImporterLdap.fill_ldap_users(users)
+
+        user5_creation = datetime(2015, 3, 2, 16, 0, 1)
+        user5_deletion = datetime(2015, 3, 2, 16, 0, 1)
+        user5_id = 5
+        MockPg2.PG_REQS['find_user'].set_assoc(
+          params=( 'login5', ),
+          result=[ [ user5_id ] ]
+          )
+        MockPg2.PG_REQS['existing_account'].set_assoc(
+          params=( user5_id, self.cluster.cluster_id, ),
+          result=[ [ 0 ] ]
+          )
+        MockPg2.PG_REQS['load_account'].set_assoc(
+          params=( user5_id, self.cluster.cluster_id, ),
+          result=[ [ 0, 0, user5_creation, user5_deletion ] ]
+        )
+
+        self.importer.load()
+        self.importer.update()
+        self.assertEquals(self.importer.accounts[0].deletion_date, None)
+        m_user_update.assert_called_with(self.db)
+        m_account_update.assert_called_with(self.db)
+
+    @staticmethod
+    def fill_ldap_users(users):
+
+        ldap_config = CONFIG['testcluster/ldap']
         MockLdap.LDAP_REQS['get_group_members'] = {
           'req':
             ( "ou=groups,%s" % (ldap_config['basedn']),
@@ -114,6 +310,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
                 ( "ou=people,%s" % (ldap_config['basedn']),
                   "uid=%s" % user ),
               'res': [ ( "dn_%s" % user,
+
                         { 'givenName': [ "given_name_%s" % user ],
                           'sn': [ "sn_%s" % user ],
                           'uidNumber': [ 0 ],
@@ -129,7 +326,5 @@ class TestsUserImporterLdap(HPCStatsTestCase):
                         ldap_config['group_dpt_search'] ) ),
               'res': [ ( 'cn=dir1-dp-dpt1,ou=groups', dict() ) ]
             }
-        self.importer.load()
-        self.assertEquals(len(self.importer.users), 3)
 
 loadtestcase(TestsUserImporterLdap)

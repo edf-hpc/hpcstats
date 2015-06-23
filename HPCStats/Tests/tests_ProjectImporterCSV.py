@@ -55,31 +55,6 @@ CONFIG = {
            },
          }
 
-MockPg2.PG_REQS['exist_domain_dom1'] = {
-  'req': "SELECT domain_id FROM Domain WHERE domain_id = %s",
-  'res': [],
-}
-
-MockPg2.PG_REQS['save_domain_dom1'] = {
-  'req': "INSERT INTO Domain \( domain_id, domain_name \) " \
-         "VALUES \( %s, %s \)",
-  'res': [],
-}
-
-MockPg2.PG_REQS['find_project_code1'] = {
-  'req': "SELECT project_id FROM Project WHERE project_code = %s",
-  'res': [],
-}
-
-MockPg2.PG_REQS['save_project_code1'] = {
-  'req': "INSERT INTO Project \( project_code, " \
-                                "project_description, "\
-                                "domain_id \) "\
-         "VALUES \( %s, %s, %s \) "\
-         "RETURNING project_id",
-  'res': [],
-}
-
 module = "HPCStats.Importer.Projects.ProjectImporterCSV"
 
 class TestsProjectImporterCSVLoad(HPCStatsTestCase):
@@ -270,10 +245,14 @@ class TestsProjectImporterCSVUpdate(HPCStatsTestCase):
     def test_update(self):
         """ProjectImporterCSV.update() works with simple data
         """
-        MockPg2.PG_REQS['save_project_code1']['res'] = \
-          [ [ 1 ] ]
+
         domain1 = Domain('dom1', 'domain name 1')
         project1 = Project(domain1, 'code1', 'project description 1')
+
+        MockPg2.PG_REQS['save_project'].set_assoc(
+          params=( project1.code, project1.description, domain1.key ),
+          result=[ [ 1 ] ]
+        )
         self.importer.projects = [ project1 ]
         self.importer.domains = [ domain1 ]
 

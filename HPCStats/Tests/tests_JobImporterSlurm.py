@@ -45,7 +45,7 @@ from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
-from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
+from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2, init_reqs
 import HPCStats.Tests.Mocks.MySQLdb as MockMySQLdb # for MY_REQS
 from HPCStats.Tests.Mocks.MySQLdb import mock_mysqldb
 from HPCStats.Tests.Mocks.Conf import MockConf
@@ -95,21 +95,6 @@ MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
   'res': [],
 }
 
-MockPg2.PG_REQS['get_batchid_oldest_unfinished'] = {
-  'req': "SELECT MIN\(job_batch_id\) AS last_id " \
-           "FROM Job " \
-          "WHERE cluster_id = %s " \
-            "AND \(job_start IS NULL " \
-             "OR job_end IS NULL\)",
-  'res': [],
-}
-MockPg2.PG_REQS['get_batchid_last'] = {
-  'req': "SELECT MAX\(job_batch_id\) AS last_id " \
-           "FROM Job "  \
-          "WHERE cluster_id = %s",
-  'res': [],
-}
-
 module = 'HPCStats.Importer.Jobs.JobImporterSlurm'
 
 class TestsJobImporterSlurm(HPCStatsTestCase):
@@ -128,6 +113,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
                                          self.db,
                                          self.conf,
                                          self.cluster)
+        init_reqs()
 
     def test_init(self):
         """JobImporterSlurm.__init__() initializes object with attributes
@@ -194,22 +180,40 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
     def test_load_search_batchid(self, mock_get_jobs):
         """JobImporterSlurm.load() must search jobs after correct batch_id."""
 
-        MockPg2.PG_REQS['get_batchid_oldest_unfinished']['res'] = [ [ 2 ] ]
-        MockPg2.PG_REQS['get_batchid_last']['res'] = [ [ 3 ] ]
+        MockPg2.PG_REQS['get_batchid_oldest_unfinished'].set_assoc(
+          params=( self.cluster.cluster_id ),
+          result=[ [ 2 ] ]
+        )
+        MockPg2.PG_REQS['get_batchid_last'].set_assoc(
+          params=( self.cluster.cluster_id ),
+          result=[ [ 3 ] ]
+        )
 
         self.importer.load()
         mock_get_jobs.assert_called_with(2)
 
         # None unfinished job, search must be done with batch_id of lasti job.
-        MockPg2.PG_REQS['get_batchid_oldest_unfinished']['res'] = [ ]
-        MockPg2.PG_REQS['get_batchid_last']['res'] = [ [ 4 ] ]
+        MockPg2.PG_REQS['get_batchid_oldest_unfinished'].set_assoc(
+          params=( self.cluster.cluster_id ),
+          result=[ ]
+        )
+        MockPg2.PG_REQS['get_batchid_last'].set_assoc(
+          params=( self.cluster.cluster_id ),
+          result=[ [ 4 ] ]
+        )
 
         self.importer.load()
         mock_get_jobs.assert_called_with(4)
 
         # No job in DB: search starting -1.
-        MockPg2.PG_REQS['get_batchid_oldest_unfinished']['res'] = [ ]
-        MockPg2.PG_REQS['get_batchid_last']['res'] = [ ]
+        MockPg2.PG_REQS['get_batchid_oldest_unfinished'].set_assoc(
+          params=( self.cluster.cluster_id ),
+          result=[ ]
+        )
+        MockPg2.PG_REQS['get_batchid_last'].set_assoc(
+          params=( self.cluster.cluster_id ),
+          result=[ ]
+        )
 
         self.importer.load()
         mock_get_jobs.assert_called_with(-1)

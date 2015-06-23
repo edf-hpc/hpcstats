@@ -39,7 +39,7 @@ from HPCStats.Model.Business import Business
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Mocks.Utils import mock_open
 import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
-from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
+from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2, init_reqs
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 
 CONFIG = {
@@ -55,13 +55,6 @@ CONFIG = {
   },
 }
 
-MockPg2.PG_REQS['existing_business_code1'] = {
-  'req': "SELECT business_code " \
-           "FROM Business "\
-          "WHERE business_code = %s",
-  'res': [],
-}
-
 module = "HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV"
 
 class TestsBusinessCodeImporterCSVLoad(HPCStatsTestCase):
@@ -75,6 +68,7 @@ class TestsBusinessCodeImporterCSVLoad(HPCStatsTestCase):
         self.app = None
         self.db = None
         self.importer = BusinessCodeImporterCSV(self.app, self.db, self.conf)
+        init_reqs()
 
     def test_init(self):
         """ProjectImporterCSV.__init__() runs w/o problem
@@ -202,8 +196,14 @@ class TestsBusinessCodeImporterCSVUpdate(HPCStatsTestCase):
         """ProjectImporterCSV.update() call Business.save() when business code
            does not exist
         """
-        MockPg2.PG_REQS['existing_business_code1']['res'] = []
+
         business1 = Business('code1', 'business description 1')
+
+        MockPg2.PG_REQS['existing_business'].set_assoc(
+          params=( business1.code, ),
+          result=[ ]
+        )
+
         self.importer.businesses = [ business1 ]
         self.importer.update()
         mock_save.assert_called_with(self.db)
@@ -211,9 +211,14 @@ class TestsBusinessCodeImporterCSVUpdate(HPCStatsTestCase):
     def test_update_exists(self):
         """ProjectImporterCSV.update() works when business code exists
         """
-        MockPg2.PG_REQS['existing_business_code1']['res'] = \
-          [ [ 'code1' ] ]
+
         business1 = Business('code1', 'business description 1')
+
+        MockPg2.PG_REQS['existing_business'].set_assoc(
+          params=( business1.code, ),
+          result=[ [ 'code1' ] ]
+        )
+
         self.importer.businesses = [ business1 ]
         self.importer.update()
 
@@ -222,9 +227,13 @@ class TestsBusinessCodeImporterCSVUpdate(HPCStatsTestCase):
         """ProjectImporterCSV.update() call Business.update() when business
            code exists
         """
-        MockPg2.PG_REQS['existing_business_code1']['res'] = \
-          [ [ 'code1' ] ]
         business1 = Business('code1', 'business description 1')
+
+        MockPg2.PG_REQS['existing_business'].set_assoc(
+          params=( business1.code, ),
+          result=[ [ 'code1' ] ]
+        )
+
         self.importer.businesses = [ business1 ]
         self.importer.update()
         mock_update.assert_called_with(self.db)

@@ -41,7 +41,7 @@ from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
-from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
+from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2, init_reqs
 import HPCStats.Tests.Mocks.MySQLdb as MockMySQLdb # for MY_REQS
 from HPCStats.Tests.Mocks.MySQLdb import mock_mysqldb
 from HPCStats.Tests.Mocks.Conf import MockConf
@@ -74,20 +74,6 @@ MockMySQLdb.MY_REQS['get_events'] = {
   'res': [],
 }
 
-MockPg2.PG_REQS['get_end_last_event'] = {
-  'req': "SELECT MAX\(event_end\) AS last " \
-         "FROM Event " \
-         "WHERE cluster_id = %s",
-  'res': []
-}
-
-MockPg2.PG_REQS['get_start_oldest_unfinised_event'] = {
-  'req': "SELECT MIN\(event_start\) " \
-          "FROM Event " \
-         "WHERE cluster_id = %s " \
-           "AND event_end IS NULL",
-  'res': []
-}
 
 module = 'HPCStats.Importer.Events.EventImporterSlurm'
 
@@ -107,6 +93,7 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
                                            self.db,
                                            self.conf,
                                            self.cluster)
+        init_reqs()
 
     def test_init(self):
         """EventImporterSlurm.__init__() initializes w/o error
@@ -151,16 +138,28 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         d1_ts = time.mktime(d1.timetuple())
         d2_ts = time.mktime(d2.timetuple())
 
-        MockPg2.PG_REQS['get_end_last_event']['res'] = [ [ d1_ts ] ]
-        MockPg2.PG_REQS['get_start_oldest_unfinised_event']['res'] = [ [ d2_ts ] ]
+        MockPg2.PG_REQS['get_end_last_event'].set_assoc(
+          params=( self.cluster.cluster_id ),
+          result=[ [ d1_ts ] ]
+        )
+        MockPg2.PG_REQS['get_start_oldest_unfinised_event'].set_assoc(
+          params= ( self.cluster.cluster_id ),
+          result=[ [ d2_ts ] ]
+        )
 
         self.importer.load()
         mock_new_events.assert_called_with(d2_ts)
 
         # None unfinished event, search must be done with end datetime of last
         # event.
-        MockPg2.PG_REQS['get_end_last_event']['res'] = [ [ d1_ts ] ]
-        MockPg2.PG_REQS['get_start_oldest_unfinised_event']['res'] = [ ]
+        MockPg2.PG_REQS['get_end_last_event'].set_assoc(
+          params=( self.cluster.cluster_id ),
+          result=[ [ d1_ts ] ]
+        )
+        MockPg2.PG_REQS['get_start_oldest_unfinised_event'].set_assoc(
+          params= ( self.cluster.cluster_id ),
+          result=[ ]
+        )
 
         self.importer.load()
         mock_new_events.assert_called_with(d1_ts)
@@ -169,8 +168,14 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         default_ts = time.mktime(default_datetime.timetuple())
 
         # No event in DB: search starting from epoch.
-        MockPg2.PG_REQS['get_end_last_event']['res'] = [ ]
-        MockPg2.PG_REQS['get_start_oldest_unfinised_event']['res'] = [ ]
+        MockPg2.PG_REQS['get_end_last_event'].set_assoc(
+          params=( self.cluster.cluster_id ),
+          result=[ ]
+        )
+        MockPg2.PG_REQS['get_start_oldest_unfinised_event'].set_assoc(
+          params= ( self.cluster.cluster_id ),
+          result=[ ]
+        )
 
         self.importer.load()
         mock_new_events.assert_called_with(default_ts)
