@@ -28,9 +28,10 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 import mock
+import ldap
 
 # the requests and results are then defined by tests themselves.
-LDAP_REQS = dict()
+LDAP_REQS = None
 
 class MockLdap(object):
 
@@ -60,6 +61,7 @@ class MockLdapConn(object):
 
     def search_s(self, req_dn, flag, req_search, attrs):
 
+        print "LDAP_REQS: " + str(LDAP_REQS)
         for req in LDAP_REQS.keys():
             (dn, search) =  LDAP_REQS[req]['req']
             print("req   : %s/%s" % (dn, search))
@@ -68,44 +70,75 @@ class MockLdapConn(object):
                 print("match %s!" % (req))
                 return LDAP_REQS[req]['res']
 
+        raise ldap.NO_SUCH_OBJECT('mock fail')
+
 def mock_ldap():
 
     ldap_m = mock.Mock()
     ldap_m.initialize.side_effect = MockLdap.initialize
+    ldap_m.NO_SUCH_OBJECT = ldap.NO_SUCH_OBJECT
     return ldap_m
 
+def fill_ldap_users(ldap_config, users, users_no_group=None):
 
-def fill_ldap_users(ldap_config, users):
+    global LDAP_REQS
+    LDAP_REQS = dict()
 
     LDAP_REQS['get_group_members'] = {
       'req':
         ( "ou=groups,%s" % (ldap_config['basedn']),
           "(&(objectclass=posixGroup)(cn=%s))" % (ldap_config['group']) ),
-      'res': [ ('dn_group1', { 'member': None } ) ],
+      'res': [ ('dn_group1', { 'member': [] } ) ],
     }
-    # replace None with list of users
-    LDAP_REQS['get_group_members']['res'][0][1]['member'] = \
-      [ 'dn=%s,ou=people' % user for user in users ]
 
-    for user in users:
-        LDAP_REQS["get_user_%s" % user] = {
-          'req':
-            ( "ou=people,%s" % (ldap_config['basedn']),
-              "uid=%s" % user ),
-          'res': [ ( "dn_%s" % user,
+    if users is not None:
 
-                    { 'givenName': [ "given_name_%s" % user ],
-                      'sn': [ "sn_%s" % user ],
-                      'uidNumber': [ 0 ],
-                      'gidNumber': [ 0 ], } ) ]
-        }
-        LDAP_REQS["secondary_groups_%s" % user] = {
-          'req':
-            ( "ou=groups,%s" % (ldap_config['basedn']),
-              "(&(|(member=uid=%s,ou=people,%s)(memberUid=%s))(cn=%s))"
-                % ( user,
-                    ldap_config['basedn'],
-                    user,
-                    ldap_config['group_dpt_search'] ) ),
-          'res': [ ( 'cn=dir1-dp-dpt1,ou=groups', dict() ) ]
-        }
+        if len(users) > 0:
+            # set member attribute with list of users
+            LDAP_REQS['get_group_members']['res'][0][1]['member'] = \
+              [ 'dn=%s,ou=people' % user for user in users ]
+
+        for user in users:
+            LDAP_REQS["get_user_%s" % user] = {
+              'req':
+                ( "ou=people,%s" % (ldap_config['basedn']),
+                  "uid=%s" % user ),
+              'res': [ ( "dn_%s" % user,
+                        { 'givenName': [ "given_name_%s" % user ],
+                          'sn': [ "sn_%s" % user ],
+                          'uidNumber': [ 0 ],
+                          'gidNumber': [ 0 ], } ) ]
+            }
+            LDAP_REQS["secondary_groups_%s" % user] = {
+              'req':
+                ( "ou=groups,%s" % (ldap_config['basedn']),
+                  "(&(|(member=uid=%s,ou=people,%s)(memberUid=%s))(cn=%s))"
+                    % ( user,
+                        ldap_config['basedn'],
+                        user,
+                        ldap_config['group_dpt_search'] ) ),
+              'res': [ ( 'cn=dir1-dp-dpt1,ou=groups', dict() ) ]
+            }
+
+    if users_no_group is not None:
+        for user in users_no_group:
+            LDAP_REQS["get_user_%s" % user] = {
+              'req':
+                ( "ou=people,%s" % (ldap_config['basedn']),
+                  "uid=%s" % user ),
+              'res': [ ( "dn_%s" % user,
+                        { 'givenName': [ "given_name_%s" % user ],
+                          'sn': [ "sn_%s" % user ],
+                          'uidNumber': [ 0 ],
+                          'gidNumber': [ 0 ], } ) ]
+            }
+            LDAP_REQS["secondary_groups_%s" % user] = {
+              'req':
+                ( "ou=groups,%s" % (ldap_config['basedn']),
+                  "(&(|(member=uid=%s,ou=people,%s)(memberUid=%s))(cn=%s))"
+                    % ( user,
+                        ldap_config['basedn'],
+                        user,
+                        ldap_config['group_dpt_search'] ) ),
+              'res': [ ( 'cn=dir1-dp-dpt1,ou=groups', dict() ) ]
+            }
