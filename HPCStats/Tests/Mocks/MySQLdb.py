@@ -80,6 +80,9 @@ class MockMySQLdbCursor(object):
                 return result
         return None
 
+    def close(self):
+        pass
+
 class MockMySQLdbConnect(object):
 
     def __init__(self, host, user, passwd, db, port):
@@ -94,6 +97,9 @@ class MockMySQLdbConnect(object):
     def cursor(self, stuff=None):
 
         return self._cursor
+
+    def close(self):
+        pass
 
 def mock_mysqldb():
 
