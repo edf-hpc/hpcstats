@@ -211,6 +211,9 @@ class UserImporterLdap(UserImporter):
         """Returns (User,Account) objects tuple with information found in LDAP
            for the login in parameter.
 
+           The created account have None creation date and deletion date. It is
+           up-to update() method to set them well.
+
            When no account could be found in LDAP directory for the login, if
            strict_user_membership attribute is True, this function raises an
            HPCStatsSourceError exception. If the attribute is False, None is
