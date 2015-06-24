@@ -42,8 +42,8 @@ from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 from HPCStats.Tests.Mocks.MockPg2 import init_reqs, mock_psycopg2
 import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
-from HPCStats.Tests.Mocks.MockLdap import mock_ldap
-import HPCStats.Tests.Mocks.MockLdap as MockLdap # for PG_REQS
+from HPCStats.Tests.Mocks.MockLdap import mock_ldap, fill_ldap_users
+import HPCStats.Tests.Mocks.MockLdap as MockLdap # for LDAP_REQS
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Mocks.Conf import MockConf
 from HPCStats.Tests.Mocks.App import MockApp
@@ -99,11 +99,13 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         """
 
         users = [ 'login1', 'login2', 'login3' ]
+        fill_ldap_users(CONFIG['testcluster/ldap'], users)
+
         MockPg2.PG_REQS['get_unclosed_accounts'].set_assoc (
           params=( 0, ),
           result=[ ]
         )
-        TestsUserImporterLdap.fill_ldap_users(users)
+
         self.importer.load()
         self.assertEquals(len(self.importer.users), 3)
         self.assertEquals(len(self.importer.accounts), 3)
@@ -115,7 +117,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         """
 
         users = [ 'login1', 'login2', 'login3' ]
-        TestsUserImporterLdap.fill_ldap_users(users)
+        fill_ldap_users(CONFIG['testcluster/ldap'], users)
 
         creation_user4 = datetime(2015, 3, 2, 16, 0, 1)
         MockPg2.PG_REQS['get_unclosed_accounts'].set_assoc(
@@ -138,7 +140,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         """
 
         users = [ 'login1' ]
-        TestsUserImporterLdap.fill_ldap_users(users)
+        fill_ldap_users(CONFIG['testcluster/ldap'], users)
 
         MockPg2.PG_REQS['get_unclosed_accounts'].set_assoc(
           params=( self.cluster.cluster_id, ),
@@ -165,7 +167,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         """
 
         users = [ 'login1' ]
-        TestsUserImporterLdap.fill_ldap_users(users)
+        fill_ldap_users(CONFIG['testcluster/ldap'], users)
 
         self.importer.load()
         self.importer.update()
@@ -181,7 +183,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         """
 
         users = [ ]
-        TestsUserImporterLdap.fill_ldap_users(users)
+        fill_ldap_users(CONFIG['testcluster/ldap'], users)
 
         creation_user2 = datetime(2015, 3, 2, 16, 0, 1)
 
@@ -205,7 +207,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         """
 
         users = [ 'login3' ]
-        TestsUserImporterLdap.fill_ldap_users(users)
+        fill_ldap_users(CONFIG['testcluster/ldap'], users)
 
         user3_id = 3
 
@@ -232,7 +234,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         """
 
         users = [ 'login4' ]
-        TestsUserImporterLdap.fill_ldap_users(users)
+        fill_ldap_users(CONFIG['testcluster/ldap'], users)
 
         creation_user4 = datetime(2015, 3, 2, 16, 0, 1)
         user4_id = 4
@@ -266,7 +268,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
            with a closed account on the cluster.
         """
         users = [ 'login5' ]
-        TestsUserImporterLdap.fill_ldap_users(users)
+        fill_ldap_users(CONFIG['testcluster/ldap'], users)
 
         user5_creation = datetime(2015, 3, 2, 16, 0, 1)
         user5_deletion = datetime(2015, 3, 2, 16, 0, 1)
@@ -289,42 +291,5 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         self.assertEquals(self.importer.accounts[0].deletion_date, None)
         m_user_update.assert_called_with(self.db)
         m_account_update.assert_called_with(self.db)
-
-    @staticmethod
-    def fill_ldap_users(users):
-
-        ldap_config = CONFIG['testcluster/ldap']
-        MockLdap.LDAP_REQS['get_group_members'] = {
-          'req':
-            ( "ou=groups,%s" % (ldap_config['basedn']),
-              "(&(objectclass=posixGroup)(cn=%s))" % (ldap_config['group']) ),
-          'res': [ ('dn_group1', { 'member': None } ) ],
-        }
-        # replace None with list of users
-        MockLdap.LDAP_REQS['get_group_members']['res'][0][1]['member'] = \
-          [ 'dn=%s,ou=people' % user for user in users ]
-
-        for user in users: 
-            MockLdap.LDAP_REQS["get_user_%s" % user] = {
-              'req':
-                ( "ou=people,%s" % (ldap_config['basedn']),
-                  "uid=%s" % user ),
-              'res': [ ( "dn_%s" % user,
-
-                        { 'givenName': [ "given_name_%s" % user ],
-                          'sn': [ "sn_%s" % user ],
-                          'uidNumber': [ 0 ],
-                          'gidNumber': [ 0 ], } ) ]
-            }
-            MockLdap.LDAP_REQS["secondary_groups_%s" % user] = {
-              'req':
-                ( "ou=groups,%s" % (ldap_config['basedn']),
-                  "(&(|(member=uid=%s,ou=people,%s)(memberUid=%s))(cn=%s))"
-                    % ( user,
-                        ldap_config['basedn'],
-                        user,
-                        ldap_config['group_dpt_search'] ) ),
-              'res': [ ( 'cn=dir1-dp-dpt1,ou=groups', dict() ) ]
-            }
 
 loadtestcase(TestsUserImporterLdap)
