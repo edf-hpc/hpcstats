@@ -33,6 +33,7 @@
 
 from HPCStats.Exceptions import HPCStatsConfigurationException
 from HPCStats.Importer.Users.UserImporterLdap import UserImporterLdap
+from HPCStats.Importer.Users.UserImporterLdapSlurm import UserImporterLdapSlurm
 
 class UserImporterFactory(object):
 
@@ -51,8 +52,10 @@ class UserImporterFactory(object):
         """
         implem = config.get(cluster.name, 'users')
 
-        if implem == "ldap":
+        if implem == 'ldap':
             return UserImporterLdap(app, db, config, cluster)
+        if implem == 'ldap+slurm':
+            return UserImporterLdapSlurm(app, db, config, cluster)
         else:
             raise HPCStatsConfigurationException( \
                     "UserImporter %s is not implemented" \
