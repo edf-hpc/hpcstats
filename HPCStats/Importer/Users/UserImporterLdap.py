@@ -182,6 +182,9 @@ class UserImporterLdap(UserImporter):
         #  - memberUid: the value is just the login of the POSIX user
         #
         # We have to handle both cases properly here.
+        #
+        # The logins are down-cased here systematically. This way HPCStats only
+        # manipulates down-cased logins then, just as Slurm does.
 
         logins = None
         # get attributes of 1st search result, the only one to consider
@@ -192,10 +195,11 @@ class UserImporterLdap(UserImporter):
             # [ 'uid=foo,ou=people,dc=company,dc=tld',
             #   'uid=bar,ou=people,dc=company,dc=tld' ]
             # -> [ 'foo', 'bar']
-            logins = [ member.split(',')[0].split('=')[1]
+            logins = [ member.split(',')[0].split('=')[1].lower()
                        for member in first_res_attr['member'] ]
         if first_res_attr.has_key('memberUid'):
-            logins = first_res_attr['memberUid']
+            logins = [ member.lower()
+                       for member in first_res_attr['memberUid'] ]
 
         # Uncomment the following line to see content of logins in debug
         # mode:
@@ -209,7 +213,8 @@ class UserImporterLdap(UserImporter):
 
     def get_user_account_from_login(self, login):
         """Returns (User,Account) objects tuple with information found in LDAP
-           for the login in parameter.
+           for the login in parameter. The login in parameter must be
+           down-cased.
 
            The created account have None creation date and deletion date. It is
            up-to update() method to set them well.
@@ -226,6 +231,8 @@ class UserImporterLdap(UserImporter):
         userdn = "uid=%s,%s" % (login, self.ldap_dn_people)
         search = "uid=%s" % (login)
 
+        # uid search in LDAP is case-insensitive so it matches even if the
+        # login is stored upper-cased.
         logging.debug("search in: %s %s", self.ldap_dn_people, search)
         try:
             user_res = self.ldap_conn.search_s(self.ldap_dn_people,
@@ -284,18 +291,28 @@ class UserImporterLdap(UserImporter):
         uid = int(user_attr['uidNumber'][0])
         gid = int(user_attr['gidNumber'][0])
 
-        department = self.get_user_department(userdn, login)
+        department = self.get_user_department(login)
 
         user = User(login, firstname, lastname, department)
         account = Account(user, self.cluster, uid, gid, None, None)
         return (user, account)
 
-    def get_user_department(self, userdn, login):
-        """Search for user department based on its groups membership."""
+    def get_user_department(self, login):
+        """Search for user department based on its groups membership.
 
-        # Then search users groups in LDAP
-        search = "(&(|(member=%s)(memberUid=%s))(cn=%s))" \
-                   % (userdn, login, self.group_dpt_search)
+           The login in parameter must be downcased.
+        """
+
+        userdn_down = "uid=%s,%s" % (login, self.ldap_dn_people)
+        userdn_upper = "uid=%s,%s" % (login.upper, self.ldap_dn_people)
+
+        # Then search users groups in LDAP. Search of member/memberUid in
+        # LDAP is case-sensitive so we have to try both down-cased and
+        # upper-cased login/dn here.
+        search = "(&(|(member=%s)(member=%s)(memberUid=%s)(memberUid=%s))" \
+                 "(cn=%s))" \
+                   % (userdn_down, userdn_upper, login,
+                      login.upper(), self.group_dpt_search)
         logging.debug("search in: %s %s", self.ldap_dn_groups, search)
         user_groups = self.ldap_conn.search_s(self.ldap_dn_groups,
                                               ldap.SCOPE_SUBTREE,
@@ -327,7 +344,7 @@ class UserImporterLdap(UserImporter):
         # if department not found, just print warning
         if not department:
             logging.warning("department not found for user %s (%s) on " \
-                            "cluster %s!", login, userdn, self.cluster.name)
+                            "cluster %s!", login, userdn_down, self.cluster.name)
 
         return department
 
