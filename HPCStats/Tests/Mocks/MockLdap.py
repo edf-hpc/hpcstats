@@ -112,10 +112,13 @@ def fill_ldap_users(ldap_config, users, users_no_group=None):
             LDAP_REQS["secondary_groups_%s" % user] = {
               'req':
                 ( "ou=groups,%s" % (ldap_config['basedn']),
-                  "(&(|(member=uid=%s,ou=people,%s)(memberUid=%s))(cn=%s))"
+                  "(&(|(member=uid=%s,ou=people,%s)(member=uid=%s,ou=people,%s)(memberUid=%s)(memberUid=%s))(cn=%s))"
                     % ( user,
                         ldap_config['basedn'],
+                        user.upper(),
+                        ldap_config['basedn'],
                         user,
+                        user.upper(),
                         ldap_config['group_dpt_search'] ) ),
               'res': [ ( 'cn=dir1-dp-dpt1,ou=groups', dict() ) ]
             }
@@ -135,10 +138,13 @@ def fill_ldap_users(ldap_config, users, users_no_group=None):
             LDAP_REQS["secondary_groups_%s" % user] = {
               'req':
                 ( "ou=groups,%s" % (ldap_config['basedn']),
-                  "(&(|(member=uid=%s,ou=people,%s)(memberUid=%s))(cn=%s))"
+                  "(&(|(member=uid=%s,ou=people,%s)(member=uid=%s,ou=people,%s)(memberUid=%s)(memberUid=%s))(cn=%s))"
                     % ( user,
                         ldap_config['basedn'],
+                        user.upper(),
+                        ldap_config['basedn'],
                         user,
+                        user.upper(),
                         ldap_config['group_dpt_search'] ) ),
               'res': [ ( 'cn=dir1-dp-dpt1,ou=groups', dict() ) ]
             }
