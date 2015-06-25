@@ -43,6 +43,7 @@ Project(
 
 import logging
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
+from HPCStats.Model.Domain import Domain
 
 class Project(object):
     """Model class for the Project table"""
@@ -94,6 +95,35 @@ class Project(object):
                           str(self),
                           self.project_id )
             return self.project_id
+
+    def load(self, db):
+        """Load the Project based on the content of the DB and set objects
+           attributes accordingly. The project_id attribute must have been
+           set previously, typically by calling find() method. It raises
+           raises HPCStatsRuntimeError if the Project is not found in DB.
+        """
+
+        if self.project_id is None:
+            raise HPCStatsRuntimeError(
+                    "could not load project %s since not found in database" \
+                      % (str(self)))
+
+        req = """
+                SELECT project_code,
+                       project_description,
+                       domain_id
+                  FROM Project
+                 WHERE project_id = %s
+              """
+        params = ( self.project_id, )
+        db.execute(req, params)
+        # We know here there is only one result thanks to existing() method
+        result = db.cur.fetchone()
+        self.code = result[0]
+        self.description = result[1]
+        # build the Domain object with the key found in DB
+        domain_key = result[2]
+        self.domain = Domain(domain_key, None)
 
     def save(self, db):
         """Insert Project in database. You must make sure that the Project does
