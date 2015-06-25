@@ -1,0 +1,23 @@
+Calibre 7
+---------
+
+Add calibre7-sp5 and squeeze-backports in /etc/apt/sources.list:
+
+deb http://debian.calibre.edf.fr/debian-backports/ squeeze-backports main contrib non-free
+deb http://newhpc.calibre.edf.fr/calibre7/calibre/ calibre7-sp5 main contrib non-free
+
+apt-get update
+apt-get install -t squeeze-backports postgresql-9.1
+
+adduser --system hpcstats --no-create-home --shell=/bin/sh
+
+apt-get install edf-proxy-agent-cli git
+
+git clone https://github.com/edf-hpc/hpcstats.git
+apt-get install python-setuptools python-psycopg2 python-mysqldb clustershell python-ldap python-paramiko python-dateutil python-mako python-argparse
+
+su postgres -c 'createuser --createdb --no-superuser --no-createrole hpcstats'
+su postgres -c "psql -c \"ALTER ROLE hpcstats WITH PASSWORD 'hpcstats';\""
+su postgres -c 'createdb hpcstatsdb'
+
+su hpcstats -c "psql hpcstatsdb < /tmp/hpcstats.psql"
