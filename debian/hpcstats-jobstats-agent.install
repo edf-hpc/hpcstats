@@ -1,0 +1,3 @@
+contribs/jobstats /usr/share/hpcstats/bin
+contribs/jobstats.tpl.sh /usr/share/hpcstats/bin
+conf/jobstats.conf etc/hpcstats

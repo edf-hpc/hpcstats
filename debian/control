@@ -1,0 +1,69 @@
+Source: hpcstats
+Section: net
+Priority: optional
+Maintainer: Rémi Palancher <remi-externe.palancher@edf.fr>
+Homepage: http://github.com/edf-hpc/hpcstats
+Build-Depends:
+ debhelper (>= 8),
+ python-all (>= 2.6.6-3~),
+ python-setuptools
+X-Python-Version: >= 2.6
+Standards-Version: 3.9.6
+
+Package: hpcstats
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python:Depends},
+ postgresql-9.1
+Description: HPC cluster usage accounting and reporting software
+ HPCStats imports raw data from various sources (Job schedulers, log
+ files, LDAP directories, etc. and insert everything into a coherent
+ and structured PostgreSQL database. Then, all these structured
+ information can be used to extract statistics about the usage of the
+ HPC clusters.
+
+Package: hpcstats-jobstats-agent
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python:Depends},
+ python
+Description: Jobstat agent of HPC cluster usage accounting software
+ This agent is typically installed on HPC cluster frontend. It provides
+ all files required by the launcher to test end-to-end HPC cluster
+ availability.
+
+Package: hpcstats-jobstats-launcher
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python:Depends},
+ python,
+ python-paramiko
+Description: Jobstat launcher of HPC cluster usage accounting software
+ The component launches the jobstats agent on all configured HPC
+ cluster frontends.
+
+Package: hpcstats-fsusage-agent
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python:Depends},
+ python
+Description: FSUsage agent of HPC cluster usage accounting software
+ This agent is typically installed on HPC cluster frontend to log in
+ a CSV file the usage rate of file systems.
+
+Package: hpcstats-utils
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python:Depends},
+ python,
+ python-psycopg2
+Description: Various utilities of HPC cluster usage accounting software
+ Set of various utilities for HPCStats accounting software:
+   - script to encode passwords in configurations files
+   - script to add descriptions to BusinessCodes and Projects
+   - script to add Domains

@@ -1,0 +1,3 @@
+db/hpcstats.psql usr/share/hpcstats/db
+conf/hpcstats.conf etc/hpcstats
+conf/architecture.conf etc/hpcstats

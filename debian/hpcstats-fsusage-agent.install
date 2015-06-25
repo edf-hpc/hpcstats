@@ -1,0 +1,2 @@
+contribs/fsusage /usr/share/hpcstats/bin
+conf/fsusage.conf etc/hpcstats
