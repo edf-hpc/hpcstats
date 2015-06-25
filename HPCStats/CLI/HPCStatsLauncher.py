@@ -90,6 +90,14 @@ class HPCStatsLauncher(object):
             self.app = HPCStatsChecker(conf, cluster_name)
         elif action == "import":
             self.app = HPCStatsImporter(conf, cluster_name)
+        elif action == "modify":
+            params = { 'business': args.business,
+                       'project': args.project,
+                       'set_description': args.set_description,
+                       'set_domain': args.set_domain,
+                       'new_domain': args.new_domain,
+                       'domain_domain': args.domain_name }
+            self.app = HPCStatsModifier(conf, cluster_name, params)
         elif action == "report":
             template = args.template
             interval = args.interval

@@ -30,6 +30,7 @@
 """This module contains the HPCStatsArgumentParser class."""
 
 import argparse
+from HPCStats.Exceptions import HPCStatsArgumentException
 
 class HPCStatsArgumentParser(argparse.ArgumentParser):
 
@@ -45,10 +46,6 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
 
         """Add all arguments with their constraints to the parser."""
 
-        #self.add_argument("actions",
-        #                  nargs=1,
-        #                  choices=['import', 'report'],
-        #                  help="name of the action to perform")
         self.add_argument("-c", "--conf",
                           dest="conf",
                           default="/etc/hpcstats/hpcstats.conf",
@@ -106,3 +103,106 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
                                 nargs=1,
                                 required=True,
                                 help="Cluster data sources to check" )
+
+        parser_mod = subparsers.add_parser('modify', help='modify help')
+
+        # modify sub-parser possible combinations:
+        #
+        #   - modify description of business B1:
+        #   $ hpcstats modify --business-code=B1 --set-descrition='business code B1 description'
+        #
+        #   - modify description of project P1:
+        #   $ hpcstats modify --project-code=P1 --set-descrition='project P1 description'
+        #
+        #   - create new domain D1:
+        #   $ hpcstats modify --new-domain=D1 --domain-name='Domain name D1'
+        #
+        #   - set domain D1 for project P1:
+        #   $ hpcstats modify --project-code=P1 --set-domain=D1
+
+
+        parser_mod.add_argument("--business-code",
+                                dest='business',
+                                nargs=1,
+                                help="The business code to modify" )
+
+        parser_mod.add_argument("--project-code",
+                                dest='project',
+                                nargs=1,
+                                help="The project code to modify" )
+
+        parser_mod.add_argument("--set-description",
+                                dest='description',
+                                nargs=1,
+                                help="Project or Business description" )
+
+        parser_mod.add_argument("--set-domain",
+                                dest='set_domain',
+                                nargs=1,
+                                help="Domain key to set for Project" )
+
+        parser_mod.add_argument("--new-domain",
+                                dest='new_domain',
+                                nargs=1,
+                                help="Create domain key" )
+
+        parser_mod.add_argument("--domain-name",
+                                dest='domain_name',
+                                nargs=1,
+                                help="The name of the domain to create" )
+
+    def parse_args(self, *args, **kwargs):
+
+        """Call parent class parse_args() method and do more specifics
+           arguments coherency checks.
+        """
+
+        args = super(HPCStatsArgumentParser, self).parse_args(*args, **kwargs)
+
+        if args.action == 'modify':
+
+            # Check that either --business-code, --project-code or --new-domain
+            # is set
+            if args.business is None and args.project is None and \
+               args.new_domain is None:
+                raise HPCStatsArgumentException( \
+                        "either --business-code, --project-code or " \
+                        "--new-domain parameters must be set with modify " \
+                        "action")
+
+            # Check that --business-code, --project-code and --new-domain are
+            # exclusive
+            if (args.business is not None and args.project is not None) or \
+               (args.business is not None and args.new_domain is not None) or \
+               (args.project is not None and args.new_domain is not None):
+                raise HPCStatsArgumentException( \
+                        "parameters --business-code, --project-code and " \
+                        "--new-domain are mutually exclusive")
+
+            # Check that --set-description is set with --business-code
+            if args.business is not None and args.description is None:
+                raise HPCStatsArgumentException( \
+                        "--set-description parameter is required to modify a " \
+                        "business code")
+            # Check that either --set-description or --set-domain are set with
+            # --project-code
+            if args.project is not None and args.description is None and \
+               args.set_domain is None:
+                raise HPCStatsArgumentException( \
+                        "--set-description or --set-domain parameters are " \
+                        "required to modify a project")
+
+            # Check that not both --set-description and --set-domain are set
+            # with --project-code
+            if args.project is not None and args.description is not None and \
+               args.set_domain is not None:
+                raise HPCStatsArgumentException( \
+                        "--set-description and --set-domain parameters are " \
+                        "mutually exclusive to modify a project")
+
+            # Check that --domain-name is set with --new-domain
+            if args.new_domain is not None and args.domain_name is None:
+                raise HPCStatsArgumentException( \
+                        "--domain-name parameter is required to create a " \
+                        "new domain")
+        return args
