@@ -29,6 +29,7 @@
 
 import sys
 
+from HPCStats.Exceptions import HPCStatsArgumentException
 from HPCStats.CLI.HPCStatsArgumentParser import HPCStatsArgumentParser
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 
@@ -56,5 +57,87 @@ class TestsHPCStatsArgumentParser(HPCStatsTestCase):
         argv = ['import', '--cluster', 'test']
         args = self.parser.parse_args(argv)
         self.assertEquals(args.action, 'import')
+
+    def test_modify(self):
+        """HPCStatsArgumentParser.parse_args() w/ modify action
+        """
+        # All of these are acceptable combinations of params
+        argvs = [ [ 'modify', '--business-code', 'B1', '--set-description', 'desc1' ],
+                  [ 'modify', '--project-code', 'P1', '--set-description', 'desc1' ],
+                  [ 'modify', '--project-code', 'P1', '--set-domain', 'D1' ],
+                  [ 'modify', '--new-domain', 'D1', '--domain-name', 'domain D1' ] ]
+        for argv in argvs:
+            args = self.parser.parse_args(argv)
+            self.assertEquals(args.action, 'modify')
+
+    def test_modify_missing_param(self):
+        """HPCStatsArgumentParser.parse_args() raise exception when
+           the main param are missing
+        """
+        argv = [ 'modify' ]
+        self.assertRaisesRegexp(
+          HPCStatsArgumentException,
+          "either --business-code, --project-code or --new-domain parameters must be set with modify action",
+          self.parser.parse_args,
+          argv)
+
+    def test_modify_params_mutually_exclusive(self):
+        """HPCStatsArgumentParser.parse_args() raise exception in case of
+           conflict w/ mutually exclusive main params
+        """
+        argvs = [ [ 'modify', '--business-code', 'B1', '--project-code', 'P1'],
+                  [ 'modify', '--business-code', 'B1', '--new-domain', 'D1' ],
+                  [ 'modify', '--project-code', 'P1', '--new-domain', 'D1' ] ]
+        for argv in argvs:
+            self.assertRaisesRegexp(
+              HPCStatsArgumentException,
+              "parameters --business-code, --project-code and --new-domain are mutually exclusive",
+              self.parser.parse_args,
+              argv)
+
+    def test_modify_business_missing_desc(self):
+        """HPCStatsArgumentParser.parse_args() raise exception when
+           modify business code w/o description
+        """
+        argv = [ 'modify', '--business-code', 'B1' ]
+        self.assertRaisesRegexp(
+          HPCStatsArgumentException,
+          "--set-description parameter is required to modify a business code",
+          self.parser.parse_args,
+          argv)
+
+    def test_modify_project_missing_param(self):
+        """HPCStatsArgumentParser.parse_args() raise exception when
+           modify project w/o param
+        """
+        argv = [ 'modify', '--project-code', 'P1' ]
+        self.assertRaisesRegexp(
+          HPCStatsArgumentException,
+          "--set-description or --set-domain parameters are required to modify a project",
+          self.parser.parse_args,
+          argv)
+
+    def test_modify_project_conflict_params(self):
+        """HPCStatsArgumentParser.parse_args() raise exception when
+           modify project w/ conflicting params
+        """
+        argv = [ 'modify', '--project-code', 'P1', '--set-description', 'desc P1', '--set-domain', 'D1' ]
+        self.assertRaisesRegexp(
+          HPCStatsArgumentException,
+          "--set-description and --set-domain parameters are mutually exclusive to modify a project",
+          self.parser.parse_args,
+          argv)
+
+    def test_modify_domain_missing_name(self):
+        """HPCStatsArgumentParser.parse_args() raise exception when
+           modify domain w/o name
+        """
+        argv = [ 'modify', '--new-domain', 'D1' ]
+        self.assertRaisesRegexp(
+          HPCStatsArgumentException,
+          "--domain-name parameter is required to create a new domain",
+          self.parser.parse_args,
+          argv)
+
 
 loadtestcase(TestsHPCStatsArgumentParser)
