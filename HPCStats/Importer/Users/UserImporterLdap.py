@@ -304,7 +304,7 @@ class UserImporterLdap(UserImporter):
         """
 
         userdn_down = "uid=%s,%s" % (login, self.ldap_dn_people)
-        userdn_upper = "uid=%s,%s" % (login.upper, self.ldap_dn_people)
+        userdn_upper = "uid=%s,%s" % (login.upper(), self.ldap_dn_people)
 
         # Then search users groups in LDAP. Search of member/memberUid in
         # LDAP is case-sensitive so we have to try both down-cased and
