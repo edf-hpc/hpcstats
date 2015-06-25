@@ -465,33 +465,36 @@ class JobImporterSlurm(JobImporter):
         """Returns the human readable job state textual representation
            corresponding to the numeric state in parameter.
 
-           From slurm.h.inc
-             enum job_states {
-               JOB_PENDING, /* queued waiting for initiation */
-               JOB_RUNNING, /* allocated resources and executing */
-               JOB_SUSPENDED, /* allocated resources, execution suspended */
-               JOB_COMPLETE, /* completed execution successfully */
-               JOB_CANCELLED, /* cancelled by user */
-               JOB_FAILED, /* completed execution unsuccessfully */
-               JOB_TIMEOUT, /* terminated on reaching time limit */
-               JOB_NODE_FAIL, /* terminated on node failure */
-               JOB_PREEMPTED, /* terminated due to preemption */
-               JOB_BOOT_FAIL, /* terminated due to preemption */
-               JOB_END /* not a real state, last entry in table */
-             };
-            #define JOB_STATE_BASE  0x00ff  /* Used for job_states above */
-            #define JOB_STATE_FLAGS 0xff00  /* Used for state flags below */
-            #define JOB_COMPLETING  0x8000  /* Waiting for epilog completion */
-            #define JOB_CONFIGURING 0x4000  /* Allocated nodes booting */
-            #define JOB_RESIZING    0x2000  /* Size of job about to change, flag set
-                                             * before calling accounting functions
-                                             * immediately before job changes size */
-            #define JOB_SPECIAL_EXIT 0x1000 /* Requeue an exit job in hold */
-            #define JOB_REQUEUE_HOLD 0x0800 /* Requeue any job in hold */
-            #define JOB_REQUEUE      0x0400 /* Requeue job in completing state */
-            #define JOB_STOPPED      0x0200 /* Job is stopped state (holding resources,
-                                             * but sent SIGSTOP */
-            #define JOB_LAUNCH_FAILED 0x0100
+           From ``slurm.h.inc``:
+
+           .. code-block:: c
+
+               enum job_states {
+                   JOB_PENDING, /* queued waiting for initiation */
+                   JOB_RUNNING, /* allocated resources and executing */
+                   JOB_SUSPENDED, /* allocated resources, execution suspended */
+                   JOB_COMPLETE, /* completed execution successfully */
+                   JOB_CANCELLED, /* cancelled by user */
+                   JOB_FAILED, /* completed execution unsuccessfully */
+                   JOB_TIMEOUT, /* terminated on reaching time limit */
+                   JOB_NODE_FAIL, /* terminated on node failure */
+                   JOB_PREEMPTED, /* terminated due to preemption */
+                   JOB_BOOT_FAIL, /* terminated due to preemption */
+                   JOB_END /* not a real state, last entry in table */
+               };
+               #define JOB_STATE_BASE  0x00ff  /* Used for job_states above */
+               #define JOB_STATE_FLAGS 0xff00  /* Used for state flags below */
+               #define JOB_COMPLETING  0x8000  /* Waiting for epilog completion */
+               #define JOB_CONFIGURING 0x4000  /* Allocated nodes booting */
+               #define JOB_RESIZING    0x2000  /* Size of job about to change, flag set
+                                                * before calling accounting functions
+                                                * immediately before job changes size */
+               #define JOB_SPECIAL_EXIT 0x1000 /* Requeue an exit job in hold */
+               #define JOB_REQUEUE_HOLD 0x0800 /* Requeue any job in hold */
+               #define JOB_REQUEUE      0x0400 /* Requeue job in completing state */
+               #define JOB_STOPPED      0x0200 /* Job is stopped state (holding resources,
+                                                * but sent SIGSTOP */
+               #define JOB_LAUNCH_FAILED 0x0100
         """
 
         states = []
