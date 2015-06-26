@@ -157,10 +157,11 @@ class BusinessCodeImporterSlurm(BusinessCodeImporter):
                     self.businesses.append(business)
 
     def update(self):
-        """Create or update BusinessCodes in database."""
+        """Create BusinessCodes in database. It does not update BusinessCodes
+           as they have no description when they are imported from Slurm and
+           operators could have added description using ``hpcstats modify``.
+        """
 
         for business in self.businesses:
             if not business.existing(self.db):
                 business.save(self.db)
-            else:
-                business.update(self.db)

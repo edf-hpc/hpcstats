@@ -168,16 +168,21 @@ class ProjectImporterSlurm(ProjectImporter):
                     self.projects.append(project)
 
     def update(self):
-        """Update loaded project (with associated domains) in database.
+        """Create loaded project (with associated domains) in database if not
+           existing. It does not update domain nor project since:
+
+             * There is only one default domain which should have created with
+               its key and name in the first place, there is no point to update
+               it.
+             * The project are imported without description from Slurm and are
+               linked to default domain. Operators have probably added a
+               description to the project and linked it to another proper
+               domain and we must not alter these information.
         """
 
         for domain in self.domains:
-            if domain.existing(self.db):
-                domain.update(self.db)
-            else:
+            if not domain.existing(self.db):
                 domain.save(self.db)
         for project in self.projects:
-            if project.find(self.db):
-                project.update(self.db)
-            else:
+            if not project.find(self.db):
                 project.save(self.db)
