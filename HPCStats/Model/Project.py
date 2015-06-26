@@ -170,10 +170,12 @@ class Project(object):
 
         req = """
                 UPDATE Project
-                   SET project_description = %s
+                   SET project_description = %s,
+                       domain_id = %s
                  WHERE project_id = %s
              """
         params = ( self.description,
+                   self.domain.key,
                    self.project_id )
 
         #print db.cur.mogrify(req, params)
