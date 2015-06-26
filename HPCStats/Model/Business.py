@@ -101,6 +101,8 @@ class Business(object):
                     "could not insert business %s since already existing in "\
                     "database" % (str(self)))
 
+        logging.info("creating business code %s" % str(self))
+
         req = """
                 INSERT INTO Business ( business_code,
                                        business_description )
@@ -123,6 +125,9 @@ class Business(object):
                     "could not update business %s since not found in " \
                     "database" \
                       % (str(self)))
+
+        logging.debug("updating business code %s" % str(self))
+
         req = """
                 UPDATE Business
                    SET business_description = %s

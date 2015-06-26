@@ -139,6 +139,8 @@ class Project(object):
                     "database" \
                       % (str(self)))
 
+        logging.info("creating project %s" % str(self))
+
         req = """
                 INSERT INTO Project ( project_code,
                                       project_description,
@@ -163,6 +165,8 @@ class Project(object):
             raise HPCStatsRuntimeError(
                     "could not update project %s since not found in database" \
                       % (str(self)))
+
+        logging.debug("updating project %s" % str(self))
 
         req = """
                 UPDATE Project
