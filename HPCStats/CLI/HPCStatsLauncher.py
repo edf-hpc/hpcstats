@@ -56,7 +56,7 @@ class HPCStatsLauncher(object):
             parser.add_args()
             args = parser.parse_args()
         except HPCStatsArgumentException, err:
-            logging.error("Argument Error: ", err)
+            logging.error("Argument Error: %s", err)
             self.exit()
 
         # locale to format numbers
