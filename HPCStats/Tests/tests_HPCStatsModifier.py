@@ -268,3 +268,6 @@ class TestsHPCStatModifier(HPCStatsTestCase):
         self.assertRaisesRegexp(HPCStatsRuntimeError,
                                 "domain D1 already exists in database",
                                 self.modifier.run)
+if __name__ == '__main__':
+
+    loadtestcase(TestsHPCStatsModifier)

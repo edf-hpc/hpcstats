@@ -292,4 +292,6 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         m_user_update.assert_called_with(self.db)
         m_account_update.assert_called_with(self.db)
 
-loadtestcase(TestsUserImporterLdap)
+if __name__ == '__main__':
+
+    loadtestcase(TestsUserImporterLdap)

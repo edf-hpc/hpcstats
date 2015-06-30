@@ -91,4 +91,6 @@ class TestsHPCStatsImporter(HPCStatsTestCase):
                "section hpcstatsdb not found",
                self.importer.run)
 
-loadtestcase(TestsHPCStatsImporter)
+if __name__ == '__main__':
+
+    loadtestcase(TestsHPCStatsImporter)

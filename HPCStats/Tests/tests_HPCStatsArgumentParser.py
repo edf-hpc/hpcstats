@@ -139,5 +139,6 @@ class TestsHPCStatsArgumentParser(HPCStatsTestCase):
           self.parser.parse_args,
           argv)
 
+if __name__ == '__main__':
 
-loadtestcase(TestsHPCStatsArgumentParser)
+    loadtestcase(TestsHPCStatsArgumentParser)

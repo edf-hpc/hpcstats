@@ -238,5 +238,7 @@ class TestsBusinessCodeImporterCSVUpdate(HPCStatsTestCase):
         self.importer.update()
         mock_update.assert_called_with(self.db)
 
-loadtestcase(TestsBusinessCodeImporterCSVLoad)
-loadtestcase(TestsBusinessCodeImporterCSVUpdate)
+if __name__ == '__main__':
+
+    loadtestcase(TestsBusinessCodeImporterCSVLoad)
+    loadtestcase(TestsBusinessCodeImporterCSVUpdate)

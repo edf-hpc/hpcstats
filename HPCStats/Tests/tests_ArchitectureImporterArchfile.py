@@ -237,5 +237,7 @@ class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
 
         self.importer.update()
 
-loadtestcase(TestsArchitectureImporterArchfileLoad)
-loadtestcase(TestsArchitectureImporterArchfileUpdate)
+if __name__ == '__main__':
+
+    loadtestcase(TestsArchitectureImporterArchfileLoad)
+    loadtestcase(TestsArchitectureImporterArchfileUpdate)

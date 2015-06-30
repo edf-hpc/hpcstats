@@ -326,4 +326,6 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         result = self.importer.job_partition(0, 'partition1,partition2', 'node[1-100]')
         self.assertEquals(result, 'partition2')
 
-loadtestcase(TestsJobImporterSlurm)
+if __name__ == '__main__':
+
+    loadtestcase(TestsJobImporterSlurm)

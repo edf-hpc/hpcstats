@@ -274,4 +274,6 @@ class TestsUserImporterLdapSlurm(HPCStatsTestCase):
                           self.db,
                           None)
 
-loadtestcase(TestsUserImporterLdapSlurm)
+if __name__ == '__main__':
+
+    loadtestcase(TestsUserImporterLdapSlurm)

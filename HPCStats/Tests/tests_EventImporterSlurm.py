@@ -274,4 +274,6 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
             txt = EventImporterSlurm.txt_slurm_event_type(value)
             self.assertEquals(txt, expected)
 
-loadtestcase(TestsEventImporterSlurm)
+if __name__ == '__main__':
+
+    loadtestcase(TestsEventImporterSlurm)

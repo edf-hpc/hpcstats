@@ -258,5 +258,7 @@ class TestsProjectImporterCSVUpdate(HPCStatsTestCase):
 
         self.importer.update()
 
-loadtestcase(TestsProjectImporterCSVLoad)
-loadtestcase(TestsProjectImporterCSVUpdate)
+if __name__ == '__main__':
+
+    loadtestcase(TestsProjectImporterCSVLoad)
+    loadtestcase(TestsProjectImporterCSVUpdate)
