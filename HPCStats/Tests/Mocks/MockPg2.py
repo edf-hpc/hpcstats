@@ -232,9 +232,21 @@ def init_reqs():
 
     PG_REQS['save_domain'] = PgReq(req)
 
+    #
+    # Project
+    #
+
     req = "SELECT project_id FROM Project WHERE project_code = %s"
 
     PG_REQS['find_project'] = PgReq(req)
+
+    req = "SELECT project_code, " \
+                 "project_description, " \
+                 "domain_id " \
+             "FROM Project " \
+             "WHERE project_id = %s"
+
+    PG_REQS['load_project'] = PgReq(req)
 
     req = "INSERT INTO Project \( project_code, " \
                                  "project_description, "\
