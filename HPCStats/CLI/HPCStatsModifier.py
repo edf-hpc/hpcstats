@@ -33,6 +33,7 @@ import logging
 
 from HPCStats.Exceptions import HPCStatsRuntimeError
 from HPCStats.CLI.HPCStatsApp import HPCStatsApp
+from HPCStats.Model.Business import Business
 
 class HPCStatsModifier(HPCStatsApp):
 
@@ -80,7 +81,7 @@ class HPCStatsModifier(HPCStatsApp):
 
         business = Business(business_code, description)
 
-        if not business.find(self.db):
+        if not business.existing(self.db):
             raise HPCStatsRuntimeError( \
                     "unable to find business code %s in database" \
                       % (business_code))
