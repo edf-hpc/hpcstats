@@ -34,6 +34,8 @@ import logging
 from HPCStats.Exceptions import HPCStatsRuntimeError
 from HPCStats.CLI.HPCStatsApp import HPCStatsApp
 from HPCStats.Model.Business import Business
+from HPCStats.Model.Domain import Domain
+from HPCStats.Model.Project import Project
 
 class HPCStatsModifier(HPCStatsApp):
 
