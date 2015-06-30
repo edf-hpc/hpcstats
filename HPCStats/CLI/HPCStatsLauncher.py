@@ -96,7 +96,7 @@ class HPCStatsLauncher(object):
                        'set_description': args.set_description,
                        'set_domain': args.set_domain,
                        'new_domain': args.new_domain,
-                       'domain_domain': args.domain_name }
+                       'domain_name': args.domain_name }
             self.app = HPCStatsModifier(conf, cluster_name, params)
         elif action == "report":
             template = args.template
