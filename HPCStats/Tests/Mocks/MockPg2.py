@@ -273,6 +273,10 @@ class MockPsycopg2Connect(object):
 
         pass
 
+    def close(self):
+
+        pass
+
 class MockPsycopg2Cursor(object):
 
     def __init__(self):
