@@ -175,21 +175,19 @@ class Event(object):
         req = """
                 UPDATE Event
                    SET event_end = %s,
+                       event_start = %s,
                        event_type = %s,
                        event_reason = %s,
-                       event_nbCpu = %s,
-                       event_start = %s,
-                       event_end = %s
+                       event_nbCpu = %s
                  WHERE event_id = %s
                    AND node_id = %s
                    AND cluster_id = %s
               """
         params = ( self.end_datetime,
+                   self.start_datetime,
                    self.event_type,
                    self.reason,
                    self.nb_cpu,
-                   self.start_datetime,
-                   self.end_datetime,
                    self.event_id,
                    self.node.node_id,
                    self.cluster.cluster_id )
