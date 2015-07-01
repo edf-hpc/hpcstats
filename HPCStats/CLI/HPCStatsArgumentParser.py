@@ -60,12 +60,6 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
 
         parser_imp = subparsers.add_parser('import', help='import help')
 
-        parser_imp.add_argument("--projects",
-                                dest="projects",
-                                help="import projects related data " \
-                                     "(projects and domains)",
-                                action="store_true")
-
         parser_imp.add_argument("--cluster",
                                 dest='cluster',
                                 nargs=1,
