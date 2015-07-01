@@ -15,6 +15,8 @@ Architecture: all
 Depends:
  ${misc:Depends},
  ${python:Depends},
+ adduser,
+ cron,
  postgresql-9.1
 Description: HPC cluster usage accounting and reporting software
  HPCStats imports raw data from various sources (Job schedulers, log
