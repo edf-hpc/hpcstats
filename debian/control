@@ -6,7 +6,8 @@ Homepage: http://github.com/edf-hpc/hpcstats
 Build-Depends:
  debhelper (>= 8),
  python-all (>= 2.6.6-3~),
- python-setuptools
+ python-setuptools,
+ python-sphinx
 X-Python-Version: >= 2.6
 Standards-Version: 3.9.6
 
