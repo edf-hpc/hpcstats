@@ -136,6 +136,7 @@ html_static_path = ['_static']
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
 #html_additional_pages = {}
+html_additional_pages = {'index': 'index.html'}
 
 # If false, no module index is generated.
 #html_domain_indices = True
@@ -171,7 +172,7 @@ htmlhelp_basename = 'hpcstatsdoc'
 
 latex_elements = {
 # The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
+  'papersize': 'a4paper',
 
 # The font size ('10pt', '11pt' or '12pt').
 #'pointsize': '10pt',
@@ -183,7 +184,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'hpcstats.tex', u'hpcstats Documentation',
+  ('index', 'hpcstats.tex', u'HPCStats Documentation',
    u'EDF CCN-HPC', 'manual'),
 ]
 
@@ -207,13 +208,12 @@ latex_documents = [
 # If false, no module index is generated.
 #latex_domain_indices = True
 
-
 # -- Options for manual page output --------------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'hpcstats', u'hpcstats Documentation',
+    ('usage', 'hpcstats', u'HPCStats database management software',
      [u'EDF CCN-HPC'], 1)
 ]
 
@@ -227,7 +227,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'hpcstats', u'hpcstats Documentation',
+  ('index', 'hpcstats', u'HPCStats Documentation',
    u'EDF CCN-HPC', 'hpcstats', 'One line description of project.',
    'Miscellaneous'),
 ]
