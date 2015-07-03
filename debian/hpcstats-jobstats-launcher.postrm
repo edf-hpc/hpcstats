@@ -20,17 +20,8 @@ set -e
 
 case "$1" in
     purge)
-        # if the database exists, drop  it
-        if $(su postgres -c 'psql -c "\l"' 2>/dev/null | grep -q hpcstatsdb); then
-            su - postgres -c 'dropdb hpcstatsdb'
-        fi
-        # if the PostgreSQL user exists, drop it
-        if $(su postgres -c 'psql -c "\du"' 2>/dev/null | grep -q hpcstats); then
-            su - postgres -c 'dropuser hpcstats'
-        fi
-        # delete the system user
-        if [ ! -e /usr/share/hpcstats/bin/fsusage \
-             -a ! -e /usr/share/hpcstats/bin/launch-jobstats ] ; then 
+        if [ ! -e /usr/bin/hpcstats \
+             -a ! -e /usr/share/hpcstats/bin/fsusage ] ; then 
             # delete the system user
             deluser hpcstats
         fi
