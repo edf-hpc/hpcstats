@@ -1,0 +1,780 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Model Package &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="../index.html" />
+    <link rel="up" title="HPCStats Package" href="HPCStats.html" />
+    <link rel="next" title="Tests Package" href="HPCStats.Tests.html" />
+    <link rel="prev" title="Users Package" href="HPCStats.Importer.Users.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Tests.html" title="Tests Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Users.html" title="Users Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" accesskey="U">HPCStats Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="model-package">
+<h1>Model Package<a class="headerlink" href="#model-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-HPCStats.Model.Account">
+<span id="account-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Account</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Account" title="Permalink to this headline">¶</a></h2>
+<p>Account table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>Account(</dt>
+<dd>account_uid      integer NOT NULL,
+account_gid      integer NOT NULL,
+account_creation date NOT NULL,
+account_deletion date NOT NULL,
+userhpc_id       integer NOT NULL,
+cluster_id       integer NOT NULL,
+CONSTRAINT Account_pkey PRIMARY KEY (userhpc_id, cluster_id)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.Account.Account">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Account.</tt><tt class="descname">Account</tt><big>(</big><em>user</em>, <em>cluster</em>, <em>uid</em>, <em>gid</em>, <em>creation_date</em>, <em>deletion_date</em>, <em>exists=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Account.Account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the Account table.</p>
+<dl class="method">
+<dt id="HPCStats.Model.Account.Account.existing">
+<tt class="descname">existing</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Account.Account.existing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the account already exists in database (same cluster
+and user), or False if not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Account.Account.load">
+<tt class="descname">load</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Account.Account.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the Account based on the content of the DB and set objects
+attributes accordingly. It calls existing() method if needed and
+raises HPCStatsRuntimeError if the Account is not found in DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Account.Account.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Account.Account.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert Account in database. It first makes sure that the Account
+does not already exist in database yet by calling Account.existing()
+method if needed. If the account already exists in database, it
+raises HPCStatsRuntimeError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Account.Account.update">
+<tt class="descname">update</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Account.Account.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Account uid, gid, creation date and deletion date in
+database. Raises HPCStatsRuntimeError is exists is False.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Model.Account.load_unclosed_users_accounts">
+<tt class="descclassname">HPCStats.Model.Account.</tt><tt class="descname">load_unclosed_users_accounts</tt><big>(</big><em>db</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Account.load_unclosed_users_accounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load (User,Account) tuples w/o account deletion date on cluster from
+DB.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Model.Account.nb_existing_accounts">
+<tt class="descclassname">HPCStats.Model.Account.</tt><tt class="descname">nb_existing_accounts</tt><big>(</big><em>db</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Account.nb_existing_accounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of existing account for the cluster in DB.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.Business">
+<span id="business-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Business</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Business" title="Permalink to this headline">¶</a></h2>
+<p>Business table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>Business(</dt>
+<dd>business_code        character varying(30) NOT NULL,
+business_description text NOT NULL,
+CONSTRAINT Business_pkey PRIMARY KEY (business_code)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.Business.Business">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Business.</tt><tt class="descname">Business</tt><big>(</big><em>code</em>, <em>description</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Business.Business" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the Business table.</p>
+<dl class="method">
+<dt id="HPCStats.Model.Business.Business.existing">
+<tt class="descname">existing</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Business.Business.existing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the business already exists in database (with same
+code), or False if not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Business.Business.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Business.Business.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert Business in database. It first makes sure that the Business
+does not already exist in database yet by calling
+Business.existing() method if needed. If the business already exists
+in database, it raises HPCStatsRuntimeError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Business.Business.update">
+<tt class="descname">update</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Business.Business.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Business description in database. Raises HPCStatsRuntimeError
+if exists is False.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.Cluster">
+<span id="cluster-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Cluster</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Cluster" title="Permalink to this headline">¶</a></h2>
+<p>Cluster table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>Cluster(</dt>
+<dd>cluster_id   SERIAL,
+cluster_name character varying(30) NOT NULL,
+CONSTRAINT Cluster_pkey PRIMARY KEY (cluster_id),
+CONSTRAINT Cluster_unique UNIQUE (cluster_name)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.Cluster.Cluster">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Cluster.</tt><tt class="descname">Cluster</tt><big>(</big><em>name</em>, <em>cluster_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Cluster.Cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for Cluster table</p>
+<dl class="method">
+<dt id="HPCStats.Model.Cluster.Cluster.find">
+<tt class="descname">find</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Cluster.Cluster.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search the Cluster in the database based on its name. If exactly
+one cluster matches in database, set cluster_id attribute properly
+and returns its value. If more than one cluster matches, raises
+HPCStatsDBIntegrityError. If no cluster is found, returns None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Cluster.Cluster.get_min_datetime">
+<tt class="descname">get_min_datetime</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Cluster.Cluster.get_min_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the start datetime of the oldest started and unfinished
+job on the cluster.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Cluster.Cluster.get_nb_accounts">
+<tt class="descname">get_nb_accounts</tt><big>(</big><em>db</em>, <em>creation_date</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Cluster.Cluster.get_nb_accounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total of users on the cluster whose account have been
+created defore date given in parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Cluster.Cluster.get_nb_active_users">
+<tt class="descname">get_nb_active_users</tt><big>(</big><em>db</em>, <em>start</em>, <em>end</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Cluster.Cluster.get_nb_active_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of users who have run job(s) on the cluster
+between start and end datetimes in parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Cluster.Cluster.get_nb_cpus">
+<tt class="descname">get_nb_cpus</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Cluster.Cluster.get_nb_cpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of CPUs available on the cluster</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Cluster.Cluster.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Cluster.Cluster.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert Cluster in database. You must make sure that the Cluster does
+not already exist in database yet (typically using Cluster.find()
+method else there is a risk of future integrity errors because of
+duplicated clusters. If cluster_id attribute is set, it raises
+HPCStatsRuntimeError.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.Domain">
+<span id="domain-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Domain</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Domain" title="Permalink to this headline">¶</a></h2>
+<p>Domain table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>Domain(</dt>
+<dd>domain_id   character varying(4) NOT NULL,
+domain_name character varying(30),
+CONSTRAINT Domain_pkey PRIMARY KEY (domain_id),
+CONSTRAINT Domain_unique UNIQUE (domain_name)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.Domain.Domain">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Domain.</tt><tt class="descname">Domain</tt><big>(</big><em>key</em>, <em>name</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Domain.Domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the Domain table.</p>
+<dl class="method">
+<dt id="HPCStats.Model.Domain.Domain.existing">
+<tt class="descname">existing</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Domain.Domain.existing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the domain already exists in database (same key), or
+False if not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Domain.Domain.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Domain.Domain.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert Domain in database. It first makes sure that the Domain does
+not already exist in database yet by calling Domain.existing()
+method if needed. If the domain already exists in database, it
+raises HPCStatsRuntimeError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Domain.Domain.update">
+<tt class="descname">update</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Domain.Domain.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Domain name in database. Raises HPCStatsRuntimeError if
+exists is False.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.Event">
+<span id="event-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Event</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Event" title="Permalink to this headline">¶</a></h2>
+<p>Event table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>Event(</dt>
+<dd>event_id     SERIAL,
+event_type   character varying(30) NOT NULL,
+event_reason character varying(30),
+event_nbCpu  integer NOT NULL,
+event_start  timestamp NOT NULL,
+event_end    timestamp NOT NULL,
+node_id      integer NOT NULL,
+cluster_id   integer NOT NULL,
+CONSTRAINT Event_pkey PRIMARY KEY (event_id, node_id, cluster_id),
+CONSTRAINT Event_unique UNIQUE (node_id, cluster_id, event_start)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.Event.Event">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Event.</tt><tt class="descname">Event</tt><big>(</big><em>cluster</em>, <em>node</em>, <em>nb_cpu</em>, <em>start_datetime</em>, <em>end_datetime</em>, <em>event_type</em>, <em>reason</em>, <em>event_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Event.Event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the Event table.</p>
+<dl class="method">
+<dt id="HPCStats.Model.Event.Event.find">
+<tt class="descname">find</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Event.Event.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search the Event in the database based on the node, the cluster,
+the start and the end datetime. If exactly one event matches in
+database, set event_id attribute properly and returns its value.
+If more than one event matches, raises HPCStatsDBIntegrityError.
+If no event is found, returns None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Event.Event.merge_event">
+<tt class="descname">merge_event</tt><big>(</big><em>event</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Event.Event.merge_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set Event end datetime equals to event in parameter end datetime.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Event.Event.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Event.Event.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert Event in database. You must make sure that the Event does not
+already exist in database yet (typically using Event.find() method
+else there is a risk of future integrity errors because of
+duplicated events. If event_id attribute is set, it raises
+HPCStatsRuntimeError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Event.Event.update">
+<tt class="descname">update</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Event.Event.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the Event in DB. The event_id attribute must be set for the
+Event, either by passing this id to __init__() or by calling
+Event.find() method previously. If event_id attribute is not set, it
+raises HPCStatsRuntimeError.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Model.Event.get_datetime_end_last_event">
+<tt class="descclassname">HPCStats.Model.Event.</tt><tt class="descname">get_datetime_end_last_event</tt><big>(</big><em>db</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Event.get_datetime_end_last_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the end datetime (as a float timestamp since epoch) of the
+last event on the cluster in DB. Returns None if no event found.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Model.Event.get_datetime_start_oldest_unfinished_event">
+<tt class="descclassname">HPCStats.Model.Event.</tt><tt class="descname">get_datetime_start_oldest_unfinished_event</tt><big>(</big><em>db</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Event.get_datetime_start_oldest_unfinished_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the start datetime (as a float timestamp since epoch) of the
+oldest event on the cluster in DB. Returns None if no unfinished event
+found.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Model.Event.get_unfinished_events">
+<tt class="descclassname">HPCStats.Model.Event.</tt><tt class="descname">get_unfinished_events</tt><big>(</big><em>db</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Event.get_unfinished_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of unfinished Events on the cluster out of DB. Returns None
+if no unfinished event found.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.FSUsage">
+<span id="fsusage-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">FSUsage</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.FSUsage" title="Permalink to this headline">¶</a></h2>
+<p>fsusage table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>fsusage(</dt>
+<dd>fsusage_time  timestamp NOT NULL,
+fsusage_usage real NOT NULL,
+filesystem_id integer NOT NULL,
+cluster_id    integer NOT NULL,
+CONSTRAINT fsusage_pkey PRIMARY KEY (fsusage_time, filesystem_id, cluster_id)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.FSUsage.FSUsage">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.FSUsage.</tt><tt class="descname">FSUsage</tt><big>(</big><em>filesystem</em>, <em>timestamp</em>, <em>usage</em><big>)</big><a class="headerlink" href="#HPCStats.Model.FSUsage.FSUsage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the fsusage table.</p>
+<dl class="method">
+<dt id="HPCStats.Model.FSUsage.FSUsage.existing">
+<tt class="descname">existing</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.FSUsage.FSUsage.existing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the FSUsage already exists in database (same cluster,
+filesystem and timestamp), or False if not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.FSUsage.FSUsage.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.FSUsage.FSUsage.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert FSUsage in database. It first makes sure that the FSUsage
+does not already exist in database yet by calling FSUsage.existing()
+method if needed. If the fsusage already exists in database, it
+raises HPCStatsRuntimeError.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Model.FSUsage.get_last_fsusage_datetime">
+<tt class="descclassname">HPCStats.Model.FSUsage.</tt><tt class="descname">get_last_fsusage_datetime</tt><big>(</big><em>db</em>, <em>cluster</em>, <em>filesystem</em><big>)</big><a class="headerlink" href="#HPCStats.Model.FSUsage.get_last_fsusage_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the datetime of the last fsusage for the fs in DB.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.Filesystem">
+<span id="filesystem-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Filesystem</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Filesystem" title="Permalink to this headline">¶</a></h2>
+<p>filesystem table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>filesystem(</dt>
+<dd>filesystem_id   SERIAL,
+filesystem_name character varying(30) NOT NULL,
+cluster_id      integer NOT NULL,
+CONSTRAINT filesystem_pkey PRIMARY KEY (filesystem_id, cluster_id),
+CONSTRAINT filesystem_unique UNIQUE (filesystem_name, cluster_id)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.Filesystem.Filesystem">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Filesystem.</tt><tt class="descname">Filesystem</tt><big>(</big><em>mountpoint</em>, <em>cluster</em>, <em>fs_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Filesystem.Filesystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the filesystem table.</p>
+<dl class="method">
+<dt id="HPCStats.Model.Filesystem.Filesystem.find">
+<tt class="descname">find</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Filesystem.Filesystem.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search the Filesystem in the database based on its mountpoint and
+cluster. If exactly one filesystem matches in database, set fs_id
+attribute properly and returns its value. If more than one
+filesystem matches, raises HPCStatsDBIntegrityError. If no
+filesystem is found, returns None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Filesystem.Filesystem.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Filesystem.Filesystem.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert Filesystem in database. You must make sure that the
+Filesystem does not already exist in database yet (typically using
+Filesystem.find() method else there is a risk of future integrity
+errors because of duplicated filesystems. If fs_id attribute is set,
+it raises HPCStatsRuntimeError.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.Job">
+<span id="job-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Job</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Job" title="Permalink to this headline">¶</a></h2>
+<p>Job table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>Job(</dt>
+<dd>job_id         SERIAL,
+job_sched_id   integer NOT NULL,
+job_batch_id   character varying(30) NOT NULL,
+job_nbCpu      integer NOT NULL,
+job_name       character varying(30),
+job_state      character varying(30) NOT NULL,
+job_queue      character varying(30),
+job_submission timestamp NOT NULL,
+job_start      timestamp,
+job_end        timestamp,
+userhpc_id     integer NOT NULL,
+cluster_id     integer NOT NULL,
+project_id     integer NOT NULL,
+business_code  character varying(30) NOT NULL,
+CONSTRAINT Job_pkey PRIMARY KEY (job_id),
+CONSTRAINT Job_unique UNIQUE (job_batch_id, cluster_id)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.Job.Job">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Job.</tt><tt class="descname">Job</tt><big>(</big><em>account</em>, <em>project</em>, <em>business</em>, <em>sched_id</em>, <em>batch_id</em>, <em>name</em>, <em>nbcpu</em>, <em>state</em>, <em>queue</em>, <em>submission</em>, <em>start</em>, <em>end</em>, <em>job_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Job.Job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the Cluster table.</p>
+<dl class="method">
+<dt id="HPCStats.Model.Job.Job.find">
+<tt class="descname">find</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Job.Job.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search the Job in the database based on its sched_id and cluster. If
+exactly one job matches in database, set job_id attribute properly
+and returns its value. If more than one job matches, raises
+HPCStatsDBIntegrityError. If no job is found, returns None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Job.Job.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Job.Job.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert Job in database. You must make sure that the Job does not
+already exist in database yet (typically using Job.find() method
+else there is a risk of future integrity errors because of
+duplicated jobs. If job_id attribute is set, it raises
+HPCStatsRuntimeError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Job.Job.update">
+<tt class="descname">update</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Job.Job.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Job sched_id, nbcpu, name, state, queue, submission, start and
+end in database. Raises HPCStatsRuntimeError if self.job_id is None.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Model.Job.get_batchid_last_job">
+<tt class="descclassname">HPCStats.Model.Job.</tt><tt class="descname">get_batchid_last_job</tt><big>(</big><em>db</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Job.get_batchid_last_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the batch_id of the last job recorded in HPCStats DB.
+Returns None if not found.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Model.Job.get_batchid_oldest_unfinished_job">
+<tt class="descclassname">HPCStats.Model.Job.</tt><tt class="descname">get_batchid_oldest_unfinished_job</tt><big>(</big><em>db</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Job.get_batchid_oldest_unfinished_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the batch_id of the oldest unfinished job recorded in
+HPCStats DB. Returns None if not found.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.Node">
+<span id="node-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Node</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Node" title="Permalink to this headline">¶</a></h2>
+<p>Node table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>Node(</dt>
+<dd>node_id        SERIAL,
+node_name      character varying(30) NOT NULL,
+node_nbCpu     integer,
+node_partition character varying(30) NOT NULL,
+node_flops     integer NOT NULL,
+node_memory    integer NOT NULL,
+cluster_id     integer NOT NULL,
+CONSTRAINT Node_pkey PRIMARY KEY (node_id, cluster_id),
+CONSTRAINT Node_unique UNIQUE (node_name, cluster_id)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.Node.Node">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Node.</tt><tt class="descname">Node</tt><big>(</big><em>name</em>, <em>cluster</em>, <em>partition</em>, <em>cpu</em>, <em>memory</em>, <em>flops</em>, <em>node_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Node.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the Node table.</p>
+<dl class="method">
+<dt id="HPCStats.Model.Node.Node.find">
+<tt class="descname">find</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Node.Node.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search the Node in the database based on its name and cluster. If
+exactly one node matches in database, set node_id attribute properly
+and returns its value. If more than one node matches, raises
+HPCStatsDBIntegrityError. If no node is found, returns None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Node.Node.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Node.Node.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert Node in database. You must make sure that the Node does not
+already exist in database yet (typically using Node.find() method
+else there is a risk of future integrity errors because of
+duplicated nodes. If node_id attribute is set, it raises
+HPCStatsRuntimeError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Node.Node.update">
+<tt class="descname">update</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Node.Node.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Node partition, cpu, memory and flops fields in database.
+Raises HPCStatsRuntimeError if self.node_id is None.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.Project">
+<span id="project-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Project</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Project" title="Permalink to this headline">¶</a></h2>
+<p>Project table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>Project(</dt>
+<dd>project_id          SERIAL,
+project_code        character varying(30) NOT NULL,
+project_description text,
+domain_id           character varying(4),
+CONSTRAINT Project_pkey PRIMARY KEY (project_id),
+CONSTRAINT Project_unique UNIQUE (project_code)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.Project.Project">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Project.</tt><tt class="descname">Project</tt><big>(</big><em>domain</em>, <em>code</em>, <em>description</em>, <em>project_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Project.Project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the Project table</p>
+<dl class="method">
+<dt id="HPCStats.Model.Project.Project.find">
+<tt class="descname">find</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Project.Project.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search the Project in the database based on its code. If exactly
+one project matches in database, set project_id attribute properly
+and returns its value. If more than one project matches, raises
+HPCStatsDBIntegrityError. If no project is found, returns None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Project.Project.load">
+<tt class="descname">load</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Project.Project.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the Project based on the content of the DB and set objects
+attributes accordingly. The project_id attribute must have been
+set previously, typically by calling find() method. It raises
+raises HPCStatsRuntimeError if the Project is not found in DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Project.Project.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Project.Project.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert Project in database. You must make sure that the Project does
+not already exist in database yet (typically using Project.find()
+method else there is a risk of future integrity errors because of
+duplicated clusters. If project_id attribute is set, it raises
+HPCStatsRuntimeError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Project.Project.update">
+<tt class="descname">update</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Project.Project.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Project description field in database. Raises
+HPCStatsRuntimeError if self.project_id is None.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.Run">
+<span id="run-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Run</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Run" title="Permalink to this headline">¶</a></h2>
+<p>Run table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>Run(</dt>
+<dd>job_id         integer NOT NULL,
+node_id        integer NOT NULL,
+cluster_id     integer NOT NULL,
+CONSTRAINT Run_pkey PRIMARY KEY (job_id, node_id, cluster_id)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.Run.Run">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Run.</tt><tt class="descname">Run</tt><big>(</big><em>cluster</em>, <em>node</em>, <em>job</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Run.Run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the Run table.</p>
+<dl class="method">
+<dt id="HPCStats.Model.Run.Run.existing">
+<tt class="descname">existing</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Run.Run.existing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if theRunt already exists in database (same cluster,
+node and job), or False if not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.Run.Run.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Run.Run.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert Run in database. It first makes sure that the Run does not
+already exist in database yet by calling Run.existing() method if
+needed. If the Run already exists in database, it raises
+HPCStatsRuntimeError.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Model.User">
+<span id="user-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">User</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.User" title="Permalink to this headline">¶</a></h2>
+<p>Userhpc table in HPCStatsDB:</p>
+<dl class="docutils">
+<dt>Userhpc(</dt>
+<dd>userhpc_id         SERIAL,
+userhpc_login      character varying(30) NOT NULL,
+userhpc_name       character varying(30) NOT NULL,
+userhpc_firstname  character varying(30) NOT NULL,
+userhpc_department character varying(30),
+CONSTRAINT Userhpc_pkey PRIMARY KEY (userhpc_id),
+CONSTRAINT Userhpc_unique UNIQUE (userhpc_login)</dd>
+</dl>
+<p>)</p>
+<dl class="class">
+<dt id="HPCStats.Model.User.User">
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.User.</tt><tt class="descname">User</tt><big>(</big><em>login</em>, <em>firstname</em>, <em>lastname</em>, <em>department</em>, <em>user_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.User.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Model class for the Userhpc table.</p>
+<dl class="method">
+<dt id="HPCStats.Model.User.User.find">
+<tt class="descname">find</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.User.User.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search the User in the database based on its login. If exactly
+one user matches in database, set user_id attribute properly
+and returns its value. If more than one user matches, raises
+HPCStatsDBIntegrityError. If no user is found, returns None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.User.User.save">
+<tt class="descname">save</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.User.User.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert User in database. You must make sure that the User does
+not already exist in database yet (typically using User.find()
+method else there is a risk of future integrity errors because of
+duplicated users. If user_id attribute is set, it raises
+HPCStatsRuntimeError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Model.User.User.update">
+<tt class="descname">update</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Model.User.User.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update User firstname, lastname and department fields in database.
+Raises HPCStatsRuntimeError is user_id is None.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Model Package</a><ul>
+<li><a class="reference internal" href="#module-HPCStats.Model.Account"><tt class="docutils literal"><span class="pre">Account</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.Business"><tt class="docutils literal"><span class="pre">Business</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.Cluster"><tt class="docutils literal"><span class="pre">Cluster</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.Domain"><tt class="docutils literal"><span class="pre">Domain</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.Event"><tt class="docutils literal"><span class="pre">Event</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.FSUsage"><tt class="docutils literal"><span class="pre">FSUsage</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.Filesystem"><tt class="docutils literal"><span class="pre">Filesystem</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.Job"><tt class="docutils literal"><span class="pre">Job</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.Node"><tt class="docutils literal"><span class="pre">Node</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.Project"><tt class="docutils literal"><span class="pre">Project</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.Run"><tt class="docutils literal"><span class="pre">Run</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Model.User"><tt class="docutils literal"><span class="pre">User</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.Users.html"
+                        title="previous chapter">Users Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HPCStats.Tests.html"
+                        title="next chapter">Tests Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/HPCStats.Model.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Tests.html" title="Tests Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Users.html" title="Users Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

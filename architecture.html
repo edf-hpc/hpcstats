@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Architecture &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Installation Guide" href="installation.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">HPCStats 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="architecture">
+<span id="id1"></span><h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h1>
+<p>HPCStats is composed of a server component, the main part of the software, and
+various agents and a launcher. The server component is mainly used to extract
+raw production data from various sources and then import it into the HPCStats
+database. The agents are used to produce data well formatted data on the
+supercomputer, typically on the frontend (or login) nodes. All these components
+are described with full details in the following sub-sections.</p>
+<div class="section" id="database">
+<h2>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
+<p>All production data imported by HPCStats are structured and hosted in a
+relational SQL database using <a class="reference external" href="http://www.postgresql.org/">PostgreSQL</a> 9+ RDBMS. The following figure
+represents the UML class diagram of the HPCStats database:</p>
+<img src="_images/db_diagram.svg" /><p>The database is designed to store the data coming from multiple supercomputers
+(or clusters). Therefore, most tables are linked, directly or not, to the
+<tt class="docutils literal"><span class="pre">Cluster</span></tt> table (<tt class="docutils literal"><span class="pre">Jobs</span></tt>, <tt class="docutils literal"><span class="pre">Filesystems</span></tt>, etc). The notable exceptions are:</p>
+<ul class="simple">
+<li>The projects, domains and business codes because they are transversal to all
+clusters.</li>
+<li>The users because they can be associated with multiple account, one account
+per cluster.</li>
+</ul>
+</div>
+<div class="section" id="server">
+<h2>Server<a class="headerlink" href="#server" title="Permalink to this headline">¶</a></h2>
+<p>The following diagrams represents the software architecture of the base of
+HPCStats server component:</p>
+<img src="_images/architecture_app.svg" /><p>Whole server component is management by the HPCStats launcher. This launcher
+sequentially instanciates the following objects:</p>
+<ul class="simple">
+<li>The <strong>Argument parser</strong> (class <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsArgumentParser</span></tt>): It parses
+the arguments given in the command line of the <strong class="command">hpcstats</strong> command
+and checks their coherency and correctness.</li>
+<li>The <strong>Configuration handler</strong> (class <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsConf</span></tt>): It reads the
+main HPCStats <a class="reference internal" href="configuration.html#configuration-server"><em>configuration file</em></a> and gives an
+abstraction for the other classes to access configuration parameters.</li>
+<li>The <strong>Application</strong> (class <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsApp</span></tt>): The actual application
+to run.</li>
+</ul>
+<p>HPCStats server component has multiple applications that are available to
+users. The launched application depends on the action parameter given in the
+command line (please refer to the <a class="reference internal" href="usage.html#usage"><em>Usage guide</em></a> for details). The available
+applications are:</p>
+<ul class="simple">
+<li><strong>Importer application</strong>: Extract raw production data from various sources,
+structure and import them into the HPCStats database ;</li>
+<li><strong>Checker application</strong>: Just quickly check if the configured data sources
+are available for extraction ;</li>
+<li><strong>Modifier application</strong>: Slightly modify the database in database to manage
+projects, domain and business codes ;</li>
+<li><strong>Exporter application</strong> (<em>very experimental</em>): Generate reports full of
+statistics with data in HPCStats database.</li>
+</ul>
+<p>The <em>Importer</em> application is the original, main and most complex application
+of HPCStats server component. This diagrams gives on overview of this
+application architecture:</p>
+<img src="_images/architecture_importer_app.svg" /><p>The Importer application is divided into several importer <em>categories</em>. Each
+category has multiple implementations called <em>connectors</em>. These connectors
+instanciate the model classes to manipulate the HPCStats database content.</p>
+<p>Each category of importer is responsible of filling one or more tables of the
+database. On the other side, a table is filled by only one importer category.</p>
+<p>All the connectors and database tables associated to the importer categories
+are summarised in the following table:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="29%" />
+<col width="49%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Category</th>
+<th class="head">Database tables</th>
+<th class="head">Available connectors</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">Project</span></tt></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">Project</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">Domain</span></tt></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterCSV</span></tt></li>
+<li><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterSlurm</span></tt></li>
+<li><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterDummy</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">BusinessCode</span></tt></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">Business</span></tt></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterCSV</span></tt></li>
+<li><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></tt></li>
+<li><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterDummy</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">Architecture</span></tt></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">Cluster</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">Node</span></tt></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><tt class="xref py py-mod docutils literal"><span class="pre">ArchitectureImporterArchfile</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">User</span></tt></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">Userhpc</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">Account</span></tt></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt></li>
+<li><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">Job</span></tt></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">Job</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">Run</span></tt></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">FSUsage</span></tt></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">filesystem</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">fsusage</span></tt></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><tt class="xref py py-mod docutils literal"><span class="pre">FSUsageImporterSSH</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">Event</span></tt></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">Event</span></tt></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><tt class="xref py py-mod docutils literal"><span class="pre">EventImporterSlurm</span></tt></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The inner working of each connector is explained with all details in the
+<a class="reference internal" href="api/modules.html"><em>API reference</em></a>.</p>
+</div>
+<div class="section" id="agents">
+<h2>Agents<a class="headerlink" href="#agents" title="Permalink to this headline">¶</a></h2>
+<p>Notable feature of HPCStats are end-to-end supercomputer availability
+measurement from users standpoint and shared filesystem usage rate. Those
+metrics are hard to track from a remote server. Therefore, for such purpose,
+some agents and a launcher components have been designed.</p>
+<p>The following diagram illustrate the deployed architecture of these components:</p>
+<img src="_images/arch_agents_launcher.svg" /><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">fsusage</span></tt> agent can be installed on login nodes, and then launched
+periodically by a cronjob to log constantly the filesystems usage rate in a
+CSV file. This CSV file is then read through an SSH connection and parsed by
+<tt class="xref py py-class docutils literal"><span class="pre">FSUsageImporterSSH</span></tt> connector to fill the HPCStats database.</li>
+<li><tt class="docutils literal"><span class="pre">jobstats</span></tt> agent can also be installed on login nodes. It generates a job
+submission script and submit it to the job scheduler.</li>
+<li><tt class="docutils literal"><span class="pre">launcher</span></tt> is a program, installed on the central HPCStats server node that
+connects to the login nodes using SSH to trigger the <tt class="docutils literal"><span class="pre">jobstats</span></tt> agent from
+outside the supercomputer. The data generated by these fake jobs are then
+stored in job scheduler accounting system and gathered by Job importers
+category.</li>
+</ul>
+<p>These agents are optionals, there role is just to generate accurate data for
+specific metrics.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Architecture</a><ul>
+<li><a class="reference internal" href="#database">Database</a></li>
+<li><a class="reference internal" href="#server">Server</a></li>
+<li><a class="reference internal" href="#agents">Agents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="next chapter">Installation Guide</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/architecture.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation Guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="index.html">HPCStats 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

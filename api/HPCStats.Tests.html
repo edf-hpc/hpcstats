@@ -1,0 +1,815 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tests Package &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="../index.html" />
+    <link rel="up" title="HPCStats Package" href="HPCStats.html" />
+    <link rel="next" title="Mocks Package" href="HPCStats.Tests.Mocks.html" />
+    <link rel="prev" title="Model Package" href="HPCStats.Model.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Tests.Mocks.html" title="Mocks Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Model.html" title="Model Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" accesskey="U">HPCStats Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tests-package">
+<h1>Tests Package<a class="headerlink" href="#tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-HPCStats.Tests.Utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Utils</span></tt> Module<a class="headerlink" href="#module-HPCStats.Tests.Utils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.Tests.Utils.HPCStatsTestCase">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.Utils.</tt><tt class="descname">HPCStatsTestCase</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest2.case.TestCase</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Tests.Utils.loadtestcase">
+<tt class="descclassname">HPCStats.Tests.Utils.</tt><tt class="descname">loadtestcase</tt><big>(</big><em>testcase</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.Utils.loadtestcase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Tests.tests_ArchitectureImporterArchfile">
+<span id="tests-architectureimporterarchfile-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tests_ArchitectureImporterArchfile</span></tt> Module<a class="headerlink" href="#module-HPCStats.Tests.tests_ArchitectureImporterArchfile" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_ArchitectureImporterArchfile.</tt><tt class="descname">TestsArchitectureImporterArchfileLoad</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_convert_freq">
+<tt class="descname">test_convert_freq</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_convert_freq" title="Permalink to this definition">¶</a></dt>
+<dd><p>ArchitectureImporterArchfile.convert_freq() should properly convert
+frequency string into float</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_convert_mem">
+<tt class="descname">test_convert_mem</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_convert_mem" title="Permalink to this definition">¶</a></dt>
+<dd><p>ArchitectureImporterArchfile.convert_mem() should properly convert
+memory string into integer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_init">
+<tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>ArchitectureImporterArchfile.__init__() runs w/o problem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_load_1">
+<tt class="descname">test_load_1</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_load_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>ArchitectureImporterArchfile.load() works with simple data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_load_missing_option">
+<tt class="descname">test_load_missing_option</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_load_missing_option" title="Permalink to this definition">¶</a></dt>
+<dd><p>ArchitectureImporterArchfile.load() raise exception in one option
+is missing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_load_missing_section">
+<tt class="descname">test_load_missing_section</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileLoad.test_load_missing_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>ArchitectureImporterArchfile.load() raise exception in one section
+is missing</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileUpdate">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_ArchitectureImporterArchfile.</tt><tt class="descname">TestsArchitectureImporterArchfileUpdate</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileUpdate.setUp">
+<tt class="descname">setUp</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileUpdate.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileUpdate.test_update">
+<tt class="descname">test_update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileUpdate.test_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.update() creates cluster and node if not existing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileUpdate.test_update_2">
+<tt class="descname">test_update_2</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ArchitectureImporterArchfile.TestsArchitectureImporterArchfileUpdate.test_update_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.update() detect existing cluster and node</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Tests.tests_BusinessCodeImporterCSV">
+<span id="tests-businesscodeimportercsv-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tests_BusinessCodeImporterCSV</span></tt> Module<a class="headerlink" href="#module-HPCStats.Tests.tests_BusinessCodeImporterCSV" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_BusinessCodeImporterCSV.</tt><tt class="descname">TestsBusinessCodeImporterCSVLoad</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_init">
+<tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.__init__() runs w/o problem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_load_1">
+<tt class="descname">test_load_1</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_load_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>BusinessCodeImporterCSV.load() works with simple data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_load_business_empty_code">
+<tt class="descname">test_load_business_empty_code</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_load_business_empty_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>BusinessCodeImporterCSV.load() raise exception when business code is
+empty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_load_business_empty_description">
+<tt class="descname">test_load_business_empty_description</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_load_business_empty_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>BusinessCodeImporterCSV.load() set description to None when empty.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_load_invalid_line">
+<tt class="descname">test_load_invalid_line</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_load_invalid_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>BusinessCodeImporterCSV.load() raise exception when a business code
+line in CSV file is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_load_multiple_lines">
+<tt class="descname">test_load_multiple_lines</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVLoad.test_load_multiple_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>BusinessCodeImporterCSV.load() works with multiple lines</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_BusinessCodeImporterCSV.</tt><tt class="descname">TestsBusinessCodeImporterCSVUpdate</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate.setUp">
+<tt class="descname">setUp</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate.test_update_exists">
+<tt class="descname">test_update_exists</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate.test_update_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.update() works when business code exists</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate.test_update_exists_with_mock">
+<tt class="descname">test_update_exists_with_mock</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate.test_update_exists_with_mock" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.update() call Business.update() when business
+code exists</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate.test_update_not_exists">
+<tt class="descname">test_update_not_exists</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate.test_update_not_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.update() works when business code does not exist</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate.test_update_not_exists_with_mock">
+<tt class="descname">test_update_not_exists_with_mock</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_BusinessCodeImporterCSV.TestsBusinessCodeImporterCSVUpdate.test_update_not_exists_with_mock" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.update() call Business.save() when business code
+does not exist</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Tests.tests_EventImporterSlurm">
+<span id="tests-eventimporterslurm-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tests_EventImporterSlurm</span></tt> Module<a class="headerlink" href="#module-HPCStats.Tests.tests_EventImporterSlurm" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_EventImporterSlurm.</tt><tt class="descname">TestsEventImporterSlurm</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.setUp">
+<tt class="descname">setUp</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_init">
+<tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>EventImporterSlurm.__init__() initializes w/o error</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_load_search_datetime">
+<tt class="descname">test_load_search_datetime</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_load_search_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>EventImporterSlurm.load() must search new events starting from
+correct datetime.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_load_simple">
+<tt class="descname">test_load_simple</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_load_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>EventImporterSlurm.load() works with simple data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_load_unfound_node">
+<tt class="descname">test_load_unfound_node</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_load_unfound_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>EventImporterSlurm.load() raises Exception if one event is linked to
+a node not loaded by ArchitectureImporter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_merge_successive_events">
+<tt class="descname">test_merge_successive_events</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_merge_successive_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>EventImporterSlurm.merge_successive_events() should merge successive
+events in the list if they are on the same node w/ same type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_txt_slurm_event_type">
+<tt class="descname">test_txt_slurm_event_type</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_txt_slurm_event_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>EventImporterSlurm.txt_slurm_event_type() should give the
+appropriate human readable string represation of an event type
+according to its hex bitmap value.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Tests.tests_HPCStatsArgumentParser">
+<span id="tests-hpcstatsargumentparser-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tests_HPCStatsArgumentParser</span></tt> Module<a class="headerlink" href="#module-HPCStats.Tests.tests_HPCStatsArgumentParser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_HPCStatsArgumentParser.</tt><tt class="descname">TestsHPCStatsArgumentParser</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_import">
+<tt class="descname">test_import</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_import" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsArgumentParser.parse_args() w/ import action</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_init">
+<tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsArgumentParser.__init__() + add_args() run w/o problem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify">
+<tt class="descname">test_modify</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsArgumentParser.parse_args() w/ modify action</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_business_missing_desc">
+<tt class="descname">test_modify_business_missing_desc</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_business_missing_desc" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsArgumentParser.parse_args() raise exception when
+modify business code w/o description</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_domain_missing_name">
+<tt class="descname">test_modify_domain_missing_name</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_domain_missing_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsArgumentParser.parse_args() raise exception when
+modify domain w/o name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_missing_param">
+<tt class="descname">test_modify_missing_param</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_missing_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsArgumentParser.parse_args() raise exception when
+the main param are missing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_params_mutually_exclusive">
+<tt class="descname">test_modify_params_mutually_exclusive</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_params_mutually_exclusive" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsArgumentParser.parse_args() raise exception in case of
+conflict w/ mutually exclusive main params</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_project_conflict_params">
+<tt class="descname">test_modify_project_conflict_params</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_project_conflict_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsArgumentParser.parse_args() raise exception when
+modify project w/ conflicting params</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_project_missing_param">
+<tt class="descname">test_modify_project_missing_param</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_modify_project_missing_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsArgumentParser.parse_args() raise exception when
+modify project w/o param</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_report">
+<tt class="descname">test_report</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsArgumentParser.TestsHPCStatsArgumentParser.test_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsArgumentParser.parse_args() w/ report action</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Tests.tests_HPCStatsImporter">
+<span id="tests-hpcstatsimporter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tests_HPCStatsImporter</span></tt> Module<a class="headerlink" href="#module-HPCStats.Tests.tests_HPCStatsImporter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.Tests.tests_HPCStatsImporter.TestsHPCStatsImporter">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_HPCStatsImporter.</tt><tt class="descname">TestsHPCStatsImporter</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsImporter.TestsHPCStatsImporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsImporter.TestsHPCStatsImporter.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsImporter.TestsHPCStatsImporter.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsImporter.TestsHPCStatsImporter.test_init">
+<tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsImporter.TestsHPCStatsImporter.test_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsImporter.__init__() run w/o problem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsImporter.TestsHPCStatsImporter.test_run">
+<tt class="descname">test_run</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsImporter.TestsHPCStatsImporter.test_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsImporter.run() NOT SUPPOSED TO WORK YET.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_HPCStatsImporter.TestsHPCStatsImporter.test_run_exception_no_hpcstatsdb">
+<tt class="descname">test_run_exception_no_hpcstatsdb</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_HPCStatsImporter.TestsHPCStatsImporter.test_run_exception_no_hpcstatsdb" title="Permalink to this definition">¶</a></dt>
+<dd><p>HPCStatsImporter.run() raise exception when hpcstatsdb section is
+missing.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Tests.tests_JobImporterSlurm">
+<span id="tests-jobimporterslurm-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tests_JobImporterSlurm</span></tt> Module<a class="headerlink" href="#module-HPCStats.Tests.tests_JobImporterSlurm" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_JobImporterSlurm.</tt><tt class="descname">TestsJobImporterSlurm</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.load_app">
+<tt class="descname">load_app</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.load_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load App objects for JobImporterSlurm.load() normal operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.setUp">
+<tt class="descname">setUp</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_init">
+<tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.__init__() initializes object with attributes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_job_partition">
+<tt class="descname">test_job_partition</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_job_partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.job_partition() must return correct partition for
+based on job partition list and its nodelist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load">
+<tt class="descname">test_load</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() works with simple data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_account_not_found">
+<tt class="descname">test_load_account_not_found</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_account_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() raises exception when account not found</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_business_not_found">
+<tt class="descname">test_load_business_not_found</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_business_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() raises exception when business not found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_invalid_nodelist">
+<tt class="descname">test_load_invalid_nodelist</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_invalid_nodelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() raises exception when format of nodelist
+is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_invalid_wckey">
+<tt class="descname">test_load_invalid_wckey</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_invalid_wckey" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() raises exception when format of wckey is
+invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_node_not_found">
+<tt class="descname">test_load_node_not_found</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_node_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() raises exception when node not found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_project_not_found">
+<tt class="descname">test_load_project_not_found</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_project_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() raises exception when project not found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_search_batchid">
+<tt class="descname">test_load_search_batchid</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_search_batchid" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() must search jobs after correct batch_id.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Tests.tests_ProjectImporterCSV">
+<span id="tests-projectimportercsv-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tests_ProjectImporterCSV</span></tt> Module<a class="headerlink" href="#module-HPCStats.Tests.tests_ProjectImporterCSV" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_ProjectImporterCSV.</tt><tt class="descname">TestsProjectImporterCSVLoad</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_init">
+<tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.__init__() runs w/o problem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_1">
+<tt class="descname">test_load_1</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.load() works with simple data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_domain_empty_key">
+<tt class="descname">test_load_domain_empty_key</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_domain_empty_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.load() raise exception when domain key is empty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_domain_empty_name">
+<tt class="descname">test_load_domain_empty_name</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_domain_empty_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.load() raise exception when domain name is empty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_domain_invalid">
+<tt class="descname">test_load_domain_invalid</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_domain_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.load() raise exception when domain format is
+invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_duplicate_project">
+<tt class="descname">test_load_duplicate_project</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_duplicate_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.load() raise Error when duplicate project codes
+found in CSV file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_duplicate_sectors_domains">
+<tt class="descname">test_load_duplicate_sectors_domains</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_duplicate_sectors_domains" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.load() does not create duplicate sectors and
+domains</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_multiple_lines">
+<tt class="descname">test_load_multiple_lines</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVLoad.test_load_multiple_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.load() works with multiple lines</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVUpdate">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_ProjectImporterCSV.</tt><tt class="descname">TestsProjectImporterCSVUpdate</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVUpdate.setUp">
+<tt class="descname">setUp</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVUpdate.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVUpdate.test_update">
+<tt class="descname">test_update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_ProjectImporterCSV.TestsProjectImporterCSVUpdate.test_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>ProjectImporterCSV.update() works with simple data</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Tests.tests_UserImporterLdap">
+<span id="tests-userimporterldap-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tests_UserImporterLdap</span></tt> Module<a class="headerlink" href="#module-HPCStats.Tests.tests_UserImporterLdap" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_UserImporterLdap.</tt><tt class="descname">TestsUserImporterLdap</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.setUp">
+<tt class="descname">setUp</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_init">
+<tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.__init__() initializes w/o error</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_simple">
+<tt class="descname">test_load_simple</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.load() should work with simple data from LDAP.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_simple2">
+<tt class="descname">test_load_simple2</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_simple2" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.load() should work with simple data from LDAP and
+HPCStatsDB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_close_account">
+<tt class="descname">test_load_update_close_account</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_close_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.update() close account found as unclosed in
+HPCStatsDB and not found in LDAP.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_new_user_no_account">
+<tt class="descname">test_load_update_new_user_no_account</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_new_user_no_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.update() save new user/account found in LDAP
+and not found in HPCStatsDB with a creation date equals to epoch
+because there is none existing accounts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_new_user_other_accounts">
+<tt class="descname">test_load_update_new_user_other_accounts</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_new_user_other_accounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.update() create new user/account found in LDAP
+and not found in HPCStatsDB with a creation date equals to today
+because there are already existing accounts.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_user_closed_account">
+<tt class="descname">test_load_update_user_closed_account</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_user_closed_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.update() update user found in LDAP and in HPCStatsDB
+with a closed account on the cluster.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_user_w_account">
+<tt class="descname">test_load_update_user_w_account</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_user_w_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.update() update user found in LDAP and in HPCStatsDB
+with an unclosed account on the cluster.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_user_wo_account">
+<tt class="descname">test_load_update_user_wo_account</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_user_wo_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.update() create account and update user found in
+LDAP and in HPCStatsDB but w/o account on the cluster.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Tests.tests_UserImporterLdapSlurm">
+<span id="tests-userimporterldapslurm-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tests_UserImporterLdapSlurm</span></tt> Module<a class="headerlink" href="#module-HPCStats.Tests.tests_UserImporterLdapSlurm" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm">
+<em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_UserImporterLdapSlurm.</tt><tt class="descname">TestsUserImporterLdapSlurm</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.setUp">
+<tt class="descname">setUp</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_init">
+<tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.__init__() initializes w/o error</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_load_no_redundancy">
+<tt class="descname">test_load_no_redundancy</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_load_no_redundancy" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdapSlurm.load() should manage redundancy with LDAP.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_load_user_in_group">
+<tt class="descname">test_load_user_in_group</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_load_user_in_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdapSlurm.load() should not load user from Slurm if
+already loaded because it is member of cluster group.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_load_user_no_ldap">
+<tt class="descname">test_load_user_no_ldap</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_load_user_no_ldap" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdapSlurm.load() should not user from Slurm if not found
+in LDAP.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_load_user_ok_ldap">
+<tt class="descname">test_load_user_ok_ldap</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_load_user_ok_ldap" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdapSlurm.load() should load user from Slurm if also
+found in LDAP.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_update_new_user">
+<tt class="descname">test_update_new_user</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_update_new_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdapSlurm.slurm() should save the user and the account if
+not existing in DB</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_update_user_account_exist">
+<tt class="descname">test_update_user_account_exist</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdapSlurm.TestsUserImporterLdapSlurm.test_update_user_account_exist" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdapSlurm.slurm() should update the user and do not
+touch the account if they already exist in DB</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="HPCStats.Tests.Mocks.html">Mocks Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.App"><tt class="docutils literal"><span class="pre">App</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.ArchitectureImporter"><tt class="docutils literal"><span class="pre">ArchitectureImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.BusinessCodeImporter"><tt class="docutils literal"><span class="pre">BusinessCodeImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.Conf"><tt class="docutils literal"><span class="pre">Conf</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.MockConfigParser"><tt class="docutils literal"><span class="pre">MockConfigParser</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.MockLdap"><tt class="docutils literal"><span class="pre">MockLdap</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.MockPg2"><tt class="docutils literal"><span class="pre">MockPg2</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.MySQLdb"><tt class="docutils literal"><span class="pre">MySQLdb</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.ProjectImporter"><tt class="docutils literal"><span class="pre">ProjectImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.UserImporter"><tt class="docutils literal"><span class="pre">UserImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Tests.Mocks.html#module-HPCStats.Tests.Mocks.Utils"><tt class="docutils literal"><span class="pre">Utils</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tests Package</a><ul>
+<li><a class="reference internal" href="#module-HPCStats.Tests.Utils"><tt class="docutils literal"><span class="pre">Utils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Tests.tests_ArchitectureImporterArchfile"><tt class="docutils literal"><span class="pre">tests_ArchitectureImporterArchfile</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Tests.tests_BusinessCodeImporterCSV"><tt class="docutils literal"><span class="pre">tests_BusinessCodeImporterCSV</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Tests.tests_EventImporterSlurm"><tt class="docutils literal"><span class="pre">tests_EventImporterSlurm</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Tests.tests_HPCStatsArgumentParser"><tt class="docutils literal"><span class="pre">tests_HPCStatsArgumentParser</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Tests.tests_HPCStatsImporter"><tt class="docutils literal"><span class="pre">tests_HPCStatsImporter</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Tests.tests_JobImporterSlurm"><tt class="docutils literal"><span class="pre">tests_JobImporterSlurm</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Tests.tests_ProjectImporterCSV"><tt class="docutils literal"><span class="pre">tests_ProjectImporterCSV</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Tests.tests_UserImporterLdap"><tt class="docutils literal"><span class="pre">tests_UserImporterLdap</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Tests.tests_UserImporterLdapSlurm"><tt class="docutils literal"><span class="pre">tests_UserImporterLdapSlurm</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="HPCStats.Model.html"
+                        title="previous chapter">Model Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HPCStats.Tests.Mocks.html"
+                        title="next chapter">Mocks Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/HPCStats.Tests.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Tests.Mocks.html" title="Mocks Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Model.html" title="Model Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

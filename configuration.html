@@ -1,0 +1,575 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuration &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Usage guide" href="usage.html" />
+    <link rel="prev" title="Installation Guide" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="Usage guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation Guide"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">HPCStats 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="configuration">
+<span id="id1"></span><h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<p>All the configuration files of the HPCStats components are formatted like an
+INI file with sections between square brakets (<tt class="docutils literal"><span class="pre">[]</span></tt>) and parameter/value
+pairs separated by an equal sign (<tt class="docutils literal"><span class="pre">=</span></tt>).</p>
+<p>The various sections and parameters of these files are fully documented in the
+following sub-sections.</p>
+<div class="section" id="hpcstats-server">
+<span id="configuration-server"></span><h2>HPCStats server<a class="headerlink" href="#hpcstats-server" title="Permalink to this headline">¶</a></h2>
+<p>The configuration file of the HPCStats server component is located at
+<tt class="file docutils literal"><span class="pre">/etc/hpcstats/hpcstats.conf</span></tt>.</p>
+<p>The first section is <tt class="docutils literal"><span class="pre">clusters</span></tt> (<em>required</em>). It must contain the following
+parameter:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">clusters</span></tt> (<em>required</em>): a list of cluster name separated by commas (<tt class="docutils literal"><span class="pre">,</span></tt>)
+The list is then considered as the official list of clusters supported by
+HPCStats server component.</li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">hpcstatsdb</span></tt> section (<em>required</em>) contains all the parameters to access
+the central PostgreSQL HPCStats database. It must contain the following
+parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">hostname</span></tt> (<em>required</em>): The network hostname and the IP address of the
+PostgreSQL server.</li>
+<li><tt class="docutils literal"><span class="pre">dbname</span></tt> (<em>required</em>): The name of the database.</li>
+<li><tt class="docutils literal"><span class="pre">port</span></tt> (<em>required</em>): The TCP port listened by PostgreSQL server for
+incoming connections (Note: default TCP port of PostgreSQL is 5432).</li>
+<li><tt class="docutils literal"><span class="pre">user</span></tt> (<em>required</em>): The user name to authenticate to PostgreSQL server.</li>
+<li><tt class="docutils literal"><span class="pre">password</span></tt> (<em>required</em>): The password to authenticate to PostgreSQL server.</li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">constraints</span></tt> section (<em>optional</em>) has several parameters that control
+how HPCStats should behave when importing production data from sources that do
+not strictely respect all constraints required by the HPCStats database schema.
+It can contain the following parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">strict_user_membership</span></tt>: This parameter controls how HPCStats
+<tt class="xref py py-class docutils literal"><span class="pre">UserImporterLdap</span></tt> connector should behave when a user is a member
+of the group in LDAP directory but has no account in this LDAP directory. If
+set to <tt class="docutils literal"><span class="pre">True</span></tt> (<em>default</em>), HPCStats will fail (and stop running) when such
+incoherency is encountered. If set to <tt class="docutils literal"><span class="pre">False</span></tt>, HPCStats will simply just
+print a warning message, discard this user and keep running.</li>
+<li><tt class="docutils literal"><span class="pre">strict_job_project_binding</span></tt>: This parameter controls how HPCStats Job
+importers category should behave when a job is linked to a project that has
+not been loaded by Project importer category previously. If set to <tt class="docutils literal"><span class="pre">True</span></tt>
+(<em>default</em>), HPCStats will fail (and stop running). If set to <tt class="docutils literal"><span class="pre">False</span></tt>,
+HPCStats will just print a warning message and set project reference to
+<tt class="docutils literal"><span class="pre">NULL</span></tt> in the <tt class="docutils literal"><span class="pre">Job</span></tt> table of the HPCStats database.</li>
+<li><tt class="docutils literal"><span class="pre">strict_job_businesscode_binding</span></tt>: This parameter is basically the same as
+<tt class="docutils literal"><span class="pre">strict_job_project_binding</span></tt> but for the Business codes. The possible
+values are <tt class="docutils literal"><span class="pre">True</span></tt> (<em>default</em>) and <tt class="docutils literal"><span class="pre">False</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">strict_job_account_binding</span></tt>: This parameter controls how HPCStats Job
+importer category should behave when importing a job submitted by an account
+unknown by the User importer category. When set to <tt class="docutils literal"><span class="pre">True</span></tt> (<em>default</em>),
+HPCStats will fail (and stop running) when such job is encountered. If set to
+<tt class="docutils literal"><span class="pre">False</span></tt>, HPCStats will just print a warning message and skip the job.</li>
+<li><tt class="docutils literal"><span class="pre">strict_job_wckey_format</span></tt>: This parameter controls how
+<tt class="xref py py-class docutils literal"><span class="pre">JobImporterSlurm</span></tt> connector should behave when importing a job
+with a badly formatted <em>wckey</em>. If set to <tt class="docutils literal"><span class="pre">True</span></tt> (<em>default</em>), HPCStats will
+fail (and stop running) when such job is encountered. If set to <tt class="docutils literal"><span class="pre">False</span></tt>,
+HPCStats will just print a warning message and ignore the <em>wckey</em>.</li>
+</ul>
+<p>If the <tt class="docutils literal"><span class="pre">constraints</span></tt> section is missing, default values are assumed for all
+parameters.</p>
+<p>The <tt class="docutils literal"><span class="pre">globals</span></tt> section (<em>optional</em>) defines which connectors must be used for
+projects and business importer categories. It can contain the following
+parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">business</span></tt> (<em>optional</em>): Possible values are <tt class="docutils literal"><span class="pre">dummy</span></tt> (<em>default</em>), <tt class="docutils literal"><span class="pre">csv</span></tt>
+and <tt class="docutils literal"><span class="pre">slurm</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">projects</span></tt> (<em>optional</em>): Possible values are <tt class="docutils literal"><span class="pre">dummy</span></tt> (<em>default</em>), <tt class="docutils literal"><span class="pre">csv</span></tt>
+and <tt class="docutils literal"><span class="pre">slurm</span></tt>.</li>
+</ul>
+<p>If the <tt class="docutils literal"><span class="pre">globals</span></tt> section is missing, default values are assumed for all
+parameters.</p>
+<p>If the <tt class="docutils literal"><span class="pre">business</span></tt> parameter is set to <tt class="docutils literal"><span class="pre">csv</span></tt>, then the <tt class="docutils literal"><span class="pre">business</span></tt> section
+(<em>optional</em>) must be present with this parameter:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">file</span></tt> (<em>optional</em>): The absolute path to the business codes CSV file.</li>
+</ul>
+<p>If the <tt class="docutils literal"><span class="pre">projects</span></tt> parameter is set to <tt class="docutils literal"><span class="pre">csv</span></tt> or <tt class="docutils literal"><span class="pre">slurm</span></tt>, then the
+<tt class="docutils literal"><span class="pre">projects</span></tt> section (<em>optional</em>) must be present with these parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">file</span></tt> (<em>optional</em>): for <tt class="xref py py-class docutils literal"><span class="pre">ProjectImporterCSV</span></tt> connector, it is
+the absolute path to the projects CSV file.</li>
+<li><tt class="docutils literal"><span class="pre">default_domain_key</span></tt> (<em>optional</em>): for <tt class="xref py py-class docutils literal"><span class="pre">ProjectImporterSlurm</span></tt>
+connector, the key of the default domain associated to created projects.</li>
+<li><tt class="docutils literal"><span class="pre">default_domain_name</span></tt> (<em>optional</em>): for <tt class="xref py py-class docutils literal"><span class="pre">ProjectImporterSlurm</span></tt>
+connector, the name of the default domain associated to created projects.</li>
+</ul>
+<p>The configuration file must also contain one section per cluster declared in
+the <tt class="docutils literal"><span class="pre">clusters</span></tt> parameter list. The section must be the cluster name. These
+sections must contain the following parameters to specify which connectors must
+be used by HPCStats for each importer category on these clusters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">architecture</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">archfile</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">users</span></tt> (<em>required</em>): The possible values are <tt class="docutils literal"><span class="pre">ldap</span></tt> and <tt class="docutils literal"><span class="pre">ldap+slurm</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">fsusage</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">ssh</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">events</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">slurm</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">jobs</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">slurm</span></tt>.</li>
+</ul>
+<p>Then, the other sections depend on the connectors used for the cluster.</p>
+<p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/archfile</span></tt> section (<em>optional</em>) is required by
+<tt class="xref py py-class docutils literal"><span class="pre">ArchitectureImporterArchfile</span></tt> connector. It must contains the
+following parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">file</span></tt> (<em>required</em>): The absolute path to the architecture file which
+which description the component of the cluster.</li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/ldap</span></tt> section (<em>optional</em>) is required by
+<tt class="xref py py-class docutils literal"><span class="pre">UserImporterLdap</span></tt> and <tt class="xref py py-class docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt> connectors.
+It must contains the following parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">url</span></tt> (<em>required</em>): the URL to connect to the LDAP server with its protocol
+and eventually the TCP port. <em>Ex:</em> <tt class="docutils literal"><span class="pre">ldaps://ldap.company.tld/</span></tt> or
+<tt class="docutils literal"><span class="pre">ldap://ldap.company.tld:636/</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">dn</span></tt> (<em>required</em>): The distinguished name of the user for binding the LDAP
+server.</li>
+<li><tt class="docutils literal"><span class="pre">phash</span></tt> (<em>required</em>): The hashed and salted password of <tt class="docutils literal"><span class="pre">dn</span></tt> for binding
+the LDAP server.</li>
+<li><tt class="docutils literal"><span class="pre">cert</span></tt> (<em>optional</em>): The absolute path to the CA certificate to check LDAP
+server certificate. Default is <tt class="docutils literal"><span class="pre">None</span></tt> with means it checks the server
+certificate against all CA certificates available on the system.</li>
+<li><tt class="docutils literal"><span class="pre">basedn</span></tt> (<em>required</em>): The base distinguished name to look for groups and
+users in the LDAP directory tree. <em>Ex:</em> <tt class="docutils literal"><span class="pre">dc=company,dc=tld</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">rdn_people</span></tt> (<em>optional</em>) The relative distinguished name of the subtree to
+search users. Default is <tt class="docutils literal"><span class="pre">ou=people</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">rdn_groups</span></tt> (<em>optional</em>): The relative distinguished name of the subtree
+to search groups. Default is <tt class="docutils literal"><span class="pre">ou=groups</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">group</span></tt> (<em>required</em>): The name of the group of users of the cluster.</li>
+<li><tt class="docutils literal"><span class="pre">group_dpt_search</span></tt> (<em>required</em>): The regular expression to restrict the
+search of users secondary groups to find their department.</li>
+<li><tt class="docutils literal"><span class="pre">group_dpt_regexp</span></tt> (<em>required</em>): The regular expression to extract the
+department name of the user out of a group name. <em>Ex:</em>
+<tt class="docutils literal"><span class="pre">cn=(.+)-dp-(.+),ou.*</span></tt>.</li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/slurm</span></tt> section (<em>optional</em>) is required by
+<tt class="xref py py-class docutils literal"><span class="pre">ProjectImporterSlurm</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></tt>,
+<tt class="xref py py-class docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">EventImporterSlurm</span></tt> and
+<tt class="xref py py-class docutils literal"><span class="pre">JobImporterSlurm</span></tt> connectors. It must contains the following
+parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">host</span></tt> (<em>required</em>): The network hostname or the IP address of the SlurmDBD
+MySQL (or MariaDB) server.</li>
+<li><tt class="docutils literal"><span class="pre">name</span></tt> (<em>required</em>): The name of MySQL database that contains the SlurmDBD
+accounting (hint: value is probably <tt class="docutils literal"><span class="pre">slurm_acct_db</span></tt>).</li>
+<li><tt class="docutils literal"><span class="pre">user</span></tt> (<em>required</em>): The name of the user to authenticate on MySQL server.</li>
+<li><tt class="docutils literal"><span class="pre">password</span></tt> (<em>optional</em>): The password of the user to authenticate on MySQL
+server. Default is None, <em>ie.</em> no password.</li>
+<li><tt class="docutils literal"><span class="pre">window_size</span></tt> (<em>optional</em>): The size of the window of loaded jobs. When
+this parameter is set to a value <tt class="docutils literal"><span class="pre">N</span></tt> above <tt class="docutils literal"><span class="pre">0</span></tt>, the new jobs will be
+loaded by <tt class="xref py py-class docutils literal"><span class="pre">JobImporterSlurm</span></tt> in windowed mode, <tt class="docutils literal"><span class="pre">N</span></tt> jobs at a
+time, until there are no jobs to load anymore. If set to <tt class="docutils literal"><span class="pre">0</span></tt> (<em>default</em>),
+all jobs will be loaded at once and this can lead to a lot of memory
+consumption when there too many jobs. It is recommended to set this value
+to avoid memory over-consumption during jobs import.</li>
+<li><tt class="docutils literal"><span class="pre">uppercase_accounts</span></tt>: <em>DEPRECATED</em></li>
+<li><tt class="docutils literal"><span class="pre">uppercase_exceptions</span></tt>: <em>DEPRECATED</em></li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/fsusage</span></tt> section (<em>optional</em>) is required by
+<tt class="xref py py-class docutils literal"><span class="pre">FSUsageImporterSSH</span></tt> connector. It must contains the following
+parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">host</span></tt> (<em>required</em>): The network hostname or the IP address of the cluster
+node on which the <tt class="docutils literal"><span class="pre">fsusage</span></tt> runs and where the HPCStats should connect to.</li>
+<li><tt class="docutils literal"><span class="pre">name</span></tt> (<em>required</em>): The user name to authenticate on the remote cluster
+node.</li>
+<li><tt class="docutils literal"><span class="pre">privkey</span></tt> (<em>required</em>): The absolute path to the SSH private key file to
+authenticate on the remote cluster node.</li>
+<li><tt class="docutils literal"><span class="pre">file</span></tt> (<em>required</em>): The absolute path of the remote CSV file to read and
+parse for new filesystem usage metrics.</li>
+<li><tt class="docutils literal"><span class="pre">timestamp_fmt</span></tt> (<em>optional</em>): The format of the timestamps written in the
+CSV file.  Default value is <tt class="docutils literal"><span class="pre">%Y-%m-%dT%H:%M:%S.%fZ</span></tt>.</li>
+</ul>
+<p>All sections and parameters on the HPCStats server component configuration file
+have been covered. Here is complete annoted configuration file example with 2
+clusters <em>cluster1</em> and <em>cluster2</em>:</p>
+<div class="highlight-python"><pre># Example of hpcstats.conf
+# Most of the default values can be change and have to be adpated
+# This file is not meant to be a ready to work one you might have to tune it
+###############################################################################
+
+[clusters]
+clusters = cluster1,cluster2
+
+[hpcstatsdb]
+hostname = localhost
+dbname = hpcstatsdb
+port = 5432
+user = &lt;myuser&gt;
+password = &lt;password&gt;
+
+# Importer constraints
+###############################################################################
+[constraints]
+# This parameter specifies how hpcstats should behave when a user is a member
+# of the group in LDAP directory but has not an account in this LDAP directory.
+# If set to True (default value), hpcstats will fail (and stop running) when
+# such error is encountered. If set to False, hpcstats will simply print a
+# warning message, ignore this user and keep running.
+strict_user_membership=True
+
+# These parameters define whether hpcstats should either fail or just print an
+# error if an imported job is linked to a projet (or respectively a business
+# code) that has not been loaded by ProjectImporter (and BusinessCodeImporter)
+# previously. If set to True (default value), hpcstats will fail (and stop
+# running). Else hpstats will just print a warning and will set project and
+# business references to NULL in HPCStatsDB.
+strict_job_project_binding=True
+strict_job_businesscode_binding=True
+
+# This parameter controls how hpcstats should behave when a loaded job was
+# submitted by an account that has not been loaded by UserImporter. When, set
+# to True, hpcstats will fail (and stop running) when such job is encountered.
+# Else, hpcstats will just print a warning message and skip the job. Default
+# value is True.
+strict_job_account_binding=True
+
+# This parameter controls if hpcstats should fail or just print an error when
+# a job loaded by JobImporterSlurm has a wckey in a wrong format. When set to
+# True (default) hpcstats will fail, when set to False hpcstats will simply
+# print an error message.
+strict_job_wckey_format=True
+
+# Global parameters
+###############################################################################
+
+[globals]
+business = csv
+projects = slurm
+
+[business]
+file = &lt;absolute path to CSV file&gt;
+
+[projects]
+default_domain_key = dft
+default_domain_name = Default domain
+
+# Cluster 1
+###############################################################################
+[cluster1]
+architecture = archfile
+users = ldap
+fsusage = ssh
+events = slurm
+jobs = slurm
+
+[cluster1/archfile]
+file = /path/to/archfile
+
+[cluster1/ldap]
+url = ldaps://&lt;ldapuri&gt;/
+dn = &lt;dn&gt;
+basedn = &lt;basedn&gt;
+rdn_people = ou=people
+rdn_groups = ou=groups
+phash = &lt;password&gt;
+cert = /path/to/cert
+group = &lt;group&gt;
+group_dpt_search = *dp*
+group_dpt_regexp = cn=(.+)-dp-(.+),ou.*
+
+[cluster1/slurm]
+host = &lt;slurm_mysql_db_ip&gt;
+name = slurm_acct_db
+user = slurm
+password = &lt;slurmpasswd&gt;
+# Defines whether login extracted from SlurmDBD must be uppercased before
+# matching them with account loaded by UserImporter. Default is False.
+uppercase_accounts = False
+# When uppercase_accounts is True, it is possible to specify a list of
+# account exceptions. These account names will not not be uppercased even
+# if uppercase_accounts is True.
+uppercase_exceptions = account1,account2
+# When this parameter is set to a value N above 0, the new jobs will be
+# loaded by JobImporterSlurm in windowed mode, N jobs at a time, until there
+# are no jobs to load anymore. If set to 0 (default value), all jobs will be
+# loaded at once and this can lead to a lot of memory consumption when there
+# too many jobs. It is recommended to set this value to limit memory
+# consumption during jobs import.
+window_size = 1000
+
+[cluster1/fsusage]
+host = host IP
+name = username
+file = &lt;absolute path to CSV file&gt;
+# The format of the timestamp to parse in remote log file.
+# Default value is: %Y-%m-%dT%H:%M:%S.%fZ
+timestamp_fmt = %Y-%m-%dT%H:%M:%S.%fZ
+
+# Cluster2
+###############################################################################
+[cluster2]
+architecture = archfile
+users = ldap
+fsusage = ssh
+events = slurm
+jobs = slurm
+
+[cluster2/archfile]
+file = /path/to/archfile
+
+[cluster2/ldap]
+url = ldaps://&lt;ldapuri&gt;/
+dn = &lt;dn&gt;
+basedn = &lt;basedn&gt;
+phash = &lt;password&gt;
+group = &lt;group&gt;
+group_dpt_search = *dp*
+group_dpt_regexp = cn=(.+)-dp-(.+),ou.*
+
+[cluster2/slurm]
+host = &lt;slurm_mysql_db_ip&gt;
+name = slurm_acct_db
+user = slurm
+password = &lt;slurmpasswd&gt;
+
+[cluster2/fsusage]
+host = host IP
+name = username
+file = &lt;absolute path to CSV file&gt;
+</pre>
+</div>
+</div>
+<div class="section" id="agents-and-launcher">
+<h2>Agents and launcher<a class="headerlink" href="#agents-and-launcher" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fsusage-agent">
+<span id="configuration-fsusage-agent"></span><h3>FSUsage agent<a class="headerlink" href="#fsusage-agent" title="Permalink to this headline">¶</a></h3>
+<p>The configuration file of the <strong class="command">fsusage</strong> agent is located at
+<tt class="file docutils literal"><span class="pre">/etc/hpcstats/fsusage.conf</span></tt>.</p>
+<p>This file contains only one <tt class="docutils literal"><span class="pre">global</span></tt> section (<em>required</em>) with the following
+parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">fs</span></tt> (<em>required</em>): The list separated by commas (<tt class="docutils literal"><span class="pre">,</span></tt>) of the mount points
+of the filesystem to monitor.</li>
+<li><tt class="docutils literal"><span class="pre">csv</span></tt> (<em>required</em>): The absolute path of the CSV file where the file system
+usage rates are recorded.</li>
+<li><tt class="docutils literal"><span class="pre">maxsize</span></tt> (<em>required</em>): the maximum size in MB of the CSV file. When this
+size is reached, the <strong class="command">fsusage</strong> agent remove the first two third of
+the file to significantly reduce its size.</li>
+</ul>
+<p>Here is complete annoted HPCStats <strong class="command">fsusage</strong> agent configuration file
+example:</p>
+<div class="highlight-python"><pre>[global]
+fs=/home,/scratch
+csv=/usr/lib/hpcstats/fsusage.csv
+maxsize=2
+</pre>
+</div>
+</div>
+<div class="section" id="jobstats-agent">
+<span id="configuration-jobstats-agent"></span><h3>JobStats agent<a class="headerlink" href="#jobstats-agent" title="Permalink to this headline">¶</a></h3>
+<p>The configuration file of the <strong class="command">jobstats</strong> agent is located at
+<tt class="file docutils literal"><span class="pre">/etc/hpcstats/jobstats.conf</span></tt>.</p>
+<p>This file contains a <tt class="docutils literal"><span class="pre">global</span></tt> section (<em>required</em>) with the following
+parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">tpl</span></tt> (<em>required</em>): The absolute path of the source template job submission
+script.</li>
+<li><tt class="docutils literal"><span class="pre">script</span></tt> (<em>required</em>): The absolute path of the output generated job
+submission script.</li>
+<li><tt class="docutils literal"><span class="pre">subcmd</span></tt> (<em>required</em>): The command to use for submitting the jobs. <em>Ex:</em>
+<strong class="command">sbatch</strong>.</li>
+</ul>
+<p>Then, the file must also contain a <tt class="docutils literal"><span class="pre">vars</span></tt> section (<em>required</em>). This section
+contains all the variables used in the template job submission script:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">name</span></tt> (<em>required</em>): The name of the jobs.</li>
+<li><tt class="docutils literal"><span class="pre">ntasks</span></tt> (<em>required</em>): The number of CPU allocated for the jobs.</li>
+<li><tt class="docutils literal"><span class="pre">error</span></tt> (<em>required</em>): The absolute path of the error output logging file.</li>
+<li><tt class="docutils literal"><span class="pre">output</span></tt> (<em>required</em>): The absolute path of the standard output logging
+file.</li>
+<li><tt class="docutils literal"><span class="pre">time</span></tt> (<em>required</em>): The maximum running time of the jobs (in minutes).</li>
+<li><tt class="docutils literal"><span class="pre">partition</span></tt> (<em>required</em>): The name of the partition in which the jobs will be
+submitted.</li>
+<li><tt class="docutils literal"><span class="pre">qos</span></tt> (<em>required</em>): The name of the QOS in which the jobs will be submitted.</li>
+<li><tt class="docutils literal"><span class="pre">wckey</span></tt> (<em>required</em>): The wckey of the jobs.</li>
+<li><tt class="docutils literal"><span class="pre">fs</span></tt> (<em>required</em>): The list of separated by white spaces of filesystems
+mountpoints to check in the jobs.</li>
+<li><tt class="docutils literal"><span class="pre">log</span></tt> (<em>required</em>): The absolute path of the file where all check results
+will be recorded.</li>
+</ul>
+<p>Here is complete annoted HPCStats <strong class="command">jobstats</strong> agent configuration file
+example:</p>
+<div class="highlight-python"><pre>[global]
+tpl=/usr/share/hpcstats/jobstats.tpl.sh
+script=/usr/share/hpcstats/jobstats.sh
+subcmd=sbatch
+
+[vars]
+name=STATS
+ntasks=1
+error=/tmp/jobstats.err.log
+output=/tmp/jobstats.out.log
+partition=cn
+time=5
+qos=dsp-ap-hpcstats
+wckey=dsp:hpcstats
+fs=/home /scratch
+log=/tmp/jobstats.log
+</pre>
+</div>
+</div>
+<div class="section" id="jobstats-launcher">
+<span id="configuration-jobstats-launcher"></span><h3>JobStats launcher<a class="headerlink" href="#jobstats-launcher" title="Permalink to this headline">¶</a></h3>
+<p>The configuration file of the <strong class="command">jobstats</strong> launcher is located at
+<tt class="file docutils literal"><span class="pre">/etc/hpcstats/launcher.conf</span></tt>.</p>
+<p>This file contains a <tt class="docutils literal"><span class="pre">global</span></tt> section (<em>required</em>) with the following
+parameter:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">clusters</span></tt> (<em>required</em>): a list of cluster name separated by commas
+(<tt class="docutils literal"><span class="pre">,</span></tt>).</li>
+</ul>
+<p>Then, for each cluster present in the list, a dedicated section must be
+present, named after the cluster name. These sections must contain the
+following parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">frontend</span></tt> (<em>required</em>): The network hostname or the IP address of the
+cluster frontend on which the launcher should connect to launch the
+<strong class="command">jobstats</strong> agent.</li>
+<li><tt class="docutils literal"><span class="pre">user</span></tt> (<em>required</em>): The user name to authenticate on the remote cluster
+frontend node.</li>
+<li><tt class="docutils literal"><span class="pre">privkey</span></tt> (<em>required</em>): The absolute path to the SSH private key file to
+authenticate on the remote cluster frontend node.</li>
+<li><tt class="docutils literal"><span class="pre">script</span></tt> (<em>required</em>): The absolute path to the <strong class="command">jobstats</strong> agent.</li>
+</ul>
+<p>Here is complete annoted HPCStats <strong class="command">jobstats</strong> launcher configuration
+file example:</p>
+<div class="highlight-python"><pre>[global]
+clusters=cluster1,cluster2
+
+[cluster1]
+user=hpcstats
+frontend=frontend.cluster1.company.tld
+privkey=/home/hpcstats/.ssh/id_rsa
+script=/usr/share/hpcstats/jobstats
+
+[cluster2]
+user=hpcstats
+frontend=frontend.cluster2.company.tld
+privkey=/home/hpcstats/.ssh/id_rsa
+script=/usr/share/hpcstats/jobstats
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configuration</a><ul>
+<li><a class="reference internal" href="#hpcstats-server">HPCStats server</a></li>
+<li><a class="reference internal" href="#agents-and-launcher">Agents and launcher</a><ul>
+<li><a class="reference internal" href="#fsusage-agent">FSUsage agent</a></li>
+<li><a class="reference internal" href="#jobstats-agent">JobStats agent</a></li>
+<li><a class="reference internal" href="#jobstats-launcher">JobStats launcher</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation Guide</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="usage.html"
+                        title="next chapter">Usage guide</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/configuration.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="Usage guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation Guide"
+             >previous</a> |</li>
+        <li><a href="index.html">HPCStats 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

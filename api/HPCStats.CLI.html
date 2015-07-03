@@ -1,0 +1,403 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CLI Package &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="../index.html" />
+    <link rel="up" title="HPCStats Package" href="HPCStats.html" />
+    <link rel="next" title="Conf Package" href="HPCStats.Conf.html" />
+    <link rel="prev" title="HPCStats Package" href="HPCStats.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Conf.html" title="Conf Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.html" title="HPCStats Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" accesskey="U">HPCStats Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cli-package">
+<h1>CLI Package<a class="headerlink" href="#cli-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">CLI</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-HPCStats.CLI"></span><p>This package contains all CLI related modules:</p>
+<ul class="simple">
+<li>The applications</li>
+<li>The argument parser</li>
+<li>The application launcher</li>
+</ul>
+</div>
+<div class="section" id="module-HPCStats.CLI.HPCStatsApp">
+<span id="hpcstatsapp-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">HPCStatsApp</span></tt> Module<a class="headerlink" href="#module-HPCStats.CLI.HPCStatsApp" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the HPCStatsApp class.</p>
+<dl class="class">
+<dt id="HPCStats.CLI.HPCStatsApp.HPCStatsApp">
+<em class="property">class </em><tt class="descclassname">HPCStats.CLI.HPCStatsApp.</tt><tt class="descname">HPCStatsApp</tt><big>(</big><em>conf</em>, <em>cluster_name</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsApp.HPCStatsApp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Abstract HPCStats application class, parent of all real application
+classes (Importer, Reporter).</p>
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsApp.HPCStatsApp.new_db">
+<tt class="descname">new_db</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsApp.HPCStatsApp.new_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new HPCStatsDB object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsApp.HPCStatsApp.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsApp.HPCStatsApp.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run method that should be implemented by all real App classes.
+For this abstract class, it raises NotImplementedError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsApp.HPCStatsApp.run_check">
+<tt class="descname">run_check</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsApp.HPCStatsApp.run_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pre-run checks</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.CLI.HPCStatsArgumentParser">
+<span id="hpcstatsargumentparser-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">HPCStatsArgumentParser</span></tt> Module<a class="headerlink" href="#module-HPCStats.CLI.HPCStatsArgumentParser" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the HPCStatsArgumentParser class.</p>
+<dl class="class">
+<dt id="HPCStats.CLI.HPCStatsArgumentParser.HPCStatsArgumentParser">
+<em class="property">class </em><tt class="descclassname">HPCStats.CLI.HPCStatsArgumentParser.</tt><tt class="descname">HPCStatsArgumentParser</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsArgumentParser.HPCStatsArgumentParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">argparse.ArgumentParser</span></tt></p>
+<p>This class inherits the Python standard ArgumentParser class, it
+implements the CLI argument parser for the HPCStats program.</p>
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsArgumentParser.HPCStatsArgumentParser.add_args">
+<tt class="descname">add_args</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsArgumentParser.HPCStatsArgumentParser.add_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add all arguments with their constraints to the parser.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsArgumentParser.HPCStatsArgumentParser.parse_args">
+<tt class="descname">parse_args</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsArgumentParser.HPCStatsArgumentParser.parse_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call parent class parse_args() method and do more specifics
+arguments coherency checks.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.CLI.HPCStatsChecker">
+<span id="hpcstatschecker-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">HPCStatsChecker</span></tt> Module<a class="headerlink" href="#module-HPCStats.CLI.HPCStatsChecker" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the HPCStatsChecker class.</p>
+<dl class="class">
+<dt id="HPCStats.CLI.HPCStatsChecker.HPCStatsChecker">
+<em class="property">class </em><tt class="descclassname">HPCStats.CLI.HPCStatsChecker.</tt><tt class="descname">HPCStatsChecker</tt><big>(</big><em>conf</em>, <em>cluster_name</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsChecker.HPCStatsChecker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.CLI.HPCStatsApp.HPCStatsApp" title="HPCStats.CLI.HPCStatsApp.HPCStatsApp"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.CLI.HPCStatsApp.HPCStatsApp</span></tt></a></p>
+<p>HPCStats Checker application which checks all data sources availability.</p>
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsChecker.HPCStatsChecker.check_cluster_sources">
+<tt class="descname">check_cluster_sources</tt><big>(</big><em>db</em>, <em>cluster_name</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsChecker.HPCStatsChecker.check_cluster_sources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check data sources for a cluster.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsChecker.HPCStatsChecker.cleanup">
+<tt class="descname">cleanup</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsChecker.HPCStatsChecker.cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean-up the application before exit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsChecker.HPCStatsChecker.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsChecker.HPCStatsChecker.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run HPCStats Checker application.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.CLI.HPCStatsImporter">
+<span id="hpcstatsimporter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">HPCStatsImporter</span></tt> Module<a class="headerlink" href="#module-HPCStats.CLI.HPCStatsImporter" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the HPCStatsImporter class.</p>
+<dl class="class">
+<dt id="HPCStats.CLI.HPCStatsImporter.HPCStatsImporter">
+<em class="property">class </em><tt class="descclassname">HPCStats.CLI.HPCStatsImporter.</tt><tt class="descname">HPCStatsImporter</tt><big>(</big><em>conf</em>, <em>cluster_name</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsImporter.HPCStatsImporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.CLI.HPCStatsApp.HPCStatsApp" title="HPCStats.CLI.HPCStatsApp.HPCStatsApp"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.CLI.HPCStatsApp.HPCStatsApp</span></tt></a></p>
+<p>HPCStats Importer application which import data from various sources
+and update the database.</p>
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsImporter.HPCStatsImporter.cleanup">
+<tt class="descname">cleanup</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsImporter.HPCStatsImporter.cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean-up the application before exit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsImporter.HPCStatsImporter.import_cluster_data">
+<tt class="descname">import_cluster_data</tt><big>(</big><em>db</em>, <em>cluster_name</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsImporter.HPCStatsImporter.import_cluster_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import from sources all data specific to a cluster.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsImporter.HPCStatsImporter.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsImporter.HPCStatsImporter.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run HPCStats Importer application.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.CLI.HPCStatsLauncher">
+<span id="hpcstatslauncher-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">HPCStatsLauncher</span></tt> Module<a class="headerlink" href="#module-HPCStats.CLI.HPCStatsLauncher" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the HPCStatsLauncher class.</p>
+<dl class="class">
+<dt id="HPCStats.CLI.HPCStatsLauncher.HPCStatsLauncher">
+<em class="property">class </em><tt class="descclassname">HPCStats.CLI.HPCStatsLauncher.</tt><tt class="descname">HPCStatsLauncher</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsLauncher.HPCStatsLauncher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>HPCStats application factory. It basically parses the arguments, set
+various global and general parameters, creates the configuration object
+and finally creates the appropriate application object.</p>
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsLauncher.HPCStatsLauncher.exit">
+<tt class="descname">exit</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsLauncher.HPCStatsLauncher.exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean-up the application and exit the program with error return
+node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsLauncher.HPCStatsLauncher.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsLauncher.HPCStatsLauncher.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the application and catch all exceptions.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.CLI.HPCStatsModifier">
+<span id="hpcstatsmodifier-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">HPCStatsModifier</span></tt> Module<a class="headerlink" href="#module-HPCStats.CLI.HPCStatsModifier" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the HPCStatsModifier class.</p>
+<dl class="class">
+<dt id="HPCStats.CLI.HPCStatsModifier.HPCStatsModifier">
+<em class="property">class </em><tt class="descclassname">HPCStats.CLI.HPCStatsModifier.</tt><tt class="descname">HPCStatsModifier</tt><big>(</big><em>conf</em>, <em>cluster_name</em>, <em>params</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsModifier.HPCStatsModifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.CLI.HPCStatsApp.HPCStatsApp" title="HPCStats.CLI.HPCStatsApp.HPCStatsApp"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.CLI.HPCStatsApp.HPCStatsApp</span></tt></a></p>
+<p>HPCStats Modifier application is used to modify BusinessCodes, Projects
+and Domains data in HPCStats DB.</p>
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.cleanup">
+<tt class="descname">cleanup</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean-up the application before exit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.create_domain">
+<tt class="descname">create_domain</tt><big>(</big><em>domain_key</em>, <em>domain_name</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.create_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the domain whose key and name are given in parameters. It
+raises HPCStatsRuntimeError if another Domain with the same key
+already exists in DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run HPCStats Updater application.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.set_business_code_description">
+<tt class="descname">set_business_code_description</tt><big>(</big><em>business_code</em>, <em>description</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.set_business_code_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify in DB the description of the Business code given in
+parameter. It raises HPCStatsRuntimeError if the Business code
+is not found in DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.set_project_description">
+<tt class="descname">set_project_description</tt><big>(</big><em>project_code</em>, <em>description</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.set_project_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify in DB the description of the Project given in parameter. It
+raises HPCStatsRuntimeError if the Project is not found in DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.set_project_domain">
+<tt class="descname">set_project_domain</tt><big>(</big><em>project_code</em>, <em>domain_key</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsModifier.HPCStatsModifier.set_project_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the Domain of the Project whose code is given in parameter.
+It raises HPCStatsRuntimeError if either the Project code or the
+Domain key are not found in DB.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.CLI.HPCStatsReporter">
+<span id="hpcstatsreporter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">HPCStatsReporter</span></tt> Module<a class="headerlink" href="#module-HPCStats.CLI.HPCStatsReporter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HPCStats.CLI.HPCStatsReporter.HPCStatsReporter">
+<em class="property">class </em><tt class="descclassname">HPCStats.CLI.HPCStatsReporter.</tt><tt class="descname">HPCStatsReporter</tt><big>(</big><em>conf</em>, <em>cluster_name</em>, <em>template</em>, <em>interval</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsReporter.HPCStatsReporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.CLI.HPCStatsApp.HPCStatsApp" title="HPCStats.CLI.HPCStatsApp.HPCStatsApp"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.CLI.HPCStatsApp.HPCStatsApp</span></tt></a></p>
+<p>HPCStats Reporter application which generates usage report based on
+database content.</p>
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.check_template">
+<tt class="descname">check_template</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.check_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.cleanup">
+<tt class="descname">cleanup</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean-up the application before exit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.get_interval_begin_end">
+<tt class="descname">get_interval_begin_end</tt><big>(</big><em>tmp_datetime</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.get_interval_begin_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function aims to calculate the exacts beginning and end of the
+of the step sized interval around the specified datetime.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.get_interval_timedelta">
+<tt class="descname">get_interval_timedelta</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.get_interval_timedelta" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function return a python timedelta (difference between
+2 datetime objects) of the size of the step.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.get_template_filename">
+<tt class="descname">get_template_filename</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.get_template_filename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.get_templates_dirname">
+<tt class="descname">get_templates_dirname</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.get_templates_dirname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run HPCStats Reporter application.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.run_interval">
+<tt class="descname">run_interval</tt><big>(</big><em>process_info</em><big>)</big><a class="headerlink" href="#HPCStats.CLI.HPCStatsReporter.HPCStatsReporter.run_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process has an array of 2 args:
+- beginning interval
+- end interval</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">CLI Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">CLI</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-HPCStats.CLI.HPCStatsApp"><tt class="docutils literal"><span class="pre">HPCStatsApp</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.CLI.HPCStatsArgumentParser"><tt class="docutils literal"><span class="pre">HPCStatsArgumentParser</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.CLI.HPCStatsChecker"><tt class="docutils literal"><span class="pre">HPCStatsChecker</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.CLI.HPCStatsImporter"><tt class="docutils literal"><span class="pre">HPCStatsImporter</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.CLI.HPCStatsLauncher"><tt class="docutils literal"><span class="pre">HPCStatsLauncher</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.CLI.HPCStatsModifier"><tt class="docutils literal"><span class="pre">HPCStatsModifier</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.CLI.HPCStatsReporter"><tt class="docutils literal"><span class="pre">HPCStatsReporter</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="HPCStats.html"
+                        title="previous chapter">HPCStats Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HPCStats.Conf.html"
+                        title="next chapter">Conf Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/HPCStats.CLI.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Conf.html" title="Conf Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.html" title="HPCStats Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

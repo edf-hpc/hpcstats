@@ -1,0 +1,243 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Architectures Package &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="../index.html" />
+    <link rel="up" title="Importer Package" href="HPCStats.Importer.html" />
+    <link rel="next" title="BusinessCodes Package" href="HPCStats.Importer.BusinessCodes.html" />
+    <link rel="prev" title="Importer Package" href="HPCStats.Importer.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.BusinessCodes.html" title="BusinessCodes Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.html" title="Importer Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li>
+          <li><a href="HPCStats.Importer.html" accesskey="U">Importer Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="architectures-package">
+<h1>Architectures Package<a class="headerlink" href="#architectures-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">Architectures</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-HPCStats.Importer.Architectures"></span><p>This package contains all Architecture importers.</p>
+</div>
+<div class="section" id="module-HPCStats.Importer.Architectures.ArchitectureImporter">
+<span id="architectureimporter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ArchitectureImporter</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Architectures.ArchitectureImporter" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the base class for all Architecture importers.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporter.ArchitectureImporter">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Architectures.ArchitectureImporter.</tt><tt class="descname">ArchitectureImporter</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster_name</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporter.ArchitectureImporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="HPCStats.Importer.html#HPCStats.Importer.Importer.Importer" title="HPCStats.Importer.Importer.Importer"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Importer.Importer</span></tt></a></p>
+<p>This is the base class common to all HPCStats Architecture importers.
+It defines a common set of attributes and generic methods.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporter.ArchitectureImporter.find_node">
+<tt class="descname">find_node</tt><big>(</big><em>search</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporter.ArchitectureImporter.find_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a Node over the list of Nodes loaded by importer
+in self.nodes attribute. Returns None if not found.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Architectures.ArchitectureImporterArchfile">
+<span id="architectureimporterarchfile-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ArchitectureImporterArchfile</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Architectures.ArchitectureImporterArchfile" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the ArchitectureImporterArchfile class.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Architectures.ArchitectureImporterArchfile.</tt><tt class="descname">ArchitectureImporterArchfile</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster_name</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Importer.Architectures.ArchitectureImporter.ArchitectureImporter" title="HPCStats.Importer.Architectures.ArchitectureImporter.ArchitectureImporter"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Architectures.ArchitectureImporter.ArchitectureImporter</span></tt></a></p>
+<p>This class imports architecture related data (Cluster and Nodes)
+from an ini flat file.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.check">
+<tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if archfile actually exists or raises HPCStatsSourceError if
+not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.config_get">
+<tt class="descname">config_get</tt><big>(</big><em>section</em>, <em>option</em>, <em>isint=False</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.config_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to get option/section in architecture file and raise
+HPCStatsSourceError when a problem occurs.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.convert_freq">
+<em class="property">static </em><tt class="descname">convert_freq</tt><big>(</big><em>freq_str</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.convert_freq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert frequency string in parameter into float. Returns None if
+string format is not valid.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.convert_mem">
+<em class="property">static </em><tt class="descname">convert_mem</tt><big>(</big><em>mem_str</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.convert_mem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert memory string in parameter into int. Returns None if
+string format is not valid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load Cluster, Nodes and partitions from Architecture files. Raises
+HPCStatsRuntimeError or HPCStatsSourceError if error is encountered
+while loading data from sources. It sets attributes cluster, nodes
+and partitions with loaded data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.read_arch">
+<tt class="descname">read_arch</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.read_arch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if archfile actually exists then reads it and set arch
+attribute. Raises HPCStatsSourceError on error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporterArchfile.ArchitectureImporterArchfile.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or update Cluster and Nodes in the database.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Architectures.ArchitectureImporterFactory">
+<span id="architectureimporterfactory-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ArchitectureImporterFactory</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Architectures.ArchitectureImporterFactory" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the factory design pattern class that builds the
+appropriate ArchitectureImporter depending on what is specified in
+configuration.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporterFactory.ArchitectureImporterFactory">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Architectures.ArchitectureImporterFactory.</tt><tt class="descname">ArchitectureImporterFactory</tt><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporterFactory.ArchitectureImporterFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class simply delivers the factory() static method, there is not
+point to instanciate it with an object.</p>
+<dl class="staticmethod">
+<dt id="HPCStats.Importer.Architectures.ArchitectureImporterFactory.ArchitectureImporterFactory.factory">
+<em class="property">static </em><tt class="descname">factory</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster_name</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Architectures.ArchitectureImporterFactory.ArchitectureImporterFactory.factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the appropriate ArchitectureImporter object
+depending on what is specified in configuration. In case of
+configuration error, HPCStatsConfigurationException is raised.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Architectures Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">Architectures</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Architectures.ArchitectureImporter"><tt class="docutils literal"><span class="pre">ArchitectureImporter</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Architectures.ArchitectureImporterArchfile"><tt class="docutils literal"><span class="pre">ArchitectureImporterArchfile</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Architectures.ArchitectureImporterFactory"><tt class="docutils literal"><span class="pre">ArchitectureImporterFactory</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.html"
+                        title="previous chapter">Importer Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.BusinessCodes.html"
+                        title="next chapter">BusinessCodes Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/HPCStats.Importer.Architectures.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.BusinessCodes.html" title="BusinessCodes Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.html" title="Importer Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li>
+          <li><a href="HPCStats.Importer.html" >Importer Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

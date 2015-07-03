@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BusinessCodes Package &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="../index.html" />
+    <link rel="up" title="Importer Package" href="HPCStats.Importer.html" />
+    <link rel="next" title="Events Package" href="HPCStats.Importer.Events.html" />
+    <link rel="prev" title="Architectures Package" href="HPCStats.Importer.Architectures.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Events.html" title="Events Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Architectures.html" title="Architectures Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li>
+          <li><a href="HPCStats.Importer.html" accesskey="U">Importer Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="businesscodes-package">
+<h1>BusinessCodes Package<a class="headerlink" href="#businesscodes-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodes</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-HPCStats.Importer.BusinessCodes"></span><p>This package contains all BusinessCode importers.</p>
+</div>
+<div class="section" id="module-HPCStats.Importer.BusinessCodes.BusinessCodeImporter">
+<span id="businesscodeimporter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporter</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporter" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the base class for all BusinessCode importers.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.BusinessCodes.BusinessCodeImporter.</tt><tt class="descname">BusinessCodeImporter</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="HPCStats.Importer.html#HPCStats.Importer.Importer.Importer" title="HPCStats.Importer.Importer.Importer"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Importer.Importer</span></tt></a></p>
+<p>This is the base class common to all HPCStats BusinessCode importers.
+It defines a common set of attributes and generic methods.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter.find">
+<tt class="descname">find</tt><big>(</big><em>search</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a Business over the list of Businesses loaded by importer
+in self.businesses attribute. Returns None if not found.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV">
+<span id="businesscodeimportercsv-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterCSV</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the BusinessCodeImporterCSV class.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV.BusinessCodeImporterCSV">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV.</tt><tt class="descname">BusinessCodeImporterCSV</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV.BusinessCodeImporterCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter" title="HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter</span></tt></a></p>
+<p>This class imports BusinessCodes from a CSV flat file.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV.BusinessCodeImporterCSV.check">
+<tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV.BusinessCodeImporterCSV.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if CSV file exists and is a proper flat file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV.BusinessCodeImporterCSV.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV.BusinessCodeImporterCSV.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load BusinessCodes from CSV files in businesses attribute. Raise
+HPCStatsSourceError if error in encountered.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV.BusinessCodeImporterCSV.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV.BusinessCodeImporterCSV.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or update BusinessCodes in database.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy">
+<span id="businesscodeimporterdummy-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterDummy</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the BusinessCodeImporterDumy class.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy.BusinessCodeImporterDummy">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy.</tt><tt class="descname">BusinessCodeImporterDummy</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy.BusinessCodeImporterDummy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter" title="HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter</span></tt></a></p>
+<p>This class is dummy, it does not import any BusinessCode at all. It
+could be used as sane default when no BusinessCode have to be imported.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy.BusinessCodeImporterDummy.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy.BusinessCodeImporterDummy.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dummy BusinessCodes load.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy.BusinessCodeImporterDummy.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy.BusinessCodeImporterDummy.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dummy BusinessCodes update.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory">
+<span id="businesscodeimporterfactory-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterFactory</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the factory design pattern class that builds the
+appropriate BusinessCodeImporter depending on what is specified in
+configuration.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory.BusinessCodeImporterFactory">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory.</tt><tt class="descname">BusinessCodeImporterFactory</tt><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory.BusinessCodeImporterFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class simply delivers the factory() static method, there is not
+point to instanciate it with an object.</p>
+<dl class="staticmethod">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory.BusinessCodeImporterFactory.factory">
+<em class="property">static </em><tt class="descname">factory</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory.BusinessCodeImporterFactory.factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the appropriate BusinessCodeImporter object
+depending on what is specified in configuration. In case of
+configuration error, HPCStatsConfigurationException is raised.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm">
+<span id="businesscodeimporterslurm-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm" title="Permalink to this headline">¶</a></h2>
+<p>This module import business codes from wckeys in Slurm accouting database.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.</tt><tt class="descname">BusinessCodeImporterSlurm</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter" title="HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.BusinessCodes.BusinessCodeImporter.BusinessCodeImporter</span></tt></a></p>
+<p>Main class of this module.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.check">
+<tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if all Slurm databases are available and if we connect to
+them.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.connect_db">
+<tt class="descname">connect_db</tt><big>(</big><em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.connect_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to a cluster Slurm database and set conn/cur attributes
+accordingly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.disconnect_db">
+<tt class="descname">disconnect_db</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.disconnect_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnect to currently connected Slurm DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects to all known Slurm databases to extract business codes
+from jobs wckeys. Raises HPCStatsSourceError in case of error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.load_cluster">
+<tt class="descname">load_cluster</tt><big>(</big><em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.load_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to cluster Slurm database to extract business codes from
+jobs wckeys. Raises HPCStatsSourceError in case of error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm.BusinessCodeImporterSlurm.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create BusinessCodes in database. It does not update BusinessCodes
+as they have no description when they are imported from Slurm and
+operators could have added description using <tt class="docutils literal"><span class="pre">hpcstats</span> <span class="pre">modify</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">BusinessCodes Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">BusinessCodes</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporter"><tt class="docutils literal"><span class="pre">BusinessCodeImporter</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV"><tt class="docutils literal"><span class="pre">BusinessCodeImporterCSV</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy"><tt class="docutils literal"><span class="pre">BusinessCodeImporterDummy</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory"><tt class="docutils literal"><span class="pre">BusinessCodeImporterFactory</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm"><tt class="docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.Architectures.html"
+                        title="previous chapter">Architectures Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.Events.html"
+                        title="next chapter">Events Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/HPCStats.Importer.BusinessCodes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Events.html" title="Events Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Architectures.html" title="Architectures Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li>
+          <li><a href="HPCStats.Importer.html" >Importer Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

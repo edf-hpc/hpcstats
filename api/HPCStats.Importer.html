@@ -1,0 +1,212 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Importer Package &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="../index.html" />
+    <link rel="up" title="HPCStats Package" href="HPCStats.html" />
+    <link rel="next" title="Architectures Package" href="HPCStats.Importer.Architectures.html" />
+    <link rel="prev" title="Finder Package" href="HPCStats.Finder.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Architectures.html" title="Architectures Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Finder.html" title="Finder Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" accesskey="U">HPCStats Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="importer-package">
+<h1>Importer Package<a class="headerlink" href="#importer-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">Importer</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-HPCStats.Importer"></span><p>This package contains all the HPCStats importers.</p>
+</div>
+<div class="section" id="module-HPCStats.Importer.Importer">
+<span id="importer-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Importer</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Importer" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the base abstract for all HPCStats importers.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Importer.Importer">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Importer.</tt><tt class="descname">Importer</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Importer.Importer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This abstract base class defines a common set of attributes
+for all HPCStats importers.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="HPCStats.Importer.Architectures.html">Architectures Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Architectures.html#id1"><tt class="docutils literal"><span class="pre">Architectures</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Architectures.html#module-HPCStats.Importer.Architectures.ArchitectureImporter"><tt class="docutils literal"><span class="pre">ArchitectureImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Architectures.html#module-HPCStats.Importer.Architectures.ArchitectureImporterArchfile"><tt class="docutils literal"><span class="pre">ArchitectureImporterArchfile</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Architectures.html#module-HPCStats.Importer.Architectures.ArchitectureImporterFactory"><tt class="docutils literal"><span class="pre">ArchitectureImporterFactory</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="HPCStats.Importer.BusinessCodes.html">BusinessCodes Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.BusinessCodes.html#id1"><tt class="docutils literal"><span class="pre">BusinessCodes</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.BusinessCodes.html#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporter"><tt class="docutils literal"><span class="pre">BusinessCodeImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.BusinessCodes.html#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterCSV"><tt class="docutils literal"><span class="pre">BusinessCodeImporterCSV</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.BusinessCodes.html#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterDummy"><tt class="docutils literal"><span class="pre">BusinessCodeImporterDummy</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.BusinessCodes.html#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory"><tt class="docutils literal"><span class="pre">BusinessCodeImporterFactory</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.BusinessCodes.html#module-HPCStats.Importer.BusinessCodes.BusinessCodeImporterSlurm"><tt class="docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="HPCStats.Importer.Events.html">Events Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Events.html#id1"><tt class="docutils literal"><span class="pre">Events</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Events.html#module-HPCStats.Importer.Events.EventImporter"><tt class="docutils literal"><span class="pre">EventImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Events.html#module-HPCStats.Importer.Events.EventImporterFactory"><tt class="docutils literal"><span class="pre">EventImporterFactory</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Events.html#module-HPCStats.Importer.Events.EventImporterSlurm"><tt class="docutils literal"><span class="pre">EventImporterSlurm</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="HPCStats.Importer.FSUsage.html">FSUsage Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.FSUsage.html#id1"><tt class="docutils literal"><span class="pre">FSUsage</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.FSUsage.html#module-HPCStats.Importer.FSUsage.FSUsageImporter"><tt class="docutils literal"><span class="pre">FSUsageImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.FSUsage.html#module-HPCStats.Importer.FSUsage.FSUsageImporterFactory"><tt class="docutils literal"><span class="pre">FSUsageImporterFactory</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.FSUsage.html#module-HPCStats.Importer.FSUsage.FSUsageImporterSSH"><tt class="docutils literal"><span class="pre">FSUsageImporterSSH</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="HPCStats.Importer.Jobs.html">Jobs Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Jobs.html#id1"><tt class="docutils literal"><span class="pre">Jobs</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Jobs.html#module-HPCStats.Importer.Jobs.JobImporter"><tt class="docutils literal"><span class="pre">JobImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Jobs.html#module-HPCStats.Importer.Jobs.JobImporterFactory"><tt class="docutils literal"><span class="pre">JobImporterFactory</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Jobs.html#module-HPCStats.Importer.Jobs.JobImporterSlurm"><tt class="docutils literal"><span class="pre">JobImporterSlurm</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="HPCStats.Importer.Projects.html">Projects Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Projects.html#id1"><tt class="docutils literal"><span class="pre">Projects</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Projects.html#module-HPCStats.Importer.Projects.ProjectImporter"><tt class="docutils literal"><span class="pre">ProjectImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Projects.html#module-HPCStats.Importer.Projects.ProjectImporterCSV"><tt class="docutils literal"><span class="pre">ProjectImporterCSV</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Projects.html#module-HPCStats.Importer.Projects.ProjectImporterDummy"><tt class="docutils literal"><span class="pre">ProjectImporterDummy</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Projects.html#module-HPCStats.Importer.Projects.ProjectImporterFactory"><tt class="docutils literal"><span class="pre">ProjectImporterFactory</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Projects.html#module-HPCStats.Importer.Projects.ProjectImporterSlurm"><tt class="docutils literal"><span class="pre">ProjectImporterSlurm</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="HPCStats.Importer.Users.html">Users Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Users.html#id1"><tt class="docutils literal"><span class="pre">Users</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Users.html#module-HPCStats.Importer.Users.UserImporter"><tt class="docutils literal"><span class="pre">UserImporter</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Users.html#module-HPCStats.Importer.Users.UserImporterFactory"><tt class="docutils literal"><span class="pre">UserImporterFactory</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Users.html#module-HPCStats.Importer.Users.UserImporterLdap"><tt class="docutils literal"><span class="pre">UserImporterLdap</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HPCStats.Importer.Users.html#module-HPCStats.Importer.Users.UserImporterLdapSlurm"><tt class="docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Importer Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">Importer</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Importer"><tt class="docutils literal"><span class="pre">Importer</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="HPCStats.Finder.html"
+                        title="previous chapter">Finder Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.Architectures.html"
+                        title="next chapter">Architectures Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/HPCStats.Importer.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Architectures.html" title="Architectures Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Finder.html" title="Finder Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

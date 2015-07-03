@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Users Package &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="../index.html" />
+    <link rel="up" title="Importer Package" href="HPCStats.Importer.html" />
+    <link rel="next" title="Model Package" href="HPCStats.Model.html" />
+    <link rel="prev" title="Projects Package" href="HPCStats.Importer.Projects.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Model.html" title="Model Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Projects.html" title="Projects Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li>
+          <li><a href="HPCStats.Importer.html" accesskey="U">Importer Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="users-package">
+<h1>Users Package<a class="headerlink" href="#users-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">Users</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-HPCStats.Importer.Users"></span><p>This package contains all User importers.</p>
+</div>
+<div class="section" id="module-HPCStats.Importer.Users.UserImporter">
+<span id="userimporter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">UserImporter</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Users.UserImporter" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the base class for all User importers.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Users.UserImporter.UserImporter">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Users.UserImporter.</tt><tt class="descname">UserImporter</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporter.UserImporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="HPCStats.Importer.html#HPCStats.Importer.Importer.Importer" title="HPCStats.Importer.Importer.Importer"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Importer.Importer</span></tt></a></p>
+<p>This is the base class common to all HPCStats User importers.
+It defines a common set of attributes and generic methods.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporter.UserImporter.find_account">
+<tt class="descname">find_account</tt><big>(</big><em>search</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporter.UserImporter.find_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for an Account over the list of Accounts loaded by importer
+in self.accounts attribute. Returns None if not found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporter.UserImporter.find_user">
+<tt class="descname">find_user</tt><big>(</big><em>search</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporter.UserImporter.find_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a User over the list of Users loaded by importer
+in self.users attribute. Returns None if not found.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Users.UserImporterFactory">
+<span id="userimporterfactory-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterFactory</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Users.UserImporterFactory" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the factory design pattern class that builds the
+appropriate UserImporter depending on what is specified in configuration.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Users.UserImporterFactory.UserImporterFactory">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Users.UserImporterFactory.</tt><tt class="descname">UserImporterFactory</tt><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterFactory.UserImporterFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class simply delivers the factory() static method, there is not
+point to instanciate it with an object.</p>
+<dl class="staticmethod">
+<dt id="HPCStats.Importer.Users.UserImporterFactory.UserImporterFactory.factory">
+<em class="property">static </em><tt class="descname">factory</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterFactory.UserImporterFactory.factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the appropriate UserImporter object depending on
+what is specified in configuration. In case of configuration error,
+HPCStatsConfigurationException is raised.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Users.UserImporterLdap">
+<span id="userimporterldap-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Users.UserImporterLdap" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the UserImporterLdap class.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Users.UserImporterLdap.</tt><tt class="descname">UserImporterLdap</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Importer.Users.UserImporter.UserImporter" title="HPCStats.Importer.Users.UserImporter.UserImporter"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Users.UserImporter.UserImporter</span></tt></a></p>
+<p>This UserImporter is a bit tricky since it also has to calculate start
+and end datetime of users&#8217; Accounts. For this purpose, the load() method
+must first get all user accounts that are currently defined w/o end
+datetime in database to find out if they have disapeared or not in LDAP
+directory. If yes, update the account end datetime with todays date.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.check">
+<tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the LDAP directory is available for connections.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.connect_ldap">
+<tt class="descname">connect_ldap</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.connect_ldap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to LDAP directory and set ldap_conn attribute accordingly.
+Raises HPCStatsSourceError in case of error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.get_default_new_date">
+<tt class="descname">get_default_new_date</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.get_default_new_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the date that is used as creation date for new accounts.
+If there is no account for this cluster in DB yet, we consider this
+is an import from scratch and the creation date is epoch. Else the
+creation date is today.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.get_group_members">
+<tt class="descname">get_group_members</tt><big>(</big><em>group</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.get_group_members" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of (Users,Account) tuples members of a group in LDAP
+directory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.get_user_account_from_login">
+<tt class="descname">get_user_account_from_login</tt><big>(</big><em>login</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.get_user_account_from_login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns (User,Account) objects tuple with information found in LDAP
+for the login in parameter. The login in parameter must be
+down-cased.</p>
+<p>The created account have None creation date and deletion date. It is
+up-to update() method to set them well.</p>
+<p>When no account could be found in LDAP directory for the login, if
+strict_user_membership attribute is True, this function raises an
+HPCStatsSourceError exception. If the attribute is False, None is
+returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.get_user_department">
+<tt class="descname">get_user_department</tt><big>(</big><em>login</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.get_user_department" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for user department based on its groups membership.</p>
+<p>The login in parameter must be downcased.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load (User,Account) tuples from both LDAP directoy and DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.load_db">
+<tt class="descname">load_db</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.load_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load (User,Account) tuples w/o account deletion date from DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.load_ldap">
+<tt class="descname">load_ldap</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.load_ldap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load (User,Account) tuples from LDAP directory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Users and Accounts in DB based on what has been loaded from
+LDAP directory and current DB content.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Users.UserImporterLdapSlurm">
+<span id="userimporterldapslurm-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Users.UserImporterLdapSlurm" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the UserImporterLdapSlurm class.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Users.UserImporterLdapSlurm.</tt><tt class="descname">UserImporterLdapSlurm</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap" title="HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Users.UserImporterLdap.UserImporterLdap</span></tt></a></p>
+<p>This class inherits from UserImporterLdap so it imports users from LDAP
+directory and ensure that accounts from DB are closed properly as well.
+But it also imports the list of users known in Slurm DB and tries to get
+information about them in LDAP. This is particularly usefull for users
+that are still in LDAP but not in cluster user group anymore since these
+users have not been imported by UserImporterLdap on purpose.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm.connect_db">
+<tt class="descname">connect_db</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm.connect_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to cluster Slurm database and set conn/cur attribute
+accordingly. Raises HPCStatsSourceError in case of problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm.disconnect_db">
+<tt class="descname">disconnect_db</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm.disconnect_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnect from cluster Slurm database.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm.load_slurm_users">
+<tt class="descname">load_slurm_users</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm.load_slurm_users" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Users.UserImporterLdapSlurm.UserImporterLdapSlurm.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Users Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">Users</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Users.UserImporter"><tt class="docutils literal"><span class="pre">UserImporter</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Users.UserImporterFactory"><tt class="docutils literal"><span class="pre">UserImporterFactory</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Users.UserImporterLdap"><tt class="docutils literal"><span class="pre">UserImporterLdap</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Users.UserImporterLdapSlurm"><tt class="docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.Projects.html"
+                        title="previous chapter">Projects Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HPCStats.Model.html"
+                        title="next chapter">Model Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/HPCStats.Importer.Users.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Model.html" title="Model Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Projects.html" title="Projects Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li>
+          <li><a href="HPCStats.Importer.html" >Importer Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

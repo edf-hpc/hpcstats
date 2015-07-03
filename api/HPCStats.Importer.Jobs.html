@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Jobs Package &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="../index.html" />
+    <link rel="up" title="Importer Package" href="HPCStats.Importer.html" />
+    <link rel="next" title="Projects Package" href="HPCStats.Importer.Projects.html" />
+    <link rel="prev" title="FSUsage Package" href="HPCStats.Importer.FSUsage.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Projects.html" title="Projects Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.FSUsage.html" title="FSUsage Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li>
+          <li><a href="HPCStats.Importer.html" accesskey="U">Importer Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="jobs-package">
+<h1>Jobs Package<a class="headerlink" href="#jobs-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">Jobs</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-HPCStats.Importer.Jobs"></span><p>This package contains all HPCStats JobImporters.</p>
+</div>
+<div class="section" id="module-HPCStats.Importer.Jobs.JobImporter">
+<span id="jobimporter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">JobImporter</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Jobs.JobImporter" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the base class for all Job importers.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Jobs.JobImporter.JobImporter">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Jobs.JobImporter.</tt><tt class="descname">JobImporter</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporter.JobImporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="HPCStats.Importer.html#HPCStats.Importer.Importer.Importer" title="HPCStats.Importer.Importer.Importer"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Importer.Importer</span></tt></a></p>
+<p>This is the base class common to all HPCStats Job importers.
+It simply defines a common set of attributes.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Jobs.JobImporterFactory">
+<span id="jobimporterfactory-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterFactory</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Jobs.JobImporterFactory" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the factory design pattern class that builds
+the appropriate JobImporter depending on what is specified in
+configuration.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Jobs.JobImporterFactory.JobImporterFactory">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Jobs.JobImporterFactory.</tt><tt class="descname">JobImporterFactory</tt><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterFactory.JobImporterFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class simply delivers the factory() static method, there is not
+point to instanciate it with an object.</p>
+<dl class="staticmethod">
+<dt id="HPCStats.Importer.Jobs.JobImporterFactory.JobImporterFactory.factory">
+<em class="property">static </em><tt class="descname">factory</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterFactory.JobImporterFactory.factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the appropriate JobImporter object depending
+on what is specified in configuration. In case of configuration
+error, HPCStatsConfigurationException is raised.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Jobs.JobImporterSlurm">
+<span id="jobimporterslurm-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Jobs.JobImporterSlurm" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the JobImporterSlurm class.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Jobs.JobImporterSlurm.</tt><tt class="descname">JobImporterSlurm</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em>, <em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Importer.Jobs.JobImporter.JobImporter" title="HPCStats.Importer.Jobs.JobImporter.JobImporter"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Jobs.JobImporter.JobImporter</span></tt></a></p>
+<p>This JobImporter imports jobs related data from Slurm accounting
+database.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.check">
+<tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if cluster Slurm database is available for connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.connect_db">
+<tt class="descname">connect_db</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.connect_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to cluster Slurm database and set conn/cur attribute
+accordingly. Raises HPCStatsSourceError in case of problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.disconnect_db">
+<tt class="descname">disconnect_db</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.disconnect_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnect from cluster Slurm database.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.get_job_state_from_slurm_state">
+<em class="property">static </em><tt class="descname">get_job_state_from_slurm_state</tt><big>(</big><em>state</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.get_job_state_from_slurm_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the human readable job state textual representation
+corresponding to the numeric state in parameter.</p>
+<p>From <tt class="docutils literal"><span class="pre">slurm.h.inc</span></tt>:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">enum</span> <span class="n">job_states</span> <span class="p">{</span>
+    <span class="n">JOB_PENDING</span><span class="p">,</span> <span class="cm">/* queued waiting for initiation */</span>
+    <span class="n">JOB_RUNNING</span><span class="p">,</span> <span class="cm">/* allocated resources and executing */</span>
+    <span class="n">JOB_SUSPENDED</span><span class="p">,</span> <span class="cm">/* allocated resources, execution suspended */</span>
+    <span class="n">JOB_COMPLETE</span><span class="p">,</span> <span class="cm">/* completed execution successfully */</span>
+    <span class="n">JOB_CANCELLED</span><span class="p">,</span> <span class="cm">/* cancelled by user */</span>
+    <span class="n">JOB_FAILED</span><span class="p">,</span> <span class="cm">/* completed execution unsuccessfully */</span>
+    <span class="n">JOB_TIMEOUT</span><span class="p">,</span> <span class="cm">/* terminated on reaching time limit */</span>
+    <span class="n">JOB_NODE_FAIL</span><span class="p">,</span> <span class="cm">/* terminated on node failure */</span>
+    <span class="n">JOB_PREEMPTED</span><span class="p">,</span> <span class="cm">/* terminated due to preemption */</span>
+    <span class="n">JOB_BOOT_FAIL</span><span class="p">,</span> <span class="cm">/* terminated due to preemption */</span>
+    <span class="n">JOB_END</span> <span class="cm">/* not a real state, last entry in table */</span>
+<span class="p">};</span>
+<span class="cp">#define JOB_STATE_BASE  0x00ff  </span><span class="cm">/* Used for job_states above */</span><span class="cp"></span>
+<span class="cp">#define JOB_STATE_FLAGS 0xff00  </span><span class="cm">/* Used for state flags below */</span><span class="cp"></span>
+<span class="cp">#define JOB_COMPLETING  0x8000  </span><span class="cm">/* Waiting for epilog completion */</span><span class="cp"></span>
+<span class="cp">#define JOB_CONFIGURING 0x4000  </span><span class="cm">/* Allocated nodes booting */</span><span class="cp"></span>
+<span class="cp">#define JOB_RESIZING    0x2000  </span><span class="cm">/* Size of job about to change, flag set</span>
+<span class="cm">                                 * before calling accounting functions</span>
+<span class="cm">                                 * immediately before job changes size */</span><span class="cp"></span>
+<span class="cp">#define JOB_SPECIAL_EXIT 0x1000 </span><span class="cm">/* Requeue an exit job in hold */</span><span class="cp"></span>
+<span class="cp">#define JOB_REQUEUE_HOLD 0x0800 </span><span class="cm">/* Requeue any job in hold */</span><span class="cp"></span>
+<span class="cp">#define JOB_REQUEUE      0x0400 </span><span class="cm">/* Requeue job in completing state */</span><span class="cp"></span>
+<span class="cp">#define JOB_STOPPED      0x0200 </span><span class="cm">/* Job is stopped state (holding resources,</span>
+<span class="cm">                                 * but sent SIGSTOP */</span><span class="cp"></span>
+<span class="cp">#define JOB_LAUNCH_FAILED 0x0100</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.get_jobs_after_batchid">
+<tt class="descname">get_jobs_after_batchid</tt><big>(</big><em>batchid</em>, <em>window_size=0</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.get_jobs_after_batchid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill the jobs attribute with the list of Jobs found in Slurm DB
+whose id_job is over or equals to the batchid in parameter.
+Returns the last found batch_id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.get_search_batch_id">
+<tt class="descname">get_search_batch_id</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.get_search_batch_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine and return the oldest batch_id to search for update in
+Slurm database.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.job_partition">
+<tt class="descname">job_partition</tt><big>(</big><em>job_id</em>, <em>partitions_str</em>, <em>nodelist</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.job_partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return one partition name depending on the partition field and the
+nodelist job record in Slurm DB.</p>
+<p>The partitions_str parameter is the partition field from Slurm DB
+job table. It is a string that represents a comma-separated list of
+partitions. Ex: &#8216;partition1,partition2&#8217;</p>
+<p>The nodelist parameter is the nodelist field from Slurm DB job
+table. It a string that represents the nodeset allocated to the job.
+Ex: &#8216;node[001-100]&#8217;</p>
+<p>If this partition list has only one element, this element is the
+resulting partition to record in HPCStatsDB. If this list has
+multiple elements, the function looks through the nodelist to find
+the coresponding partition loaded by ArchitectureImporter.</p>
+<p>If the nodelist is not specified, the function arbitrary select the
+first element of the partition list.</p>
+<p>Else, it searches through the job partitions loaded by
+ArchitectureImporter to find the list of job partitions whose
+nodelist totally intersects with job&#8217;s nodelist. Once found, it
+searches the partition over the list and returns it if found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load jobs from Slurm DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.load_update_window">
+<tt class="descname">load_update_window</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.load_update_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load and update job in windowed mode until there is more job to load
+in Slurm database.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.load_window">
+<tt class="descname">load_window</tt><big>(</big><em>batch_id</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.load_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a limited amount of jobs (limite to the window size) starting
+from the batch_id in parameter and fill jobs list attribute
+accordingly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Jobs.JobImporterSlurm.JobImporterSlurm.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update and save loaded Jobs in HPCStats DB.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Jobs Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">Jobs</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Jobs.JobImporter"><tt class="docutils literal"><span class="pre">JobImporter</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Jobs.JobImporterFactory"><tt class="docutils literal"><span class="pre">JobImporterFactory</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Jobs.JobImporterSlurm"><tt class="docutils literal"><span class="pre">JobImporterSlurm</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.FSUsage.html"
+                        title="previous chapter">FSUsage Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.Projects.html"
+                        title="next chapter">Projects Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/HPCStats.Importer.Jobs.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Projects.html" title="Projects Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.FSUsage.html" title="FSUsage Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li>
+          <li><a href="HPCStats.Importer.html" >Importer Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

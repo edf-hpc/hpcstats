@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Projects Package &mdash; HPCStats 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="HPCStats 0.9.0 documentation" href="../index.html" />
+    <link rel="up" title="Importer Package" href="HPCStats.Importer.html" />
+    <link rel="next" title="Users Package" href="HPCStats.Importer.Users.html" />
+    <link rel="prev" title="Jobs Package" href="HPCStats.Importer.Jobs.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Users.html" title="Users Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Jobs.html" title="Jobs Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li>
+          <li><a href="HPCStats.Importer.html" accesskey="U">Importer Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="projects-package">
+<h1>Projects Package<a class="headerlink" href="#projects-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">Projects</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-HPCStats.Importer.Projects"></span><p>This package contains all HPCStats Project importers.</p>
+</div>
+<div class="section" id="module-HPCStats.Importer.Projects.ProjectImporter">
+<span id="projectimporter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporter</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Projects.ProjectImporter" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the base class for all Projects importers.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Projects.ProjectImporter.ProjectImporter">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Projects.ProjectImporter.</tt><tt class="descname">ProjectImporter</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporter.ProjectImporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="HPCStats.Importer.html#HPCStats.Importer.Importer.Importer" title="HPCStats.Importer.Importer.Importer"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Importer.Importer</span></tt></a></p>
+<p>This is the base class common to all HPCStats Projects importers.
+It defines a common set of attributes and generic methods.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporter.ProjectImporter.find_domain">
+<tt class="descname">find_domain</tt><big>(</big><em>search</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporter.ProjectImporter.find_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a Domain over the list of Domains loaded by importer
+in self.domains attribute. Returns None if not found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporter.ProjectImporter.find_project">
+<tt class="descname">find_project</tt><big>(</big><em>search</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporter.ProjectImporter.find_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a Project over the list of Projects loaded by importer
+in self.projects attribute. Returns None if not found.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Projects.ProjectImporterCSV">
+<span id="projectimportercsv-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterCSV</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Projects.ProjectImporterCSV" title="Permalink to this headline">¶</a></h2>
+<p>This module import projects from CSV file. The CSV file must be formatted
+like this:</p>
+<p>&lt;project_code&gt;;&lt;project_description&gt;;      [&lt;domain_id&gt;] &lt;domain_description&gt;;      [&lt;sector_id&gt;] &lt;sector_description&gt;</p>
+<p>The project_code is a mandatory string
+The project_description is an optional string
+The domain_id is an optional string
+The domain_description is an optional string
+The sector_id is an optional string
+The sector_description is an optional string</p>
+<p>A domain has both an ID and a description.</p>
+<p>However, a sector could have an ID but not description. The reverse is not
+true: there could not be a sector w/ a description w/o ID.</p>
+<p>A project could have a domain and no sector. But the reverse is not true:
+there could not be project w/ a sector and w/o domain.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Projects.ProjectImporterCSV.ProjectImporterCSV">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Projects.ProjectImporterCSV.</tt><tt class="descname">ProjectImporterCSV</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterCSV.ProjectImporterCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Importer.Projects.ProjectImporter.ProjectImporter" title="HPCStats.Importer.Projects.ProjectImporter.ProjectImporter"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Projects.ProjectImporter.ProjectImporter</span></tt></a></p>
+<p>Main class of this module.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterCSV.ProjectImporterCSV.check">
+<tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterCSV.ProjectImporterCSV.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if CSV file exists and is a proper flat file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterCSV.ProjectImporterCSV.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterCSV.ProjectImporterCSV.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open CSV file and load project out of it.
+Raises Exceptions if error is found in the file.
+Returns the list of Projects with their Domains.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterCSV.ProjectImporterCSV.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterCSV.ProjectImporterCSV.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update loaded project (with associated domains) in database.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Projects.ProjectImporterDummy">
+<span id="projectimporterdummy-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterDummy</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Projects.ProjectImporterDummy" title="Permalink to this headline">¶</a></h2>
+<p>Dummy Project importer</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Projects.ProjectImporterDummy.ProjectImporterDummy">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Projects.ProjectImporterDummy.</tt><tt class="descname">ProjectImporterDummy</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterDummy.ProjectImporterDummy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Importer.Projects.ProjectImporter.ProjectImporter" title="HPCStats.Importer.Projects.ProjectImporter.ProjectImporter"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Projects.ProjectImporter.ProjectImporter</span></tt></a></p>
+<p>Main class of this module.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterDummy.ProjectImporterDummy.check">
+<tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterDummy.ProjectImporterDummy.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dummy check</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterDummy.ProjectImporterDummy.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterDummy.ProjectImporterDummy.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dummy Projects load.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterDummy.ProjectImporterDummy.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterDummy.ProjectImporterDummy.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dummy Projects update.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Projects.ProjectImporterFactory">
+<span id="projectimporterfactory-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterFactory</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Projects.ProjectImporterFactory" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the factory design pattern class that builds the
+appropriate ProjectImporter depending on what is specified in configuration.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Projects.ProjectImporterFactory.ProjectImporterFactory">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Projects.ProjectImporterFactory.</tt><tt class="descname">ProjectImporterFactory</tt><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterFactory.ProjectImporterFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class simply delivers the factory() static method, there is not
+point to instanciate it with an object.</p>
+<dl class="staticmethod">
+<dt id="HPCStats.Importer.Projects.ProjectImporterFactory.ProjectImporterFactory.factory">
+<em class="property">static </em><tt class="descname">factory</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterFactory.ProjectImporterFactory.factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the appropriate ProjectImporter object depending
+on what is specified in configuration. In case of configuration
+error, HPCStatsConfigurationException is raised.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-HPCStats.Importer.Projects.ProjectImporterSlurm">
+<span id="projectimporterslurm-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterSlurm</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Projects.ProjectImporterSlurm" title="Permalink to this headline">¶</a></h2>
+<p>This module import projects from wckeys in Slurm accouting database.</p>
+<dl class="class">
+<dt id="HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm">
+<em class="property">class </em><tt class="descclassname">HPCStats.Importer.Projects.ProjectImporterSlurm.</tt><tt class="descname">ProjectImporterSlurm</tt><big>(</big><em>app</em>, <em>db</em>, <em>config</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#HPCStats.Importer.Projects.ProjectImporter.ProjectImporter" title="HPCStats.Importer.Projects.ProjectImporter.ProjectImporter"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Importer.Projects.ProjectImporter.ProjectImporter</span></tt></a></p>
+<p>Main class of this module.</p>
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.check">
+<tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if all Slurm databases are available and if we connect to
+them.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.connect_db">
+<tt class="descname">connect_db</tt><big>(</big><em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.connect_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to a cluster Slurm database and set conn/cur attributes
+accordingly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.disconnect_db">
+<tt class="descname">disconnect_db</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.disconnect_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnect to currently connected Slurm DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects to all known Slurm databases to extract project codes
+in jobs wckeys. Raises HPCStatsSourceError in case of error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.load_cluster">
+<tt class="descname">load_cluster</tt><big>(</big><em>cluster</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.load_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to cluster Slurm database to extract project codes from
+jobs wckeys. Raises HPCStatsSourceError in case of error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create loaded project (with associated domains) in database if not
+existing. It does not update domain nor project since:</p>
+<ul class="simple">
+<li>There is only one default domain which should have created with
+its key and name in the first place, there is no point to update
+it.</li>
+<li>The project are imported without description from Slurm and are
+linked to default domain. Operators have probably added a
+description to the project and linked it to another proper
+domain and we must not alter these information.</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Projects Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">Projects</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Projects.ProjectImporter"><tt class="docutils literal"><span class="pre">ProjectImporter</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Projects.ProjectImporterCSV"><tt class="docutils literal"><span class="pre">ProjectImporterCSV</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Projects.ProjectImporterDummy"><tt class="docutils literal"><span class="pre">ProjectImporterDummy</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Projects.ProjectImporterFactory"><tt class="docutils literal"><span class="pre">ProjectImporterFactory</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-HPCStats.Importer.Projects.ProjectImporterSlurm"><tt class="docutils literal"><span class="pre">ProjectImporterSlurm</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.Jobs.html"
+                        title="previous chapter">Jobs Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HPCStats.Importer.Users.html"
+                        title="next chapter">Users Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/HPCStats.Importer.Projects.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Users.html" title="Users Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="HPCStats.Importer.Jobs.html" title="Jobs Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">HPCStats 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >API reference</a> &raquo;</li>
+          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li>
+          <li><a href="HPCStats.Importer.html" >Importer Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, EDF CCN-HPC.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
