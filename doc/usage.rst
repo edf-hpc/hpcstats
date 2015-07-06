@@ -41,6 +41,12 @@ Global options
                     Alternative configuration file. Default is
                     **/etc/hpcstats/hpcstats.conf**.
     -d, --debug     Enable debug output.
+    --batch-mode    Set output in batch mode. The outputs are sent to local
+                    syslog server, the standard and errors outputs only get the
+                    messages at the warning level and over. This mode is
+                    particularly usefull for cronjobs because the warnings and
+                    errors are sent by email when needed and administrators get
+                    all output in syslog for further diagnosis.
 
 Import options
 ==============
