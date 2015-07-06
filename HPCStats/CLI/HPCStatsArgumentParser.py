@@ -55,6 +55,11 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
                           help='Enable debug output',
                           action="store_true")
 
+        self.add_argument("--batch-mode",
+                          dest="batch",
+                          help='Set application output in batch mode',
+                          action="store_true")
+
         subparsers = self.add_subparsers(help='sub-command help',
                                          dest='action')
 

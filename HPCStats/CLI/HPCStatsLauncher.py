@@ -75,15 +75,36 @@ class HPCStatsLauncher(object):
             logging_level = logging.DEBUG
 
         app_logger = logging.getLogger('HPCStats')
-        # create formatter
-        formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
-        # create console handler
-        ch = logging.StreamHandler()
-        ch.setLevel(logging_level)
-        # add formatter to ch
-        ch.setFormatter(formatter)
-        # add ch to logger
-        app_logger.addHandler(ch)
+
+        if args.batch:
+
+            # In batch mode, set 2 handlers:
+            #   - console handler with warning level for cronjobs emails
+            #   - syslog handler with info/debug level (depending on --debug
+            #     parameter) for sysadmins
+
+            hdr_str = logging.StreamHandler()
+            hdr_str.setLevel(logging.WARNING)
+            fmt_str = logging.Formatter('%(levelname)s: %(name) - %(message)s')
+            hdr_str.setFormatter(fmt_str)
+            app_logger.addHandler(hdr_str)
+
+            hdr_sys = logging.handlers.SysLogHandler('/dev/log')
+            hdr_sys.setLevel(logging_level)
+            fmt_sys = logging.Formatter('%(name)s: %(message)s')
+            hdr_sys.setFormatter(fmt_sys)
+            app_logger.addHandler(hdr_sys)
+
+        else:
+
+            # In normal mode, only one console handler with info/debug level
+            # (depending on --debug parameter)
+
+            hdr_str = logging.StreamHandler()
+            hdr_str.setLevel(logging_level)
+            fmt_str = logging.Formatter('%(levelname)s: %(name) - %(message)s')
+            hdr_str.setFormatter(fmt_str)
+            app_logger.addHandler(hdr_str)
 
         action = args.action
         cluster_name = args.cluster.pop()
