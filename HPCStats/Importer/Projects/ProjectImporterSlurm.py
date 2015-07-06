@@ -32,6 +32,7 @@
 """
 
 import logging
+logger = logging.getLogger(__name__)
 import MySQLdb
 import _mysql_exceptions
 from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
@@ -129,7 +130,7 @@ class ProjectImporterSlurm(ProjectImporter):
            jobs wckeys. Raises HPCStatsSourceError in case of error.
         """
 
-        logging.debug("loading project codes from %s slurm database", cluster)
+        logger.debug("loading project codes from %s slurm database", cluster)
 
         self.connect_db(cluster)
 
@@ -154,8 +155,8 @@ class ProjectImporterSlurm(ProjectImporter):
                 if len(wckey_items) != 2:
                     if wckey not in self.invalid_wckeys:
                         self.invalid_wckeys.append(wckey)
-                        logging.warning("format of wckey %s is not valid",
-                                        wckey)
+                        logger.warning("format of wckey %s is not valid",
+                                       wckey)
                     continue
                 else:
                     project_code = wckey_items[0]
@@ -185,6 +186,6 @@ class ProjectImporterSlurm(ProjectImporter):
                 domain.save(self.db)
         for project in self.projects:
             if not project.find(self.db):
-                logging.warning("creating project %s with default domain",
-                                str(self))
+                logger.warning("creating project %s with default domain",
+                               str(self))
                 project.save(self.db)

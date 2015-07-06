@@ -29,12 +29,9 @@
 
 import ConfigParser
 import os
-import logging
 import sys
 
 from HPCStats.Exceptions import HPCStatsConfigurationException
-
-
 
 class HPCStatsConf(ConfigParser.ConfigParser, object):
 

@@ -32,6 +32,7 @@
 from operator import attrgetter
 from datetime import datetime
 import logging
+logger = logging.getLogger(__name__)
 import os
 import paramiko
 import socket
@@ -71,9 +72,9 @@ class FSUsageImporterSSH(FSUsageImporter):
         """
 
         try:
-            logging.debug("ssh connection to %s@%s",
-                          self.ssh_user,
-                          self.ssh_host)
+            logger.debug("ssh connection to %s@%s",
+                         self.ssh_user,
+                         self.ssh_host)
             ssh = paramiko.SSHClient()
             # set automatically RSA key on known_hosts file
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())

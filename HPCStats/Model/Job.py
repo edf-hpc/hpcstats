@@ -52,6 +52,7 @@ Job(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Job(object):
@@ -119,7 +120,7 @@ class Job(object):
         db.execute(req, params)
         nb_rows = db.cur.rowcount
         if nb_rows == 0:
-            logging.debug("job %s not found in DB", str(self))
+            logger.debug("job %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -127,7 +128,7 @@ class Job(object):
                       % (str(self)))
         else:
             self.job_id = db.cur.fetchone()[0]
-            logging.debug("job %s found in DB with id %d",
+            logger.debug("job %s found in DB with id %d",
                           str(self),
                           self.job_id )
             return self.job_id

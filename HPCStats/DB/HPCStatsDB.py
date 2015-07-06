@@ -27,7 +27,6 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import logging
 import psycopg2
 
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError

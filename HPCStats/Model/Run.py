@@ -40,6 +40,7 @@ Run(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Run(object):
@@ -78,14 +79,14 @@ class Run(object):
         db.execute(req, params)
         nb_rows = db.cur.rowcount
         if nb_rows == 0:
-            logging.debug("run %s not found in DB", str(self))
+            logger.debug("run %s not found in DB", str(self))
             self.exists = False
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several run found in DB for run %s" \
                       % (str(self)))
         else:
-            logging.debug("run %s found in DB", str(self))
+            logger.debug("run %s found in DB", str(self))
             self.exists = True
         return self.exists
 

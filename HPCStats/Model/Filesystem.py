@@ -41,6 +41,7 @@ filesystem(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Filesystem(object):
@@ -83,7 +84,7 @@ class Filesystem(object):
         db.execute(req, params)
         nb_rows = db.cur.rowcount
         if nb_rows == 0:
-            logging.debug("filesystem %s not found in DB", str(self))
+            logger.debug("filesystem %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -91,9 +92,9 @@ class Filesystem(object):
                       % (str(self)))
         else:
             self.fs_id = db.cur.fetchone()[0]
-            logging.debug("filesystem %s found in DB with id %d",
-                          str(self),
-                          self.fs_id )
+            logger.debug("filesystem %s found in DB with id %d",
+                         str(self),
+                         self.fs_id )
             return self.fs_id
 
     def save(self, db):

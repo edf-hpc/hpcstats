@@ -30,6 +30,7 @@
 """This module contains the HPCStatsModifier class."""
 
 import logging
+logger = logging.getLogger(__name__)
 
 from HPCStats.Exceptions import HPCStatsRuntimeError
 from HPCStats.CLI.HPCStatsApp import HPCStatsApp
@@ -88,8 +89,8 @@ class HPCStatsModifier(HPCStatsApp):
                     "unable to find business code %s in database" \
                       % (business_code))
 
-        logging.info("updating business code %s with new description",
-                     business_code)
+        logger.info("updating business code %s with new description",
+                    business_code)
         business.update(self.db)
 
     def set_project_description(self, project_code, description):
@@ -108,8 +109,8 @@ class HPCStatsModifier(HPCStatsApp):
 
         project.description = description
 
-        logging.info("updating project %s with new description",
-                     project_code)
+        logger.info("updating project %s with new description",
+                    project_code)
         project.update(self.db)
 
     def set_project_domain(self, project_code, domain_key):
@@ -135,8 +136,8 @@ class HPCStatsModifier(HPCStatsApp):
 
         project.domain = domain
 
-        logging.info("updating project %s with new domain %s",
-                      project_code, domain_key)
+        logger.info("updating project %s with new domain %s",
+                    project_code, domain_key)
         project.update(self.db)
 
     def create_domain(self, domain_key, domain_name):
@@ -148,7 +149,7 @@ class HPCStatsModifier(HPCStatsApp):
         if domain.existing(self.db):
             raise HPCStatsRuntimeError("domain %s already exists in database" % (domain_key))
 
-        logging.info("creating domain %s in database", domain_key)
+        logger.info("creating domain %s in database", domain_key)
         domain.save(self.db)
 
     def cleanup(self):

@@ -42,6 +42,7 @@ Project(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 from HPCStats.Model.Domain import Domain
 
@@ -83,7 +84,7 @@ class Project(object):
         db.execute(req, params)
         nb_rows = db.cur.rowcount
         if nb_rows == 0:
-            logging.debug("project %s not found in DB", str(self))
+            logger.debug("project %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -91,9 +92,9 @@ class Project(object):
                       % (str(self)))
         else:
             self.project_id = db.cur.fetchone()[0]
-            logging.debug("project %s found in DB with id %d",
-                          str(self),
-                          self.project_id )
+            logger.debug("project %s found in DB with id %d",
+                         str(self),
+                         self.project_id )
             return self.project_id
 
     def load(self, db):
@@ -139,7 +140,7 @@ class Project(object):
                     "database" \
                       % (str(self)))
 
-        logging.info("creating project %s" % str(self))
+        logger.info("creating project %s" % str(self))
 
         req = """
                 INSERT INTO Project ( project_code,
@@ -166,7 +167,7 @@ class Project(object):
                     "could not update project %s since not found in database" \
                       % (str(self)))
 
-        logging.debug("updating project %s" % str(self))
+        logger.debug("updating project %s" % str(self))
 
         req = """
                 UPDATE Project

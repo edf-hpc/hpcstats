@@ -43,6 +43,7 @@ Userhpc(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class User(object):
@@ -82,7 +83,7 @@ class User(object):
         db.execute(req, params)
         nb_rows = db.cur.rowcount
         if nb_rows == 0:
-            logging.debug("user %s not found in DB", str(self))
+            logger.debug("user %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -90,7 +91,7 @@ class User(object):
                       % (str(self)))
         else:
             self.user_id = db.cur.fetchone()[0]
-            logging.debug("user %s found in DB with id %d",
+            logger.debug("user %s found in DB with id %d",
                           str(self),
                           self.user_id )
             return self.user_id

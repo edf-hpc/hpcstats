@@ -30,6 +30,7 @@
 """This module contains the HPCStatsApp class."""
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.DB.HPCStatsDB import HPCStatsDB
 
 class HPCStatsApp(object):
@@ -57,11 +58,11 @@ class HPCStatsApp(object):
 
         # dump configuration in debug mode
         for section in self.conf.sections():
-            logging.debug("conf: %s", section)
+            logger.debug("conf: %s", section)
             for option in self.conf.options(section):
-                logging.debug("conf:  %s=%s",
-                              option,
-                              self.conf.get(section, option))
+                logger.debug("conf:  %s=%s",
+                             option,
+                             self.conf.get(section, option))
 
         if self.cluster_name != 'all':
             # check presence of cluster in configuration

@@ -32,6 +32,7 @@
 import MySQLdb
 import _mysql_exceptions
 import logging
+logger = logging.getLogger(__name__)
 import time
 from datetime import datetime
 from HPCStats.Exceptions import HPCStatsSourceError
@@ -230,13 +231,13 @@ class EventImporterSlurm(EventImporter):
 
         event_index = 0
         nb_events = len(events)
-        logging.debug("merge: nb_events: %d", nb_events)
+        logger.debug("merge: nb_events: %d", nb_events)
 
         # iterate over the list of new events
         while event_index < nb_events - 1:
 
             event = events[event_index]
-            logging.debug("merge: current event_index: %d", event_index)
+            logger.debug("merge: current event_index: %d", event_index)
             # find the next event in the list for the same node
             next_event_index = event_index + 1
 
@@ -249,25 +250,25 @@ class EventImporterSlurm(EventImporter):
                 else:
                     next_event_index += 1
 
-            logging.debug("merge: computed next_event_index: %d",
-                          next_event_index)
+            logger.debug("merge: computed next_event_index: %d",
+                         next_event_index)
             # If search index is at the end of the list, it means the next
             # event has not been found in the list..
             if next_event_index == nb_events:
-                logging.debug("no event to merge: %d (%s, %s → %s)",
-                               event_index,
-                               event.node,
-                               event.start_datetime,
-                               event.end_datetime )
+                logger.debug("no event to merge: %d (%s, %s → %s)",
+                             event_index,
+                             event.node,
+                             event.start_datetime,
+                             event.end_datetime )
                 # we can jump to next event in the list
                 event_index += 1
             else:
                 next_event = events[next_event_index]
-                logging.debug("merging %s (%d) with %s (%d)",
-                               event,
-                               event_index,
-                               next_event,
-                               next_event_index )
+                logger.debug("merging %s (%d) with %s (%d)",
+                             event,
+                             event_index,
+                             next_event,
+                             next_event_index )
                 event.end_datetime = next_event.end_datetime
                 # remove the next event out of the list
                 events.pop(next_event_index)

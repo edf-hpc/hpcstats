@@ -29,6 +29,7 @@
 
 import locale
 import logging
+logger = logging.getLogger(__name__)
 import os
 from datetime import datetime,timedelta
 from dateutil.relativedelta import relativedelta # debian package: python-dateutil
@@ -56,8 +57,8 @@ class HPCStatsReporter(HPCStatsApp):
 
         self.run_check()
 
-        logging.debug("running on cluster %s with interval %s" \
-                      % (self.cluster_name, self.interval))
+        logger.debug("running on cluster %s with interval %s" \
+                     % (self.cluster_name, self.interval))
 
         db = self.new_db()
 
@@ -70,7 +71,7 @@ class HPCStatsReporter(HPCStatsApp):
                         % (cluster, ",".join(available_clusters)))
 
         # get the total number of cpus inside the cluster
-        logging.debug("main: getting nb cpus on cluster %s" % (cluster.name))
+        logger.debug("main: getting nb cpus on cluster %s" % (cluster.name))
         nb_cpus_cluster = cluster.get_nb_cpus(db)
 
         results = []
@@ -107,7 +108,7 @@ class HPCStatsReporter(HPCStatsApp):
             interval = self.get_interval_timedelta()
             tmp_datetime += interval
 
-            logging.debug(processes_args)
+            logger.debug(processes_args)
 
         # launch processes with their corresponding arguments
         parallel = True
@@ -129,8 +130,8 @@ class HPCStatsReporter(HPCStatsApp):
             groupstats_global[str_date] = groupstats
             results.append(result)
 
-            logging.debug("usersstats", userstats_global)
-            logging.debug("groupsstats", groupstats_global)
+            logger.debug("usersstats", userstats_global)
+            logger.debug("groupsstats", groupstats_global)
 
         # print results using template
         mytemplate = Template( filename=self.get_template_filename(),
@@ -226,17 +227,17 @@ class HPCStatsReporter(HPCStatsApp):
 
         db = self.new_db()
 
-        logging.debug("getting nb cpus on cluster %s" % (self.cluster.name))
+        logger.debug("getting nb cpus on cluster %s" % (self.cluster.name))
 
         nb_cpus_cluster = self.cluster.get_nb_cpus(db)
 
-        logging.debug("nb cpus on cluster %s: %d" \
-                        % (self.cluster.name, nb_cpus_cluster))
+        logger.debug("nb cpus on cluster %s: %d" \
+                     % (self.cluster.name, nb_cpus_cluster))
 
         userstats = {}
         groupstats = {}
 
-        logging.debug("%s -> %s" % (interval_beginning, interval_end))
+        logger.debug("%s -> %s" % (interval_beginning, interval_end))
 
         # calculate the number of hours during the interval
         nb_hours_interval = ((interval_end - interval_beginning).days + 1) * 24
@@ -304,11 +305,11 @@ class HPCStatsReporter(HPCStatsApp):
                 else:
                     groupstats[group]['time'] = cpu_time_job_seconds
 
-                logging.debug("(%s - %s) * %d -> %s" \
-                                % (end_datetime,
-                                   running_datetime,
-                                   nb_cpus,
-                                   cpu_time_job_seconds))
+                logger.debug("(%s - %s) * %d -> %s" \
+                             % (end_datetime,
+                                running_datetime,
+                                nb_cpus,
+                                cpu_time_job_seconds))
 
             except UserWarning as w:
                 #print "Warning:", w
@@ -324,8 +325,8 @@ class HPCStatsReporter(HPCStatsApp):
                                                       interval_end)
 
         cpu_time_hours = cpu_time_interval / 3600
-        logging.debug("nb_cpus_cluster: %d nb_hours_interval: %d" \
-                        % (nb_cpus_cluster, nb_hours_interval))
+        logger.debug("nb_cpus_cluster: %d nb_hours_interval: %d" \
+                     % (nb_cpus_cluster, nb_hours_interval))
 
         cpu_time_available = nb_cpus_cluster * nb_hours_interval
         utilisation_rate = (float(cpu_time_hours) / cpu_time_available) * 100

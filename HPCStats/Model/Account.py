@@ -43,6 +43,7 @@ Account(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 from HPCStats.Model.User import User
 
@@ -96,14 +97,14 @@ class Account(object):
         db.execute(req, params)
         nb_rows = db.cur.rowcount
         if nb_rows == 0:
-            logging.debug("account %s not found in DB", str(self))
+            logger.debug("account %s not found in DB", str(self))
             self.exists = False
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several account found in DB for account %s" \
                       % (str(self)))
         else:
-            logging.debug("account %s found in DB", str(self))
+            logger.debug("account %s found in DB", str(self))
             self.exists = True
         return self.exists
 

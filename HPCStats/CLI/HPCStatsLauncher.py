@@ -31,6 +31,8 @@
 
 import sys
 import logging
+logger = logging.getLogger(__name__)
+import logging.handlers
 import locale
 
 from HPCStats.Exceptions import HPCStatsArgumentException, HPCStatsConfigurationException, HPCStatsDBIntegrityError, HPCStatsSourceError, HPCStatsRuntimeError
@@ -56,7 +58,7 @@ class HPCStatsLauncher(object):
             parser.add_args()
             args = parser.parse_args()
         except HPCStatsArgumentException, err:
-            logging.error("Argument Error: %s", err)
+            logger.error("Argument Error: %s", err)
             self.exit()
 
         # locale to format numbers
@@ -64,7 +66,7 @@ class HPCStatsLauncher(object):
         try:
             locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
         except locale.Error, err:
-            logging.error("Error while setting locale: %s", err)
+            logger.error("Error while setting locale: %s", err)
             self.exit()
 
         # enable debug mode
@@ -72,9 +74,16 @@ class HPCStatsLauncher(object):
         if args.debug:
             logging_level = logging.DEBUG
 
-        logging.basicConfig(format='%(levelname)s: %(filename)s: %(message)s',
-                            level=logging_level,
-                            stream=sys.stdout)
+        app_logger = logging.getLogger('HPCStats')
+        # create formatter
+        formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+        # create console handler
+        ch = logging.StreamHandler()
+        ch.setLevel(logging_level)
+        # add formatter to ch
+        ch.setFormatter(formatter)
+        # add ch to logger
+        app_logger.addHandler(ch)
 
         action = args.action
         cluster_name = args.cluster.pop()
@@ -83,7 +92,7 @@ class HPCStatsLauncher(object):
         try:
             conf.read()
         except HPCStatsConfigurationException, err:
-            logging.error("Configuration Error: %s", err)
+            logger.error("Configuration Error: %s", err)
             self.exit()
 
         if action == "check":
@@ -110,16 +119,16 @@ class HPCStatsLauncher(object):
         try:
             self.app.run()
         except HPCStatsConfigurationException, err:
-            logging.error("Configuration Error: %s", err)
+            logger.error("Configuration Error: %s", err)
             self.exit()
         except HPCStatsDBIntegrityError, err:
-            logging.error("DB Integrity Error: %s", err)
+            logger.error("DB Integrity Error: %s", err)
             self.exit()
         except HPCStatsSourceError, err:
-            logging.error("Source Error: %s", err)
+            logger.error("Source Error: %s", err)
             self.exit()
         except HPCStatsRuntimeError, err:
-            logging.error("Runtime Error: %s", err)
+            logger.error("Runtime Error: %s", err)
             self.exit()
 
 

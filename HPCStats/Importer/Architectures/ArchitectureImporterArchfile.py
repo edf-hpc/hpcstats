@@ -33,6 +33,7 @@ import ConfigParser
 import re
 import os
 import logging
+logger = logging.getLogger(__name__)
 from ClusterShell.NodeSet import NodeSet
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.Architectures.ArchitectureImporter import ArchitectureImporter
@@ -69,16 +70,16 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
         """Create or update Cluster and Nodes in the database."""
 
         if not self.cluster.find(self.db):
-            logging.debug("creating cluster %s", self.cluster)
+            logger.debug("creating cluster %s", self.cluster)
             self.cluster.save(self.db)
 
         # insert or update nodes
         for node in self.nodes:
             if node.find(self.db):
-                logging.debug("updating node %s", node)
+                logger.debug("updating node %s", node)
                 node.update(self.db)
             else:
-                logging.debug("creating node %s", node)
+                logger.debug("creating node %s", node)
                 node.save(self.db)
 
     def config_get(self, section, option, isint=False):

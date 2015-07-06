@@ -34,6 +34,7 @@ import _mysql_exceptions
 from datetime import datetime
 from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Model.Job import Job, get_batchid_oldest_unfinished_job, get_batchid_last_job
@@ -171,8 +172,8 @@ class JobImporterSlurm(JobImporter):
             # load jobs and jump to next batch_id for next iteration
             batch_id = self.load_window(batch_id) + 1
             nb_loaded = len(self.jobs)
-            logging.info("%d loaded jobs (%d this iteration), %d excluded",
-                         self.nb_loaded_jobs, nb_loaded, self.nb_excluded_jobs)
+            logger.info("%d loaded jobs (%d this iteration), %d excluded",
+                        self.nb_loaded_jobs, nb_loaded, self.nb_excluded_jobs)
             self.update()
 
     def load_window(self, batch_id):
@@ -297,7 +298,7 @@ class JobImporterSlurm(JobImporter):
                     raise HPCStatsSourceError(msg)
                 elif login not in self.unknown_accounts:
                     self.unknown_accounts.append(login)
-                    logging.warning(msg)
+                    logger.warning(msg)
                 self.nb_excluded_jobs += 1
                 continue
 
@@ -318,7 +319,7 @@ class JobImporterSlurm(JobImporter):
                         raise HPCStatsSourceError(msg)
                     elif wckey not in self.invalid_wckeys:
                         self.invalid_wckeys.append(wckey)
-                        logging.warning(msg)
+                        logger.warning(msg)
                     project = None
                     business = None
                 else:
@@ -332,7 +333,7 @@ class JobImporterSlurm(JobImporter):
                             raise HPCStatsSourceError(msg)
                         elif project_code not in self.unknown_projects:
                             self.unknown_projects.append(project_code)
-                            logging.warning(msg)
+                            logger.warning(msg)
 
                     business_code = wckey_items[1]
                     searched_business = Business(business_code, None)
@@ -345,7 +346,7 @@ class JobImporterSlurm(JobImporter):
                             raise HPCStatsSourceError(msg)
                         elif business_code not in self.unknown_businesses:
                             self.unknown_businesses.append(business_code)
-                            logging.warning(msg)
+                            logger.warning(msg)
 
             job = Job(account, project, business, sched_id, str(batch_id),
                       name, nbcpu, state, queue, submission, start, end)
@@ -418,12 +419,12 @@ class JobImporterSlurm(JobImporter):
                 # look for the actual running partition of the job
                 # through self._partitions
                 nodeset_job = NodeSet(nodelist)
-                logging.debug("trying to find the actual running partition " \
-                              "for job %d with list %s and nodes %s (%d)",
-                              job_id,
-                              job_partitions,
-                              nodelist,
-                              len(nodeset_job) )
+                logger.debug("trying to find the actual running partition " \
+                             "for job %d with list %s and nodes %s (%d)",
+                             job_id,
+                             job_partitions,
+                             nodelist,
+                             len(nodeset_job) )
 
                 for nodelist_parts, partitions in arch_partitions.iteritems():
                     nodeset_parts = NodeSet(nodelist_parts)
@@ -432,30 +433,30 @@ class JobImporterSlurm(JobImporter):
                         # iterate over job's partitions list
                         for xpart in job_partitions:
                             if xpart in partitions:
-                                logging.debug("job %d found partition %s " \
-                                              "in list %s which intersect " \
-                                              "for nodes %s",
-                                              job_id,
-                                              xpart,
-                                              partitions,
-                                              nodelist )
+                                logger.debug("job %d found partition %s " \
+                                             "in list %s which intersect " \
+                                             "for nodes %s",
+                                             job_id,
+                                             xpart,
+                                             partitions,
+                                             nodelist )
                                 # partition found
                                 partition = xpart
                     else:
-                        logging.debug("job %d nodes %s do not entirely " \
-                                      "intersect with %s (%d != %d)",
-                                       job_id,
-                                       nodelist,
-                                       nodelist_parts,
-                                       len(nodeset_job),
-                                       len(intersect) )
+                        logger.debug("job %d nodes %s do not entirely " \
+                                     "intersect with %s (%d != %d)",
+                                      job_id,
+                                      nodelist,
+                                      nodelist_parts,
+                                      len(nodeset_job),
+                                      len(intersect) )
 
             if partition is None:
-                logging.error("job %d did not found partition in list %s " \
-                              "which intersect for nodes %s",
-                               job_id,
-                               partitions_str,
-                               nodelist )
+                logger.error("job %d did not found partition in list %s " \
+                             "which intersect for nodes %s",
+                              job_id,
+                              partitions_str,
+                              nodelist )
                 partition = "UNKNOWN"
 
         return partition

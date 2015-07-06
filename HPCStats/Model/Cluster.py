@@ -40,6 +40,7 @@ Cluster(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Cluster(object):
@@ -74,7 +75,7 @@ class Cluster(object):
         db.execute(req, params)
         nb_rows = db.cur.rowcount
         if nb_rows == 0:
-            logging.debug("cluster %s not found in DB", str(self))
+            logger.debug("cluster %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -82,9 +83,9 @@ class Cluster(object):
                       % (str(self)))
         else:
             self.cluster_id = db.cur.fetchone()[0]
-            logging.debug("cluster %s found in DB with id %d",
-                          str(self),
-                          self.cluster_id )
+            logger.debug("cluster %s found in DB with id %d",
+                         str(self),
+                         self.cluster_id )
             return self.cluster_id
 
     def save(self, db):

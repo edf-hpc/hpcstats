@@ -45,6 +45,7 @@ Node(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Node(object):
@@ -97,7 +98,7 @@ class Node(object):
         nb_rows = db.cur.rowcount
 
         if nb_rows == 0:
-            logging.debug("node %s not found in DB", str(self))
+            logger.debug("node %s not found in DB", str(self))
             return None
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
@@ -105,9 +106,9 @@ class Node(object):
                       % (str(self)))
         else:
             self.node_id = db.cur.fetchone()[0]
-            logging.debug("node %s found in DB with id %d",
-                          str(self),
-                          self.node_id )
+            logger.debug("node %s found in DB with id %d",
+                         str(self),
+                         self.node_id )
             return self.node_id
 
     def save(self, db):

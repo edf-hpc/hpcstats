@@ -41,6 +41,7 @@ fsusage(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from datetime import datetime
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
@@ -79,14 +80,14 @@ class FSUsage(object):
         db.execute(req, params)
         nb_rows = db.cur.rowcount
         if nb_rows == 0:
-            logging.debug("fsusage %s not found in DB", str(self))
+            logger.debug("fsusage %s not found in DB", str(self))
             self.exists = False
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several fsusage found in DB for fsusage %s" \
                       % (str(self)))
         else:
-            logging.debug("fsusage %s found in DB", str(self))
+            logger.debug("fsusage %s found in DB", str(self))
             self.exists = True
         return self.exists
 

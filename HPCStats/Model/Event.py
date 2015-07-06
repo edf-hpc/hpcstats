@@ -46,6 +46,7 @@ Event(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsRuntimeError, HPCStatsDBIntegrityError
 
 class Event(object):
@@ -109,7 +110,7 @@ class Event(object):
         db.execute(req, params)
         nb_events = db.cur.rowcount
         if nb_events == 0:
-            logging.debug("event %s not found in DB", str(self))
+            logger.debug("event %s not found in DB", str(self))
             return None
         elif nb_events > 1:
             raise HPCStatsDBIntegrityError(
@@ -117,9 +118,9 @@ class Event(object):
                       % (str(self)))
         else:
             self.event_id = db.cur.fetchone()[0]
-            logging.debug("event %s found in DB with id %d",
-                          str(self),
-                          self.event_id )
+            logger.debug("event %s found in DB with id %d",
+                         str(self),
+                         self.event_id )
             return self.event_id
 
     def save(self, db):

@@ -30,6 +30,7 @@
 """This module contains the UserImporterLdapSlurm class."""
 
 import logging
+logger = logging.getLogger(__name__)
 import MySQLdb
 from datetime import date
 from HPCStats.Exceptions import HPCStatsSourceError
@@ -142,10 +143,10 @@ class UserImporterLdapSlurm(UserImporterLdap):
             if user is None:
                 member = self.get_user_account_from_login(login)
                 if member is None:
-                    logging.warning("slurm user %s could not be found in " \
-                                    "LDAP, ignoring this user", login)
+                    logger.warning("slurm user %s could not be found in " \
+                                   "LDAP, ignoring this user", login)
                 else:
-                    logging.debug("slurm user %s found in LDAP", login)
+                    logger.debug("slurm user %s found in LDAP", login)
                     self.users_acct_slurm.append(member)
 
         self.disconnect_db()
@@ -166,8 +167,8 @@ class UserImporterLdapSlurm(UserImporterLdap):
             # creation and deletion date so we do nothing. If it does not exist
             # it is created with default (wrong) creation/deletion dates.
             if not account.existing(self.db):
-                logging.warning("account for slurm user %s saved with " \
-                                "default dates in DB", user.login)
+                logger.warning("account for slurm user %s saved with " \
+                               "default dates in DB", user.login)
                 account.deletion_date = default_account_date
                 account.creation_date = default_account_date
                 account.save(self.db)

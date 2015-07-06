@@ -30,6 +30,7 @@
 """This module contains the HPCStatsChecker class."""
 
 import logging
+logger = logging.getLogger(__name__)
 
 from HPCStats.CLI.HPCStatsApp import HPCStatsApp
 from HPCStats.Importer.Jobs.JobImporterFactory import JobImporterFactory
@@ -69,11 +70,11 @@ class HPCStatsChecker(HPCStatsApp):
 
         # import projects and business code that are globals and not related
         # to a specific cluster
-        logging.info("checking projects sources")
+        logger.info("checking projects sources")
         self.projects = ProjectImporterFactory.factory(self, db, self.conf)
         self.projects.check()
 
-        logging.info("checking business codes sources")
+        logger.info("checking business codes sources")
         self.business = BusinessCodeImporterFactory.factory(self, db, self.conf)
         self.business.check()
 
@@ -93,8 +94,8 @@ class HPCStatsChecker(HPCStatsApp):
 
         cluster = None
 
-        logging.info("checking architecture source for cluster %s",
-                     cluster_name)
+        logger.info("checking architecture source for cluster %s",
+                    cluster_name)
         self.arch = \
           ArchitectureImporterFactory.factory(self, db, self.conf,
                                               cluster_name)
@@ -102,31 +103,31 @@ class HPCStatsChecker(HPCStatsApp):
 
         cluster = Cluster(cluster_name)
 
-        logging.info("checking users source for cluster %s",
-                     cluster.name)
+        logger.info("checking users source for cluster %s",
+                    cluster.name)
         self.users = \
           UserImporterFactory.factory(self, db, self.conf, cluster)
         self.users.check()
 
-        logging.info("checking filesystem usage source for cluster %s",
-                     cluster.name)
+        logger.info("checking filesystem usage source for cluster %s",
+                    cluster.name)
         self.fsusage = \
           FSUsageImporterFactory.factory(self, db, self.conf, cluster)
         self.fsusage.check()
 
-        logging.info("checking events source for cluster %s",
-                     cluster.name)
+        logger.info("checking events source for cluster %s",
+                    cluster.name)
         self.events = \
           EventImporterFactory.factory(self, db, self.conf, cluster)
         self.events.check()
 
-        logging.info("checking jobs source for cluster %s",
-                     cluster.name)
+        logger.info("checking jobs source for cluster %s",
+                    cluster.name)
         self.jobs = \
           JobImporterFactory.factory(self, db, self.conf, cluster)
         self.jobs.check()
 
-        logging.info("every sources are properly available")
+        logger.info("every sources are properly available")
 
     def cleanup(self):
         """Clean-up the application before exit."""

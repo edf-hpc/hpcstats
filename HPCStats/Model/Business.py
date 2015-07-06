@@ -39,6 +39,7 @@ Business(
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 
 class Business(object):
@@ -76,14 +77,14 @@ class Business(object):
         db.execute(req, params)
         nb_rows = db.cur.rowcount
         if nb_rows == 0:
-            logging.debug("business %s not found in DB", str(self))
+            logger.debug("business %s not found in DB", str(self))
             self.exists = False
         elif nb_rows > 1:
             raise HPCStatsDBIntegrityError(
                     "several businesses found in DB for account %s" \
                       % (str(self)))
         else:
-            logging.debug("business %s found in DB", str(self))
+            logger.debug("business %s found in DB", str(self))
             self.exists = True
         return self.exists
 
@@ -101,7 +102,7 @@ class Business(object):
                     "could not insert business %s since already existing in "\
                     "database" % (str(self)))
 
-        logging.info("creating business code %s" % str(self))
+        logger.info("creating business code %s" % str(self))
 
         req = """
                 INSERT INTO Business ( business_code,
@@ -126,7 +127,7 @@ class Business(object):
                     "database" \
                       % (str(self)))
 
-        logging.debug("updating business code %s" % str(self))
+        logger.debug("updating business code %s" % str(self))
 
         req = """
                 UPDATE Business

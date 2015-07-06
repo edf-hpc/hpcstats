@@ -32,6 +32,7 @@
 """
 
 import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
 
 class ProjectImporterDummy(ProjectImporter):
@@ -44,16 +45,16 @@ class ProjectImporterDummy(ProjectImporter):
     def check(self):
         """Dummy check"""
 
-        logging.debug("ProjectImporterDummy check")
+        logger.debug("ProjectImporterDummy check")
 
     def load(self):
         """Dummy Projects load."""
 
-        logging.debug("ProjectImporterDummy load")
+        logger.debug("ProjectImporterDummy load")
         self.domains = []
         self.projects = []
 
     def update(self):
         """Dummy Projects update."""
 
-        logging.debug("ProjectImporterDummy update")
+        logger.debug("ProjectImporterDummy update")
