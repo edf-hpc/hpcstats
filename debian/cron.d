@@ -1,1 +1,1 @@
-0 5 * * * hpcstats hpcstats import --cluster=all
+0 5 * * * hpcstats hpcstats --batch-mode import --cluster=all
