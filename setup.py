@@ -11,13 +11,13 @@ setup(name='hpcstats',
       version=VERSION,
       packages=find_packages(),
       scripts=['scripts/hpcstats'],
-      author='Stéphan Gorget, Rémi Palancher',
-      author_email='stephan.gorget@edf.fr, remi.palancher@edf.fr',
+      author='EDF CCN-HPC',
+      author_email='dsp-cspite-ccn-hpc@edf.fr',
       license='GPLv2',
-      url='http://www.edf.fr/',
-      download_url='http://www.edf.fr/',
+      url='http://edf-hpc.github.io/hpcstats',
+      download_url='http://github.com/edf-hpc/hpcstats/',
       platforms=['GNU/Linux', 'BSD', 'MacOSX'],
-      keywords=['clustershell', 'hpcstats'],
+      keywords=['hpcstats', 'hpc', 'supercomputers', 'statistics'],
       install_requires=['argparse',
                         'psycopg2',
                         'MySQL-python',
@@ -26,7 +26,13 @@ setup(name='hpcstats',
                         'python-dateutil',
                         'paramiko',
                         'mako' ],
-      description='HPCStats tool',
+      description="HPCStats imports HPC supercomputers raw production " \
+                  "data from various sources (Job schedulers, log files, " \
+                  "LDAP directories, etc. and insert everything into a " \
+                  "coherent and structured PostgreSQL database. All these " \
+                  "structured information can be then used to compute many " \
+                  "statistics and metrics about the usage of HPC " \
+                  "supercomputers.",
       classifiers=[
           "Development Status :: 4 - Beta",
           "Environment :: Console",
