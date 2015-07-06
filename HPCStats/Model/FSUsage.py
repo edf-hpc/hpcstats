@@ -28,15 +28,17 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-fsusage table in HPCStatsDB:
+Schema of the ``fsusage`` table in HPCStats database:
 
-fsusage(
-  fsusage_time  timestamp NOT NULL,
-  fsusage_usage real NOT NULL,
-  filesystem_id integer NOT NULL,
-  cluster_id    integer NOT NULL,
-  CONSTRAINT fsusage_pkey PRIMARY KEY (fsusage_time, filesystem_id, cluster_id)
-)
+.. code-block:: sql
+
+    fsusage(
+      fsusage_time  timestamp NOT NULL,
+      fsusage_usage real NOT NULL,
+      filesystem_id integer NOT NULL,
+      cluster_id    integer NOT NULL,
+      CONSTRAINT fsusage_pkey PRIMARY KEY (fsusage_time, filesystem_id, cluster_id)
+    )
 
 """
 

@@ -28,19 +28,21 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Node table in HPCStatsDB:
+Schema of the ``Node`` table in HPCStats database:
 
-Node(
-  node_id        SERIAL,
-  node_name      character varying(30) NOT NULL,
-  node_nbCpu     integer,
-  node_partition character varying(30) NOT NULL,
-  node_flops     integer NOT NULL,
-  node_memory    integer NOT NULL,
-  cluster_id     integer NOT NULL,
-  CONSTRAINT Node_pkey PRIMARY KEY (node_id, cluster_id),
-  CONSTRAINT Node_unique UNIQUE (node_name, cluster_id)
-)
+.. code-block:: sql
+
+    Node(
+      node_id        SERIAL,
+      node_name      character varying(30) NOT NULL,
+      node_nbCpu     integer,
+      node_partition character varying(30) NOT NULL,
+      node_flops     integer NOT NULL,
+      node_memory    integer NOT NULL,
+      cluster_id     integer NOT NULL,
+      CONSTRAINT Node_pkey PRIMARY KEY (node_id, cluster_id),
+      CONSTRAINT Node_unique UNIQUE (node_name, cluster_id)
+    )
 
 """
 

@@ -28,17 +28,19 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Userhpc table in HPCStatsDB:
+Schema of the ``Userhpc`` table in HPCStats database:
 
-Userhpc(
-  userhpc_id         SERIAL,
-  userhpc_login      character varying(30) NOT NULL,
-  userhpc_name       character varying(30) NOT NULL,
-  userhpc_firstname  character varying(30) NOT NULL,
-  userhpc_department character varying(30),
-  CONSTRAINT Userhpc_pkey PRIMARY KEY (userhpc_id),
-  CONSTRAINT Userhpc_unique UNIQUE (userhpc_login)
-)
+.. code-block:: sql
+
+    Userhpc(
+      userhpc_id         SERIAL,
+      userhpc_login      character varying(30) NOT NULL,
+      userhpc_name       character varying(30) NOT NULL,
+      userhpc_firstname  character varying(30) NOT NULL,
+      userhpc_department character varying(30),
+      CONSTRAINT Userhpc_pkey PRIMARY KEY (userhpc_id),
+      CONSTRAINT Userhpc_unique UNIQUE (userhpc_login)
+    )
 
 """
 

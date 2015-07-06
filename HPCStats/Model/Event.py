@@ -28,20 +28,22 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Event table in HPCStatsDB:
+Schema of the ``Event`` table in HPCStats database:
 
-Event(
-  event_id     SERIAL,
-  event_type   character varying(30) NOT NULL,
-  event_reason character varying(30),
-  event_nbCpu  integer NOT NULL,
-  event_start  timestamp NOT NULL,
-  event_end    timestamp NOT NULL,
-  node_id      integer NOT NULL,
-  cluster_id   integer NOT NULL,
-  CONSTRAINT Event_pkey PRIMARY KEY (event_id, node_id, cluster_id),
-  CONSTRAINT Event_unique UNIQUE (node_id, cluster_id, event_start)
-)
+.. code-block:: sql
+
+    Event(
+      event_id     SERIAL,
+      event_type   character varying(30) NOT NULL,
+      event_reason character varying(30),
+      event_nbCpu  integer NOT NULL,
+      event_start  timestamp NOT NULL,
+      event_end    timestamp NOT NULL,
+      node_id      integer NOT NULL,
+      cluster_id   integer NOT NULL,
+      CONSTRAINT Event_pkey PRIMARY KEY (event_id, node_id, cluster_id),
+      CONSTRAINT Event_unique UNIQUE (node_id, cluster_id, event_start)
+    )
 
 """
 

@@ -28,15 +28,17 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-filesystem table in HPCStatsDB:
+Schema of the ``filesystem`` table in HPCStats database:
 
-filesystem(
-  filesystem_id   SERIAL,
-  filesystem_name character varying(30) NOT NULL,
-  cluster_id      integer NOT NULL,
-  CONSTRAINT filesystem_pkey PRIMARY KEY (filesystem_id, cluster_id),
-  CONSTRAINT filesystem_unique UNIQUE (filesystem_name, cluster_id)
-)
+.. code-block:: sql
+
+    filesystem(
+      filesystem_id   SERIAL,
+      filesystem_name character varying(30) NOT NULL,
+      cluster_id      integer NOT NULL,
+      CONSTRAINT filesystem_pkey PRIMARY KEY (filesystem_id, cluster_id),
+      CONSTRAINT filesystem_unique UNIQUE (filesystem_name, cluster_id)
+    )
 
 """
 

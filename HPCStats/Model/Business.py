@@ -28,13 +28,15 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Business table in HPCStatsDB:
+Schema of the ``Business`` table in HPCStats database:
 
-Business(
-  business_code        character varying(30) NOT NULL,
-  business_description text NOT NULL,
-  CONSTRAINT Business_pkey PRIMARY KEY (business_code)
-)
+.. code-block:: sql
+
+    Business(
+      business_code        character varying(30) NOT NULL,
+      business_description text NOT NULL,
+      CONSTRAINT Business_pkey PRIMARY KEY (business_code)
+    )
 
 """
 

@@ -28,14 +28,16 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Run table in HPCStatsDB:
+Schema of the ``Run`` table in HPCStats database:
 
-Run(
-  job_id         integer NOT NULL,
-  node_id        integer NOT NULL,
-  cluster_id     integer NOT NULL,
-  CONSTRAINT Run_pkey PRIMARY KEY (job_id, node_id, cluster_id)
-)
+.. code-block:: sql
+
+    Run(
+      job_id         integer NOT NULL,
+      node_id        integer NOT NULL,
+      cluster_id     integer NOT NULL,
+      CONSTRAINT Run_pkey PRIMARY KEY (job_id, node_id, cluster_id)
+    )
 
 """
 

@@ -28,14 +28,16 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Domain table in HPCStatsDB:
+Schema of the ``Domain`` table in HPCStats database:
 
-Domain(
-  domain_id   character varying(4) NOT NULL,
-  domain_name character varying(30),
-  CONSTRAINT Domain_pkey PRIMARY KEY (domain_id),
-  CONSTRAINT Domain_unique UNIQUE (domain_name)
-)
+.. code-block:: sql
+
+    Domain(
+      domain_id   character varying(4) NOT NULL,
+      domain_name character varying(30),
+      CONSTRAINT Domain_pkey PRIMARY KEY (domain_id),
+      CONSTRAINT Domain_unique UNIQUE (domain_name)
+    )
 
 """
 

@@ -28,14 +28,16 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Cluster table in HPCStatsDB:
+Schema of the ``Cluster`` table in HPCStats database:
 
-Cluster(
-  cluster_id   SERIAL,
-  cluster_name character varying(30) NOT NULL,
-  CONSTRAINT Cluster_pkey PRIMARY KEY (cluster_id),
-  CONSTRAINT Cluster_unique UNIQUE (cluster_name)
-)
+.. code-block:: sql
+
+    Cluster(
+      cluster_id   SERIAL,
+      cluster_name character varying(30) NOT NULL,
+      CONSTRAINT Cluster_pkey PRIMARY KEY (cluster_id),
+      CONSTRAINT Cluster_unique UNIQUE (cluster_name)
+    )
 
 """
 

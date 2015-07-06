@@ -28,17 +28,19 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Account table in HPCStatsDB:
+Schema of the ``Account`` table in HPCStats database:
 
-Account(
-  account_uid      integer NOT NULL,
-  account_gid      integer NOT NULL,
-  account_creation date NOT NULL,
-  account_deletion date NOT NULL,
-  userhpc_id       integer NOT NULL,
-  cluster_id       integer NOT NULL,
-  CONSTRAINT Account_pkey PRIMARY KEY (userhpc_id, cluster_id)
-)
+.. code-block:: sql
+
+    Account(
+      account_uid      integer NOT NULL,
+      account_gid      integer NOT NULL,
+      account_creation date NOT NULL,
+      account_deletion date NOT NULL,
+      userhpc_id       integer NOT NULL,
+      cluster_id       integer NOT NULL,
+      CONSTRAINT Account_pkey PRIMARY KEY (userhpc_id, cluster_id)
+    )
 
 """
 

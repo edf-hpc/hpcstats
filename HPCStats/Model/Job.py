@@ -28,26 +28,28 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Job table in HPCStatsDB:
+Schema of the ``Job`` table in HPCStats database:
 
-Job(
-  job_id         SERIAL,
-  job_sched_id   integer NOT NULL,
-  job_batch_id   character varying(30) NOT NULL,
-  job_nbCpu      integer NOT NULL,
-  job_name       character varying(30),
-  job_state      character varying(30) NOT NULL,
-  job_queue      character varying(30),
-  job_submission timestamp NOT NULL,
-  job_start      timestamp,
-  job_end        timestamp,
-  userhpc_id     integer NOT NULL,
-  cluster_id     integer NOT NULL,
-  project_id     integer NOT NULL,
-  business_code  character varying(30) NOT NULL,
-  CONSTRAINT Job_pkey PRIMARY KEY (job_id),
-  CONSTRAINT Job_unique UNIQUE (job_batch_id, cluster_id)
-)
+.. code-block:: sql
+
+    Job(
+      job_id         SERIAL,
+      job_sched_id   integer NOT NULL,
+      job_batch_id   character varying(30) NOT NULL,
+      job_nbCpu      integer NOT NULL,
+      job_name       character varying(30),
+      job_state      character varying(30) NOT NULL,
+      job_queue      character varying(30),
+      job_submission timestamp NOT NULL,
+      job_start      timestamp,
+      job_end        timestamp,
+      userhpc_id     integer NOT NULL,
+      cluster_id     integer NOT NULL,
+      project_id     integer NOT NULL,
+      business_code  character varying(30) NOT NULL,
+      CONSTRAINT Job_pkey PRIMARY KEY (job_id),
+      CONSTRAINT Job_unique UNIQUE (job_batch_id, cluster_id)
+    )
 
 """
 

@@ -28,16 +28,18 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-Project table in HPCStatsDB:
+Schema of the ``Project`` table in HPCStats database:
 
-Project(
-  project_id          SERIAL,
-  project_code        character varying(30) NOT NULL,
-  project_description text,
-  domain_id           character varying(4),
-  CONSTRAINT Project_pkey PRIMARY KEY (project_id),
-  CONSTRAINT Project_unique UNIQUE (project_code)
-)
+.. code-block:: sql
+
+    Project(
+      project_id          SERIAL,
+      project_code        character varying(30) NOT NULL,
+      project_description text,
+      domain_id           character varying(4),
+      CONSTRAINT Project_pkey PRIMARY KEY (project_id),
+      CONSTRAINT Project_unique UNIQUE (project_code)
+    )
 
 """
 
