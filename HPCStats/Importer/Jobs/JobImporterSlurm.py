@@ -68,17 +68,6 @@ class JobImporterSlurm(JobImporter):
                              'window_size',
                              0, int)
 
-        self.uppercase_accounts = \
-          config.get_default(section,
-                             'uppercase_accounts',
-                             False, bool)
-        self.uppercase_exceptions = []
-        exceptions_str = \
-          config.get_default(section,
-                             'uppercase_exceptions',
-                             '')
-        self.uppercase_exceptions = exceptions_str.split(',')
-
         self.strict_job_account_binding = \
           config.get_default('constraints',
                              'strict_job_account_binding',
@@ -283,9 +272,6 @@ class JobImporterSlurm(JobImporter):
             queue = "%s-%s" % (partition, qos)
 
             login = row[13]
-            if login not in self.uppercase_exceptions and \
-               self.uppercase_accounts == True:
-                login = login.upper()
 
             searched_user = User(login, None, None, None)
             searched_account = Account(searched_user, self.cluster,

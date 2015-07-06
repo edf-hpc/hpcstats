@@ -60,17 +60,6 @@ class UserImporterLdapSlurm(UserImporterLdap):
         self.dbuser = config.get(section, 'user')
         self.dbpass = config.get_default(section, 'password', None)
 
-        self.uppercase_accounts = \
-          config.get_default(section,
-                             'uppercase_accounts',
-                             False, bool)
-        self.uppercase_exceptions = []
-        exceptions_str = \
-          config.get_default(section,
-                             'uppercase_exceptions',
-                             '')
-        self.uppercase_exceptions = exceptions_str.split(',')
-
         self.users_acct_slurm = None
 
         self.conn = None
@@ -134,9 +123,6 @@ class UserImporterLdapSlurm(UserImporterLdap):
                 break
 
             login = row[0]
-            if login not in self.uppercase_exceptions and \
-               self.uppercase_accounts == True:
-                login = login.upper()
 
             searched_user = User(login, None, None, None)
             user = self.find_user(searched_user)
