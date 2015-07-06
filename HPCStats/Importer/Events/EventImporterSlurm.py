@@ -223,10 +223,11 @@ class EventImporterSlurm(EventImporter):
     def merge_successive_events(events):
         """Merge successive Events in the list. For example, if the list
            contains 2 events on node A from X to Y and from Y to Z, this method
-           will merge them into one event on node A from Y to Z. Ex:
-           [ { node: N1, reason: R1, start: X, end Y },
-             { node: N1, reason: R1, start: Y, end Z } ]
-           -> [ { node: N1, reason: R1, start: X, end: Z } ]
+           will merge them into one event on node A from Y to Z. Ex::
+
+               [ { node: N1, reason: R1, start: X, end Y },
+                 { node: N1, reason: R1, start: Y, end Z } ]
+               -> [ { node: N1, reason: R1, start: X, end: Z } ]
         """
 
         event_index = 0

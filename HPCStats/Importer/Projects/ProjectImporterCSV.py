@@ -28,27 +28,28 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 """
-   This module import projects from CSV file. The CSV file must be formatted
-   like this:
+This module import projects from CSV file. The CSV file must be formatted
+like this::
 
    <project_code>;<project_description>; \
-     [<domain_id>] <domain_description>; \
-     [<sector_id>] <sector_description>
+[<domain_id>] <domain_description>; \
+[<sector_id>] <sector_description>
 
-   The project_code is a mandatory string
-   The project_description is an optional string
-   The domain_id is an optional string
-   The domain_description is an optional string
-   The sector_id is an optional string
-   The sector_description is an optional string
+Where:
 
-   A domain has both an ID and a description.
+* The ``project_code`` is a mandatory string
+* The ``project_description`` is an optional string
+* The ``domain_id`` is an optional string
+* The ``domain_description`` is an optional string
+* The ``sector_id`` is an optional string
+* The ``sector_description`` is an optional string
 
-   However, a sector could have an ID but not description. The reverse is not
-   true: there could not be a sector w/ a description w/o ID.
+A domain has both an ID and a description. However, a sector could have an ID
+but not description. The reverse is not true: there could not be a sector w/ a
+description w/o ID.
 
-   A project could have a domain and no sector. But the reverse is not true:
-   there could not be project w/ a sector and w/o domain.
+A project could have a domain and no sector. But the reverse is not true:
+there could not be project w/ a sector and w/o domain.
 """
 
 from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
