@@ -89,11 +89,16 @@ class FSUsageImporterSSH(FSUsageImporter):
 
     def check(self):
         """Check if remote SSH server is available for connections and if the
-           remote CSV file can be opened. Riases HPCStatsSourceError in case of
+           remote CSV file can be opened. Raises HPCStatsSourceError in case of
            problem.
         """
         ssh = self.connect_ssh()
-        sftp = ssh.open_sftp()
+        try:
+            sftp = ssh.open_sftp()
+        except paramiko.SFTPError, err:
+            raise HPCStatsSourceError( \
+                    "Error while opening SFTP connection: %s" \
+                      % (err))
         try:
             sftp.open(self.fsfile, 'r')
         except IOError, err:
@@ -117,7 +122,12 @@ class FSUsageImporterSSH(FSUsageImporter):
         # Paramiko sftp.open() but iterating over a long file (line by line)
         # is quite slow. We prefer to download the full file to a local
         # temporary file and then read/parse this local file.
-        sftp = ssh.open_sftp()
+        try:
+            sftp = ssh.open_sftp()
+        except paramiko.SFTPError, err:
+            raise HPCStatsSourceError( \
+                    "Error while opening SFTP connection: %s" \
+                      % (err))
 
         (tmp_fh, tmp_fpath) = tempfile.mkstemp()
         os.close(tmp_fh) # immediately close since we do not need it
