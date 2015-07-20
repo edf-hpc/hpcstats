@@ -29,6 +29,8 @@
 
 """Collection of utility functions widely used accross HPCStats."""
 
+import re
+
 def decypher(encoded):
     """Decypher the string in parameter."""
 
@@ -40,3 +42,74 @@ def decypher(encoded):
         else:
             result.append(encoded[coord_i])
     return ''.join(result)
+
+def match_bg_nodelist(nodelist):
+    """Returns the match object as returned by the match() method
+       after the regext and the nodelist in parameter.
+    """
+
+    re_ns = r"(\S+)\[(\d+)x(\d+)\]"
+    cp_ns = re.compile(re_ns)
+    return cp_ns.match(nodelist)
+
+def is_bg_nodelist(nodelist):
+    """Returns True if the nodelist in parameter is a valid BG/Q nodelist
+       as formatted by Slurm.
+    """
+
+    return match_bg_nodelist(nodelist) is not None
+
+def compute_bg_nodelist(nodelist):
+    """Returns the list of nodes in a BG/Q nodelist as formatted by Slurm.
+       Ex: bgq[001x011] -> [ bgq001, bgq010, bgq011].
+    """
+
+    def is_over(idxs, idx_values):
+
+        for i in range(len(idxs)):
+            if idxs[i] < len(idx_values[i])-1:
+                return False
+        return True
+
+    def increment_idxs(idxs, idx_values):
+
+        for i in range(len(idxs)-1, -1, -1):
+            if idxs[i] >= len(idx_values[i])-1:
+                idxs[i] = 0
+            elif idxs[i] < len(idx_values[i])-1:
+                idxs[i] += 1
+                break
+
+    def compute_nodes_inter(pfx, start, end):
+
+        idx_values = list()
+        idxs = list()
+        nodes = list()
+
+        for i in range(len(start)):
+           idx_values.append(list())
+           idxs.append(0)
+           idx_values[i] = range(int(start[i]), int(end[i])+1)
+
+        while(True):
+
+            new_node_name = pfx
+            for i in range(len(idxs)):
+                new_node_name += str(idx_values[i][idxs[i]])
+            nodes.append(new_node_name)
+            if is_over(idxs, idx_values):
+                break
+            increment_idxs(idxs, idx_values)
+
+        return nodes
+
+    match_ns = match_bg_nodelist(nodelist)
+
+    if match_ns is not None:
+        pfx = match_ns.group(1)
+        start_inter = match_ns.group(2)
+        end_inter = match_ns.group(3)
+        nodes = compute_nodes_inter(pfx, start_inter, end_inter)
+        return nodes
+
+    return None

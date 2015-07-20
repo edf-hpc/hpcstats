@@ -37,6 +37,7 @@ import logging
 logger = logging.getLogger(__name__)
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
+from HPCStats.Utils import is_bg_nodelist, compute_bg_nodelist
 from HPCStats.Model.Job import Job, get_batchid_oldest_unfinished_job, get_batchid_last_job
 from HPCStats.Model.Node import Node
 from HPCStats.Model.Run import Run
@@ -339,27 +340,37 @@ class JobImporterSlurm(JobImporter):
             self.jobs.append(job)
 
             if nodelist is not None:
-                try:
-                    nodeset = NodeSet(nodelist)
-                except NodeSetParseRangeError:
-                    raise HPCStatsSourceError( \
-                            "could not parse nodeset %s for job %s" \
-                              % (nodelist, batch_id))
-
-                for nodename in nodeset:
-                    searched_node = Node(nodename, self.cluster,
-                                         None, None, None, None)
-                    node = self.app.arch.find_node(searched_node)
-                    if node is None:
-                        raise HPCStatsSourceError(
-                                "unable to find node %s for job %s in " \
-                                "loaded nodes" \
-                                  % (nodename, batch_id))
-
-                    run = Run(self.cluster, node, job)
-                    self.runs.append(run)
+                self.create_runs(nodelist, job)
 
         return last_batch_id
+
+    def create_runs(self, nodelist, job):
+        """Create all Runs objects for the job in parameter and all the nodes
+           in nodelist.
+        """
+
+        if is_bg_nodelist(nodelist):
+            nodeset = compute_bg_nodelist(nodelist)
+        else:
+            try:
+                nodeset = NodeSet(nodelist)
+            except NodeSetParseRangeError:
+                raise HPCStatsSourceError( \
+                        "could not parse nodeset %s for job %s" \
+                          % (nodelist, job.batch_id))
+
+        for nodename in nodeset:
+            searched_node = Node(nodename, self.cluster,
+                                 None, None, None, None)
+            node = self.app.arch.find_node(searched_node)
+            if node is None:
+                raise HPCStatsSourceError(
+                        "unable to find node %s for job %s in " \
+                        "loaded nodes" \
+                          % (nodename, job.batch_id))
+
+            run = Run(self.cluster, node, job)
+            self.runs.append(run)
 
     def job_partition(self, job_id, partitions_str, nodelist):
         """Return one partition name depending on the partition field and the
