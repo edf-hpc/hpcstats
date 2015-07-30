@@ -81,7 +81,9 @@ class FSUsageImporterSSH(FSUsageImporter):
             ssh.connect(self.ssh_host,
                         username=self.ssh_user,
                         key_filename=self.ssh_pkey)
-        except (paramiko.AuthenticationException, socket.error) as err:
+        except (paramiko.AuthenticationException,
+                paramiko.SSHException,
+                socket.error) as err:
             raise HPCStatsSourceError( \
                     "unable to connect by SSH to %s@%s: %s" % \
                       (self.ssh_user, self.ssh_host, err))
