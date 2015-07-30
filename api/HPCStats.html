@@ -108,9 +108,30 @@
 <span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Utils</span></tt> Module<a class="headerlink" href="#module-HPCStats.Utils" title="Permalink to this headline">¶</a></h2>
 <p>Collection of utility functions widely used accross HPCStats.</p>
 <dl class="function">
+<dt id="HPCStats.Utils.compute_bg_nodelist">
+<tt class="descclassname">HPCStats.Utils.</tt><tt class="descname">compute_bg_nodelist</tt><big>(</big><em>nodelist</em><big>)</big><a class="headerlink" href="#HPCStats.Utils.compute_bg_nodelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of nodes in a BG/Q nodelist as formatted by Slurm.
+Ex: bgq[001x011] -&gt; [ bgq001, bgq010, bgq011].</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="HPCStats.Utils.decypher">
 <tt class="descclassname">HPCStats.Utils.</tt><tt class="descname">decypher</tt><big>(</big><em>encoded</em><big>)</big><a class="headerlink" href="#HPCStats.Utils.decypher" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decypher the string in parameter.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Utils.is_bg_nodelist">
+<tt class="descclassname">HPCStats.Utils.</tt><tt class="descname">is_bg_nodelist</tt><big>(</big><em>nodelist</em><big>)</big><a class="headerlink" href="#HPCStats.Utils.is_bg_nodelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the nodelist in parameter is a valid BG/Q nodelist
+as formatted by Slurm.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Utils.match_bg_nodelist">
+<tt class="descclassname">HPCStats.Utils.</tt><tt class="descname">match_bg_nodelist</tt><big>(</big><em>nodelist</em><big>)</big><a class="headerlink" href="#HPCStats.Utils.match_bg_nodelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the match object as returned by the match() method
+after the regext and the nodelist in parameter.</p>
 </dd></dl>
 
 </div>

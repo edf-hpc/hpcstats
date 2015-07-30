@@ -104,7 +104,7 @@ of HPCStats.</p>
 may want to create a cronjob for automatically running HPCStats importer
 application for all clusters. Here is an example of such cronjob, in file
 <tt class="file docutils literal"><span class="pre">/etc/cron.d/hpcstats</span></tt>:</p>
-<div class="highlight-python"><pre>0 5 * * * hpcstats hpcstats import --cluster=all
+<div class="highlight-python"><pre>0 5 * * * hpcstats hpcstats --batch-mode import --cluster=all
 </pre>
 </div>
 <p>To receive the complete output of the cronjob runs by email, you can also set

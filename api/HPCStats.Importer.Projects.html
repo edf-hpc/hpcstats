@@ -94,16 +94,20 @@ in self.projects attribute. Returns None if not found.</p>
 <span id="projectimportercsv-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterCSV</span></tt> Module<a class="headerlink" href="#module-HPCStats.Importer.Projects.ProjectImporterCSV" title="Permalink to this headline">¶</a></h2>
 <p>This module import projects from CSV file. The CSV file must be formatted
 like this:</p>
-<p>&lt;project_code&gt;;&lt;project_description&gt;;      [&lt;domain_id&gt;] &lt;domain_description&gt;;      [&lt;sector_id&gt;] &lt;sector_description&gt;</p>
-<p>The project_code is a mandatory string
-The project_description is an optional string
-The domain_id is an optional string
-The domain_description is an optional string
-The sector_id is an optional string
-The sector_description is an optional string</p>
-<p>A domain has both an ID and a description.</p>
-<p>However, a sector could have an ID but not description. The reverse is not
-true: there could not be a sector w/ a description w/o ID.</p>
+<div class="highlight-python"><pre>&lt;project_code&gt;;&lt;project_description&gt;; [&lt;domain_id&gt;] &lt;domain_description&gt;; [&lt;sector_id&gt;] &lt;sector_description&gt;</pre>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li>The <tt class="docutils literal"><span class="pre">project_code</span></tt> is a mandatory string</li>
+<li>The <tt class="docutils literal"><span class="pre">project_description</span></tt> is an optional string</li>
+<li>The <tt class="docutils literal"><span class="pre">domain_id</span></tt> is an optional string</li>
+<li>The <tt class="docutils literal"><span class="pre">domain_description</span></tt> is an optional string</li>
+<li>The <tt class="docutils literal"><span class="pre">sector_id</span></tt> is an optional string</li>
+<li>The <tt class="docutils literal"><span class="pre">sector_description</span></tt> is an optional string</li>
+</ul>
+<p>A domain has both an ID and a description. However, a sector could have an ID
+but not description. The reverse is not true: there could not be a sector w/ a
+description w/o ID.</p>
 <p>A project could have a domain and no sector. But the reverse is not true:
 there could not be project w/ a sector and w/o domain.</p>
 <dl class="class">

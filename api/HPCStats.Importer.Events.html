@@ -146,11 +146,11 @@ list attribute.</p>
 <em class="property">static </em><tt class="descname">merge_successive_events</tt><big>(</big><em>events</em><big>)</big><a class="headerlink" href="#HPCStats.Importer.Events.EventImporterSlurm.EventImporterSlurm.merge_successive_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge successive Events in the list. For example, if the list
 contains 2 events on node A from X to Y and from Y to Z, this method
-will merge them into one event on node A from Y to Z. Ex:
-[ { node: N1, reason: R1, start: X, end Y },</p>
-<blockquote>
-<div>{ node: N1, reason: R1, start: Y, end Z } ]</div></blockquote>
-<p>-&gt; [ { node: N1, reason: R1, start: X, end: Z } ]</p>
+will merge them into one event on node A from Y to Z. Ex:</p>
+<div class="highlight-python"><pre>[ { node: N1, reason: R1, start: X, end Y },
+  { node: N1, reason: R1, start: Y, end Z } ]
+-&gt; [ { node: N1, reason: R1, start: X, end: Z } ]</pre>
+</div>
 </dd></dl>
 
 <dl class="staticmethod">

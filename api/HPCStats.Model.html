@@ -61,18 +61,18 @@
 <h1>Model Package<a class="headerlink" href="#model-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-HPCStats.Model.Account">
 <span id="account-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Account</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Account" title="Permalink to this headline">¶</a></h2>
-<p>Account table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>Account(</dt>
-<dd>account_uid      integer NOT NULL,
-account_gid      integer NOT NULL,
-account_creation date NOT NULL,
-account_deletion date NOT NULL,
-userhpc_id       integer NOT NULL,
-cluster_id       integer NOT NULL,
-CONSTRAINT Account_pkey PRIMARY KEY (userhpc_id, cluster_id)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">Account</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">Account</span><span class="p">(</span>
+  <span class="n">account_uid</span>      <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">account_gid</span>      <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">account_creation</span> <span class="nb">date</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">account_deletion</span> <span class="nb">date</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">userhpc_id</span>       <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">cluster_id</span>       <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Account_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">userhpc_id</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.Account.Account">
 <em class="property">class </em><tt class="descclassname">HPCStats.Model.Account.</tt><tt class="descname">Account</tt><big>(</big><em>user</em>, <em>cluster</em>, <em>uid</em>, <em>gid</em>, <em>creation_date</em>, <em>deletion_date</em>, <em>exists=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Account.Account" title="Permalink to this definition">¶</a></dt>
@@ -127,14 +127,14 @@ DB.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.Business">
 <span id="business-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Business</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Business" title="Permalink to this headline">¶</a></h2>
-<p>Business table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>Business(</dt>
-<dd>business_code        character varying(30) NOT NULL,
-business_description text NOT NULL,
-CONSTRAINT Business_pkey PRIMARY KEY (business_code)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">Business</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">Business</span><span class="p">(</span>
+  <span class="n">business_code</span>        <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">business_description</span> <span class="nb">text</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Business_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">business_code</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.Business.Business">
 <em class="property">class </em><tt class="descclassname">HPCStats.Model.Business.</tt><tt class="descname">Business</tt><big>(</big><em>code</em>, <em>description</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Business.Business" title="Permalink to this definition">¶</a></dt>
@@ -168,15 +168,15 @@ if exists is False.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.Cluster">
 <span id="cluster-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Cluster</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Cluster" title="Permalink to this headline">¶</a></h2>
-<p>Cluster table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>Cluster(</dt>
-<dd>cluster_id   SERIAL,
-cluster_name character varying(30) NOT NULL,
-CONSTRAINT Cluster_pkey PRIMARY KEY (cluster_id),
-CONSTRAINT Cluster_unique UNIQUE (cluster_name)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">Cluster</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">Cluster</span><span class="p">(</span>
+  <span class="n">cluster_id</span>   <span class="nb">SERIAL</span><span class="p">,</span>
+  <span class="n">cluster_name</span> <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Cluster_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">cluster_id</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Cluster_unique</span> <span class="k">UNIQUE</span> <span class="p">(</span><span class="n">cluster_name</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.Cluster.Cluster">
 <em class="property">class </em><tt class="descclassname">HPCStats.Model.Cluster.</tt><tt class="descname">Cluster</tt><big>(</big><em>name</em>, <em>cluster_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Cluster.Cluster" title="Permalink to this definition">¶</a></dt>
@@ -233,15 +233,15 @@ HPCStatsRuntimeError.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.Domain">
 <span id="domain-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Domain</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Domain" title="Permalink to this headline">¶</a></h2>
-<p>Domain table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>Domain(</dt>
-<dd>domain_id   character varying(4) NOT NULL,
-domain_name character varying(30),
-CONSTRAINT Domain_pkey PRIMARY KEY (domain_id),
-CONSTRAINT Domain_unique UNIQUE (domain_name)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">Domain</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">Domain</span><span class="p">(</span>
+  <span class="n">domain_id</span>   <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">domain_name</span> <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Domain_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">domain_id</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Domain_unique</span> <span class="k">UNIQUE</span> <span class="p">(</span><span class="n">domain_name</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.Domain.Domain">
 <em class="property">class </em><tt class="descclassname">HPCStats.Model.Domain.</tt><tt class="descname">Domain</tt><big>(</big><em>key</em>, <em>name</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Domain.Domain" title="Permalink to this definition">¶</a></dt>
@@ -275,21 +275,21 @@ exists is False.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.Event">
 <span id="event-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Event</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Event" title="Permalink to this headline">¶</a></h2>
-<p>Event table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>Event(</dt>
-<dd>event_id     SERIAL,
-event_type   character varying(30) NOT NULL,
-event_reason character varying(30),
-event_nbCpu  integer NOT NULL,
-event_start  timestamp NOT NULL,
-event_end    timestamp NOT NULL,
-node_id      integer NOT NULL,
-cluster_id   integer NOT NULL,
-CONSTRAINT Event_pkey PRIMARY KEY (event_id, node_id, cluster_id),
-CONSTRAINT Event_unique UNIQUE (node_id, cluster_id, event_start)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">Event</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">Event</span><span class="p">(</span>
+  <span class="n">event_id</span>     <span class="nb">SERIAL</span><span class="p">,</span>
+  <span class="n">event_type</span>   <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">event_reason</span> <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+  <span class="n">event_nbCpu</span>  <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">event_start</span>  <span class="k">timestamp</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">event_end</span>    <span class="k">timestamp</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">node_id</span>      <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">cluster_id</span>   <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Event_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">event_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Event_unique</span> <span class="k">UNIQUE</span> <span class="p">(</span><span class="n">node_id</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="n">event_start</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.Event.Event">
 <em class="property">class </em><tt class="descclassname">HPCStats.Model.Event.</tt><tt class="descname">Event</tt><big>(</big><em>cluster</em>, <em>node</em>, <em>nb_cpu</em>, <em>start_datetime</em>, <em>end_datetime</em>, <em>event_type</em>, <em>reason</em>, <em>event_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Event.Event" title="Permalink to this definition">¶</a></dt>
@@ -357,19 +357,20 @@ if no unfinished event found.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.FSUsage">
 <span id="fsusage-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">FSUsage</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.FSUsage" title="Permalink to this headline">¶</a></h2>
-<p>fsusage table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>fsusage(</dt>
-<dd>fsusage_time  timestamp NOT NULL,
-fsusage_usage real NOT NULL,
-filesystem_id integer NOT NULL,
-cluster_id    integer NOT NULL,
-CONSTRAINT fsusage_pkey PRIMARY KEY (fsusage_time, filesystem_id, cluster_id)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">fsusage</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">fsusage</span><span class="p">(</span>
+  <span class="n">fsusage_time</span>   <span class="k">timestamp</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">fsusage_usage</span>  <span class="nb">real</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">fsusage_inode</span>  <span class="nb">real</span><span class="p">,</span>
+  <span class="n">filesystem_id</span>  <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">cluster_id</span>     <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="n">fsusage_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">fsusage_time</span><span class="p">,</span> <span class="n">filesystem_id</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.FSUsage.FSUsage">
-<em class="property">class </em><tt class="descclassname">HPCStats.Model.FSUsage.</tt><tt class="descname">FSUsage</tt><big>(</big><em>filesystem</em>, <em>timestamp</em>, <em>usage</em><big>)</big><a class="headerlink" href="#HPCStats.Model.FSUsage.FSUsage" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.FSUsage.</tt><tt class="descname">FSUsage</tt><big>(</big><em>filesystem</em>, <em>timestamp</em>, <em>usage</em>, <em>inode</em><big>)</big><a class="headerlink" href="#HPCStats.Model.FSUsage.FSUsage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Model class for the fsusage table.</p>
 <dl class="method">
@@ -399,16 +400,16 @@ raises HPCStatsRuntimeError.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.Filesystem">
 <span id="filesystem-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Filesystem</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Filesystem" title="Permalink to this headline">¶</a></h2>
-<p>filesystem table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>filesystem(</dt>
-<dd>filesystem_id   SERIAL,
-filesystem_name character varying(30) NOT NULL,
-cluster_id      integer NOT NULL,
-CONSTRAINT filesystem_pkey PRIMARY KEY (filesystem_id, cluster_id),
-CONSTRAINT filesystem_unique UNIQUE (filesystem_name, cluster_id)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">filesystem</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">filesystem</span><span class="p">(</span>
+  <span class="n">filesystem_id</span>   <span class="nb">SERIAL</span><span class="p">,</span>
+  <span class="n">filesystem_name</span> <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">cluster_id</span>      <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="n">filesystem_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">filesystem_id</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">filesystem_unique</span> <span class="k">UNIQUE</span> <span class="p">(</span><span class="n">filesystem_name</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.Filesystem.Filesystem">
 <em class="property">class </em><tt class="descclassname">HPCStats.Model.Filesystem.</tt><tt class="descname">Filesystem</tt><big>(</big><em>mountpoint</em>, <em>cluster</em>, <em>fs_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Filesystem.Filesystem" title="Permalink to this definition">¶</a></dt>
@@ -439,27 +440,27 @@ it raises HPCStatsRuntimeError.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.Job">
 <span id="job-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Job</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Job" title="Permalink to this headline">¶</a></h2>
-<p>Job table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>Job(</dt>
-<dd>job_id         SERIAL,
-job_sched_id   integer NOT NULL,
-job_batch_id   character varying(30) NOT NULL,
-job_nbCpu      integer NOT NULL,
-job_name       character varying(30),
-job_state      character varying(30) NOT NULL,
-job_queue      character varying(30),
-job_submission timestamp NOT NULL,
-job_start      timestamp,
-job_end        timestamp,
-userhpc_id     integer NOT NULL,
-cluster_id     integer NOT NULL,
-project_id     integer NOT NULL,
-business_code  character varying(30) NOT NULL,
-CONSTRAINT Job_pkey PRIMARY KEY (job_id),
-CONSTRAINT Job_unique UNIQUE (job_batch_id, cluster_id)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">Job</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">Job</span><span class="p">(</span>
+  <span class="n">job_id</span>         <span class="nb">SERIAL</span><span class="p">,</span>
+  <span class="n">job_sched_id</span>   <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">job_batch_id</span>   <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">job_nbCpu</span>      <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">job_name</span>       <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+  <span class="n">job_state</span>      <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">job_queue</span>      <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+  <span class="n">job_submission</span> <span class="k">timestamp</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">job_start</span>      <span class="k">timestamp</span><span class="p">,</span>
+  <span class="n">job_end</span>        <span class="k">timestamp</span><span class="p">,</span>
+  <span class="n">userhpc_id</span>     <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">cluster_id</span>     <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">project_id</span>     <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">business_code</span>  <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Job_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">job_id</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Job_unique</span> <span class="k">UNIQUE</span> <span class="p">(</span><span class="n">job_batch_id</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.Job.Job">
 <em class="property">class </em><tt class="descclassname">HPCStats.Model.Job.</tt><tt class="descname">Job</tt><big>(</big><em>account</em>, <em>project</em>, <em>business</em>, <em>sched_id</em>, <em>batch_id</em>, <em>name</em>, <em>nbcpu</em>, <em>state</em>, <em>queue</em>, <em>submission</em>, <em>start</em>, <em>end</em>, <em>job_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Job.Job" title="Permalink to this definition">¶</a></dt>
@@ -510,23 +511,24 @@ HPCStats DB. Returns None if not found.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.Node">
 <span id="node-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Node</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Node" title="Permalink to this headline">¶</a></h2>
-<p>Node table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>Node(</dt>
-<dd>node_id        SERIAL,
-node_name      character varying(30) NOT NULL,
-node_nbCpu     integer,
-node_partition character varying(30) NOT NULL,
-node_flops     integer NOT NULL,
-node_memory    integer NOT NULL,
-cluster_id     integer NOT NULL,
-CONSTRAINT Node_pkey PRIMARY KEY (node_id, cluster_id),
-CONSTRAINT Node_unique UNIQUE (node_name, cluster_id)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">Node</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">Node</span><span class="p">(</span>
+  <span class="n">node_id</span>        <span class="nb">SERIAL</span><span class="p">,</span>
+  <span class="n">node_name</span>      <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">node_model</span>     <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">node_nbCpu</span>     <span class="nb">integer</span><span class="p">,</span>
+  <span class="n">node_partition</span> <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">node_flops</span>     <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">node_memory</span>    <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">cluster_id</span>     <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Node_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">node_id</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Node_unique</span> <span class="k">UNIQUE</span> <span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.Node.Node">
-<em class="property">class </em><tt class="descclassname">HPCStats.Model.Node.</tt><tt class="descname">Node</tt><big>(</big><em>name</em>, <em>cluster</em>, <em>partition</em>, <em>cpu</em>, <em>memory</em>, <em>flops</em>, <em>node_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Node.Node" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Node.</tt><tt class="descname">Node</tt><big>(</big><em>name</em>, <em>cluster</em>, <em>model</em>, <em>partition</em>, <em>cpu</em>, <em>memory</em>, <em>flops</em>, <em>node_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Node.Node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Model class for the Node table.</p>
 <dl class="method">
@@ -560,17 +562,17 @@ Raises HPCStatsRuntimeError if self.node_id is None.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.Project">
 <span id="project-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Project</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Project" title="Permalink to this headline">¶</a></h2>
-<p>Project table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>Project(</dt>
-<dd>project_id          SERIAL,
-project_code        character varying(30) NOT NULL,
-project_description text,
-domain_id           character varying(4),
-CONSTRAINT Project_pkey PRIMARY KEY (project_id),
-CONSTRAINT Project_unique UNIQUE (project_code)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">Project</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">Project</span><span class="p">(</span>
+  <span class="n">project_id</span>          <span class="nb">SERIAL</span><span class="p">,</span>
+  <span class="n">project_code</span>        <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">project_description</span> <span class="nb">text</span><span class="p">,</span>
+  <span class="n">domain_id</span>           <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Project_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">project_id</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Project_unique</span> <span class="k">UNIQUE</span> <span class="p">(</span><span class="n">project_code</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.Project.Project">
 <em class="property">class </em><tt class="descclassname">HPCStats.Model.Project.</tt><tt class="descname">Project</tt><big>(</big><em>domain</em>, <em>code</em>, <em>description</em>, <em>project_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Project.Project" title="Permalink to this definition">¶</a></dt>
@@ -616,15 +618,15 @@ HPCStatsRuntimeError if self.project_id is None.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.Run">
 <span id="run-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Run</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.Run" title="Permalink to this headline">¶</a></h2>
-<p>Run table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>Run(</dt>
-<dd>job_id         integer NOT NULL,
-node_id        integer NOT NULL,
-cluster_id     integer NOT NULL,
-CONSTRAINT Run_pkey PRIMARY KEY (job_id, node_id, cluster_id)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">Run</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">Run</span><span class="p">(</span>
+  <span class="n">job_id</span>         <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">node_id</span>        <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">cluster_id</span>     <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Run_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">job_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.Run.Run">
 <em class="property">class </em><tt class="descclassname">HPCStats.Model.Run.</tt><tt class="descname">Run</tt><big>(</big><em>cluster</em>, <em>node</em>, <em>job</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Run.Run" title="Permalink to this definition">¶</a></dt>
@@ -651,18 +653,18 @@ HPCStatsRuntimeError.</p>
 </div>
 <div class="section" id="module-HPCStats.Model.User">
 <span id="user-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">User</span></tt> Module<a class="headerlink" href="#module-HPCStats.Model.User" title="Permalink to this headline">¶</a></h2>
-<p>Userhpc table in HPCStatsDB:</p>
-<dl class="docutils">
-<dt>Userhpc(</dt>
-<dd>userhpc_id         SERIAL,
-userhpc_login      character varying(30) NOT NULL,
-userhpc_name       character varying(30) NOT NULL,
-userhpc_firstname  character varying(30) NOT NULL,
-userhpc_department character varying(30),
-CONSTRAINT Userhpc_pkey PRIMARY KEY (userhpc_id),
-CONSTRAINT Userhpc_unique UNIQUE (userhpc_login)</dd>
-</dl>
-<p>)</p>
+<p>Schema of the <tt class="docutils literal"><span class="pre">Userhpc</span></tt> table in HPCStats database:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">Userhpc</span><span class="p">(</span>
+  <span class="n">userhpc_id</span>         <span class="nb">SERIAL</span><span class="p">,</span>
+  <span class="n">userhpc_login</span>      <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">userhpc_name</span>       <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">userhpc_firstname</span>  <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">userhpc_department</span> <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Userhpc_pkey</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">userhpc_id</span><span class="p">),</span>
+  <span class="k">CONSTRAINT</span> <span class="n">Userhpc_unique</span> <span class="k">UNIQUE</span> <span class="p">(</span><span class="n">userhpc_login</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="HPCStats.Model.User.User">
 <em class="property">class </em><tt class="descclassname">HPCStats.Model.User.</tt><tt class="descname">User</tt><big>(</big><em>login</em>, <em>firstname</em>, <em>lastname</em>, <em>department</em>, <em>user_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.User.User" title="Permalink to this definition">¶</a></dt>

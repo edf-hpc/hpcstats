@@ -101,6 +101,14 @@ the database and generate usage reports with statistics.</p>
 <tr><td class="option-group">
 <kbd><span class="option">-d</span>, <span class="option">--debug</span></kbd></td>
 <td>Enable debug output.</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--batch-mode</span></kbd></td>
+<td>Set output in batch mode. The outputs are sent to local
+syslog server, the standard and errors outputs only get the
+messages at the warning level and over. This mode is
+particularly usefull for cronjobs because the warnings and
+errors are sent by email when needed and administrators get
+all output in syslog for further diagnosis.</td></tr>
 </tbody>
 </table>
 </div></blockquote>

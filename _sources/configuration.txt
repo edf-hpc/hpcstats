@@ -166,8 +166,6 @@ parameters:
   all jobs will be loaded at once and this can lead to a lot of memory
   consumption when there too many jobs. It is recommended to set this value
   to avoid memory over-consumption during jobs import.
-* ``uppercase_accounts``: *DEPRECATED*
-* ``uppercase_exceptions``: *DEPRECATED*
 
 The ``<cluster>/fsusage`` section (*optional*) is required by
 :py:class:`FSUsageImporterSSH` connector. It must contains the following

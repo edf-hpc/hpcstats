@@ -209,8 +209,6 @@ time, until there are no jobs to load anymore. If set to <tt class="docutils lit
 all jobs will be loaded at once and this can lead to a lot of memory
 consumption when there too many jobs. It is recommended to set this value
 to avoid memory over-consumption during jobs import.</li>
-<li><tt class="docutils literal"><span class="pre">uppercase_accounts</span></tt>: <em>DEPRECATED</em></li>
-<li><tt class="docutils literal"><span class="pre">uppercase_exceptions</span></tt>: <em>DEPRECATED</em></li>
 </ul>
 <p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/fsusage</span></tt> section (<em>optional</em>) is required by
 <tt class="xref py py-class docutils literal"><span class="pre">FSUsageImporterSSH</span></tt> connector. It must contains the following
@@ -313,20 +311,13 @@ phash = &lt;password&gt;
 cert = /path/to/cert
 group = &lt;group&gt;
 group_dpt_search = *dp*
-group_dpt_regexp = cn=(.+)-dp-(.+),ou.*
+group_dpt_regexp = cn=(\w+)-dp-(\w+),ou=.*
 
 [cluster1/slurm]
 host = &lt;slurm_mysql_db_ip&gt;
 name = slurm_acct_db
 user = slurm
 password = &lt;slurmpasswd&gt;
-# Defines whether login extracted from SlurmDBD must be uppercased before
-# matching them with account loaded by UserImporter. Default is False.
-uppercase_accounts = False
-# When uppercase_accounts is True, it is possible to specify a list of
-# account exceptions. These account names will not not be uppercased even
-# if uppercase_accounts is True.
-uppercase_exceptions = account1,account2
 # When this parameter is set to a value N above 0, the new jobs will be
 # loaded by JobImporterSlurm in windowed mode, N jobs at a time, until there
 # are no jobs to load anymore. If set to 0 (default value), all jobs will be
