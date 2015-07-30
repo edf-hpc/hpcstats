@@ -361,7 +361,7 @@ class JobImporterSlurm(JobImporter):
 
         for nodename in nodeset:
             searched_node = Node(nodename, self.cluster,
-                                 None, None, None, None)
+                                 None, None, None, None, None)
             node = self.app.arch.find_node(searched_node)
             if node is None:
                 raise HPCStatsSourceError(

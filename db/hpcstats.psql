@@ -52,6 +52,7 @@ CREATE TABLE Account(
 CREATE TABLE Node(
         node_id        SERIAL,
         node_name      character varying(30) NOT NULL,
+        node_model     character varying(50) NOT NULL,
         node_nbCpu     integer,
         node_partition character varying(30) NOT NULL,
         node_flops     bigint NOT NULL,

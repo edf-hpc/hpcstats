@@ -198,7 +198,7 @@ class EventImporterSlurm(EventImporter):
 
             node_name = row[2]
             searched_node = Node(node_name, self.cluster,
-                                 None, None, None, None)
+                                 None, None, None, None, None)
             node = self.app.arch.find_node(searched_node)
             if node is None:
                 raise HPCStatsSourceError( \

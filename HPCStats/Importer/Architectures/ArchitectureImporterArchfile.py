@@ -210,14 +210,14 @@ class ArchitectureImporterArchfile(ArchitectureImporter):
                                   nodenames,
                                   mem_str ))
 
-                # Commented out as model are not stored in HPCStats DB anymore
-                #model = config_get(nodegroup_sect, "model")
+                model = config_get(nodegroup_sect, "model")
             
                 nodeset_group = NodeSet(nodenames)
                 for nodename in nodeset_group:
                     # create and append node
                     new_node = Node(name=nodename,
                                     cluster=self.cluster,
+                                    model=model,
                                     partition=partition,
                                     cpu=cpu,
                                     memory=mem,

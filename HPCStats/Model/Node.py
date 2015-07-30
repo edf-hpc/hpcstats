@@ -35,6 +35,7 @@ Schema of the ``Node`` table in HPCStats database:
     Node(
       node_id        SERIAL,
       node_name      character varying(30) NOT NULL,
+      node_model     character varying(50) NOT NULL,
       node_nbCpu     integer,
       node_partition character varying(30) NOT NULL,
       node_flops     integer NOT NULL,
@@ -54,12 +55,13 @@ class Node(object):
 
     """Model class for the Node table."""
 
-    def __init__(self, name, cluster, partition,
+    def __init__(self, name, cluster, model, partition,
                  cpu, memory, flops, node_id=None):
 
         self.node_id = node_id
         self.name = name
         self.cluster = cluster
+        self.model = model
         self.partition = partition
         self.cpu = cpu
         self.memory = memory
@@ -67,10 +69,11 @@ class Node(object):
 
     def __str__(self):
 
-        return "%s/%s/%s: cpu:%d Gflops:%.2f memory:%dGB" % \
+        return "%s/%s/%s: model: %s cpu:%d Gflops:%.2f memory:%dGB" % \
                    ( self.cluster.name,
                      self.partition,
                      self.name,
+                     self.model,
                      self.cpu,
                      self.flops / float(1000**3),
                      self.memory / 1024**3 )
@@ -130,15 +133,17 @@ class Node(object):
         req = """
                 INSERT INTO Node ( node_name,
                                    cluster_id,
+                                   node_model,
                                    node_partition,
                                    node_nbCpu,
                                    node_memory,
                                    node_flops )
-                VALUES ( %s, %s, %s, %s, %s, %s )
+                VALUES ( %s, %s, %s, %s, %s, %s, %s )
                 RETURNING node_id
               """
         params = ( self.name,
                    self.cluster.cluster_id,
+                   self.model,
                    self.partition,
                    self.cpu,
                    self.memory,
@@ -159,13 +164,15 @@ class Node(object):
 
         req = """
                 UPDATE Node
-                   SET node_partition = %s,
+                   SET node_model = %s,
+                       node_partition = %s,
                        node_nbCpu = %s,
                        node_memory = %s,
                        node_flops = %s
                  WHERE node_id = %s
              """
-        params = ( self.partition,
+        params = ( self.model,
+                   self.partition,
                    self.cpu,
                    self.memory,
                    self.flops,
