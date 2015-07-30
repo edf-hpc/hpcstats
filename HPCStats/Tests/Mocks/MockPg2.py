@@ -160,11 +160,12 @@ def init_reqs():
 
     req = "INSERT INTO Node \( node_name, " \
                               "cluster_id, " \
+                              "node_model, " \
                               "node_partition, " \
                               "node_nbCpu, " \
                               "node_memory, " \
                               "node_flops \) " \
-           "VALUES \( %s, %s, %s, %s, %s, %s \) " \
+           "VALUES \( %s, %s, %s, %s, %s, %s, %s \) " \
            "RETURNING node_id"
 
     PG_REQS['save_node'] = PgReq(req)

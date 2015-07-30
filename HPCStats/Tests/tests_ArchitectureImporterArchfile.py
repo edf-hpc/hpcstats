@@ -64,6 +64,7 @@ BASIC_ARCH = {
   },
   "test_cluster/group_compute/cn": {
     "names": "cn[0001-1000]",
+    "model": "test_model",
     "sockets": 2,
     "corespersocket": 6,
     "frequency": "2.93GHz",
@@ -201,7 +202,7 @@ class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
         """
 
         cluster1 = Cluster('cluster1')
-        node1 = Node('node1', cluster1, 'test_partition', 12, 6 * 1024 ** 3, 1)
+        node1 = Node('node1', cluster1, 'model1', 'test_partition', 12, 6 * 1024 ** 3, 1)
 
         MockPg2.PG_REQS['save_cluster'].set_assoc(
           params=( cluster1.name ),
@@ -222,7 +223,7 @@ class TestsArchitectureImporterArchfileUpdate(HPCStatsTestCase):
         """
 
         cluster1 = Cluster('cluster1')
-        node1 = Node('node1', cluster1, 'test_partition', 12, 6 * 1024 ** 3, 1)
+        node1 = Node('node1', cluster1, 'model1', 'test_partition', 12, 6 * 1024 ** 3, 1)
 
         MockPg2.PG_REQS['find_cluster'].set_assoc(
           params=( cluster1.name, ),

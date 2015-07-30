@@ -130,8 +130,8 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         j1_start_ts = time.mktime(j1_start.timetuple())
         j1_end_ts = time.mktime(j1_end.timetuple())
 
-        node1 = Node('node1', self.cluster, 'partition1', 4, 4, 0)
-        node2 = Node('node2', self.cluster, 'partition1', 4, 4, 0)
+        node1 = Node('node1', self.cluster, 'model1', 'partition1', 4, 4, 0)
+        node2 = Node('node2', self.cluster, 'model1', 'partition1', 4, 4, 0)
 
         a1_create = datetime(2010, 1, 1, 12, 0, 0)
         user1 = User('user1', 'firstname1', 'lastname1', 'department1')

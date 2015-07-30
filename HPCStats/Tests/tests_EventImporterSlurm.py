@@ -115,7 +115,7 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
             [ e1_start_ts, e1_end_ts,  node_name, 16, 35, 'reason1' ],
           ]
 
-        self.app.arch.nodes = [ Node(node_name, self.cluster, 'partition1', 16, 8, 0), ]
+        self.app.arch.nodes = [ Node(node_name, self.cluster, 'model1', 'partition1', 16, 8, 0), ]
         self.importer.load()
         self.assertEquals(1, len(self.importer.events))
         event = self.importer.events[0]
@@ -215,8 +215,8 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         e3_start = datetime(2015, 3, 2, 16, 20, 0)
         e3_end   = datetime(2015, 3, 2, 16, 30, 0)
 
-        node1 = [ Node('node1', self.cluster, 'partition1', 16, 8, 0), ]
-        node2 = [ Node('node2', self.cluster, 'partition1', 16, 8, 0), ]
+        node1 = [ Node('node1', self.cluster, 'model1', 'partition1', 16, 8, 0), ]
+        node2 = [ Node('node2', self.cluster, 'model1', 'partition1', 16, 8, 0), ]
 
         # 3 successive events on one node with same type, they must be merged
         # into one event.
