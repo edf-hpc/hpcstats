@@ -33,10 +33,11 @@ Schema of the ``fsusage`` table in HPCStats database:
 .. code-block:: sql
 
     fsusage(
-      fsusage_time  timestamp NOT NULL,
-      fsusage_usage real NOT NULL,
-      filesystem_id integer NOT NULL,
-      cluster_id    integer NOT NULL,
+      fsusage_time   timestamp NOT NULL,
+      fsusage_usage  real NOT NULL,
+      fsusage_inode  real,
+      filesystem_id  integer NOT NULL,
+      cluster_id     integer NOT NULL,
       CONSTRAINT fsusage_pkey PRIMARY KEY (fsusage_time, filesystem_id, cluster_id)
     )
 
@@ -50,11 +51,12 @@ from HPCStats.Exceptions import HPCStatsDBIntegrityError, HPCStatsRuntimeError
 class FSUsage(object):
     """Model class for the fsusage table."""
 
-    def __init__(self, filesystem, timestamp, usage):
+    def __init__(self, filesystem, timestamp, usage, inode):
 
         self.filesystem = filesystem
         self.timestamp = timestamp
         self.usage = usage
+        self.inode = inode
         self.exists = None
 
     def __str__(self):
@@ -112,13 +114,15 @@ class FSUsage(object):
                 INSERT INTO fsusage ( filesystem_id,
                                       cluster_id,
                                       fsusage_time,
-                                      fsusage_usage )
-                VALUES ( %s, %s, %s, %s )
+                                      fsusage_usage,
+                                      fsusage_inode )
+                VALUES ( %s, %s, %s, %s, %s )
               """
         params = ( self.filesystem.fs_id,
                    self.filesystem.cluster.cluster_id,
                    self.timestamp,
-                   self.usage )
+                   self.usage,
+                   self.inode )
 
         #print db.cur.mogrify(req, params)
         db.execute(req, params)

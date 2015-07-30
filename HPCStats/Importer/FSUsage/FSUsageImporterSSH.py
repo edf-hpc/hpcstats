@@ -156,10 +156,9 @@ class FSUsageImporterSSH(FSUsageImporter):
                     raise HPCStatsSourceError( \
                             "error while parsing log time: %s" % (err))
                 bpercent = float(row[2])
-                # This part has been commented out as inodes usage rate are not
-                # stored in HPCStats DB until now.
-                #if len(row) == 4:
-                #    ipercent = float(row[3])
+                ipercent = None
+                if len(row) >= 4:
+                    ipercent = float(row[3])
                 newfs = Filesystem(mountpoint, self.cluster)
                 fs = None
                 # search if fs not already defined
@@ -170,7 +169,7 @@ class FSUsageImporterSSH(FSUsageImporter):
                     # newfs not found in defined fs
                     self.filesystems.append(newfs)
                     fs = newfs
-                fsusage = FSUsage(fs, logtime, bpercent)
+                fsusage = FSUsage(fs, logtime, bpercent, ipercent)
                 self.fsusages.append(fsusage)
 
         # sort fsusages by datetime in asc. order

@@ -113,10 +113,11 @@ CREATE TABLE filesystem(
 );
 
 CREATE TABLE fsusage(
-        fsusage_time  timestamp NOT NULL,
-        fsusage_usage real NOT NULL,
-        filesystem_id integer NOT NULL,
-        cluster_id    integer NOT NULL,
+        fsusage_time   timestamp NOT NULL,
+        fsusage_usage  real NOT NULL,
+        fsusage_inode  real,
+        filesystem_id  integer NOT NULL,
+        cluster_id     integer NOT NULL,
         CONSTRAINT fsusage_pkey PRIMARY KEY (fsusage_time, filesystem_id, cluster_id)
 );
 
