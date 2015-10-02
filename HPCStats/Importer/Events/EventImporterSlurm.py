@@ -155,7 +155,8 @@ class EventImporterSlurm(EventImporter):
             datetime_search = datetime_end_last_event
         else:
             default_datetime = datetime.fromtimestamp(0)
-            datetime_search = time.mktime(default_datetime.timetuple())
+            datetime_search = int(round(time.mktime(
+                                          default_datetime.timetuple())))
 
         # get all events since datetime_search
         self.events = self.get_new_events(datetime_search)
@@ -177,7 +178,7 @@ class EventImporterSlurm(EventImporter):
                        reason
                  FROM %s_event_table
                 WHERE node_name <> ''
-                  AND time_start >= UNIX_TIMESTAMP(%%s)
+                  AND time_start >= %%s
                 ORDER BY time_start
               """ % (self.cluster.name)
         params = ( start, )

@@ -69,7 +69,7 @@ MockMySQLdb.MY_REQS['get_events'] = {
                 "state, reason " \
          "FROM .*_event_table " \
          "WHERE node_name <> '' " \
-         "AND time_start >= UNIX_TIMESTAMP\(%s\) " \
+         "AND time_start >= \%s\ " \
          "ORDER BY time_start",
   'res': [],
 }
