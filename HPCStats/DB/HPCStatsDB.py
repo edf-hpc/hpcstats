@@ -84,7 +84,8 @@ class HPCStatsDB(object):
                  psycopg2.IntegrityError,
                  psycopg2.OperationalError ), err:
             raise HPCStatsDBIntegrityError( \
-                    "error while executing request: %s" % (err))
+                    "error while executing request '%s': %s" \
+                      % (self.cur.mogrify(req, params), err))
 
     def unbind(self):
         """ Disconnect from the database """
