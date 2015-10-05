@@ -154,21 +154,22 @@ class EventImporterSlurm(EventImporter):
         elif datetime_end_last_event:
             datetime_search = datetime_end_last_event
         else:
-            default_datetime = datetime.fromtimestamp(0)
-            datetime_search = int(round(time.mktime(
-                                          default_datetime.timetuple())))
+            # search since epoch by default
+            datetime_search = datetime.fromtimestamp(0)
 
         # get all events since datetime_search
         self.events = self.get_new_events(datetime_search)
 
     def get_new_events(self, start):
         """Get all new Events from Slurm DB since start datetime. Parameter
-           start must be a float timestamp since epoch. Returns a list of
-           Events. The list is empty if none found.
+           start must be a valid datetime. Returns a list of Events. The list
+           is empty if none found.
         """
 
-        events = []
+        logger.info("searching new events since %s", str(start))
+        timestamp = int(round(time.mktime(start.timetuple())))
 
+        events = []
         req = """
                 SELECT time_start,
                        time_end,
@@ -181,7 +182,7 @@ class EventImporterSlurm(EventImporter):
                   AND time_start >= %%s
                 ORDER BY time_start
               """ % (self.cluster.name)
-        params = ( start, )
+        params = ( timestamp, )
         self.cur.execute(req, params)
 
         while (1):
