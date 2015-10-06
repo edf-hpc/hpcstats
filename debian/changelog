@@ -1,5 +1,5 @@
-hpcstats (0.9.0) UNRELEASED; urgency=low
+hpcstats (1.0.0) calibre7; urgency=low
 
-  * New release 0.9.0
+  * Initial release 
 
- -- Rémi Palancher <remi-externe.palancher@edf.fr>  Tue, 25 Jun 2015 15:16:32 +0200
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Tue, 06 Oct 2015 09:12:32 +0200
