@@ -27,6 +27,8 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
+import sys
+import os
 import ConfigParser
 import logging
 import logging.handlers
@@ -69,7 +71,7 @@ def ssh_launch(user, frontend, privkey, script):
     stdin, stdout, stderr = ssh.exec_command(script)
     ssh.close()
 
-def main()
+def main():
     """Main function of the script"""
 
     init_logger()
