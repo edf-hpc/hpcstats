@@ -33,6 +33,7 @@ import ConfigParser
 import logging
 import logging.handlers
 import paramiko
+import socket.gaierror
 
 logger = None
 conf = None
@@ -67,7 +68,16 @@ def ssh_launch(user, frontend, privkey, script):
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(frontend, username=user, key_filename=privkey)
+    try:
+        ssh.connect(frontend, username=user, key_filename=privkey)
+    except socket.gaierror, err:
+        logger.critical("socket error on SSH connect to %s: %s",
+                        frontend, str(err))
+        sys.exit(1)
+    except IOError, err:
+        logger.critical("IO error on SSH connect to %s: %s",
+                        frontend, str(err))
+        sys.exit(1)
     stdin, stdout, stderr = ssh.exec_command(script)
     ssh.close()
 
