@@ -1,3 +1,13 @@
+hpcstats (1.0.1) calibre7; urgency=low
+
+  * Also bump version in setup.py and doc
+  * Fix ugly bugs in launch-jobstats contrib script
+  * Handle socket and IO errors nn launcher SSH conns
+  * Fix default paths in jobstats.conf
+  * Fix variable name in jobstats script
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Thu, 17 Dec 2015 15:38:01 +0100
+
 hpcstats (1.0.0) calibre7; urgency=low
 
   * Initial release 
