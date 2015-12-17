@@ -40,7 +40,7 @@ def read_conf():
 
     conf_file = '/etc/hpcstats/jobstats.conf'
     conf = ConfigParser.ConfigParser()
-    conf.read(CONF_FILE)
+    conf.read(conf_file)
 
 def main():
     """Main function of the script"""
