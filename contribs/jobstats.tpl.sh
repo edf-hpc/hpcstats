@@ -35,6 +35,6 @@ fi
 
 /bin/cat ${output} >> ${log}
 
-/bin/rm ${log} ${error}
+/bin/rm ${output} ${error}
 
 exit 0
