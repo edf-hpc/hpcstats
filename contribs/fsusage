@@ -71,7 +71,7 @@ def truncate(fpath, maxsize):
         lines = open(fpath).readlines()
         # remove first third of the file
         nb_lines = len(lines)/3
-        open(fpath, 'w').writelines(lines[nb_lines:-1])
+        open(fpath, 'w+').writelines(lines[nb_lines:-1])
 
 def main():
     """Main function of the script"""
@@ -87,7 +87,7 @@ def main():
 
     truncate(csv_fpath, maxsize)
 
-    with open(csv_fpath, 'a') as csv_file:
+    with open(csv_fpath, 'a+') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=',',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for fs in filesystems:
