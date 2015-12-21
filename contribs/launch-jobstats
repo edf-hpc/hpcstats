@@ -33,7 +33,7 @@ import ConfigParser
 import logging
 import logging.handlers
 import paramiko
-import socket.gaierror
+from socket import gaierror
 
 logger = None
 conf = None
@@ -70,7 +70,7 @@ def ssh_launch(user, frontend, privkey, script):
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
         ssh.connect(frontend, username=user, key_filename=privkey)
-    except socket.gaierror, err:
+    except gaierror, err:
         logger.critical("socket error on SSH connect to %s: %s",
                         frontend, str(err))
         sys.exit(1)
