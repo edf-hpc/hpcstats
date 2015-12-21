@@ -25,6 +25,7 @@ case "$1" in
              -a ! -e /usr/share/hpcstats/bin/launch-jobstats ] ; then 
             # delete the system user
             deluser hpcstats
+            rm -rf /var/lib/hpcstats
         fi
         ;;
 
