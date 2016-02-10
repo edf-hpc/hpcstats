@@ -12,7 +12,7 @@
 # some FS access.
 
 LOG_FILE=${log}
-FSLIST=${fs}
+FSLIST="${fs}"
 
 set -e
 
