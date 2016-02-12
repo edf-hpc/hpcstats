@@ -166,25 +166,6 @@ class TestsUserImporterLdapSlurm(HPCStatsTestCase):
         self.assertEquals(len(self.importer.users_acct_ldap), 1)
         self.assertEquals(len(self.importer.users_acct_slurm), 0)
 
-    @mock.patch("%s.ldap" % (p_module), mock_ldap())
-    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
-    def test_load_user_in_group(self):
-        """UserImporterLdapSlurm.load() should not load user from Slurm if
-           already loaded because it is member of cluster group.
-        """
-
-        users = [ 'login1' ]
-        users_no_group = [ ]
-        fill_ldap_users(CONFIG['testcluster/ldap'], users, users_no_group)
-
-        MockMySQLdb.MY_REQS['get_users']['res'] = \
-        [ [ 'login1' ] ]
-
-        self.importer.load()
-        self.assertEquals(len(self.importer.users), 1)
-        self.assertEquals(len(self.importer.users_acct_ldap), 1)
-        self.assertEquals(len(self.importer.users_acct_slurm), 0)
-
 
     @mock.patch("%s.ldap" % (p_module), mock_ldap())
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
