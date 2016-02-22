@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2011-2015 EDF SA
+# Copyright (C) 2011-2016 EDF SA
 # Contact:
 #       CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
 #       1, Avenue du General de Gaulle
@@ -27,24 +27,14 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-"""This module contains the base abstract for all HPCStats importers."""
 
-import logging
+class HPCStatsError(object):
 
+    def __init__(self, code, reason):
 
-class Importer(object):
+        self.code = code
+        self.reason = reason
 
-    """This abstract base class defines a common set of attributes
-       for all HPCStats importers.
-    """
+    def __eq__(self, other):
 
-    def __init__(self, app, db, config, cluster):
-
-        self.app = app
-        self.db = db
-        self.config = config
-        self.cluster = cluster
-
-        # Initialize logger lately here to make sure setLoggerClass() has been
-        # called previously.
-        self.log = logging.getLogger(__name__)
+        return self.code == other.code

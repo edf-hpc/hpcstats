@@ -29,8 +29,6 @@
 
 """This module contains the BusinessCodeImporterDumy class."""
 
-import logging
-logger = logging.getLogger(__name__)
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporter import BusinessCodeImporter
 
 class BusinessCodeImporterDummy(BusinessCodeImporter):
@@ -46,10 +44,10 @@ class BusinessCodeImporterDummy(BusinessCodeImporter):
     def load(self):
         """Dummy BusinessCodes load."""
 
-        logger.debug("BusinessCodeImporterDummy load")
+        self.log.debug("BusinessCodeImporterDummy load")
         self.businesses = []
 
     def update(self):
         """Dummy BusinessCodes update."""
 
-        logger.debug("BusinessCodeImporterDummy update")
+        self.log.debug("BusinessCodeImporterDummy update")

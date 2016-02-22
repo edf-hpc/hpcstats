@@ -37,6 +37,8 @@ import locale
 
 from HPCStats.Exceptions import HPCStatsArgumentException, HPCStatsConfigurationException, HPCStatsDBIntegrityError, HPCStatsSourceError, HPCStatsRuntimeError
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
+from HPCStats.Log.Logger import HPCStatsLogger
+from HPCStats.Errors.Mgr import HPCStatsErrorMgr
 from HPCStats.CLI.HPCStatsChecker import HPCStatsChecker
 from HPCStats.CLI.HPCStatsImporter import HPCStatsImporter
 from HPCStats.CLI.HPCStatsReporter import HPCStatsReporter
@@ -69,6 +71,11 @@ class HPCStatsLauncher(object):
             logger.error("Error while setting locale: %s", err)
             self.exit()
 
+        # Change the default logger class. This way, the logger instanciated
+        # for Importer.log attribute will be a HPCStatsLogger object and all
+        # sub-Importer classes are able to use its specific warn() method.
+        logging.setLoggerClass(HPCStatsLogger)
+
         # enable debug mode
         logging_level = logging.INFO
         if args.debug:
@@ -86,13 +93,13 @@ class HPCStatsLauncher(object):
 
             hdr_str = logging.StreamHandler()
             hdr_str.setLevel(logging.WARNING)
-            fmt_str = logging.Formatter("%(levelname)s: %(name)s - %(message)s")
+            fmt_str = logging.Formatter("%(levelname)s: %(module)s - %(message)s")
             hdr_str.setFormatter(fmt_str)
             app_logger.addHandler(hdr_str)
 
             hdr_sys = logging.handlers.SysLogHandler('/dev/log')
             hdr_sys.setLevel(logging_level)
-            fmt_sys = logging.Formatter("%(levelname)s: %(name)s: %(message)s")
+            fmt_sys = logging.Formatter("%(levelname)s: %(module)s: %(message)s")
             hdr_sys.setFormatter(fmt_sys)
             app_logger.addHandler(hdr_sys)
 
@@ -103,7 +110,7 @@ class HPCStatsLauncher(object):
 
             hdr_str = logging.StreamHandler()
             hdr_str.setLevel(logging_level)
-            fmt_str = logging.Formatter("%(levelname)s: %(name)s - %(message)s")
+            fmt_str = logging.Formatter("%(levelname)s: %(module)s - %(message)s")
             hdr_str.setFormatter(fmt_str)
             app_logger.addHandler(hdr_str)
 
@@ -116,6 +123,9 @@ class HPCStatsLauncher(object):
         except HPCStatsConfigurationException, err:
             logger.error("Configuration Error: %s", err)
             self.exit()
+
+        # set error manager for HPCStatsLogger
+        app_logger.set_error_mgr(HPCStatsErrorMgr(conf))
 
         if action == "check":
             self.app = HPCStatsChecker(conf, cluster_name)

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2011-2015 EDF SA
+# Copyright (C) 2011-2016 EDF SA
 # Contact:
 #       CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
 #       1, Avenue du General de Gaulle
@@ -27,24 +27,18 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-"""This module contains the base abstract for all HPCStats importers."""
 
-import logging
+from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
 
+class HPCStatsErrorMgr(object):
 
-class Importer(object):
+    def __init__(self, conf):
 
-    """This abstract base class defines a common set of attributes
-       for all HPCStats importers.
-    """
-
-    def __init__(self, app, db, config, cluster):
-
-        self.app = app
-        self.db = db
-        self.config = config
-        self.cluster = cluster
-
-        # Initialize logger lately here to make sure setLoggerClass() has been
-        # called previously.
-        self.log = logging.getLogger(__name__)
+        ignored_errors_s = conf.get_default('constraints', 'ignored_errors', '')
+        self.ignored_errors = set()
+        for error_s in ignored_errors_s.split(','):
+            error_s = error_s.strip()
+            if len(error_s) and Errors.is_valid(error_s):
+                error = Errors.to_error(error_s)
+                if error not in self.ignored_errors:
+                    self.ignored_errors.add(error)

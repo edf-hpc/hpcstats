@@ -31,8 +31,6 @@
 
 import MySQLdb
 import _mysql_exceptions
-import logging
-logger = logging.getLogger(__name__)
 import time
 from datetime import datetime
 from HPCStats.Exceptions import HPCStatsSourceError
@@ -166,7 +164,7 @@ class EventImporterSlurm(EventImporter):
            is empty if none found.
         """
 
-        logger.info("searching new events since %s", str(start))
+        self.log.info("searching new events since %s", str(start))
         timestamp = int(round(time.mktime(start.timetuple())))
 
         events = []
@@ -219,10 +217,9 @@ class EventImporterSlurm(EventImporter):
                            reason=reason)
             events.append(event)
 
-        return EventImporterSlurm.merge_successive_events(events)
+        return self.merge_successive_events(events)
 
-    @staticmethod
-    def merge_successive_events(events):
+    def merge_successive_events(self, events):
         """Merge successive Events in the list. For example, if the list
            contains 2 events on node A from X to Y and from Y to Z, this method
            will merge them into one event on node A from Y to Z. Ex::
@@ -234,13 +231,13 @@ class EventImporterSlurm(EventImporter):
 
         event_index = 0
         nb_events = len(events)
-        logger.debug("merge: nb_events: %d", nb_events)
+        self.log.debug("merge: nb_events: %d", nb_events)
 
         # iterate over the list of new events
         while event_index < nb_events - 1:
 
             event = events[event_index]
-            logger.debug("merge: current event_index: %d", event_index)
+            self.log.debug("merge: current event_index: %d", event_index)
             # find the next event in the list for the same node
             next_event_index = event_index + 1
 
@@ -253,25 +250,25 @@ class EventImporterSlurm(EventImporter):
                 else:
                     next_event_index += 1
 
-            logger.debug("merge: computed next_event_index: %d",
-                         next_event_index)
+            self.log.debug("merge: computed next_event_index: %d",
+                           next_event_index)
             # If search index is at the end of the list, it means the next
             # event has not been found in the list..
             if next_event_index == nb_events:
-                logger.debug("no event to merge: %d (%s, %s → %s)",
-                             event_index,
-                             event.node,
-                             event.start_datetime,
-                             event.end_datetime )
+                self.log.debug("no event to merge: %d (%s, %s → %s)",
+                               event_index,
+                               event.node,
+                               event.start_datetime,
+                               event.end_datetime )
                 # we can jump to next event in the list
                 event_index += 1
             else:
                 next_event = events[next_event_index]
-                logger.debug("merging %s (%d) with %s (%d)",
-                             event,
-                             event_index,
-                             next_event,
-                             next_event_index )
+                self.log.debug("merging %s (%d) with %s (%d)",
+                               event,
+                               event_index,
+                               next_event,
+                               next_event_index )
                 event.end_datetime = next_event.end_datetime
                 # remove the next event out of the list
                 events.pop(next_event_index)

@@ -31,8 +31,6 @@
    This module import projects from wckeys in Slurm accouting database.
 """
 
-import logging
-logger = logging.getLogger(__name__)
 import MySQLdb
 import _mysql_exceptions
 from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
@@ -130,7 +128,7 @@ class ProjectImporterSlurm(ProjectImporter):
            jobs wckeys. Raises HPCStatsSourceError in case of error.
         """
 
-        logger.debug("loading project codes from %s slurm database", cluster)
+        self.log.debug("loading project codes from %s slurm database", cluster)
 
         self.connect_db(cluster)
 
@@ -155,8 +153,8 @@ class ProjectImporterSlurm(ProjectImporter):
                 if len(wckey_items) != 2:
                     if wckey not in self.invalid_wckeys:
                         self.invalid_wckeys.append(wckey)
-                        logger.warning("format of wckey %s is not valid",
-                                       wckey)
+                        self.log.warning("format of wckey %s is not valid",
+                                         wckey)
                     continue
                 else:
                     project_code = wckey_items[0]
@@ -186,6 +184,6 @@ class ProjectImporterSlurm(ProjectImporter):
                 domain.save(self.db)
         for project in self.projects:
             if not project.find(self.db):
-                logger.warning("creating project %s with default domain",
-                               str(project))
+                self.log.warning("creating project %s with default domain",
+                                 str(project))
                 project.save(self.db)

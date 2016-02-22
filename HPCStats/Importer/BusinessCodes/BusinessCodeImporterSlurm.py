@@ -31,8 +31,6 @@
    This module import business codes from wckeys in Slurm accouting database.
 """
 
-import logging
-logger = logging.getLogger(__name__)
 import MySQLdb
 import _mysql_exceptions
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporter import BusinessCodeImporter
@@ -120,7 +118,7 @@ class BusinessCodeImporterSlurm(BusinessCodeImporter):
            jobs wckeys. Raises HPCStatsSourceError in case of error.
         """
 
-        logger.debug("loading business codes from %s slurm database", cluster)
+        self.log.debug("loading business codes from %s slurm database", cluster)
 
         self.connect_db(cluster)
 
@@ -145,8 +143,8 @@ class BusinessCodeImporterSlurm(BusinessCodeImporter):
                 if len(wckey_items) != 2:
                     if wckey not in self.invalid_wckeys:
                         self.invalid_wckeys.append(wckey)
-                        logger.warning("format of wckey %s is not valid",
-                                        wckey)
+                        self.log.warning("format of wckey %s is not valid",
+                                         wckey)
                     continue
                 else:
                     business_code = wckey_items[1]

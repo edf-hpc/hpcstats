@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2011-2015 EDF SA
+# Copyright (C) 2011-2016 EDF SA
 # Contact:
 #       CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
 #       1, Avenue du General de Gaulle
@@ -27,24 +27,24 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-"""This module contains the base abstract for all HPCStats importers."""
-
-import logging
+from HPCStats.Errors.Error import HPCStatsError
 
 
-class Importer(object):
+class HPCStatsErrorsRegistry(object):
 
-    """This abstract base class defines a common set of attributes
-       for all HPCStats importers.
-    """
+    E_T0001 = HPCStatsError('E_T0001', "Fake error 1 for testing purpose")
+    E_T0002 = HPCStatsError('E_T0002', "Fake error 2 for testing purpose")
 
-    def __init__(self, app, db, config, cluster):
+    def __init__(self):
 
-        self.app = app
-        self.db = db
-        self.config = config
-        self.cluster = cluster
+        pass
 
-        # Initialize logger lately here to make sure setLoggerClass() has been
-        # called previously.
-        self.log = logging.getLogger(__name__)
+    @classmethod
+    def is_valid(cls, error_s):
+        return error_s in [a for a in dir(cls)
+                           if type(getattr(cls, a)) is HPCStatsError]
+
+    @classmethod
+    def to_error(cls, error_s):
+
+        return getattr(cls, error_s)

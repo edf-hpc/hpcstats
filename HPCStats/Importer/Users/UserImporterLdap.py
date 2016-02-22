@@ -31,8 +31,6 @@
 
 import ldap
 import base64
-import logging
-logger = logging.getLogger(__name__)
 import re
 from datetime import date
 from HPCStats.Exceptions import HPCStatsSourceError
@@ -138,7 +136,7 @@ class UserImporterLdap(UserImporter):
         """
 
         search = "(&(objectclass=posixGroup)(cn=" + group + "))"
-        logger.debug("search in: %s %s", self.ldap_dn_groups, search)
+        self.log.debug("search in: %s %s", self.ldap_dn_groups, search)
 
         try:
             members = self.ldap_conn.search_s(self.ldap_dn_groups,
@@ -158,7 +156,7 @@ class UserImporterLdap(UserImporter):
         #
         # Uncomment the following line to see content of members in debug
         # mode:
-        #logger.debug("members: %s", members)
+        #self.log.debug("members: %s", members)
         #
         # There should be only one result for the group search. Check this
         # or raise HPCStatsSourceError.
@@ -204,7 +202,7 @@ class UserImporterLdap(UserImporter):
 
         # Uncomment the following line to see content of logins in debug
         # mode:
-        #logger.debug("logins: %s", logins)
+        #self.log.debug("logins: %s", logins)
 
         members = [ self.get_user_account_from_login(login)
                     for login in logins ]
@@ -234,7 +232,7 @@ class UserImporterLdap(UserImporter):
 
         # uid search in LDAP is case-insensitive so it matches even if the
         # login is stored upper-cased.
-        logger.debug("search in: %s %s", self.ldap_dn_people, search)
+        self.log.debug("search in: %s %s", self.ldap_dn_people, search)
         try:
             user_res = self.ldap_conn.search_s(self.ldap_dn_people,
                                                ldap.SCOPE_SUBTREE,
@@ -245,7 +243,7 @@ class UserImporterLdap(UserImporter):
             if self.strict_user_membership:
                 raise HPCStatsSourceError(msg)
             else:
-                logger.warning(msg)
+                self.log.warning(msg)
                 return None
 
         # Structure of user_res is a list of tuples whose 1st member is a
@@ -257,7 +255,7 @@ class UserImporterLdap(UserImporter):
         #
         # Uncomment the following line to see content of members in debug
         # mode:
-        #logger.debug("user_res: %s", user_res)
+        #self.log.debug("user_res: %s", user_res)
         #
         # There should be only one result for the group search. Check this
         # or raise HPCStatsSourceError.
@@ -269,7 +267,7 @@ class UserImporterLdap(UserImporter):
             if self.strict_user_membership:
                 raise HPCStatsSourceError(msg)
             else:
-                logger.warning(msg)
+                self.log.warning(msg)
                 return None
         if nb_results > 1:
             raise HPCStatsSourceError( \
@@ -285,8 +283,8 @@ class UserImporterLdap(UserImporter):
             firstname = user_attr[firstname_attr][0]
         else:
             firstname = None
-            logger.warning("dn %s does not have %s attribute on %s",
-                            userdn, firstname_attr, self._ldapurl)
+            self.log.warning("dn %s does not have %s attribute on %s",
+                             userdn, firstname_attr, self._ldapurl)
 
         lastname = user_attr['sn'][0]
         uid = int(user_attr['uidNumber'][0])
@@ -314,7 +312,7 @@ class UserImporterLdap(UserImporter):
                  "(cn=%s))" \
                    % (userdn_down, userdn_upper, login,
                       login.upper(), self.group_dpt_search)
-        logger.debug("search in: %s %s", self.ldap_dn_groups, search)
+        self.log.debug("search in: %s %s", self.ldap_dn_groups, search)
         user_groups = self.ldap_conn.search_s(self.ldap_dn_groups,
                                               ldap.SCOPE_SUBTREE,
                                               search,
@@ -329,7 +327,7 @@ class UserImporterLdap(UserImporter):
         #
         # Uncomment the following line to see content of members in debug
         # mode:
-        #logger.debug("user_groups: %s", user_groups)
+        #self.log.debug("user_groups: %s", user_groups)
 
         department = None
         for user_group in user_groups:
@@ -344,8 +342,11 @@ class UserImporterLdap(UserImporter):
 
         # if department not found, just print warning
         if not department:
-            logger.warning("department not found for user %s (%s) on " \
-                            "cluster %s!", login, userdn_down, self.cluster.name)
+            self.log.warning("department not found for user %s (%s) on " \
+                             "cluster %s!",
+                             login,
+                             userdn_down,
+                             self.cluster.name)
 
         return department
 
