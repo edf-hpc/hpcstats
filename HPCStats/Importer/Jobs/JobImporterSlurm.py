@@ -34,6 +34,7 @@ import _mysql_exceptions
 from datetime import datetime
 from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 from HPCStats.Exceptions import HPCStatsSourceError
+from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
 from HPCStats.Utils import is_bg_nodelist, compute_bg_nodelist
 from HPCStats.Model.Job import Job, get_batchid_oldest_unfinished_job, get_batchid_last_job
@@ -285,7 +286,7 @@ class JobImporterSlurm(JobImporter):
                     raise HPCStatsSourceError(msg)
                 elif login not in self.unknown_accounts:
                     self.unknown_accounts.append(login)
-                    self.log.warning(msg)
+                    self.log.warn(Errors.E_J0001, msg)
                 self.nb_excluded_jobs += 1
                 continue
 
@@ -306,7 +307,7 @@ class JobImporterSlurm(JobImporter):
                         raise HPCStatsSourceError(msg)
                     elif wckey not in self.invalid_wckeys:
                         self.invalid_wckeys.append(wckey)
-                        self.log.warning(msg)
+                        self.log.warn(Errors.E_J0002, msg)
                     project = None
                     business = None
                 else:
@@ -320,7 +321,7 @@ class JobImporterSlurm(JobImporter):
                             raise HPCStatsSourceError(msg)
                         elif project_code not in self.unknown_projects:
                             self.unknown_projects.append(project_code)
-                            self.log.warning(msg)
+                            self.log.warn(Errors.E_J0003, msg)
 
                     business_code = wckey_items[1]
                     searched_business = Business(business_code, None)
@@ -333,7 +334,7 @@ class JobImporterSlurm(JobImporter):
                             raise HPCStatsSourceError(msg)
                         elif business_code not in self.unknown_businesses:
                             self.unknown_businesses.append(business_code)
-                            self.log.warning(msg)
+                            self.log.warn(Errors.E_J0004, msg)
 
             job = Job(account, project, business, sched_id, str(batch_id),
                       name, nbcpu, state, queue, submission, start, end)
@@ -449,11 +450,12 @@ class JobImporterSlurm(JobImporter):
                                        len(intersect) )
 
             if partition is None:
-                self.log.error("job %d did not found partition in list %s " \
-                               "which intersect for nodes %s",
-                               job_id,
-                               partitions_str,
-                               nodelist )
+                self.log.warn(Errors.E_J0005,
+                              "job %d did not found partition in list %s " \
+                              "which intersect for nodes %s",
+                              job_id,
+                              partitions_str,
+                              nodelist )
                 partition = "UNKNOWN"
 
         return partition

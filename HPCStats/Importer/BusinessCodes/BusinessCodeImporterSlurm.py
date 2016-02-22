@@ -33,6 +33,7 @@
 
 import MySQLdb
 import _mysql_exceptions
+from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporter import BusinessCodeImporter
 from HPCStats.Model.Business import Business
 from HPCStats.Exceptions import HPCStatsSourceError
@@ -143,8 +144,9 @@ class BusinessCodeImporterSlurm(BusinessCodeImporter):
                 if len(wckey_items) != 2:
                     if wckey not in self.invalid_wckeys:
                         self.invalid_wckeys.append(wckey)
-                        self.log.warning("format of wckey %s is not valid",
-                                         wckey)
+                        self.log.warn(Errors.E_B0001,
+                                      "format of wckey %s is not valid",
+                                      wckey)
                     continue
                 else:
                     business_code = wckey_items[1]

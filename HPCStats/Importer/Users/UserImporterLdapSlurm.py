@@ -32,6 +32,7 @@
 import MySQLdb
 from datetime import date
 from HPCStats.Exceptions import HPCStatsSourceError
+from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
 from HPCStats.Importer.Users.UserImporterLdap import UserImporterLdap
 from HPCStats.Model.User import User
 from HPCStats.Model.Account import Account, load_unclosed_users_accounts, nb_existing_accounts
@@ -127,8 +128,9 @@ class UserImporterLdapSlurm(UserImporterLdap):
             if user is None:
                 member = self.get_user_account_from_login(login)
                 if member is None:
-                    self.log.warning("slurm user %s could not be found in " \
-                                     "LDAP, ignoring this user", login)
+                    self.log.warn(Errors.E_U0004,
+                                  "slurm user %s could not be found in " \
+                                  "LDAP, ignoring this user", login)
                 else:
                     self.log.debug("slurm user %s found in LDAP", login)
                     self.users_acct_slurm.append(member)

@@ -35,6 +35,7 @@ import re
 from datetime import date
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Utils import decypher
+from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
 from HPCStats.Importer.Users.UserImporter import UserImporter
 from HPCStats.Model.User import User
 from HPCStats.Model.Account import Account, load_unclosed_users_accounts, nb_existing_accounts
@@ -243,7 +244,7 @@ class UserImporterLdap(UserImporter):
             if self.strict_user_membership:
                 raise HPCStatsSourceError(msg)
             else:
-                self.log.warning(msg)
+                self.log.warn(Errors.E_U0001, msg)
                 return None
 
         # Structure of user_res is a list of tuples whose 1st member is a
@@ -267,7 +268,7 @@ class UserImporterLdap(UserImporter):
             if self.strict_user_membership:
                 raise HPCStatsSourceError(msg)
             else:
-                self.log.warning(msg)
+                self.log.warn(Errors.E_U0001, msg)
                 return None
         if nb_results > 1:
             raise HPCStatsSourceError( \
@@ -278,13 +279,14 @@ class UserImporterLdap(UserImporter):
         user_attr = user_res[0][1]
 
         firstname_attr = 'givenName'
-        # Firstname is optional, set to None (with warning) if not found.
+        # Firstname is optional, set to None (with warn) if not found.
         if user_attr.has_key(firstname_attr):
             firstname = user_attr[firstname_attr][0]
         else:
             firstname = None
-            self.log.warning("dn %s does not have %s attribute on %s",
-                             userdn, firstname_attr, self._ldapurl)
+            self.log.warn(Errors.E_U0002,
+                          "dn %s does not have %s attribute on %s",
+                          userdn, firstname_attr, self._ldapurl)
 
         lastname = user_attr['sn'][0]
         uid = int(user_attr['uidNumber'][0])
@@ -340,13 +342,14 @@ class UserImporterLdap(UserImporter):
                 department = direction + '-' + subdirection
                 break
 
-        # if department not found, just print warning
+        # if department not found, warn
         if not department:
-            self.log.warning("department not found for user %s (%s) on " \
-                             "cluster %s!",
-                             login,
-                             userdn_down,
-                             self.cluster.name)
+            self.log.warn(Errors.E_U0003,
+                          "department not found for user %s (%s) on " \
+                          "cluster %s!",
+                          login,
+                          userdn_down,
+                          self.cluster.name)
 
         return department
 

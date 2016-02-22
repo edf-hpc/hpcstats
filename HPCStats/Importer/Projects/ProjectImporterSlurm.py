@@ -33,6 +33,7 @@
 
 import MySQLdb
 import _mysql_exceptions
+from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
 from HPCStats.Importer.Projects.ProjectImporter import ProjectImporter
 from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Project import Project
@@ -153,8 +154,9 @@ class ProjectImporterSlurm(ProjectImporter):
                 if len(wckey_items) != 2:
                     if wckey not in self.invalid_wckeys:
                         self.invalid_wckeys.append(wckey)
-                        self.log.warning("format of wckey %s is not valid",
-                                         wckey)
+                        self.log.warn(Errors.E_P0001,
+                                      "format of wckey %s is not valid",
+                                      wckey)
                     continue
                 else:
                     project_code = wckey_items[0]
