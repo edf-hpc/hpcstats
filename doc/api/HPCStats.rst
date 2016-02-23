@@ -25,8 +25,10 @@ Subpackages
     HPCStats.CLI
     HPCStats.Conf
     HPCStats.DB
+    HPCStats.Errors
     HPCStats.Finder
     HPCStats.Importer
+    HPCStats.Log
     HPCStats.Model
     HPCStats.Tests
 

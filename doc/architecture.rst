@@ -135,3 +135,85 @@ The following diagram illustrate the deployed architecture of these components:
 
 These agents are optionals, there role is just to generate accurate data for
 specific metrics.
+
+.. _architecture_error-management:
+
+Error management
+================
+
+The HPCStats Importer application may report errors during its processing, as
+long as it encounters errors in the data sources. All these errors are handled
+by an error management framework. This framework controls which errors must be
+reported to users or not, according to a configuration parameter.
+
+The following diagram illustrates the architecture of the framework:
+
+.. image:: _static/arch_error_mgt_framework.*
+
+All the errors reported by the Importer applications are actually
+:py:class:`HPCStatsError` objects.
+
+All the connectors classes indirectly inherit from the abstract
+:py:class:`Importer` class. This class initializes its ``log`` attributes with
+an instance of the specific :py:class:`HPCStatsLogger` class. Additionnaly to
+all the standard methods of its parent class, the standard Python Logger, this
+class also has a ``warn()`` method used all through the connectors classes to
+report :py:class:`HPCStatsError`.
+
+The :py:class:`HPCStatsErrorMgr` refers to the configuration to establish a set
+of errors to ignore. Then, the logger relies on this manager to define how to
+handle the errors. If the error must be reported, a warning message is sent.
+On the opposite, if the error must be ignored, it is just sent as a debug
+message not visible to users in most cases.
+
+The :py:class:`HPCStatsErrorsRegistry` contains the list of all errors the
+Importer application may report. This registry is used in connector classes to
+report the errors and by the error manager to check validity of ignored errors
+specified in configuration.
+
+This table gives the full list of errors of the registry with their
+associated connectors annd their corresponding reasons:
+
++----------------+-------------------------------------+-------------------------------------+
+| Error code     | Connector                           | Reason                              |
++================+=====================================+=====================================+
+| ``E_B0001``    | :py:mod:`BusinessCodeImporterSlurm` | The format of a wckey in SlurmDBD   |
+|                |                                     | is not valid.                       |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_P0001``    | :py:mod:`ProjectImporterSlurm`      | The format of a wckey in SlurmDBD   |
+|                |                                     | is not valid.                       |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_J0001``    | :py:mod:`JobImporterSlurm`          | Account associated to a job is      |
+|                |                                     | unknown to the user importer.       |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_J0002``    | :py:mod:`JobImporterSlurm`          | The format of a wckey in SlurmDBD   |
+|                |                                     | is not valid.                       |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_J0003``    | :py:mod:`JobImporterSlurm`          | The project associated to a job is  |
+|                |                                     | unknown to the project importer.    |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_J0004``    | :py:mod:`JobImporterSlurm`          | The business code associated to a   |
+|                |                                     | job is unknown to the business      |
+|                |                                     | codes importer.                     |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_J0005``    | :py:mod:`JobImporterSlurm`          | The importer is unable to define    |
+|                |                                     | the partition of a job based on its |
+|                |                                     | node list.                          |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_U0001``    | :py:mod:`UserImporterLdap`          | A user is member of a cluster users |
+|                |                                     | group but has no user entry in the  |
+|                |                                     | LDAP directory.                     |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_U0002``    | :py:mod:`UserImporterLdap`          | Some attributes are missing in an   |
+|                |                                     | LDAP user entry.                    |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_U0003``    | :py:mod:`UserImporterLdap`          | The importer is unable to determine |
+|                |                                     | the department of a user based on   |
+|                |                                     | its groups membership.              |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_U0004``    | :py:mod:`UserImporterLdapSlurm`     | A user has been found in SlurmDBD   |
+|                |                                     | but does not have entry in LDAP     |
+|                |                                     | directory. This is probably an old  |
+|                |                                     | user account that has been deleted  |
+|                |                                     | from the LDAP directory.            |
++----------------+-------------------------------------+-------------------------------------+
