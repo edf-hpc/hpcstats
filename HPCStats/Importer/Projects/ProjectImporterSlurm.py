@@ -186,6 +186,6 @@ class ProjectImporterSlurm(ProjectImporter):
                 domain.save(self.db)
         for project in self.projects:
             if not project.find(self.db):
-                self.log.warning("creating project %s with default domain",
-                                 str(project))
+                self.log.info("creating project %s with default domain",
+                              str(project))
                 project.save(self.db)

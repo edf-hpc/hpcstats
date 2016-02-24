@@ -153,8 +153,8 @@ class UserImporterLdapSlurm(UserImporterLdap):
             # creation and deletion date so we do nothing. If it does not exist
             # it is created with default (wrong) creation/deletion dates.
             if not account.existing(self.db):
-                self.log.warning("account for slurm user %s saved with " \
-                                 "default dates in DB", user.login)
+                self.log.info("account for slurm user %s saved with " \
+                              "default dates in DB", user.login)
                 account.deletion_date = default_account_date
                 account.creation_date = default_account_date
                 account.save(self.db)
