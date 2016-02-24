@@ -31,6 +31,7 @@ from datetime import datetime, date
 import time
 import mock
 import base64
+import logging
 
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Model.Cluster import Cluster
@@ -38,6 +39,7 @@ from HPCStats.Importer.Users.UserImporterLdapSlurm import UserImporterLdapSlurm
 from HPCStats.DB.HPCStatsDB import HPCStatsDB
 from HPCStats.Utils import decypher
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
+from HPCStats.Log.Logger import HPCStatsLogger
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 from HPCStats.Tests.Mocks.MockPg2 import init_reqs, mock_psycopg2
 import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
@@ -83,6 +85,9 @@ MockMySQLdb.MY_REQS['get_users'] = {
 
 p_module = 'HPCStats.Importer.Users.UserImporterLdap'
 module = 'HPCStats.Importer.Users.UserImporterLdapSlurm'
+
+# set logger here to make sure HPCStatsLogger.warn() is used
+logging.setLoggerClass(HPCStatsLogger)
 
 class TestsUserImporterLdapSlurm(HPCStatsTestCase):
 
