@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Architecture &mdash; HPCStats 1.0.1 documentation</title>
+    <title>Architecture &mdash; HPCStats 1.1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.0.1',
+        VERSION:     '1.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="HPCStats 1.0.1 documentation" href="index.html" />
+    <link rel="top" title="HPCStats 1.1.0 documentation" href="index.html" />
     <link rel="next" title="Installation Guide" href="installation.html" />
     <link rel="prev" title="Introduction" href="introduction.html" /> 
   </head>
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="introduction.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">HPCStats 1.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">HPCStats 1.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -238,6 +238,110 @@ category.</li>
 <p>These agents are optionals, there role is just to generate accurate data for
 specific metrics.</p>
 </div>
+<div class="section" id="error-management">
+<span id="architecture-error-management"></span><h2>Error management<a class="headerlink" href="#error-management" title="Permalink to this headline">¶</a></h2>
+<p>The HPCStats Importer application may report errors during its processing, as
+long as it encounters errors in the data sources. All these errors are handled
+by an error management framework. This framework controls which errors must be
+reported to users or not, according to a configuration parameter.</p>
+<p>The following diagram illustrates the architecture of the framework:</p>
+<img src="_images/arch_error_mgt_framework.svg" /><p>All the errors reported by the Importer applications are actually
+<tt class="xref py py-class docutils literal"><span class="pre">HPCStatsError</span></tt> objects.</p>
+<p>All the connectors classes indirectly inherit from the abstract
+<tt class="xref py py-class docutils literal"><span class="pre">Importer</span></tt> class. This class initializes its <tt class="docutils literal"><span class="pre">log</span></tt> attributes with
+an instance of the specific <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsLogger</span></tt> class. Additionnaly to
+all the standard methods of its parent class, the standard Python Logger, this
+class also has a <tt class="docutils literal"><span class="pre">warn()</span></tt> method used all through the connectors classes to
+report <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsError</span></tt>.</p>
+<p>The <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsErrorMgr</span></tt> refers to the configuration to establish a set
+of errors to ignore. Then, the logger relies on this manager to define how to
+handle the errors. If the error must be reported, a warning message is sent.
+On the opposite, if the error must be ignored, it is just sent as a debug
+message not visible to users in most cases.</p>
+<p>The <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsErrorsRegistry</span></tt> contains the list of all errors the
+Importer application may report. This registry is used in connector classes to
+report the errors and by the error manager to check validity of ignored errors
+specified in configuration.</p>
+<p>This table gives the full list of errors of the registry with their
+associated connectors annd their corresponding reasons:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="41%" />
+<col width="41%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Error code</th>
+<th class="head">Connector</th>
+<th class="head">Reason</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_B0001</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></tt></td>
+<td>The format of a wckey in SlurmDBD
+is not valid.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_P0001</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterSlurm</span></tt></td>
+<td>The format of a wckey in SlurmDBD
+is not valid.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_J0001</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></td>
+<td>Account associated to a job is
+unknown to the user importer.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_J0002</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></td>
+<td>The format of a wckey in SlurmDBD
+is not valid.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_J0003</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></td>
+<td>The project associated to a job is
+unknown to the project importer.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_J0004</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></td>
+<td>The business code associated to a
+job is unknown to the business
+codes importer.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_J0005</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></td>
+<td>The importer is unable to define
+the partition of a job based on its
+node list.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_U0001</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt></td>
+<td>A user is member of a cluster users
+group but has no user entry in the
+LDAP directory.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_U0002</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt></td>
+<td>Some attributes are missing in an
+LDAP user entry.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_U0003</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt></td>
+<td>The importer is unable to determine
+the department of a user based on
+its groups membership.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_U0004</span></tt></td>
+<td><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt></td>
+<td>A user has been found in SlurmDBD
+but does not have entry in LDAP
+directory. This is probably an old
+user account that has been deleted
+from the LDAP directory.</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 
 
@@ -252,6 +356,7 @@ specific metrics.</p>
 <li><a class="reference internal" href="#database">Database</a></li>
 <li><a class="reference internal" href="#server">Server</a></li>
 <li><a class="reference internal" href="#agents">Agents</a></li>
+<li><a class="reference internal" href="#error-management">Error management</a></li>
 </ul>
 </li>
 </ul>
@@ -299,7 +404,7 @@ specific metrics.</p>
         <li class="right" >
           <a href="introduction.html" title="Introduction"
              >previous</a> |</li>
-        <li><a href="index.html">HPCStats 1.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">HPCStats 1.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

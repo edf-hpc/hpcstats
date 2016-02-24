@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Configuration &mdash; HPCStats 1.0.1 documentation</title>
+    <title>Configuration &mdash; HPCStats 1.1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.0.1',
+        VERSION:     '1.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="HPCStats 1.0.1 documentation" href="index.html" />
+    <link rel="top" title="HPCStats 1.1.0 documentation" href="index.html" />
     <link rel="next" title="Usage guide" href="usage.html" />
     <link rel="prev" title="Installation Guide" href="installation.html" /> 
   </head>
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="installation.html" title="Installation Guide"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">HPCStats 1.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">HPCStats 1.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -114,6 +114,10 @@ HPCStats will fail (and stop running) when such job is encountered. If set to
 with a badly formatted <em>wckey</em>. If set to <tt class="docutils literal"><span class="pre">True</span></tt> (<em>default</em>), HPCStats will
 fail (and stop running) when such job is encountered. If set to <tt class="docutils literal"><span class="pre">False</span></tt>,
 HPCStats will just print a warning message and ignore the <em>wckey</em>.</li>
+<li><tt class="docutils literal"><span class="pre">ignored_errors</span></tt> (<em>optional</em>): A comma separated list of errors codes to
+ignore. If encountered during the importation process, these errors will be
+reported as debug messages instead of warnings. All possible error codes are
+available in table <a class="reference internal" href="architecture.html#architecture-error-management"><em>Error management</em></a>.</li>
 </ul>
 <p>If the <tt class="docutils literal"><span class="pre">constraints</span></tt> section is missing, default values are assumed for all
 parameters.</p>
@@ -275,6 +279,9 @@ strict_job_account_binding=True
 # print an error message.
 strict_job_wckey_format=True
 
+# Comma-separated list of errors to ignore during the importation process
+#ignored_errors =
+
 # Global parameters
 ###############################################################################
 
@@ -389,7 +396,7 @@ the file to significantly reduce its size.</li>
 example:</p>
 <div class="highlight-python"><pre>[global]
 fs=/home,/scratch
-csv=/usr/lib/hpcstats/fsusage.csv
+csv=/var/lib/hpcstats/fsusage.csv
 maxsize=2
 </pre>
 </div>
@@ -555,7 +562,7 @@ script=/usr/share/hpcstats/jobstats
         <li class="right" >
           <a href="installation.html" title="Installation Guide"
              >previous</a> |</li>
-        <li><a href="index.html">HPCStats 1.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">HPCStats 1.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

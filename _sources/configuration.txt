@@ -67,6 +67,10 @@ It can contain the following parameters:
   with a badly formatted *wckey*. If set to ``True`` (*default*), HPCStats will
   fail (and stop running) when such job is encountered. If set to ``False``,
   HPCStats will just print a warning message and ignore the *wckey*.
+* ``ignored_errors`` (*optional*): A comma separated list of errors codes to
+  ignore. If encountered during the importation process, these errors will be
+  reported as debug messages instead of warnings. All possible error codes are
+  available in table :ref:`architecture_error-management`.
 
 If the ``constraints`` section is missing, default values are assumed for all
 parameters.

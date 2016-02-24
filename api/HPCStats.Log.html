@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Finder Package &mdash; HPCStats 1.1.0 documentation</title>
+    <title>Log Package &mdash; HPCStats 1.1.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -27,8 +27,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="HPCStats 1.1.0 documentation" href="../index.html" />
     <link rel="up" title="HPCStats Package" href="HPCStats.html" />
-    <link rel="next" title="Importer Package" href="HPCStats.Importer.html" />
-    <link rel="prev" title="Errors Package" href="HPCStats.Errors.html" /> 
+    <link rel="next" title="Model Package" href="HPCStats.Model.html" />
+    <link rel="prev" title="Users Package" href="HPCStats.Importer.Users.html" /> 
   </head>
   <body>
     <div class="related">
@@ -41,10 +41,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="HPCStats.Importer.html" title="Importer Package"
+          <a href="HPCStats.Model.html" title="Model Package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="HPCStats.Errors.html" title="Errors Package"
+          <a href="HPCStats.Importer.Users.html" title="Users Package"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">HPCStats 1.1.0 documentation</a> &raquo;</li>
           <li><a href="modules.html" >API reference</a> &raquo;</li>
@@ -57,29 +57,27 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="finder-package">
-<h1>Finder Package<a class="headerlink" href="#finder-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-HPCStats.Finder.JobFinder">
-<span id="jobfinder-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">JobFinder</span></tt> Module<a class="headerlink" href="#module-HPCStats.Finder.JobFinder" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="log-package">
+<h1>Log Package<a class="headerlink" href="#log-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-HPCStats.Log.Logger">
+<span id="logger-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Logger</span></tt> Module<a class="headerlink" href="#module-HPCStats.Log.Logger" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="HPCStats.Finder.JobFinder.JobFinder">
-<em class="property">class </em><tt class="descclassname">HPCStats.Finder.JobFinder.</tt><tt class="descname">JobFinder</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Finder.JobFinder.JobFinder" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="HPCStats.Finder.JobFinder.JobFinder.find_jobs_in_interval">
-<tt class="descname">find_jobs_in_interval</tt><big>(</big><em>cluster_name</em>, <em>begin</em>, <em>end</em><big>)</big><a class="headerlink" href="#HPCStats.Finder.JobFinder.JobFinder.find_jobs_in_interval" title="Permalink to this definition">¶</a></dt>
+<dt id="HPCStats.Log.Logger.HPCStatsLogger">
+<em class="property">class </em><tt class="descclassname">HPCStats.Log.Logger.</tt><tt class="descname">HPCStatsLogger</tt><big>(</big><em>name</em>, <em>level=0</em><big>)</big><a class="headerlink" href="#HPCStats.Log.Logger.HPCStatsLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">logging.Logger</span></tt></p>
+<dl class="method">
+<dt id="HPCStats.Log.Logger.HPCStatsLogger.init">
+<tt class="descname">init</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#HPCStats.Log.Logger.HPCStatsLogger.init" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
+<dl class="staticmethod">
+<dt id="HPCStats.Log.Logger.HPCStatsLogger.set_error_mgr">
+<em class="property">static </em><tt class="descname">set_error_mgr</tt><big>(</big><em>mgr</em><big>)</big><a class="headerlink" href="#HPCStats.Log.Logger.HPCStatsLogger.set_error_mgr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
-</div>
-<div class="section" id="module-HPCStats.Finder.UserFinder">
-<span id="userfinder-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">UserFinder</span></tt> Module<a class="headerlink" href="#module-HPCStats.Finder.UserFinder" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="HPCStats.Finder.UserFinder.UserFinder">
-<em class="property">class </em><tt class="descclassname">HPCStats.Finder.UserFinder.</tt><tt class="descname">UserFinder</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#HPCStats.Finder.UserFinder.UserFinder" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="HPCStats.Finder.UserFinder.UserFinder.find">
-<tt class="descname">find</tt><big>(</big><em>cluster_name</em>, <em>uid</em><big>)</big><a class="headerlink" href="#HPCStats.Finder.UserFinder.UserFinder.find" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="HPCStats.Log.Logger.HPCStatsLogger.warn">
+<tt class="descname">warn</tt><big>(</big><em>error</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#HPCStats.Log.Logger.HPCStatsLogger.warn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -95,22 +93,21 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Finder Package</a><ul>
-<li><a class="reference internal" href="#module-HPCStats.Finder.JobFinder"><tt class="docutils literal"><span class="pre">JobFinder</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-HPCStats.Finder.UserFinder"><tt class="docutils literal"><span class="pre">UserFinder</span></tt> Module</a></li>
+<li><a class="reference internal" href="#">Log Package</a><ul>
+<li><a class="reference internal" href="#module-HPCStats.Log.Logger"><tt class="docutils literal"><span class="pre">Logger</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="HPCStats.Errors.html"
-                        title="previous chapter">Errors Package</a></p>
+  <p class="topless"><a href="HPCStats.Importer.Users.html"
+                        title="previous chapter">Users Package</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="HPCStats.Importer.html"
-                        title="next chapter">Importer Package</a></p>
+  <p class="topless"><a href="HPCStats.Model.html"
+                        title="next chapter">Model Package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/api/HPCStats.Finder.txt"
+    <li><a href="../_sources/api/HPCStats.Log.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -140,10 +137,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="HPCStats.Importer.html" title="Importer Package"
+          <a href="HPCStats.Model.html" title="Model Package"
              >next</a> |</li>
         <li class="right" >
-          <a href="HPCStats.Errors.html" title="Errors Package"
+          <a href="HPCStats.Importer.Users.html" title="Users Package"
              >previous</a> |</li>
         <li><a href="../index.html">HPCStats 1.1.0 documentation</a> &raquo;</li>
           <li><a href="modules.html" >API reference</a> &raquo;</li>
