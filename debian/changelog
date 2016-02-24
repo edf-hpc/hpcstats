@@ -1,3 +1,12 @@
+hpcstats (1.1.0) calibre7; urgency=low
+
+  * New generic error management framework
+  * Bug fix to protect FSLIST in jobstats template shell script
+  * Implement HPCStatsImporter.run() unit test and various tests cleanup
+  * Drop some meaningless importers warning to info level
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Wed, 24 Feb 2016 10:16:42 +0100
+
 hpcstats (1.0.2) calibre7; urgency=low
 
   * Remove tmp output file instead of log file
