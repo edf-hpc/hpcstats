@@ -138,8 +138,11 @@ class JobImporterSlurm(JobImporter):
           get_batchid_oldest_unfinished_job(self.db, self.cluster)
         batchid_last_job = get_batchid_last_job(self.db, self.cluster)
         if batchid_oldest_unfinished_job:
+            self.log.debug("oldest unfinished job found %d",
+                           batchid_oldest_unfinished_job)
             batchid_search = batchid_oldest_unfinished_job
         elif batchid_last_job:
+            self.log.debug("last job found %d", batchid_last_job)
             batchid_search = batchid_last_job
         else:
             batchid_search = -1
@@ -156,6 +159,7 @@ class JobImporterSlurm(JobImporter):
 
         self.connect_db()
         batch_id = self.get_search_batch_id()
+        self.log.debug("loading jobs starting from batch id %d", batch_id)
 
         while nb_loaded != 0:
             # load jobs and jump to next batch_id for next iteration
