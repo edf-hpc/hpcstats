@@ -1,3 +1,12 @@
+hpcstats (1.1.1) calibre7; urgency=low
+
+  * Fix bug in job import by converting batch_id to integer to search for
+    min/max
+  * Add debug statements for search batch_id selection
+  * Add logs for set of ignored and invalid errors
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Mon, 29 Feb 2016 11:52:53 +0100
+
 hpcstats (1.1.0) calibre7; urgency=low
 
   * New generic error management framework
