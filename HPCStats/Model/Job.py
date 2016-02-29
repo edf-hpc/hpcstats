@@ -232,11 +232,11 @@ class Job(object):
 
 def get_batchid_oldest_unfinished_job(db, cluster):
     """Return the batch_id of the oldest unfinished job recorded in
-       HPCStats DB. Returns None if not found.
+       HPCStats DB as an integer. Returns None if not found.
     """
 
     req = """
-            SELECT MIN(job_batch_id) AS last_id
+            SELECT MIN(job_batch_id::integer) AS last_id
             FROM Job
             WHERE cluster_id = %s
               AND (job_start IS NULL
@@ -250,12 +250,12 @@ def get_batchid_oldest_unfinished_job(db, cluster):
     return db_row[0]
 
 def get_batchid_last_job(db, cluster):
-    """Return the batch_id of the last job recorded in HPCStats DB.
-       Returns None if not found.
+    """Return the batch_id of the last job recorded in HPCStats DB as an
+       integer. Returns None if not found.
     """
 
     req = """
-            SELECT MAX(job_batch_id) AS last_id
+            SELECT MAX(job_batch_id::integer) AS last_id
             FROM Job
             WHERE cluster_id = %s
           """

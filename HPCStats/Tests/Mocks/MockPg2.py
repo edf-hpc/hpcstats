@@ -206,7 +206,7 @@ def init_reqs():
     #
     # Job
     #
-    req = "SELECT MIN\(job_batch_id\) AS last_id " \
+    req = "SELECT MIN\(job_batch_id::integer\) AS last_id " \
             "FROM Job " \
            "WHERE cluster_id = %s " \
              "AND \(job_start IS NULL " \
@@ -214,7 +214,7 @@ def init_reqs():
 
     PG_REQS['get_batchid_oldest_unfinished'] = PgReq(req)
 
-    req = "SELECT MAX\(job_batch_id\) AS last_id " \
+    req = "SELECT MAX\(job_batch_id::integer\) AS last_id " \
             "FROM Job "  \
            "WHERE cluster_id = %s"
 
