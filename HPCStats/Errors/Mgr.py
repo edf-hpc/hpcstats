@@ -28,6 +28,8 @@
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
 
+import logging
+logger = logging.getLogger(__name__)
 from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
 
 class HPCStatsErrorMgr(object):
@@ -41,4 +43,7 @@ class HPCStatsErrorMgr(object):
             if len(error_s) and Errors.is_valid(error_s):
                 error = Errors.to_error(error_s)
                 if error not in self.ignored_errors:
+                    logger.debug("adding error %s to set of ignored errors", error_s)
                     self.ignored_errors.add(error)
+            else:
+                logger.warning("error %s is not valid, skipping", error_s)
