@@ -113,3 +113,36 @@ def compute_bg_nodelist(nodelist):
         return nodes
 
     return None
+
+def extract_tres_cpu(tres_s):
+    """Extract cpu_count from new generic Slurm TRES text field. TRES field is
+       a string containing a comma-separated list of <id>=<value> pairs. CPU
+       count has ID 1 according to this enum found in
+       src/common/slurmdb_defs.h:
+
+       typedef enum {
+               TRES_CPU = 1,
+               TRES_MEM,
+               TRES_ENERGY,
+               TRES_NODE,
+       } tres_types_t;
+
+       ex: 1=288,2=1160770,3=0,4=12
+           -> cpu_count = 288
+
+
+       Returns CPU count as an integer or -1 if unable to extract it. There is
+       a special case for pending jobs that have an empty tres. In this case,
+       returns 0. It will be updated at the next hpcstats run once resources
+       will be allocated to the job.
+    """
+
+    if len(tres_s.strip()) == 0:
+        return 0
+
+    tres_list = tres_s.split(',')
+    for tres in tres_list:
+        (key, value) = tres.split('=')
+        if int(key) == 1:
+            return int(value)
+    return -1

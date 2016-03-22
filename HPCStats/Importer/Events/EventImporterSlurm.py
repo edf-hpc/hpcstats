@@ -34,6 +34,7 @@ import _mysql_exceptions
 import time
 from datetime import datetime
 from HPCStats.Exceptions import HPCStatsSourceError
+from HPCStats.Utils import extract_tres_cpu
 from HPCStats.Importer.Events.EventImporter import EventImporter
 from HPCStats.Model.Event import Event, get_datetime_end_last_event, get_datetime_start_oldest_unfinished_event
 from HPCStats.Model.Node import Node
@@ -158,6 +159,21 @@ class EventImporterSlurm(EventImporter):
         # get all events since datetime_search
         self.events = self.get_new_events(datetime_search)
 
+    def _is_old_schema(self):
+        """Returns True if it detects the old-schema (<15.08)in the SlurmDBD
+           database, False otherwise.
+        """
+
+        req = "SHOW COLUMNS FROM %s_event_table LIKE 'cpu_count'" \
+              % (self.cluster.name)
+        self.cur.execute(req)
+        row = self.cur.fetchone()
+        if row is not None:
+            self.log.debug("detected old-schema <15.08 in event table")
+            return True
+        self.log.debug("detected new-schema >=15.08 in event table")
+        return False
+
     def get_new_events(self, start):
         """Get all new Events from Slurm DB since start datetime. Parameter
            start must be a valid datetime. Returns a list of Events. The list
@@ -167,20 +183,29 @@ class EventImporterSlurm(EventImporter):
         self.log.info("searching new events since %s", str(start))
         timestamp = int(round(time.mktime(start.timetuple())))
 
+        old_schema = self._is_old_schema()
+
         events = []
+
+        if old_schema is True:
+            cpu_field = 'cpu_count'
+        else:
+            cpu_field = 'tres'
+
         req = """
-                SELECT time_start,
-                       time_end,
-                       node_name,
-                       cpu_count,
-                       state,
-                       reason
+               SELECT time_start,
+                      time_end,
+                      node_name,
+                      %s,
+                      state,
+                      reason
                  FROM %s_event_table
                 WHERE node_name <> ''
                   AND time_start >= %%s
                 ORDER BY time_start
-              """ % (self.cluster.name)
+              """ % (cpu_field, self.cluster.name)
         params = ( timestamp, )
+
         self.cur.execute(req, params)
 
         while (1):
@@ -204,7 +229,15 @@ class EventImporterSlurm(EventImporter):
                 raise HPCStatsSourceError( \
                         "event node %s not found in loaded nodes" \
                           % (node_name))
-            nb_cpu = row[3]
+
+            if old_schema is True:
+                nb_cpu = row[3]
+            else:
+                nb_cpu = extract_tres_cpu(row[3])
+                if nb_cpu == -1:
+                    raise HPCStatsSourceError( \
+                            "unable to extract cpu_count from event tres")
+
             event_type = EventImporterSlurm.txt_slurm_event_type(row[4])
             reason = row[5]
 

@@ -36,7 +36,7 @@ from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
 from HPCStats.Importer.Jobs.JobImporter import JobImporter
-from HPCStats.Utils import is_bg_nodelist, compute_bg_nodelist
+from HPCStats.Utils import is_bg_nodelist, compute_bg_nodelist, extract_tres_cpu
 from HPCStats.Model.Job import Job, get_batchid_oldest_unfinished_job, get_batchid_last_job
 from HPCStats.Model.Node import Node
 from HPCStats.Model.Run import Run
@@ -188,6 +188,21 @@ class JobImporterSlurm(JobImporter):
         batch_id = self.get_search_batch_id()
         self.get_jobs_after_batchid(batch_id)
 
+    def _is_old_schema(self):
+        """Returns True if it detects the old-schema (<15.08) in the SlurmDBD
+           database, False otherwise.
+        """
+
+        req = "SHOW COLUMNS FROM %s_job_table LIKE 'cpus_alloc'" \
+              % (self.cluster.name)
+        self.cur.execute(req)
+        row = self.cur.fetchone()
+        if row is not None:
+            self.log.debug("detected old-schema <15.08 in job table")
+            return True
+        self.log.debug("detected new-schema >=15.08 in job table")
+        return False
+
     def get_jobs_after_batchid(self, batchid, window_size=0):
         """Fill the jobs attribute with the list of Jobs found in Slurm DB
            whose id_job is over or equals to the batchid in parameter.
@@ -204,6 +219,12 @@ class JobImporterSlurm(JobImporter):
 
         last_batch_id = -1
 
+        old_schema = self._is_old_schema()
+        if old_schema is True:
+            cpu_field = 'cpus_alloc'
+        else:
+            cpu_field = 'tres_alloc'
+
         req = """
                 SELECT job_db_inx,
                        id_job,
@@ -213,7 +234,7 @@ class JobImporterSlurm(JobImporter):
                        time_start,
                        time_end,
                        nodes_alloc,
-                       cpus_alloc,
+                       %s,
                        job.partition,
                        qos.name AS qos,
                        state,
@@ -228,7 +249,10 @@ class JobImporterSlurm(JobImporter):
                    AND assoc.id_assoc = job.id_assoc
                    AND qos.id = job.id_qos
               ORDER BY job_db_inx %s
-              """ % (self.cluster.name, self.cluster.name, limit)
+              """ % (cpu_field,
+                     self.cluster.name,
+                     self.cluster.name,
+                     limit)
         params = ( batchid, )
         self.cur.execute(req, params)
         while (1):
@@ -266,7 +290,14 @@ class JobImporterSlurm(JobImporter):
                 start = end
 
             name = row[14]
-            nbcpu = row[8]
+            if old_schema is True:
+                nbcpu = row[8]
+            else:
+                nbcpu = extract_tres_cpu(row[8])
+                if nbcpu == -1:
+                    raise HPCStatsSourceError( \
+                            "unable to extract cpus_alloc from job tres")
+
             state = JobImporterSlurm.get_job_state_from_slurm_state(row[11])
 
             nodelist = row[12]
