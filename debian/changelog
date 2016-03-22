@@ -1,3 +1,9 @@
+hpcstats (1.1.2) calibre7; urgency=low
+
+  * Support new SlurmDBD >= 15.08 schema
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Tue, 22 Mar 2016 09:58:56 +0100
+
 hpcstats (1.1.1) calibre7; urgency=low
 
   * Fix bug in job import by converting batch_id to integer to search for
