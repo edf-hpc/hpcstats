@@ -77,7 +77,7 @@ MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
                 "time_start, " \
                 "time_end, " \
                 "nodes_alloc, " \
-                "cpus_alloc, " \
+                "(cpus_alloc|tres_alloc), " \
                 "job.partition, " \
                 "qos.name AS qos, " \
                 "state, " \
@@ -92,6 +92,11 @@ MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
            "AND assoc.id_assoc = job.id_assoc " \
            "AND qos.id = job.id_qos " \
       "ORDER BY job_db_inx",
+  'res': [],
+}
+
+MockMySQLdb.MY_REQS['job_table_cols'] = {
+  'req': "SHOW COLUMNS FROM .*_job_table LIKE 'cpus_alloc'",
   'res': [],
 }
 
@@ -150,7 +155,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
           [
             [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
-              2, 4, 'partition1', 'qos1', 1, 'node[1-2]', 'user1',
+              2, '1=4', 'partition1', 'qos1', 1, 'node[1-2]', 'user1',
               'job1', 'project1:business1' ],
           ]
 

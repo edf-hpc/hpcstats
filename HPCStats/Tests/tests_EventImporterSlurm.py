@@ -65,12 +65,17 @@ CONFIG = {
 }
 
 MockMySQLdb.MY_REQS['get_events'] = {
-  'req': "SELECT time_start, time_end, node_name, cpu_count, " \
+  'req': "SELECT time_start, time_end, node_name, (cpu_count|tres), " \
                 "state, reason " \
          "FROM .*_event_table " \
          "WHERE node_name <> '' " \
          "AND time_start >= \%s\ " \
          "ORDER BY time_start",
+  'res': [],
+}
+
+MockMySQLdb.MY_REQS['event_table_cols'] = {
+  'req': "SHOW COLUMNS FROM .*_event_table LIKE 'cpus'",
   'res': [],
 }
 
@@ -112,7 +117,7 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         node_name = 'node1'
         MockMySQLdb.MY_REQS['get_events']['res'] = \
           [
-            [ e1_start_ts, e1_end_ts,  node_name, 16, 35, 'reason1' ],
+            [ e1_start_ts, e1_end_ts,  node_name, '1=16', 35, 'reason1' ],
           ]
 
         self.app.arch.nodes = [ Node(node_name, self.cluster, 'model1', 'partition1', 16, 8, 0), ]
