@@ -160,10 +160,53 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
           ]
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_is_old_schema(self):
+        """JobImporterSlurm._is_old_schema() should return True is SlurmDBD
+           <15.08 is detected, False otherwise."""
+
+        self.load_app()
+        self.importer.connect_db()
+        MockMySQLdb.MY_REQS['job_table_cols']['res'] = \
+          [ [ 'cpus_alloc', ] , ]
+        self.assertEquals(self.importer._is_old_schema(), True)
+
+        MockMySQLdb.MY_REQS['job_table_cols']['res'] = []
+        self.assertEquals(self.importer._is_old_schema(), False)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     def test_load(self):
         """JobImporterSlurm.load() works with simple data."""
 
         self.load_app()
+        # make sure new-schema is used here
+        MockMySQLdb.MY_REQS['job_table_cols']['res'] = [ ]
+
+        self.importer.load()
+
+        self.assertEquals(len(self.importer.jobs), 1)
+        self.assertEquals(len(self.importer.runs), 2)
+
+        job = self.importer.jobs[0]
+
+        self.assertEquals(job.nbcpu, 4)
+        self.assertEquals(job.state, 'RUNNING')
+        self.assertEquals(job.name, 'job1')
+        self.assertEquals(job.queue, 'partition1-qos1')
+        self.assertEquals(job.account, self.app.users.accounts[0])
+        self.assertEquals(job.project, self.app.projects.projects[0])
+        self.assertEquals(job.business, self.app.business.businesses[0])
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_old_schema(self):
+        """JobImporterSlurm.load() works with simple data from old SlurmDBD
+           <15.08 schema."""
+
+        self.load_app()
+
+        MockMySQLdb.MY_REQS['job_table_cols']['res'] = \
+          [ [ 'cpus_alloc', ] , ]
+        # replace TRES '1=4' by cpus_alloc 4
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][8] = 4
 
         self.importer.load()
 
@@ -233,6 +276,19 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         self.assertRaisesRegexp(
                HPCStatsSourceError,
                "account user1 not found in loaded account",
+               self.importer.load)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_invalid_tres(self):
+        """JobImporterSlurm.load() raises exception if invalid tres for a job
+           is found"""
+
+        self.load_app()
+
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][8] = '0=0'
+        self.assertRaisesRegexp(
+               HPCStatsSourceError,
+               "unable to extract cpus_alloc from job tres",
                self.importer.load)
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())

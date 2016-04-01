@@ -75,7 +75,7 @@ MockMySQLdb.MY_REQS['get_events'] = {
 }
 
 MockMySQLdb.MY_REQS['event_table_cols'] = {
-  'req': "SHOW COLUMNS FROM .*_event_table LIKE 'cpus'",
+  'req': "SHOW COLUMNS FROM .*_event_table LIKE 'cpu_count'",
   'res': [],
 }
 
@@ -105,30 +105,62 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         """
         pass
 
+    def init_load_data(self):
+        """Utility method to initialize data to make load() simply."""
+
+        self.e1_start = datetime(2015, 3, 2, 15, 59, 59)
+        self.e1_end = datetime(2015, 3, 2, 16, 0, 0)
+        self.node_name = 'node1'
+        e1_start_ts = time.mktime(self.e1_start.timetuple())
+        e1_end_ts = time.mktime(self.e1_end.timetuple())
+
+        MockMySQLdb.MY_REQS['get_events']['res'] = \
+          [
+            [ e1_start_ts, e1_end_ts, self.node_name, '1=16', 35, 'reason1' ],
+          ]
+        MockMySQLdb.MY_REQS['event_table_cols']['res'] = [ ]
+
+        self.app.arch.nodes = [ Node(self.node_name, self.cluster, 'model1', 'partition1', 16, 8, 0), ]
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_is_old_schema(self):
+        """EventImporterSlurm._is_old_schema() should return True is SlurmDBD
+           <15.08 is detected, False otherwise."""
+
+        self.importer.connect_db()
+        MockMySQLdb.MY_REQS['event_table_cols']['res'] = \
+          [ [ 'cpu_count', ] , ]
+        self.assertEquals(self.importer._is_old_schema(), True)
+
+        MockMySQLdb.MY_REQS['event_table_cols']['res'] = []
+        self.assertEquals(self.importer._is_old_schema(), False)
+
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     def test_load_simple(self):
         """EventImporterSlurm.load() works with simple data."""
 
-        e1_start = datetime(2015, 3, 2, 15, 59, 59)
-        e1_end = datetime(2015, 3, 2, 16, 0, 0)
-        e1_start_ts = time.mktime(e1_start.timetuple())
-        e1_end_ts = time.mktime(e1_end.timetuple())
-
-        node_name = 'node1'
-        MockMySQLdb.MY_REQS['get_events']['res'] = \
-          [
-            [ e1_start_ts, e1_end_ts,  node_name, '1=16', 35, 'reason1' ],
-          ]
-
-        self.app.arch.nodes = [ Node(node_name, self.cluster, 'model1', 'partition1', 16, 8, 0), ]
+        self.init_load_data()
         self.importer.load()
         self.assertEquals(1, len(self.importer.events))
         event = self.importer.events[0]
-        self.assertEquals(event.start_datetime, e1_start)
-        self.assertEquals(event.end_datetime, e1_end)
+        self.assertEquals(event.start_datetime, self.e1_start)
+        self.assertEquals(event.end_datetime, self.e1_end)
         self.assertEquals(event.nb_cpu, 16)
         self.assertEquals(event.event_type, 'ALLOCATED+RES')
         self.assertEquals(event.reason, 'reason1')
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_old_schema(self):
+        """EventImporterSlurm.load() works with simple data from old SlurmDBD
+           <15.08 schema."""
+
+        self.init_load_data()
+        MockMySQLdb.MY_REQS['event_table_cols']['res'] = \
+          [ [ 'cpu_count', ] , ]
+        MockMySQLdb.MY_REQS['get_events']['res'][0][3] = 16
+        self.importer.load()
+        event = self.importer.events[0]
+        self.assertEquals(event.nb_cpu, 16)
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     @mock.patch("%s.EventImporterSlurm.get_new_events" % (module))
@@ -189,21 +221,23 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         """EventImporterSlurm.load() raises Exception if one event is linked to
            a node not loaded by ArchitectureImporter."""
 
-        e1_start = datetime(2015, 3, 2, 15, 59, 59)
-        e1_end = datetime(2015, 3, 2, 16, 0, 0)
-        e1_start_ts = time.mktime(e1_start.timetuple())
-        e1_end_ts = time.mktime(e1_end.timetuple())
-
-        node_name = 'node1'
-        MockMySQLdb.MY_REQS['get_events']['res'] = \
-          [
-            [ e1_start_ts, e1_end_ts,  node_name, 16, 35, 'reason1' ],
-          ]
-
+        self.init_load_data()
         self.app.arch.nodes = []
         self.assertRaisesRegexp(
                HPCStatsSourceError,
-               "event node %s not found in loaded nodes" % (node_name),
+               "event node %s not found in loaded nodes" % (self.node_name),
+               self.importer.load)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_invalid_tres(self):
+        """EventImporterSlurm.load() raises exception if invalid tres for an
+           event is found"""
+
+        self.init_load_data()
+        MockMySQLdb.MY_REQS['get_events']['res'][0][3] = '0=0'
+        self.assertRaisesRegexp(
+               HPCStatsSourceError,
+               "unable to extract cpu_count from event tres",
                self.importer.load)
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
