@@ -65,6 +65,11 @@ def read_conf():
 
 def truncate(fpath, maxsize):
     """Truncate first third of the file if its size is over maxsize MB"""
+
+    # if CSV file does not exist yet, just leave
+    if not os.path.exists(fpath):
+        return
+
     statinfo = os.stat(fpath)
     size = statinfo.st_size
     if size > maxsize * 1024**2:
