@@ -70,14 +70,17 @@ def ssh_launch(user, frontend, privkey, script):
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
         ssh.connect(frontend, username=user, key_filename=privkey)
+        stdin, stdout, stderr = ssh.exec_command(script)
+        ssh.close()
     except gaierror, err:
         logger.critical("socket error on SSH connect to %s: %s",
                         frontend, str(err))
     except IOError, err:
         logger.critical("IO error on SSH connect to %s: %s",
                         frontend, str(err))
-    stdin, stdout, stderr = ssh.exec_command(script)
-    ssh.close()
+    except paramiko.AuthenticationException, err:
+        logger.critical("authentication error on SSH connect to %s: %s",
+                        frontend, str(err))
 
 def main():
     """Main function of the script"""
