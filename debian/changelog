@@ -1,3 +1,10 @@
+hpcstats (1.1.4) calibre7; urgency=low
+
+  * Jobstats launcher does not exit on first error anymore
+  * Jobstats launcher also catches authentication errors
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Mon, 11 Apr 2016 11:38:00 +0200
+
 hpcstats (1.1.3) calibre7; urgency=low
 
   * Fix unit tests to support TRES changes
