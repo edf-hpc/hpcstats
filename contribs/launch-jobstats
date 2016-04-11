@@ -73,11 +73,9 @@ def ssh_launch(user, frontend, privkey, script):
     except gaierror, err:
         logger.critical("socket error on SSH connect to %s: %s",
                         frontend, str(err))
-        sys.exit(1)
     except IOError, err:
         logger.critical("IO error on SSH connect to %s: %s",
                         frontend, str(err))
-        sys.exit(1)
     stdin, stdout, stderr = ssh.exec_command(script)
     ssh.close()
 
@@ -92,6 +90,7 @@ def main():
     clusters = clusters_s.split(',')
 
     for cluster in clusters:
+        logger.info("trying to launch jobstat on %s", cluster)
         user = conf.get(cluster, 'user')
         frontend = conf.get(cluster, 'frontend')
         privkey = conf.get(cluster, 'privkey')
