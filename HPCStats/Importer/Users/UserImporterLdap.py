@@ -61,7 +61,18 @@ class UserImporterLdap(UserImporter):
         self.ldap_password = \
           base64.b64decode(decypher(base64.b64decode(self._ldaphash)))
         self._ldapcert = config.get_default(ldap_section, 'cert', None)
-        self._ldapgroup = config.get(ldap_section, 'group')
+
+        self._ldapgroups = []
+        group_list = config.get_default(ldap_section, 'groups', None)
+        if group_list is not None:
+            self._ldapgroups = group_list.split(',')
+        single_ldapgroup = config.get_default(ldap_section, 'group', None)
+        if single_ldapgroup is not None:
+            self.log.warn(Errors.E_U0005,
+                          "Deprecated config option,"
+                          "'group' is replaced by 'groups'")
+            self._ldapgroups += [single_ldapgroup]
+
         self.ldap_rdn_people = config.get_default(ldap_section,
                                                   'rdn_people',
                                                   'ou=people')
@@ -129,7 +140,10 @@ class UserImporterLdap(UserImporter):
 
         self.users_acct_ldap = []
         self.connect_ldap()
-        self.users_acct_ldap = self.get_group_members(self._ldapgroup)
+        for group in self._ldapgroups:
+            self.users_acct_ldap = list(set(
+                self.get_group_members(group) + self.users_acct_ldap
+            ))
 
     def get_group_members(self, group):
         """Return the list of (Users,Account) tuples members of a group in LDAP

@@ -64,7 +64,7 @@ CONFIG = {
     'basedn': 'test_basedn',
     'dn': 'test_dn',
     'phash': base64.b64encode(decypher(base64.b64encode('test_passwd'))),
-    'group': 'test_group',
+    'groups': 'test_groupA,test_groupB',
     'group_dpt_search': 'test_group_dpt_search',
     'group_dpt_regexp': 'cn=(.+)-dp-(.+),ou.*',
   },

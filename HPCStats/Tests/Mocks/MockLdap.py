@@ -84,10 +84,18 @@ def fill_ldap_users(ldap_config, users, users_no_group=None):
     global LDAP_REQS
     LDAP_REQS = dict()
 
-    LDAP_REQS['get_group_members'] = {
+    groups = ldap_config['groups'].split(',')
+
+    LDAP_REQS['get_group_members0'] = {
       'req':
         ( "ou=groups,%s" % (ldap_config['basedn']),
-          "(&(objectclass=posixGroup)(cn=%s))" % (ldap_config['group']) ),
+          "(&(objectclass=posixGroup)(cn=%s))" % (groups[0]) ),
+      'res': [ ('dn_group1', { 'member': [] } ) ],
+    }
+    LDAP_REQS['get_group_members1'] = {
+      'req':
+        ( "ou=groups,%s" % (ldap_config['basedn']),
+          "(&(objectclass=posixGroup)(cn=%s))" % (groups[1]) ),
       'res': [ ('dn_group1', { 'member': [] } ) ],
     }
 
@@ -95,7 +103,7 @@ def fill_ldap_users(ldap_config, users, users_no_group=None):
 
         if len(users) > 0:
             # set member attribute with list of users
-            LDAP_REQS['get_group_members']['res'][0][1]['member'] = \
+            LDAP_REQS['get_group_members0']['res'][0][1]['member'] = \
               [ 'dn=%s,ou=people' % user for user in users ]
 
         for user in users:

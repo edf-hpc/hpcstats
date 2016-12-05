@@ -68,6 +68,7 @@ class HPCStatsErrorsRegistry(object):
     E_U0004 = HPCStatsError('E_U0004', "User found in SlurmDBD but not found "
                                        "in LDAP, probably due to user removed "
                                        "from LDAP directory")
+    E_U0005 = HPCStatsError('E_U0005', "Deprecated configuration parameter")
 
     def __init__(self):
 

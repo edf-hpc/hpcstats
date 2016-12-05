@@ -142,7 +142,10 @@ It must contains the following parameters:
   search users. Default is ``ou=people``.
 * ``rdn_groups`` (*optional*): The relative distinguished name of the subtree
   to search groups. Default is ``ou=groups``.
-* ``group`` (*required*): The name of the group of users of the cluster.
+* ``group`` (*DEPRECATED*): The name of the group of users of the cluster.
+  Should be replaced by ``groups``.
+* ``groups`` (*required*): A comma separated list of group of users of the
+  cluster. For compatibility reasons, can be ommited if ``group`` is set.
 * ``group_dpt_search`` (*required*): The regular expression to restrict the
   search of users secondary groups to find their department.
 * ``group_dpt_regexp`` (*required*): The regular expression to extract the
