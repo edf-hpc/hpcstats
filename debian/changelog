@@ -1,3 +1,10 @@
+hpcstats (1.1.5) calibre7; urgency=low
+
+  * Add option to set multiple groups in config ldap section (ldap/groups)
+  * deprecate ldap/group configuration
+
+ -- Thomas Hamel <thomas-externe.hamel@edf.fr>  Mon, 05 Dec 2016 14:32:49 +0100
+
 hpcstats (1.1.4) calibre7; urgency=low
 
   * Jobstats launcher does not exit on first error anymore
