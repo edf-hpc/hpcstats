@@ -1,4 +1,4 @@
-hpcstats (1.2.0) calibre7; urgency=medium
+hpcstats (1.2.0) calibre9; urgency=medium
 
   * Add job bank account in Job table with support in Slurm jobs importer
 
