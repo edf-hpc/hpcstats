@@ -237,6 +237,7 @@ class JobImporterSlurm(JobImporter):
                        %s,
                        job.partition,
                        qos.name AS qos,
+                       job.account,
                        state,
                        nodelist,
                        assoc.user,
@@ -289,7 +290,7 @@ class JobImporterSlurm(JobImporter):
             if start is None and end is not None:
                 start = end
 
-            name = row[14]
+            name = row[15]
             if old_schema is True:
                 nbcpu = row[8]
             else:
@@ -298,17 +299,18 @@ class JobImporterSlurm(JobImporter):
                     raise HPCStatsSourceError( \
                             "unable to extract cpus_alloc from job tres")
 
-            state = JobImporterSlurm.get_job_state_from_slurm_state(row[11])
+            state = JobImporterSlurm.get_job_state_from_slurm_state(row[12])
 
-            nodelist = row[12]
+            nodelist = row[13]
             if nodelist == "(null)" or nodelist == "None assigned" :
                 nodelist = None
 
             partition = self.job_partition(sched_id, row[9], nodelist)
             qos = row[10]
             queue = "%s-%s" % (partition, qos)
+            job_acct = row[11]
 
-            login = row[13]
+            login = row[14]
 
             searched_user = User(login, None, None, None)
             searched_account = Account(searched_user, self.cluster,
@@ -325,7 +327,7 @@ class JobImporterSlurm(JobImporter):
                 self.nb_excluded_jobs += 1
                 continue
 
-            wckey = row[15]
+            wckey = row[16]
 
             # empty wckey must be considered as None
             if wckey == '':
@@ -372,7 +374,8 @@ class JobImporterSlurm(JobImporter):
                             self.log.warn(Errors.E_J0004, msg)
 
             job = Job(account, project, business, sched_id, str(batch_id),
-                      name, nbcpu, state, queue, submission, start, end)
+                      name, nbcpu, state, queue, job_acct, submission, start,
+                      end)
             self.jobs.append(job)
 
             if nodelist is not None:

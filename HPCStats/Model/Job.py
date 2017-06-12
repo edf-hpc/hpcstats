@@ -37,9 +37,10 @@ Schema of the ``Job`` table in HPCStats database:
       job_sched_id   integer NOT NULL,
       job_batch_id   character varying(30) NOT NULL,
       job_nbCpu      integer NOT NULL,
-      job_name       character varying(30),
-      job_state      character varying(30) NOT NULL,
-      job_queue      character varying(30),
+      job_name       character varying(200),
+      job_state      character varying(50) NOT NULL,
+      job_queue      character varying(50),
+      job_account    character varying(50),
       job_submission timestamp NOT NULL,
       job_start      timestamp,
       job_end        timestamp,
@@ -62,7 +63,8 @@ class Job(object):
     """Model class for the Cluster table."""
 
     def __init__( self, account, project, business, sched_id, batch_id, name,
-                  nbcpu, state, queue, submission, start, end, job_id=None):
+                  nbcpu, state, queue, job_acct, submission, start, end,
+                  job_id=None):
 
         self.job_id = job_id
         self.sched_id = sched_id # user interface ID
@@ -71,6 +73,7 @@ class Job(object):
         self.nbcpu = nbcpu
         self.state = state
         self.queue = queue
+        self.job_acct = job_acct
 
         self.submission = submission
         self.start = start
@@ -93,13 +96,14 @@ class Job(object):
         else:
             end = self.end.strftime('%Y-%m-%d %H:%M:%S')
 
-        return "job %d on %s(%d) by %s: state:%s queue:%s %s/%s/%s" % \
+        return "job %d on %s(%d) by %s: state:%s queue:%s job_acct:%s %s/%s/%s" % \
                ( self.sched_id,
                  self.account.cluster.name,
                  self.nbcpu,
                  self.account.user.login,
                  self.state,
                  self.queue,
+                 self.job_acct,
                  submission,
                  start,
                  end )
@@ -156,6 +160,7 @@ class Job(object):
                                   job_nbCpu,
                                   job_state,
                                   job_queue,
+                                  job_account,
                                   job_submission,
                                   job_start,
                                   job_end,
@@ -163,7 +168,7 @@ class Job(object):
                                   userhpc_id,
                                   project_id,
                                   business_code )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING job_id
               """
 
@@ -183,6 +188,7 @@ class Job(object):
                    self.nbcpu,
                    self.state,
                    self.queue,
+                   self.job_acct,
                    self.submission,
                    self.start,
                    self.end,
@@ -212,6 +218,7 @@ class Job(object):
                        job_name = %s,
                        job_state = %s,
                        job_queue = %s,
+                       job_account = %s,
                        job_submission = %s,
                        job_start = %s,
                        job_end = %s
@@ -222,6 +229,7 @@ class Job(object):
                    self.name,
                    self.state,
                    self.queue,
+                   self.job_acct,
                    self.submission,
                    self.start,
                    self.end,
