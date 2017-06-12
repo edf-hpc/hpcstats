@@ -1,3 +1,9 @@
+hpcstats (1.2.0) calibre7; urgency=medium
+
+  * Add job bank account in Job table with support in Slurm jobs importer
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Mon, 12 Jun 2017 10:38:20 +0200
+
 hpcstats (1.1.5) calibre7; urgency=low
 
   * Add option to set multiple groups in config ldap section (ldap/groups)
