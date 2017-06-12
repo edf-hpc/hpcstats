@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>HPCStats Package &mdash; HPCStats 1.1.0 documentation</title>
+    <title>HPCStats Package &mdash; HPCStats 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.0',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="HPCStats 1.1.0 documentation" href="../index.html" />
+    <link rel="top" title="HPCStats 1.2.0 documentation" href="../index.html" />
     <link rel="up" title="API reference" href="modules.html" />
     <link rel="next" title="CLI Package" href="HPCStats.CLI.html" />
     <link rel="prev" title="API reference" href="modules.html" /> 
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="modules.html" title="API reference"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">HPCStats 1.1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">HPCStats 1.2.0 documentation</a> &raquo;</li>
           <li><a href="modules.html" accesskey="U">API reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -118,6 +116,31 @@ Ex: bgq[001x011] -&gt; [ bgq001, bgq010, bgq011].</p>
 <dt id="HPCStats.Utils.decypher">
 <tt class="descclassname">HPCStats.Utils.</tt><tt class="descname">decypher</tt><big>(</big><em>encoded</em><big>)</big><a class="headerlink" href="#HPCStats.Utils.decypher" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decypher the string in parameter.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="HPCStats.Utils.extract_tres_cpu">
+<tt class="descclassname">HPCStats.Utils.</tt><tt class="descname">extract_tres_cpu</tt><big>(</big><em>tres_s</em><big>)</big><a class="headerlink" href="#HPCStats.Utils.extract_tres_cpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract cpu_count from new generic Slurm TRES text field. TRES field is
+a string containing a comma-separated list of &lt;id&gt;=&lt;value&gt; pairs. CPU
+count has ID 1 according to this enum found in
+src/common/slurmdb_defs.h:</p>
+<dl class="docutils">
+<dt>typedef enum {</dt>
+<dd>TRES_CPU = 1,
+TRES_MEM,
+TRES_ENERGY,
+TRES_NODE,</dd>
+</dl>
+<p>} tres_types_t;</p>
+<dl class="docutils">
+<dt>ex: 1=288,2=1160770,3=0,4=12</dt>
+<dd>-&gt; cpu_count = 288</dd>
+</dl>
+<p>Returns CPU count as an integer or -1 if unable to extract it. There is
+a special case for pending jobs that have an empty tres. In this case,
+returns 0. It will be updated at the next hpcstats run once resources
+will be allocated to the job.</p>
 </dd></dl>
 
 <dl class="function">
@@ -296,9 +319,7 @@ after the regext and the nodelist in parameter.</p>
 <li><a class="reference internal" href="#">HPCStats Package</a><ul>
 <li><a class="reference internal" href="#module-HPCStats.Exceptions"><tt class="docutils literal"><span class="pre">Exceptions</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-HPCStats.Utils"><tt class="docutils literal"><span class="pre">Utils</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 </ul>
 </li>
 </ul>
@@ -346,13 +367,13 @@ after the regext and the nodelist in parameter.</p>
         <li class="right" >
           <a href="modules.html" title="API reference"
              >previous</a> |</li>
-        <li><a href="../index.html">HPCStats 1.1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">HPCStats 1.2.0 documentation</a> &raquo;</li>
           <li><a href="modules.html" >API reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2015, EDF CCN-HPC.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        &copy; Copyright 2015-2017, EDF CCN-HPC.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

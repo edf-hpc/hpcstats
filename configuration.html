@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Configuration &mdash; HPCStats 1.1.0 documentation</title>
+    <title>Configuration &mdash; HPCStats 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '1.1.0',
+        URL_ROOT:    './',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="HPCStats 1.1.0 documentation" href="index.html" />
+    <link rel="top" title="HPCStats 1.2.0 documentation" href="index.html" />
     <link rel="next" title="Usage guide" href="usage.html" />
     <link rel="prev" title="Installation Guide" href="installation.html" /> 
   </head>
@@ -45,7 +43,7 @@
         <li class="right" >
           <a href="installation.html" title="Installation Guide"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">HPCStats 1.1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">HPCStats 1.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -186,7 +184,10 @@ users in the LDAP directory tree. <em>Ex:</em> <tt class="docutils literal"><spa
 search users. Default is <tt class="docutils literal"><span class="pre">ou=people</span></tt>.</li>
 <li><tt class="docutils literal"><span class="pre">rdn_groups</span></tt> (<em>optional</em>): The relative distinguished name of the subtree
 to search groups. Default is <tt class="docutils literal"><span class="pre">ou=groups</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">group</span></tt> (<em>required</em>): The name of the group of users of the cluster.</li>
+<li><tt class="docutils literal"><span class="pre">group</span></tt> (<em>DEPRECATED</em>): The name of the group of users of the cluster.
+Should be replaced by <tt class="docutils literal"><span class="pre">groups</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">groups</span></tt> (<em>required</em>): A comma separated list of group of users of the
+cluster. For compatibility reasons, can be ommited if <tt class="docutils literal"><span class="pre">group</span></tt> is set.</li>
 <li><tt class="docutils literal"><span class="pre">group_dpt_search</span></tt> (<em>required</em>): The regular expression to restrict the
 search of users secondary groups to find their department.</li>
 <li><tt class="docutils literal"><span class="pre">group_dpt_regexp</span></tt> (<em>required</em>): The regular expression to extract the
@@ -232,7 +233,7 @@ CSV file.  Default value is <tt class="docutils literal"><span class="pre">%Y-%m
 <p>All sections and parameters on the HPCStats server component configuration file
 have been covered. Here is complete annoted configuration file example with 2
 clusters <em>cluster1</em> and <em>cluster2</em>:</p>
-<div class="highlight-python"><pre># Example of hpcstats.conf
+<div class="highlight-python"><div class="highlight"><pre># Example of hpcstats.conf
 # Most of the default values can be change and have to be adpated
 # This file is not meant to be a ready to work one you might have to tune it
 ###############################################################################
@@ -316,7 +317,7 @@ rdn_people = ou=people
 rdn_groups = ou=groups
 phash = &lt;password&gt;
 cert = /path/to/cert
-group = &lt;group&gt;
+groups = &lt;group1&gt;,&lt;group2&gt;
 group_dpt_search = *dp*
 group_dpt_regexp = cn=(\w+)-dp-(\w+),ou=.*
 
@@ -358,7 +359,7 @@ url = ldaps://&lt;ldapuri&gt;/
 dn = &lt;dn&gt;
 basedn = &lt;basedn&gt;
 phash = &lt;password&gt;
-group = &lt;group&gt;
+groups = &lt;group1&gt;
 group_dpt_search = *dp*
 group_dpt_regexp = cn=(.+)-dp-(.+),ou.*
 
@@ -372,7 +373,7 @@ password = &lt;slurmpasswd&gt;
 host = host IP
 name = username
 file = &lt;absolute path to CSV file&gt;
-</pre>
+</pre></div>
 </div>
 </div>
 <div class="section" id="agents-and-launcher">
@@ -394,11 +395,11 @@ the file to significantly reduce its size.</li>
 </ul>
 <p>Here is complete annoted HPCStats <strong class="command">fsusage</strong> agent configuration file
 example:</p>
-<div class="highlight-python"><pre>[global]
+<div class="highlight-python"><div class="highlight"><pre>[global]
 fs=/home,/scratch
 csv=/var/lib/hpcstats/fsusage.csv
 maxsize=2
-</pre>
+</pre></div>
 </div>
 </div>
 <div class="section" id="jobstats-agent">
@@ -435,7 +436,7 @@ will be recorded.</li>
 </ul>
 <p>Here is complete annoted HPCStats <strong class="command">jobstats</strong> agent configuration file
 example:</p>
-<div class="highlight-python"><pre>[global]
+<div class="highlight-python"><div class="highlight"><pre>[global]
 tpl=/usr/share/hpcstats/bin/jobstats.tpl.sh
 script=/tmp/jobstats.sh
 subcmd=sbatch
@@ -451,7 +452,7 @@ qos=dsp-ap-hpcstats
 wckey=dsp:hpcstats
 fs=/home /scratch
 log=/tmp/jobstats.log
-</pre>
+</pre></div>
 </div>
 </div>
 <div class="section" id="jobstats-launcher">
@@ -479,7 +480,7 @@ authenticate on the remote cluster frontend node.</li>
 </ul>
 <p>Here is complete annoted HPCStats <strong class="command">jobstats</strong> launcher configuration
 file example:</p>
-<div class="highlight-python"><pre>[global]
+<div class="highlight-python"><div class="highlight"><pre>[global]
 clusters=cluster1,cluster2
 
 [cluster1]
@@ -493,7 +494,7 @@ user=hpcstats
 frontend=frontend.cluster2.company.tld
 privkey=/home/hpcstats/.ssh/id_rsa
 script=/usr/share/hpcstats/jobstats
-</pre>
+</pre></div>
 </div>
 </div>
 </div>
@@ -562,12 +563,12 @@ script=/usr/share/hpcstats/jobstats
         <li class="right" >
           <a href="installation.html" title="Installation Guide"
              >previous</a> |</li>
-        <li><a href="index.html">HPCStats 1.1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">HPCStats 1.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2015, EDF CCN-HPC.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        &copy; Copyright 2015-2017, EDF CCN-HPC.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

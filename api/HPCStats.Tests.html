@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Tests Package &mdash; HPCStats 1.1.0 documentation</title>
+    <title>Tests Package &mdash; HPCStats 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.0',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="HPCStats 1.1.0 documentation" href="../index.html" />
+    <link rel="top" title="HPCStats 1.2.0 documentation" href="../index.html" />
     <link rel="up" title="HPCStats Package" href="HPCStats.html" />
     <link rel="next" title="Mocks Package" href="HPCStats.Tests.Mocks.html" />
     <link rel="prev" title="Model Package" href="HPCStats.Model.html" /> 
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="HPCStats.Model.html" title="Model Package"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">HPCStats 1.1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">HPCStats 1.2.0 documentation</a> &raquo;</li>
           <li><a href="modules.html" >API reference</a> &raquo;</li>
           <li><a href="HPCStats.html" accesskey="U">HPCStats Package</a> &raquo;</li> 
       </ul>
@@ -64,7 +62,7 @@
 <dl class="class">
 <dt id="HPCStats.Tests.Utils.HPCStatsTestCase">
 <em class="property">class </em><tt class="descclassname">HPCStats.Tests.Utils.</tt><tt class="descname">HPCStatsTestCase</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest2.case.TestCase</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
 </dd></dl>
 
 <dl class="function">
@@ -246,6 +244,12 @@ does not exist</p>
 <em class="property">class </em><tt class="descclassname">HPCStats.Tests.tests_EventImporterSlurm.</tt><tt class="descname">TestsEventImporterSlurm</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#HPCStats.Tests.Utils.HPCStatsTestCase" title="HPCStats.Tests.Utils.HPCStatsTestCase"><tt class="xref py py-class docutils literal"><span class="pre">HPCStats.Tests.Utils.HPCStatsTestCase</span></tt></a></p>
 <dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.init_load_data">
+<tt class="descname">init_load_data</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.init_load_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility method to initialize data to make load() simply.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.setUp">
 <tt class="descname">setUp</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -254,6 +258,27 @@ does not exist</p>
 <dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_init">
 <tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>EventImporterSlurm.__init__() initializes w/o error</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_is_old_schema">
+<tt class="descname">test_is_old_schema</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_is_old_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>EventImporterSlurm._is_old_schema() should return True is SlurmDBD
+&lt;15.08 is detected, False otherwise.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_load_invalid_tres">
+<tt class="descname">test_load_invalid_tres</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_load_invalid_tres" title="Permalink to this definition">¶</a></dt>
+<dd><p>EventImporterSlurm.load() raises exception if invalid tres for an
+event is found</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_load_old_schema">
+<tt class="descname">test_load_old_schema</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_EventImporterSlurm.TestsEventImporterSlurm.test_load_old_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>EventImporterSlurm.load() works with simple data from old SlurmDBD
+&lt;15.08 schema.</p>
 </dd></dl>
 
 <dl class="method">
@@ -431,6 +456,13 @@ missing.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_is_old_schema">
+<tt class="descname">test_is_old_schema</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_is_old_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm._is_old_schema() should return True is SlurmDBD
+&lt;15.08 is detected, False otherwise.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_job_partition">
 <tt class="descname">test_job_partition</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_job_partition" title="Permalink to this definition">¶</a></dt>
 <dd><p>JobImporterSlurm.job_partition() must return correct partition for
@@ -463,6 +495,13 @@ is invalid.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_invalid_tres">
+<tt class="descname">test_load_invalid_tres</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_invalid_tres" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() raises exception if invalid tres for a job
+is found</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_invalid_wckey">
 <tt class="descname">test_load_invalid_wckey</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_invalid_wckey" title="Permalink to this definition">¶</a></dt>
 <dd><p>JobImporterSlurm.load() raises exception when format of wckey is
@@ -473,6 +512,13 @@ invalid.</p>
 <dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_node_not_found">
 <tt class="descname">test_load_node_not_found</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_node_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>JobImporterSlurm.load() raises exception when node not found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_old_schema">
+<tt class="descname">test_load_old_schema</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_old_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() works with simple data from old SlurmDBD
+&lt;15.08 schema.</p>
 </dd></dl>
 
 <dl class="method">
@@ -752,9 +798,7 @@ touch the account if they already exist in DB</p>
 <li><a class="reference internal" href="#module-HPCStats.Tests.tests_ProjectImporterCSV"><tt class="docutils literal"><span class="pre">tests_ProjectImporterCSV</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-HPCStats.Tests.tests_UserImporterLdap"><tt class="docutils literal"><span class="pre">tests_UserImporterLdap</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-HPCStats.Tests.tests_UserImporterLdapSlurm"><tt class="docutils literal"><span class="pre">tests_UserImporterLdapSlurm</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 </ul>
 </li>
 </ul>
@@ -802,14 +846,14 @@ touch the account if they already exist in DB</p>
         <li class="right" >
           <a href="HPCStats.Model.html" title="Model Package"
              >previous</a> |</li>
-        <li><a href="../index.html">HPCStats 1.1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">HPCStats 1.2.0 documentation</a> &raquo;</li>
           <li><a href="modules.html" >API reference</a> &raquo;</li>
           <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2015, EDF CCN-HPC.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        &copy; Copyright 2015-2017, EDF CCN-HPC.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>
