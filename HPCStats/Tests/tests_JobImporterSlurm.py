@@ -80,6 +80,7 @@ MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
                 "(cpus_alloc|tres_alloc), " \
                 "job.partition, " \
                 "qos.name AS qos, " \
+                "job.account, " \
                 "state, " \
                 "nodelist, " \
                 "assoc.user, " \
@@ -155,8 +156,8 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
           [
             [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
-              2, '1=4', 'partition1', 'qos1', 1, 'node[1-2]', 'user1',
-              'job1', 'project1:business1' ],
+              2, '1=4', 'partition1', 'qos1', 'job_acct1', 1, 'node[1-2]',
+              'user1', 'job1', 'project1:business1' ],
           ]
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
@@ -299,7 +300,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
 
         self.load_app()
 
-        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][15] = 'fail'
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][16] = 'fail'
 
         self.assertRaisesRegexp(
                HPCStatsSourceError,
@@ -338,7 +339,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
 
         self.load_app()
 
-        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][12] = \
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][13] = \
           'nodelistfail[5-4]'
 
         self.assertRaisesRegexp(
