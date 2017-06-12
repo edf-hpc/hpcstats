@@ -1,0 +1,136 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2011-2017 EDF SA
+# Contact:
+#       CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
+#       1, Avenue du General de Gaulle
+#       92140 Clamart
+#
+# Authors: CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
+#
+# This file is part of HPCStats.
+#
+# HPCStats is free software: you can redistribute in and/or
+# modify it under the terms of the GNU General Public License,
+# version 2, as published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with HPCStats. If not, see
+# <http://www.gnu.org/licenses/>.
+#
+# On Calibre systems, the complete text of the GNU General
+# Public License can be found in `/usr/share/common-licenses/GPL'.
+
+
+"""
+This script is designed to fill the job account column added with HPCStats v1.2
+for already imported jobs. It gathers the default account of every users of a
+cluster and set this default account on every jobs of the users.
+
+Note this might be wrong if a user has multiple accounts and submit jobs with
+an account different from his/her default account.
+
+It does not directly import the account for SlurmDBD from cluster's job table on
+a job basis as SlurmDBD archiving might be enabled and all jobs missing from the
+SlurmDBD database.
+"""
+
+import sys
+import ConfigParser
+import MySQLdb
+import psycopg2
+
+
+def parse_conf():
+
+    settings = ConfigParser.ConfigParser()
+    settings.read('/etc/hpcstats/hpcstats.conf')
+    return settings
+
+
+def get_slurm_users_account(settings, cluster):
+
+    section = "%s/slurm" % (cluster)
+    host = settings.get(section, 'host')
+    name = settings.get(section, 'name')
+    user = settings.get(section, 'user')
+    password = settings.get(section, 'password')
+
+    db = MySQLdb.connect(host, user, password, name)
+    cursor = db.cursor()
+
+    sql = "SELECT user, acct FROM %s_assoc_table WHERE is_def=1;" % (cluster)
+    cursor.execute(sql)
+    print "%d users fetched from slurm" % (cursor.rowcount)
+
+    results = cursor.fetchall()
+    users_acct = {}
+    for row in results:
+        user = row[0]
+        acct = row[1]
+        users_acct[user] = acct
+
+    cursor.close()
+    db.close()
+
+    return users_acct
+
+
+def update_hpcstats_jobs(settings, cluster, users_acct):
+
+    section = 'hpcstatsdb'
+    host = settings.get(section, 'hostname')
+    name = settings.get(section, 'dbname')
+    user = settings.get(section, 'user')
+    password = settings.get(section, 'password')
+
+    try:
+        conn = psycopg2.connect("dbname='%s' user='%s' host='%s' password='%s'" \
+                                % (name, user, host, password))
+    except:
+        print('Unable to connect to the HPCStats database')
+        sys.exit(1)
+
+    cur = conn.cursor()
+
+    nb =  0
+    for login, acct in users_acct.iteritems():
+        sql = "UPDATE Job " \
+                 "SET job_account = %s " \
+                "FROM Cluster, Userhpc " \
+               "WHERE Job.cluster_id = Cluster.cluster_id " \
+                 "AND Job.userhpc_id = Userhpc.userhpc_id " \
+                 "AND Cluster.cluster_name = %s " \
+                 "AND Userhpc.userhpc_login = %s"
+        cur.execute(sql, (acct, cluster, login))
+        nb += cur.rowcount
+        print("%d jobs updated for user %s [%s]" % (cur.rowcount, login, acct))
+
+    print("%d jobs updated in total" % (nb))
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
+
+def main():
+
+    if len(sys.argv) != 2:
+        print("usage: %s <cluster>" % (__file__))
+        sys.exit(1)
+
+    cluster = sys.argv[1]
+    settings = parse_conf()
+    users_acct = get_slurm_users_account(settings, cluster)
+    update_hpcstats_jobs(settings, cluster, users_acct)
+
+
+if __name__ == '__main__':
+
+    main()
