@@ -18,7 +18,7 @@ Depends:
  ${python:Depends},
  adduser,
  cron,
- postgresql-9.1
+ postgresql-9.1 | postgresql
 Description: HPC cluster usage accounting and reporting software
  HPCStats imports raw data from various sources (Job schedulers, log
  files, LDAP directories, etc. and insert everything into a coherent

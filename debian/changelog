@@ -1,3 +1,10 @@
+hpcstats (1.2.1) UNRELEASED; urgency=medium
+
+  * Make hpcstats installable on Debian >= 8 by making it depend alternatively
+    on postgresql-9.1 or postgresql.
+
+ -- Mehdi Dogguy <mehdi.dogguy@edf.fr>  Thu, 20 Jul 2017 19:13:01 +0200
+
 hpcstats (1.2.0) calibre9; urgency=medium
 
   * Add job bank account in Job table with support in Slurm jobs importer
