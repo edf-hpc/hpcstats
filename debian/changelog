@@ -1,4 +1,4 @@
-hpcstats (1.2.1) UNRELEASED; urgency=medium
+hpcstats (1.2.1) calibre9; urgency=medium
 
   * Make hpcstats installable on Debian >= 8 by making it depend alternatively
     on postgresql-9.1 or postgresql.
