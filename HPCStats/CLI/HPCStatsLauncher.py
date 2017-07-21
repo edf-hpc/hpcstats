@@ -130,7 +130,9 @@ class HPCStatsLauncher(object):
         if action == "check":
             self.app = HPCStatsChecker(conf, cluster_name)
         elif action == "import":
-            self.app = HPCStatsImporter(conf, cluster_name)
+            params = { 'since_event': args.since_event,
+                       'since_jobid': args.since_jobid }
+            self.app = HPCStatsImporter(conf, cluster_name, params)
         elif action == "modify":
             params = { 'business': args.business,
                        'project': args.project,

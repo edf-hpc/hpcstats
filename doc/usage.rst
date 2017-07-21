@@ -57,6 +57,13 @@ Required arguments for `import` action:
                     imported. Special value **all** can be used to import data
                     from all configured supercomputers.
 
+    --since-event=DATE Import events starting from this date for new clusters. The
+                    date must be formatted like YYYY-MM-DD. Default is
+                    **1970-01-01**.
+
+    --since-jobid=ID   Import jobs starting from this internal job id for new
+                    clusters. The job id must an integer. Default is **-1**.
+
 Check options
 =============
 

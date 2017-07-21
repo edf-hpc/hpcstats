@@ -145,7 +145,7 @@ class JobImporterSlurm(JobImporter):
             self.log.debug("last job found %d", batchid_last_job)
             batchid_search = batchid_last_job
         else:
-            batchid_search = -1
+            batchid_search = self.app.params['since_jobid']
 
         return batchid_search
 
@@ -159,7 +159,7 @@ class JobImporterSlurm(JobImporter):
 
         self.connect_db()
         batch_id = self.get_search_batch_id()
-        self.log.debug("loading jobs starting from batch id %d", batch_id)
+        self.log.info("loading jobs starting from batch id %d", batch_id)
 
         while nb_loaded != 0:
             # load jobs and jump to next batch_id for next iteration

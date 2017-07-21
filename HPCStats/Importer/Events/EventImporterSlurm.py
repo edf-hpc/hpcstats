@@ -153,8 +153,9 @@ class EventImporterSlurm(EventImporter):
         elif datetime_end_last_event:
             datetime_search = datetime_end_last_event
         else:
-            # search since epoch by default
-            datetime_search = datetime.fromtimestamp(0)
+            # search since the date given in argument
+            datetime_search = datetime.strptime(self.app.params['since_event'],
+                                                '%Y-%m-%d')
 
         # get all events since datetime_search
         self.events = self.get_new_events(datetime_search)

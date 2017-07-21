@@ -48,9 +48,11 @@ class HPCStatsImporter(HPCStatsApp):
        and update the database.
     """
 
-    def __init__(self, conf, cluster_name):
+    def __init__(self, conf, cluster_name, params):
 
         super(HPCStatsImporter, self).__init__(conf, cluster_name)
+
+        self.params = params
 
         # all importer objects
         self.business = None

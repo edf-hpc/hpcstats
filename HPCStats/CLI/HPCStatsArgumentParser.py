@@ -74,6 +74,21 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
                                      "special value all for all " \
                                      "clusters at once" )
 
+        parser_imp.add_argument("--since-event",
+                                dest='since_event',
+                                nargs=1,
+                                default='1970-01-01',
+                                help="Import event from this date for new " \
+                                     "clusters (default: %(default)s)" )
+
+        parser_imp.add_argument("--since-jobid",
+                                dest='since_jobid',
+                                nargs=1,
+                                type=int,
+                                default='-1',
+                                help="Import jobs starting from this job id "\
+                                     "for new clusters (default: %(default)s)" )
+
         parser_rep = subparsers.add_parser('report', help='report help')
 
         parser_rep.add_argument("--cluster",
@@ -87,13 +102,13 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
                                 default="day",
                                 help="Interval used for " \
                                      "consolidation of output " \
-                                     "(default: %default)")
+                                     "(default: %(default)s)")
 
         parser_rep.add_argument("--template",
                                 dest="template",
                                 default="csv",
                                 help="template to use for formatted " \
-                                     "output (default: %default)")
+                                     "output (default: %(default)s)")
 
         parser_chk = subparsers.add_parser('check', help='check help')
 
@@ -158,7 +173,19 @@ class HPCStatsArgumentParser(argparse.ArgumentParser):
 
         args = super(HPCStatsArgumentParser, self).parse_args(*args, **kwargs)
 
-        if args.action == 'modify':
+        if args.action == 'import':
+
+            # If the --since-* arguments are specified on command line, the
+            # argparse module returns the values inside a list. Since nargs=1
+            # the value is pop'ed here to get the value directly, and use it
+            # whatever the default or user value is used.
+            if type(args.since_event) is list:
+                args.since_event = args.since_event.pop()
+
+            if type(args.since_jobid) is list:
+                args.since_jobid = args.since_jobid.pop()
+
+        elif args.action == 'modify':
 
             # Check that either --business-code, --project-code or --new-domain
             # is set
