@@ -210,7 +210,6 @@ class JobImporterSlurm(JobImporter):
         """
 
         self.jobs = []
-        self.runs = []
 
         if window_size:
             limit = "LIMIT %d" % (window_size)
@@ -409,7 +408,7 @@ class JobImporterSlurm(JobImporter):
                           % (nodename, job.batch_id))
 
             run = Run(self.cluster, node, job)
-            self.runs.append(run)
+            job.runs.append(run)
 
     def job_partition(self, job_id, partitions_str, nodelist):
         """Return one partition name depending on the partition field and the
@@ -581,9 +580,10 @@ class JobImporterSlurm(JobImporter):
         for job in self.jobs:
             if job.find(self.db):
                 job.update(self.db)
+                for run in job.runs:
+                    if not run.existing(self.db):
+                        run.save(self.db)
             else:
                 job.save(self.db)
-
-        for run in self.runs:
-            if not run.existing(self.db):
-                run.save(self.db)
+                for run in job.runs:
+                    run.save(self.db)

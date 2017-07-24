@@ -42,4 +42,3 @@ class JobImporter(Importer):
         super(JobImporter, self).__init__(app, db, config, cluster)
 
         self.jobs = None
-        self.runs = None

@@ -83,6 +83,8 @@ class Job(object):
         self.project = project
         self.business = business
 
+        self.runs = []
+
     def __str__(self):
 
         # format datetimes strings
