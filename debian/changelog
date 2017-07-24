@@ -1,3 +1,10 @@
+hpcstats (1.3.0) calibre9; urgency=medium
+
+  * Add since args to limit import of new clusters
+  * Avoid runs existence check for new jobs
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Mon, 24 Jul 2017 09:43:46 +0200
+
 hpcstats (1.2.1) calibre9; urgency=medium
 
   * Make hpcstats installable on Debian >= 8 by making it depend alternatively
