@@ -71,7 +71,7 @@ class TestsHPCStatsImporter(HPCStatsTestCase):
         HPCStatsConf.__bases__ = (MockConfigParser, object)
         self.conf = HPCStatsConf(self.filename, self.cluster)
         self.conf.conf = CONFIG.copy()
-        self.importer = HPCStatsImporter(self.conf, self.cluster)
+        self.importer = HPCStatsImporter(self.conf, self.cluster, {})
         init_reqs()
 
     def test_init(self):

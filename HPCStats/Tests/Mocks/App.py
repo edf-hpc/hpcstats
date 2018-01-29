@@ -35,7 +35,8 @@ from HPCStats.Tests.Mocks.BusinessCodeImporter import MockBusinessCodeImporter
 class MockApp(object):
 
     def __init__(self, db, config, cluster):
-
+        self.params = { 'since_event': '1970-01-01',
+                        'since_jobid': -1 }
         self.arch = MockArchitectureImporter(self, db, config, cluster.name)
         self.users = MockUserImporter(self, db, config, cluster)
         self.projects = MockProjectImporter(self, db, config)
