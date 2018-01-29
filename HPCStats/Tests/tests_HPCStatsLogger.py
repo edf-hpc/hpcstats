@@ -55,6 +55,7 @@ class TestsHPCStatsLogger(HPCStatsTestCase):
         """
 
         # none error manager
+        HPCStatsLogger.set_error_mgr(None)
         self.logger.warn(Errors.E_T0001, "error 1 %s", 'test')
         self.assertIn('TestsHPCStatsLogger: error 1 test', self.handler.messages['warning'])
         self.handler.reset()
