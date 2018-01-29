@@ -33,44 +33,7 @@ from HPCStats.Log.Logger import HPCStatsLogger
 from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
 
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
-
-
-class MockLoggingHandler(logging.Handler):
-    """Mock logging handler to check for expected logs. Messages are available
-       from an instance's ``messages`` dict, in order, indexed by a lowercase
-       log level string (e.g., 'debug', 'info', etc.).
-    """
-
-    def __init__(self, *args, **kwargs):
-
-        # Unfortunately logging.Handler is an old-style class so we cannot use
-        # modern inheritance super() function. Use old-style parent __init__()
-        # then.
-        #super(MockLoggingHandler, self).__init__(*args, **kwargs)
-        logging.Handler.__init__(self, *args, **kwargs)
-
-        self.messages = {'debug': [],
-                         'info': [],
-                         'warning': [],
-                         'error': [],
-                         'critical': []}
-
-    def emit(self, record):
-        """Store a message from ``record`` in the instance's ``messages`` dict.
-        """
-        self.acquire()
-        try:
-            self.messages[record.levelname.lower()].append(record.getMessage())
-        finally:
-            self.release()
-
-    def reset(self):
-        self.acquire()
-        try:
-            for message_list in self.messages.values():
-                message_list[:] = []
-        finally:
-            self.release()
+from HPCStats.Tests.Mocks.Log import MockLoggingHandler
 
 class MockHPCStatsErrorMgr(object):
 
