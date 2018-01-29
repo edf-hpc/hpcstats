@@ -201,7 +201,7 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
         self.importer.load()
         mock_new_events.assert_called_with(d1_ts)
 
-        default_datetime = datetime(1970, 1, 1, 1, 0)
+        default_datetime = datetime(1970, 1, 1, 0, 0)
 
         # No event in DB: search starting from epoch.
         MockPg2.PG_REQS['get_end_last_event'].set_assoc(
