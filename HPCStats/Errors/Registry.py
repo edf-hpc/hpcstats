@@ -70,6 +70,10 @@ class HPCStatsErrorsRegistry(object):
                                        "from LDAP directory")
     E_U0005 = HPCStatsError('E_U0005', "Deprecated configuration parameter")
 
+    # events importers errors
+    E_E0001 = HPCStatsError('E_E0001', "Event node is unknown in cluster "
+                                       "architecture")
+
     def __init__(self):
 
         pass

@@ -30,6 +30,7 @@
 from datetime import datetime
 import time
 import mock
+import logging
 
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Model.Cluster import Cluster
@@ -38,6 +39,8 @@ from HPCStats.Model.Event import Event
 from HPCStats.Importer.Events.EventImporterSlurm import EventImporterSlurm
 from HPCStats.DB.HPCStatsDB import HPCStatsDB
 from HPCStats.Conf.HPCStatsConf import HPCStatsConf
+from HPCStats.Log.Logger import HPCStatsLogger
+from HPCStats.Errors.Mgr import HPCStatsErrorMgr
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
@@ -46,6 +49,7 @@ import HPCStats.Tests.Mocks.MySQLdb as MockMySQLdb # for MY_REQS
 from HPCStats.Tests.Mocks.MySQLdb import mock_mysqldb
 from HPCStats.Tests.Mocks.Conf import MockConf
 from HPCStats.Tests.Mocks.App import MockApp
+from HPCStats.Tests.Mocks.Log import MockLoggingHandler
 
 CONFIG = {
   'hpcstatsdb': {
@@ -86,11 +90,13 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
 
     @mock.patch("HPCStats.DB.HPCStatsDB.psycopg2", mock_psycopg2())
     def setUp(self):
+        # setup conf
         self.filename = 'fake'
         self.cluster = Cluster('testcluster')
         HPCStatsConf.__bases__ = (MockConfigParser, object)
         self.conf = HPCStatsConf(self.filename, self.cluster)
         self.conf.conf = CONFIG.copy()
+        # setup importer
         self.db = HPCStatsDB(self.conf)
         self.db.bind()
         self.app = MockApp(self.db, self.conf, self.cluster)
@@ -99,6 +105,13 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
                                            self.conf,
                                            self.cluster)
         init_reqs()
+        # setup logger
+        logging.setLoggerClass(HPCStatsLogger)
+        self.logger = logging.getLogger(__name__)
+        self.handler = MockLoggingHandler()
+        self.logger.addHandler(self.handler)
+        self.handler.reset()
+        HPCStatsLogger.set_error_mgr(HPCStatsErrorMgr(self.conf))
 
     def test_init(self):
         """EventImporterSlurm.__init__() initializes w/o error
@@ -223,10 +236,12 @@ class TestsEventImporterSlurm(HPCStatsTestCase):
 
         self.init_load_data()
         self.app.arch.nodes = []
-        self.assertRaisesRegexp(
-               HPCStatsSourceError,
-               "event node %s not found in loaded nodes" % (self.node_name),
-               self.importer.load)
+        self.importer.log = self.logger
+        self.importer.load()
+        self.assertIn("EventImporterSlurm: ERROR E_E0001: event node %s is "
+                      "unknown in cluster %s architecture, ignoring this event"
+                      % (self.node_name, self.cluster.name),
+                      self.handler.messages['warning'])
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     def test_load_invalid_tres(self):

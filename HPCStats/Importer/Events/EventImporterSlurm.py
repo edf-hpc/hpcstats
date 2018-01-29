@@ -35,6 +35,7 @@ import time
 from datetime import datetime
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Utils import extract_tres_cpu
+from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
 from HPCStats.Importer.Events.EventImporter import EventImporter
 from HPCStats.Model.Event import Event, get_datetime_end_last_event, get_datetime_start_oldest_unfinished_event
 from HPCStats.Model.Node import Node
@@ -227,9 +228,11 @@ class EventImporterSlurm(EventImporter):
                                  None, None, None, None, None)
             node = self.app.arch.find_node(searched_node)
             if node is None:
-                raise HPCStatsSourceError( \
-                        "event node %s not found in loaded nodes" \
-                          % (node_name))
+                self.log.warn(Errors.E_E0001,
+                              "event node %s is unknown in cluster %s "
+                              "architecture, ignoring this event",
+                              node_name, self.cluster.name)
+                continue
 
             if old_schema is True:
                 nb_cpu = row[3]
