@@ -185,7 +185,6 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         self.importer.load()
 
         self.assertEquals(len(self.importer.jobs), 1)
-        self.assertEquals(len(self.importer.runs), 2)
 
         job = self.importer.jobs[0]
 
@@ -196,6 +195,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         self.assertEquals(job.account, self.app.users.accounts[0])
         self.assertEquals(job.project, self.app.projects.projects[0])
         self.assertEquals(job.business, self.app.business.businesses[0])
+        self.assertEquals(len(job.runs), 2)
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     def test_load_old_schema(self):
@@ -212,7 +212,6 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         self.importer.load()
 
         self.assertEquals(len(self.importer.jobs), 1)
-        self.assertEquals(len(self.importer.runs), 2)
 
         job = self.importer.jobs[0]
 
@@ -223,6 +222,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         self.assertEquals(job.account, self.app.users.accounts[0])
         self.assertEquals(job.project, self.app.projects.projects[0])
         self.assertEquals(job.business, self.app.business.businesses[0])
+        self.assertEquals(len(job.runs), 2)
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     @mock.patch("%s.JobImporterSlurm.get_jobs_after_batchid" % (module))
