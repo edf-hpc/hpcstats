@@ -68,6 +68,8 @@ class ProjectImporterSlurm(ProjectImporter):
                   config.get(section, 'user')
                 self.clusters_db[cluster]['dbpass'] = \
                   config.get_default(section, 'password', None)
+                self.clusters_db[cluster]['prefix'] = \
+                  config.get_default(section, 'prefix', cluster)
         self.invalid_wckeys = []
 
         self.conn = None
@@ -136,7 +138,7 @@ class ProjectImporterSlurm(ProjectImporter):
         req = """
                 SELECT DISTINCT(wckey)
                   FROM %s_job_table
-              """ % (cluster)
+              """ % (self.clusters_db[cluster]['prefix'])
 
         self.cur.execute(req)
 

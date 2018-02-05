@@ -58,6 +58,7 @@ class UserImporterLdapSlurm(UserImporterLdap):
         self.dbname = config.get(section, 'name')
         self.dbuser = config.get(section, 'user')
         self.dbpass = config.get_default(section, 'password', None)
+        self.prefix = config.get_default(section, 'prefix', self.cluster.name)
 
         self.users_acct_slurm = None
 
@@ -111,7 +112,7 @@ class UserImporterLdapSlurm(UserImporterLdap):
         req = """
                 SELECT DISTINCT user
                   FROM %s_assoc_table
-              """ % (self.cluster.name)
+              """ % (self.prefix)
 
         params = ( )
         self.cur.execute(req, params)

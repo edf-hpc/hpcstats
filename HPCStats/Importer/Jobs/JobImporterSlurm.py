@@ -68,6 +68,8 @@ class JobImporterSlurm(JobImporter):
                              'window_size',
                              0, int)
 
+        self.prefix = config.get_default(section, 'prefix', self.cluster.name)
+
         self.strict_job_account_binding = \
           config.get_default('constraints',
                              'strict_job_account_binding',
@@ -194,7 +196,7 @@ class JobImporterSlurm(JobImporter):
         """
 
         req = "SHOW COLUMNS FROM %s_job_table LIKE 'cpus_alloc'" \
-              % (self.cluster.name)
+              % (self.prefix)
         self.cur.execute(req)
         row = self.cur.fetchone()
         if row is not None:
@@ -250,8 +252,8 @@ class JobImporterSlurm(JobImporter):
                    AND qos.id = job.id_qos
               ORDER BY job_db_inx %s
               """ % (cpu_field,
-                     self.cluster.name,
-                     self.cluster.name,
+                     self.prefix,
+                     self.prefix,
                      limit)
         params = ( batchid, )
         self.cur.execute(req, params)

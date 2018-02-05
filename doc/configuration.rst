@@ -173,6 +173,10 @@ parameters:
   all jobs will be loaded at once and this can lead to a lot of memory
   consumption when there too many jobs. It is recommended to set this value
   to avoid memory over-consumption during jobs import.
+* ``prefix`` (*optional*): The prefix in SlurmDBD database table names. Default
+  value is the cluster name. This parameter might be usefull only in some
+  corner-cases when someone wants the cluster name in HPCStats to be different
+  from the Slurm cluster name.
 
 The ``<cluster>/fsusage`` section (*optional*) is required by
 :py:class:`FSUsageImporterSSH` connector. It must contains the following

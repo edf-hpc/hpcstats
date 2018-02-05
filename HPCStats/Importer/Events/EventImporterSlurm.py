@@ -57,6 +57,7 @@ class EventImporterSlurm(EventImporter):
         self._dbname = config.get(section,"name")
         self._dbuser = config.get(section,"user")
         self._dbpass = config.get_default(section, "password", None)
+        self.prefix = config.get_default(section, 'prefix', self.cluster.name)
         self.conn = None
         self.cur = None
 
@@ -167,7 +168,7 @@ class EventImporterSlurm(EventImporter):
         """
 
         req = "SHOW COLUMNS FROM %s_event_table LIKE 'cpu_count'" \
-              % (self.cluster.name)
+              % (self.prefix)
         self.cur.execute(req)
         row = self.cur.fetchone()
         if row is not None:
@@ -205,7 +206,7 @@ class EventImporterSlurm(EventImporter):
                 WHERE node_name <> ''
                   AND time_start >= %%s
                 ORDER BY time_start
-              """ % (cpu_field, self.cluster.name)
+              """ % (cpu_field, self.prefix)
         params = ( timestamp, )
 
         self.cur.execute(req, params)

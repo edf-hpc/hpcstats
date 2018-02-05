@@ -62,6 +62,8 @@ class BusinessCodeImporterSlurm(BusinessCodeImporter):
                   config.get(section, 'user')
                 self.clusters_db[cluster]['dbpass'] = \
                   config.get_default(section, 'password', None)
+                self.clusters_db[cluster]['prefix'] = \
+                  config.get_default(section, 'prefix', cluster)
 
         self.invalid_wckeys = []
 
@@ -126,7 +128,7 @@ class BusinessCodeImporterSlurm(BusinessCodeImporter):
         req = """
                 SELECT DISTINCT(wckey)
                   FROM %s_job_table
-              """ % (cluster)
+              """ % (self.clusters_db[cluster]['prefix'])
 
         self.cur.execute(req)
 
