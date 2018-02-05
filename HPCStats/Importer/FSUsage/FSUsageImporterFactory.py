@@ -32,6 +32,7 @@
 """
 
 from HPCStats.Exceptions import HPCStatsConfigurationException
+from HPCStats.Importer.FSUsage.FSUsageImporterDummy import FSUsageImporterDummy
 from HPCStats.Importer.FSUsage.FSUsageImporterSSH import FSUsageImporterSSH
 
 class FSUsageImporterFactory(object):
@@ -52,7 +53,9 @@ class FSUsageImporterFactory(object):
 
         implem = config.get(cluster.name, 'fsusage')
 
-        if implem == "ssh":
+        if implem == 'dummy':
+            return FSUsageImporterDummy(app, db, config, cluster)
+        elif implem == "ssh":
             return FSUsageImporterSSH(app, db, config, cluster)
         else:
             raise HPCStatsConfigurationException( \

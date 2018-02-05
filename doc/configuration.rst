@@ -109,7 +109,7 @@ be used by HPCStats for each importer category on these clusters:
 
 * ``architecture`` (*required*): The only possible value is ``archfile``.
 * ``users`` (*required*): The possible values are ``ldap`` and ``ldap+slurm``.
-* ``fsusage`` (*required*): The only possible value is ``ssh``.
+* ``fsusage`` (*required*): Possible values are ``dummy`` and ``ssh``.
 * ``events`` (*required*): The only possible value is ``slurm``.
 * ``jobs`` (*required*): The only possible value is ``slurm``.
 
