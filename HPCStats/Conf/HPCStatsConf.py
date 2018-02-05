@@ -80,6 +80,14 @@ class HPCStatsConf(ConfigParser.ConfigParser, object):
         except HPCStatsConfigurationException:
             return default
 
+    def get_list(self, section, option):
+        """Returns a comma separated multi-values parameter formatted into a
+           list. If the parameter is not set, it returns an empty list."""
+        items = self.get_default(section, option, '')
+        return [ item.strip()
+                 for item in items.split(',')
+                 if item.strip() != '' ]
+
     def get_clusters_list(self):
         """Returns the list of clusters in configuration file. If any problem
            is encountered, HPCStatsConfigurationException is raised.

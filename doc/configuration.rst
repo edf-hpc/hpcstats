@@ -177,6 +177,11 @@ parameters:
   value is the cluster name. This parameter might be usefull only in some
   corner-cases when someone wants the cluster name in HPCStats to be different
   from the Slurm cluster name.
+* ``partitions`` (*optional*): List of comma separated Slurm partitions whose
+  imported data (jobs, projects, business codes, etc) are restricted to. Data
+  on other partitions are ignored by HPCStats for this cluster. By default,
+  HPCStats imports data from all Slurm partitions of the cluster without any
+  restriction.
 
 The ``<cluster>/fsusage`` section (*optional*) is required by
 :py:class:`FSUsageImporterSSH` connector. It must contains the following

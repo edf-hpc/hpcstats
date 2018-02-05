@@ -70,6 +70,9 @@ class ProjectImporterSlurm(ProjectImporter):
                   config.get_default(section, 'password', None)
                 self.clusters_db[cluster]['prefix'] = \
                   config.get_default(section, 'prefix', cluster)
+                self.clusters_db[cluster]['partitions'] = \
+                  config.get_list(section, 'partitions')
+
         self.invalid_wckeys = []
 
         self.conn = None
@@ -135,12 +138,22 @@ class ProjectImporterSlurm(ProjectImporter):
 
         self.connect_db(cluster)
 
+        if not len(self.clusters_db[cluster]['partitions']):
+            partitions_clause = ''
+        else:
+            partitions_clause = \
+                "WHERE job.partition IN (%s)" % \
+                ','.join(['%s'] * len(self.clusters_db[cluster]['partitions']))
+
         req = """
                 SELECT DISTINCT(wckey)
-                  FROM %s_job_table
-              """ % (self.clusters_db[cluster]['prefix'])
+                  FROM %s_job_table job
+                  %s
+              """ % (self.clusters_db[cluster]['prefix'],
+                     partitions_clause)
 
-        self.cur.execute(req)
+        params = tuple(self.clusters_db[cluster]['partitions'])
+        self.cur.execute(req, params)
 
         while (1):
             row = self.cur.fetchone()

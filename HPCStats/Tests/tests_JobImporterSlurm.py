@@ -96,6 +96,35 @@ MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
   'res': [],
 }
 
+MockMySQLdb.MY_REQS['get_jobs_after_batchid_w_parts'] = {
+  'req': "SELECT job_db_inx, " \
+                "id_job, " \
+                "id_user, " \
+                "id_group, " \
+                "time_submit, " \
+                "time_start, " \
+                "time_end, " \
+                "nodes_alloc, " \
+                "(cpus_alloc|tres_alloc), " \
+                "job.partition, " \
+                "qos.name AS qos, " \
+                "job.account, " \
+                "state, " \
+                "nodelist, " \
+                "assoc.user, " \
+                "job_name, " \
+                "wckey " \
+          "FROM .*_job_table job, "\
+               ".*_assoc_table assoc, " \
+               "qos_table qos " \
+         "WHERE job_db_inx >= %s " \
+           "AND job.partition IN (.*) " \
+           "AND assoc.id_assoc = job.id_assoc " \
+           "AND qos.id = job.id_qos " \
+      "ORDER BY job_db_inx",
+  'res': [],
+}
+
 MockMySQLdb.MY_REQS['job_table_cols'] = {
   'req': "SHOW COLUMNS FROM .*_job_table LIKE 'cpus_alloc'",
   'res': [],
@@ -159,6 +188,12 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
               2, '1=4', 'partition1', 'qos1', 'job_acct1', 1, 'node[1-2]',
               'user1', 'job1', 'project1:business1' ],
           ]
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid_w_parts']['res'] = \
+          [
+            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
+              2, '1=8', 'partition1', 'qos1', 'job_acct1', 1, 'node[1-2]',
+              'user1', 'job2', 'project1:business1' ],
+          ]
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     def test_is_old_schema(self):
@@ -191,6 +226,30 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         self.assertEquals(job.nbcpu, 4)
         self.assertEquals(job.state, 'RUNNING')
         self.assertEquals(job.name, 'job1')
+        self.assertEquals(job.queue, 'partition1-qos1')
+        self.assertEquals(job.account, self.app.users.accounts[0])
+        self.assertEquals(job.project, self.app.projects.projects[0])
+        self.assertEquals(job.business, self.app.business.businesses[0])
+        self.assertEquals(len(job.runs), 2)
+
+    @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
+    def test_load_with_parts(self):
+        """JobImporterSlurm.load() works with simple data."""
+
+        self.load_app()
+        self.importer.partitions = ['partition2']
+        # make sure new-schema is used here
+        MockMySQLdb.MY_REQS['job_table_cols']['res'] = [ ]
+
+        self.importer.load()
+
+        self.assertEquals(len(self.importer.jobs), 1)
+
+        job = self.importer.jobs[0]
+
+        self.assertEquals(job.nbcpu, 8)
+        self.assertEquals(job.state, 'RUNNING')
+        self.assertEquals(job.name, 'job2')
         self.assertEquals(job.queue, 'partition1-qos1')
         self.assertEquals(job.account, self.app.users.accounts[0])
         self.assertEquals(job.project, self.app.projects.projects[0])
