@@ -1,3 +1,17 @@
+hpcstats (1.4.0) unstable; urgency=medium
+
+  * Update tests for new params in HPCStatsImporter
+  * Update tests to use new Job runs attribute
+  * Factorize MockLoggingHandler into its own module
+  * Ensure logger error manager is None in tests
+  * Fix default datetime in event importer test
+  * Report new error E_E0001 instead of Exception
+  * Add optional slurm prefix conf param
+  * Add optional Slurm partitions filter
+  * Introduce FSUsageImporterDummy connector
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Tue, 06 Feb 2018 10:58:49 +0100
+
 hpcstats (1.3.0) calibre9; urgency=medium
 
   * Add since args to limit import of new clusters
