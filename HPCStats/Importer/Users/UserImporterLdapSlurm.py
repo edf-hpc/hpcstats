@@ -30,6 +30,7 @@
 """This module contains the UserImporterLdapSlurm class."""
 
 import MySQLdb
+import _mysql_exceptions
 from datetime import date
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
