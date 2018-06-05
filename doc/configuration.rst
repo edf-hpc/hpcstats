@@ -155,6 +155,13 @@ It must contains the following parameters:
   whose real department cannot be defined based on their groups memberships.
   This default subdirection is concatenated to the name of the user primary
   group. Default is ``unknown``.
+* ``groups_alias_file`` (*optional*): The absolute path to a file which defines
+  aliases to primary group names. With these aliases, it is possible to
+  substitute the primary group name with a more appropriate direction name in
+  the resulting user department name. The file must be formatted with one alias
+  per line, each alias being the primary group name and the alias separated
+  with a whitespace (*ex:* ``group_name alias``). If this parameter is not
+  defined, there is no aliasing involved.
 
 
 The ``<cluster>/slurm`` section (*optional*) is required by

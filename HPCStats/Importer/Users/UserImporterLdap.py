@@ -29,6 +29,7 @@
 
 """This module contains the UserImporterLdap class."""
 
+import os
 import ldap
 import base64
 import re
@@ -94,6 +95,11 @@ class UserImporterLdap(UserImporter):
                                                True,
                                                bool)
 
+        self.groups_alias_file = config.get_default(ldap_section,
+                                                    'groups_alias_file',
+                                                    None)
+        self.groups_alias = {} # hash of aliases
+
         self.users_acct_ldap = None
         self.users_acct_db = None
 
@@ -118,12 +124,22 @@ class UserImporterLdap(UserImporter):
 
         self.connect_ldap()
 
+        # check groups alias file exist if defined
+        if self.groups_alias_file is not None:
+            if not os.path.isfile(self.groups_alias_file):
+                raise HPCStatsSourceError( \
+                        "Groups alias file %s does not exist" \
+                          % (self.groups_alias_file))
+
     def load(self):
         """Load (User,Account) tuples from both LDAP directoy and DB."""
 
         self.users = []
         self.accounts = []
 
+        self.check()
+
+        self.load_groups_alias()
         self.load_ldap()
         self.load_db()
 
@@ -138,11 +154,22 @@ class UserImporterLdap(UserImporter):
                 self.users.append(user)
                 self.accounts.append(account)
 
+    def load_groups_alias(self):
+
+        if self.groups_alias_file is not None:
+            with open(self.groups_alias_file, 'r') as f_groups_alias:
+                for line in f_groups_alias.readlines():
+                    s_line = line.split(' ')
+                    if len(s_line) != 2:
+                        raise HPCStatsSourceError( \
+                            "Malformed line in alias file %s" \
+                            % (self.groups_alias_file))
+                    self.groups_alias[s_line[0].strip()] = s_line[1].strip()
+
     def load_ldap(self):
         """Load (User,Account) tuples from LDAP directory."""
 
         self.users_acct_ldap = []
-        self.connect_ldap()
         for group in self._ldapgroups:
             self.users_acct_ldap = list(set(
                 self.get_group_members(group) + self.users_acct_ldap
@@ -419,6 +446,13 @@ class UserImporterLdap(UserImporter):
 
         # Then extract information from attributes of 1st result
         primary_group = prim_group_res[0][1]['cn'][0]
+
+        # Use alias if defined
+        if self.groups_alias.has_key(primary_group):
+            alias = self.groups_alias[primary_group]
+            self.log.debug("Using alias %s for primary group %s",
+                           alias, primary_group)
+            primary_group = alias
 
         # Compose department name with primary group as the direction and
         # default subdirection configuration parameter
