@@ -84,6 +84,9 @@ class UserImporterLdap(UserImporter):
         self.ldap_dn_groups = self.ldap_rdn_groups + ',' + self._ldapbase
         self.group_dpt_search = config.get(ldap_section, 'group_dpt_search')
         self.group_dpt_regexp = config.get(ldap_section, 'group_dpt_regexp')
+        self.default_subdir = config.get_default(ldap_section,
+                                                 'default_subdir',
+                                                 'unknown')
 
         self.strict_user_membership = config.get_default( \
                                                'constraints',
@@ -306,13 +309,24 @@ class UserImporterLdap(UserImporter):
         uid = int(user_attr['uidNumber'][0])
         gid = int(user_attr['gidNumber'][0])
 
-        department = self.get_user_department(login)
+        department = self.get_user_department(login, gid)
 
         user = User(login, firstname, lastname, department)
         account = Account(user, self.cluster, uid, gid, None, None)
         return (user, account)
 
-    def get_user_department(self, login):
+
+    def get_user_department(self, login, gid):
+        """Search for the user department based on its group membership. If
+           unable to compute a department name this way, use the primary group.
+        """
+        department = self.get_user_department_groups_member(login)
+        if department is not None:
+            return department
+        return self.get_user_department_prim_group(login, gid)
+
+
+    def get_user_department_groups_member(self, login):
         """Search for user department based on its groups membership.
 
            The login in parameter must be downcased.
@@ -360,10 +374,58 @@ class UserImporterLdap(UserImporter):
         if not department:
             self.log.warn(Errors.E_U0003,
                           "department not found for user %s (%s) on " \
-                          "cluster %s!",
+                          "cluster %s based on groups membership!",
                           login,
                           userdn_down,
                           self.cluster.name)
+
+        return department
+
+    def get_user_department_prim_group(self, login, gid):
+        """Define the user department based on the name of its primary group.
+        """
+
+        # Search for the group with the provided gid in LDAP.
+        search = "gidNumber=%d" % (gid)
+        self.log.debug("search in: %s %s", self.ldap_dn_groups, search)
+        prim_group_res = self.ldap_conn.search_s(self.ldap_dn_groups,
+                                                 ldap.SCOPE_SUBTREE,
+                                                 search,
+                                                 ['cn'])
+
+        # Structure of prim_group_res is a list of tuples whose 1st member is a
+        # string dn and 2nd member is a dict with all attributes for this dn.
+        #
+        # Here is an example:
+        # [ (dn1, {'cn': ['group1'] }) ]
+        #
+        # Uncomment the following line to see content of members in debug
+        # mode:
+        #self.log.debug("prim_group_res: %s", prim_group_res)
+
+        nb_results = len(prim_group_res)
+        if nb_results == 0:
+            self.log.warn(Errors.E_U0006,
+                          "primary group %d not found for user %s on " \
+                          "cluster %s!",
+                          gid,
+                          login,
+                          self.cluster.name)
+            return None
+        if nb_results > 1:
+            raise HPCStatsSourceError( \
+                    "too much results (%d) found for user %s primary group %d in base %s" \
+                    % (nb_results, login, gid, self.ldap_dn_groups))
+
+        # Then extract information from attributes of 1st result
+        primary_group = prim_group_res[0][1]['cn'][0]
+
+        # Compose department name with primary group as the direction and
+        # default subdirection configuration parameter
+        department = primary_group + "-" + self.default_subdir
+        self.log.info("user %s is assigned to fake department %s " \
+                      "based on the primary group",
+                      login, department)
 
         return department
 

@@ -69,6 +69,8 @@ class HPCStatsErrorsRegistry(object):
                                        "in LDAP, probably due to user removed "
                                        "from LDAP directory")
     E_U0005 = HPCStatsError('E_U0005', "Deprecated configuration parameter")
+    E_U0006 = HPCStatsError('E_U0006', "User primary group does not exist in "
+                                       "LDAP directory")
 
     # events importers errors
     E_E0001 = HPCStatsError('E_E0001', "Event node is unknown in cluster "

@@ -151,6 +151,10 @@ It must contains the following parameters:
 * ``group_dpt_regexp`` (*required*): The regular expression to extract the
   department name of the user out of a group name. *Ex:*
   ``cn=(.+)-dp-(.+),ou.*``.
+* ``default_subdir`` (*optional*): The default subdirection assigned to users
+  whose real department cannot be defined based on their groups memberships.
+  This default subdirection is concatenated to the name of the user primary
+  group. Default is ``unknown``.
 
 
 The ``<cluster>/slurm`` section (*optional*) is required by
