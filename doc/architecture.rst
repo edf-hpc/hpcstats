@@ -217,6 +217,14 @@ associated connectors annd their corresponding reasons:
 |                |                                     | user account that has been deleted  |
 |                |                                     | from the LDAP directory.            |
 +----------------+-------------------------------------+-------------------------------------+
+| ``E_U0005``    | :py:mod:`UserImporterLdap`          | The configuration file still uses   |
+|                |                                     | the deprecated configuration        |
+|                |                                     | parameter `group` instead of        |
+|                |                                     | `groups`.                           |
++----------------+-------------------------------------+-------------------------------------+
+| ``E_U0006``    | :py:mod:`UserImporterLdap`          | The primary group of a user does    |
+|                |                                     | not exist in the LDAP directory.    |
++----------------+-------------------------------------+-------------------------------------+
 | ``E_E0001``    | :py:mod:`EventImporterSlurm`        | An event has been found in SlurmDBD |
 |                |                                     | on a node unknown in cluster        |
 |                |                                     | architecture.                       |
