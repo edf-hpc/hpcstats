@@ -1,59 +1,135 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Tests Package &mdash; HPCStats 1.2.0 documentation</title>
-    
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="HPCStats 1.2.0 documentation" href="../index.html" />
-    <link rel="up" title="HPCStats Package" href="HPCStats.html" />
-    <link rel="next" title="Mocks Package" href="HPCStats.Tests.Mocks.html" />
-    <link rel="prev" title="Model Package" href="HPCStats.Model.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="HPCStats.Tests.Mocks.html" title="Mocks Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="HPCStats.Model.html" title="Model Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">HPCStats 1.2.0 documentation</a> &raquo;</li>
-          <li><a href="modules.html" >API reference</a> &raquo;</li>
-          <li><a href="HPCStats.html" accesskey="U">HPCStats Package</a> &raquo;</li> 
-      </ul>
-    </div>  
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tests Package &mdash; HPCStats 1.4.0 documentation</title>
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="HPCStats 1.4.0 documentation" href="../index.html"/>
+        <link rel="up" title="HPCStats Package" href="HPCStats.html"/>
+        <link rel="next" title="Mocks Package" href="HPCStats.Tests.Mocks.html"/>
+        <link rel="prev" title="Model Package" href="HPCStats.Model.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="fa fa-home"> HPCStats</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#database">Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#server">Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#agents">Agents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#error-management">Error management</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#from-sources">From sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#from-debian-packages">From Debian packages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../configuration.html#hpcstats-server">HPCStats server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration.html#agents-and-launcher">Agents and launcher</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#actions">Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#global-options">Global options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#import-options">Import options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#check-options">Check options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#modify-options">Modify options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#report-options">Report options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="HPCStats.html">HPCStats Package</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">HPCStats</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="modules.html">API reference</a> &raquo;</li>
+      
+          <li><a href="HPCStats.html">HPCStats Package</a> &raquo;</li>
+      
+    <li>Tests Package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/api/HPCStats.Tests.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
             
   <div class="section" id="tests-package">
 <h1>Tests Package<a class="headerlink" href="#tests-package" title="Permalink to this headline">¶</a></h1>
@@ -533,6 +609,12 @@ invalid.</p>
 <dd><p>JobImporterSlurm.load() must search jobs after correct batch_id.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_with_parts">
+<tt class="descname">test_load_with_parts</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_JobImporterSlurm.TestsJobImporterSlurm.test_load_with_parts" title="Permalink to this definition">¶</a></dt>
+<dd><p>JobImporterSlurm.load() works with simple data.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -630,9 +712,22 @@ domains</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_check_groups_alias_file">
+<tt class="descname">test_check_groups_alias_file</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_check_groups_alias_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.check() should raise HPCStatsSourceError if
+groups_alias_file does not exist</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_init">
 <tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>UserImporterLdap.__init__() initializes w/o error</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_groups_alias">
+<tt class="descname">test_load_groups_alias</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_groups_alias" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.load_groups_alias() tests</p>
 </dd></dl>
 
 <dl class="method">
@@ -690,6 +785,12 @@ with an unclosed account on the cluster.</p>
 <tt class="descname">test_load_update_user_wo_account</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_update_user_wo_account" title="Permalink to this definition">¶</a></dt>
 <dd><p>UserImporterLdap.update() create account and update user found in
 LDAP and in HPCStatsDB but w/o account on the cluster.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_user_no_dp_group">
+<tt class="descname">test_load_user_no_dp_group</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#HPCStats.Tests.tests_UserImporterLdap.TestsUserImporterLdap.test_load_user_no_dp_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>UserImporterLdap.load() should work with user having no secondary group.</p>
 </dd></dl>
 
 </dd></dl>
@@ -781,79 +882,67 @@ touch the account if they already exist in DB</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Tests Package</a><ul>
-<li><a class="reference internal" href="#module-HPCStats.Tests.Utils"><tt class="docutils literal"><span class="pre">Utils</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-HPCStats.Tests.tests_ArchitectureImporterArchfile"><tt class="docutils literal"><span class="pre">tests_ArchitectureImporterArchfile</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-HPCStats.Tests.tests_BusinessCodeImporterCSV"><tt class="docutils literal"><span class="pre">tests_BusinessCodeImporterCSV</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-HPCStats.Tests.tests_EventImporterSlurm"><tt class="docutils literal"><span class="pre">tests_EventImporterSlurm</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-HPCStats.Tests.tests_HPCStatsArgumentParser"><tt class="docutils literal"><span class="pre">tests_HPCStatsArgumentParser</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-HPCStats.Tests.tests_HPCStatsImporter"><tt class="docutils literal"><span class="pre">tests_HPCStatsImporter</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-HPCStats.Tests.tests_JobImporterSlurm"><tt class="docutils literal"><span class="pre">tests_JobImporterSlurm</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-HPCStats.Tests.tests_ProjectImporterCSV"><tt class="docutils literal"><span class="pre">tests_ProjectImporterCSV</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-HPCStats.Tests.tests_UserImporterLdap"><tt class="docutils literal"><span class="pre">tests_UserImporterLdap</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-HPCStats.Tests.tests_UserImporterLdapSlurm"><tt class="docutils literal"><span class="pre">tests_UserImporterLdapSlurm</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="HPCStats.Tests.Mocks.html" class="btn btn-neutral float-right" title="Mocks Package"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="HPCStats.Model.html" class="btn btn-neutral" title="Model Package"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="HPCStats.Model.html"
-                        title="previous chapter">Model Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="HPCStats.Tests.Mocks.html"
-                        title="next chapter">Mocks Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/HPCStats.Tests.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2017, EDF CCN-HPC.
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="HPCStats.Tests.Mocks.html" title="Mocks Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="HPCStats.Model.html" title="Model Package"
-             >previous</a> |</li>
-        <li><a href="../index.html">HPCStats 1.2.0 documentation</a> &raquo;</li>
-          <li><a href="modules.html" >API reference</a> &raquo;</li>
-          <li><a href="HPCStats.html" >HPCStats Package</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015-2017, EDF CCN-HPC.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.4.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

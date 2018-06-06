@@ -1,56 +1,130 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Configuration &mdash; HPCStats 1.2.0 documentation</title>
-    
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="HPCStats 1.2.0 documentation" href="index.html" />
-    <link rel="next" title="Usage guide" href="usage.html" />
-    <link rel="prev" title="Installation Guide" href="installation.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="usage.html" title="Usage guide"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="installation.html" title="Installation Guide"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">HPCStats 1.2.0 documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Configuration &mdash; HPCStats 1.4.0 documentation</title>
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="HPCStats 1.4.0 documentation" href="index.html"/>
+        <link rel="next" title="Usage guide" href="usage.html"/>
+        <link rel="prev" title="Installation Guide" href="installation.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="fa fa-home"> HPCStats</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#database">Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#server">Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#agents">Agents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#error-management">Error management</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-debian-packages">From Debian packages</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hpcstats-server">HPCStats server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#agents-and-launcher">Agents and launcher</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#actions">Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#global-options">Global options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#import-options">Import options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#check-options">Check options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#modify-options">Modify options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#report-options">Report options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/HPCStats.html">HPCStats Package</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">HPCStats</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/configuration.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
             
   <div class="section" id="configuration">
 <span id="id1"></span><h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
@@ -152,7 +226,7 @@ be used by HPCStats for each importer category on these clusters:</p>
 <ul class="simple">
 <li><tt class="docutils literal"><span class="pre">architecture</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">archfile</span></tt>.</li>
 <li><tt class="docutils literal"><span class="pre">users</span></tt> (<em>required</em>): The possible values are <tt class="docutils literal"><span class="pre">ldap</span></tt> and <tt class="docutils literal"><span class="pre">ldap+slurm</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">fsusage</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">ssh</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">fsusage</span></tt> (<em>required</em>): Possible values are <tt class="docutils literal"><span class="pre">dummy</span></tt> and <tt class="docutils literal"><span class="pre">ssh</span></tt>.</li>
 <li><tt class="docutils literal"><span class="pre">events</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">slurm</span></tt>.</li>
 <li><tt class="docutils literal"><span class="pre">jobs</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">slurm</span></tt>.</li>
 </ul>
@@ -193,6 +267,17 @@ search of users secondary groups to find their department.</li>
 <li><tt class="docutils literal"><span class="pre">group_dpt_regexp</span></tt> (<em>required</em>): The regular expression to extract the
 department name of the user out of a group name. <em>Ex:</em>
 <tt class="docutils literal"><span class="pre">cn=(.+)-dp-(.+),ou.*</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">default_subdir</span></tt> (<em>optional</em>): The default subdirection assigned to users
+whose real department cannot be defined based on their groups memberships.
+This default subdirection is concatenated to the name of the user primary
+group. Default is <tt class="docutils literal"><span class="pre">unknown</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">groups_alias_file</span></tt> (<em>optional</em>): The absolute path to a file which defines
+aliases to primary group names. With these aliases, it is possible to
+substitute the primary group name with a more appropriate direction name in
+the resulting user department name. The file must be formatted with one alias
+per line, each alias being the primary group name and the alias separated
+with a whitespace (<em>ex:</em> <tt class="docutils literal"><span class="pre">group_name</span> <span class="pre">alias</span></tt>). If this parameter is not
+defined, there is no aliasing involved.</li>
 </ul>
 <p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/slurm</span></tt> section (<em>optional</em>) is required by
 <tt class="xref py py-class docutils literal"><span class="pre">ProjectImporterSlurm</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></tt>,
@@ -214,6 +299,15 @@ time, until there are no jobs to load anymore. If set to <tt class="docutils lit
 all jobs will be loaded at once and this can lead to a lot of memory
 consumption when there too many jobs. It is recommended to set this value
 to avoid memory over-consumption during jobs import.</li>
+<li><tt class="docutils literal"><span class="pre">prefix</span></tt> (<em>optional</em>): The prefix in SlurmDBD database table names. Default
+value is the cluster name. This parameter might be usefull only in some
+corner-cases when someone wants the cluster name in HPCStats to be different
+from the Slurm cluster name.</li>
+<li><tt class="docutils literal"><span class="pre">partitions</span></tt> (<em>optional</em>): List of comma separated Slurm partitions whose
+imported data (jobs, projects, business codes, etc) are restricted to. Data
+on other partitions are ignored by HPCStats for this cluster. By default,
+HPCStats imports data from all Slurm partitions of the cluster without any
+restriction.</li>
 </ul>
 <p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/fsusage</span></tt> section (<em>optional</em>) is required by
 <tt class="xref py py-class docutils literal"><span class="pre">FSUsageImporterSSH</span></tt> connector. It must contains the following
@@ -320,6 +414,14 @@ cert = /path/to/cert
 groups = &lt;group1&gt;,&lt;group2&gt;
 group_dpt_search = *dp*
 group_dpt_regexp = cn=(\w+)-dp-(\w+),ou=.*
+# If the department cannot be defined based on user groups membership, it is
+# defined based on the user primary group in LDAP directory and this default
+# subdirection.
+#default_subdir = unknown
+# Optional alias file to associate group names to the organization directions
+# for department names based on users primary group name.
+#groups_alias_file = /etc/hpcstats/groups.alias
+
 
 [cluster1/slurm]
 host = &lt;slurm_mysql_db_ip&gt;
@@ -333,6 +435,11 @@ password = &lt;slurmpasswd&gt;
 # too many jobs. It is recommended to set this value to limit memory
 # consumption during jobs import.
 window_size = 1000
+# SlurmDBD clusters specific table names prefix. Default is cluster name.
+# prefix = cluster
+# Optionally restrict imported data from slurm (jobs, events, projects) to a
+# specific list of slurm partitions of a cluster. The list is comma separated.
+# partitions = compute,graphics
 
 [cluster1/fsusage]
 host = host IP
@@ -362,6 +469,10 @@ phash = &lt;password&gt;
 groups = &lt;group1&gt;
 group_dpt_search = *dp*
 group_dpt_regexp = cn=(.+)-dp-(.+),ou.*
+# If the department cannot be defined based on user groups membership, it is
+# defined based on the user primary group in LDAP directory and this default
+# subdirection.
+# default_subdir = unknown
 
 [cluster2/slurm]
 host = &lt;slurm_mysql_db_ip&gt;
@@ -502,73 +613,67 @@ script=/usr/share/hpcstats/jobstats
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Configuration</a><ul>
-<li><a class="reference internal" href="#hpcstats-server">HPCStats server</a></li>
-<li><a class="reference internal" href="#agents-and-launcher">Agents and launcher</a><ul>
-<li><a class="reference internal" href="#fsusage-agent">FSUsage agent</a></li>
-<li><a class="reference internal" href="#jobstats-agent">JobStats agent</a></li>
-<li><a class="reference internal" href="#jobstats-launcher">JobStats launcher</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage guide"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral" title="Installation Guide"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="installation.html"
-                        title="previous chapter">Installation Guide</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="usage.html"
-                        title="next chapter">Usage guide</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/configuration.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2017, EDF CCN-HPC.
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="usage.html" title="Usage guide"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="installation.html" title="Installation Guide"
-             >previous</a> |</li>
-        <li><a href="index.html">HPCStats 1.2.0 documentation</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015-2017, EDF CCN-HPC.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.4.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>
