@@ -32,6 +32,7 @@ import time
 import mock
 from datetime import date
 import base64
+from StringIO import StringIO
 
 from HPCStats.Exceptions import HPCStatsSourceError
 from HPCStats.Model.Cluster import Cluster
@@ -47,6 +48,7 @@ import HPCStats.Tests.Mocks.MockLdap as MockLdap # for LDAP_REQS
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Mocks.Conf import MockConf
 from HPCStats.Tests.Mocks.App import MockApp
+from HPCStats.Tests.Mocks.Utils import mock_open
 
 CONFIG = {
   'hpcstatsdb': {
@@ -93,6 +95,59 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         """
         pass
 
+
+    @mock.patch("%s.ldap" % (module), mock_ldap())
+    @mock.patch("%s.os.path.isfile" % module)
+    def test_check_groups_alias_file(self, m_isfile):
+        """UserImporterLdap.check() should raise HPCStatsSourceError if
+           groups_alias_file does not exist
+        """
+
+        # define file path to run the isfile check
+        self.importer.groups_alias_file = 'test'
+
+        # if file exist, everything is OK
+        m_isfile.return_value = True
+        self.importer.check()
+
+        # if file does not exist, must raise HPCStatsSourceError
+        m_isfile.return_value = False
+        self.assertRaisesRegexp(
+               HPCStatsSourceError,
+               "Groups alias file test does not exist",
+               self.importer.check)
+
+
+    def test_load_groups_alias(self):
+        """UserImporterLdap.load_groups_alias() tests
+        """
+
+        self.importer.groups_alias_file = 'test'
+
+        # tests valid content
+        aliases = "testAlong testA\n" \
+                  "testBlong testB\n"
+
+        m_open = mock_open(data=StringIO(aliases))
+        with mock.patch("%s.open" % (module), m_open, create=True):
+            self.importer.load_groups_alias()
+
+        self.assertEquals(self.importer.groups_alias,
+                          {'testAlong': 'testA',
+                           'testBlong': 'testB'})
+
+        # tests various invalid content
+        wrong_aliases = ["testAlong", "testBlong testB fail\n",
+                         "test:fail", "test;epic"]
+        for wrong_alias in wrong_aliases:
+            m_open = mock_open(data=StringIO(wrong_alias))
+            with mock.patch("%s.open" % (module), m_open, create=True):
+                self.assertRaisesRegexp(
+                    HPCStatsSourceError,
+                    "Malformed line in alias file test",
+                    self.importer.load_groups_alias)
+
+
     @mock.patch("%s.ldap" % (module), mock_ldap())
     def test_load_simple(self):
         """UserImporterLdap.load() should work with simple data from LDAP.
@@ -129,6 +184,63 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         self.importer.load()
         self.assertEquals(len(self.importer.users), 4)
         self.assertEquals(len(self.importer.accounts), 4)
+
+
+    @mock.patch("%s.ldap" % (module), mock_ldap())
+    def test_load_user_no_dp_group(self):
+        """UserImporterLdap.load() should work with user having no secondary group.
+        """
+
+        user = 'login1'
+        fill_ldap_users(CONFIG['testcluster/ldap'], [user])
+        # remove secondary group result for login1
+        MockLdap.LDAP_REQS['secondary_groups_login1']['res'] = []
+
+        # set the cn result of the prim_group LDAP query
+        primary_group = 'primgrouptest'
+        MockLdap.LDAP_REQS['prim_group_0']['res'][0][1]['cn'][0] = primary_group
+
+        MockPg2.PG_REQS['get_unclosed_accounts'].set_assoc (
+          params=( 0, ),
+          result=[ ]
+        )
+
+        # test the user department has been computed based on its primary group
+        self.importer.load()
+        self.assertEquals(self.importer.users[0].department,
+                          primary_group+'-unknown')
+
+        # test with alternative default subdir
+        subdir = 'testA'
+        self.importer.default_subdir = subdir
+        self.importer.load()
+        self.assertEquals(self.importer.users[0].department,
+                          primary_group+'-'+subdir)
+
+        # test with alias
+        primary_group_complicated = 'primgrouptestcomplicated'
+        MockLdap.LDAP_REQS['prim_group_0']['res'][0][1]['cn'][0] = \
+            primary_group_complicated
+        self.importer.groups_alias = \
+            { primary_group_complicated: primary_group }
+        self.importer.load()
+        self.assertEquals(self.importer.users[0].department,
+                          primary_group+'-'+subdir)
+
+        # test without primary group -> department must be None
+        MockLdap.LDAP_REQS['prim_group_0']['res'] = {}
+        self.importer.load()
+        self.assertEquals(self.importer.users[0].department, None)
+
+        # test with multiple primary groups -> must raise HPCStatsSourceError
+        primary_group_complicated = 'primgrouptestcomplicated'
+        MockLdap.LDAP_REQS['prim_group_0']['res'] = [ 'result1', 'result2' ]
+        self.assertRaisesRegexp(
+            HPCStatsSourceError,
+            "too much results .%d. found for user %s primary group %d in " \
+            "base %s" % (2, user, 0, self.importer.ldap_dn_groups),
+            self.importer.load)
+
 
     @mock.patch("%s.ldap" % (module), mock_ldap())
     @mock.patch("%s.User.save" % (module))

@@ -131,6 +131,14 @@ def fill_ldap_users(ldap_config, users, users_no_group=None):
               'res': [ ( 'cn=dir1-dp-dpt1,ou=groups', dict() ) ]
             }
 
+        # request for the group 0, primary group of all users
+        LDAP_REQS["prim_group_0"] = {
+          'req':
+            ( "ou=groups,%s" % (ldap_config['basedn']),
+              "gidNumber=0" ),
+          'res': [ ( 'cn=prim_groups,ou=groups', { 'cn': ['dirprim1'] } ) ]
+        }
+
     if users_no_group is not None:
         for user in users_no_group:
             LDAP_REQS["get_user_%s" % user] = {
