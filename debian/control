@@ -7,7 +7,8 @@ Build-Depends:
  debhelper (>= 8),
  python-all (>= 2.6.6-3~),
  python-setuptools,
- python-sphinx
+ python-sphinx,
+ python-sphinx-rtd-theme
 X-Python-Version: >= 2.6
 Standards-Version: 3.9.6
 
