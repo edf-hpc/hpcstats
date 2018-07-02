@@ -42,6 +42,13 @@ case "$1" in
             su hpcstats -c "\
                 psql hpcstatsdb < /usr/share/hpcstats/db/migrations/001_add_job_account.psql"
         fi
+        # test if job table must be upgraded with job_account field coming with
+        # HPCStats v1.6
+        if ! $(su hpcstats -c "psql hpcstatsdb -c '\d Job'" | grep -q job_department); then
+            echo "Upgrading DB schema to add job department column"
+            su hpcstats -c "\
+                psql hpcstatsdb < /usr/share/hpcstats/db/migrations/002_add_job_department.psql"
+        fi
 
     ;;
 
