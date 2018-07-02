@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2011-2015 EDF SA
+# Copyright (C) 2011-2018 EDF SA
 # Contact:
 #       CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
 #       1, Avenue du General de Gaulle
@@ -63,8 +63,8 @@ class Job(object):
     """Model class for the Cluster table."""
 
     def __init__( self, account, project, business, sched_id, batch_id, name,
-                  nbcpu, state, queue, job_acct, submission, start, end,
-                  job_id=None):
+                  nbcpu, state, queue, job_acct, job_department,
+                  submission, start, end, job_id=None):
 
         self.job_id = job_id
         self.sched_id = sched_id # user interface ID
@@ -74,6 +74,7 @@ class Job(object):
         self.state = state
         self.queue = queue
         self.job_acct = job_acct
+        self.job_department = job_department
 
         self.submission = submission
         self.start = start
@@ -98,13 +99,15 @@ class Job(object):
         else:
             end = self.end.strftime('%Y-%m-%d %H:%M:%S')
 
-        return "job %d on %s(%d) by %s: state:%s queue:%s job_acct:%s %s/%s/%s" % \
+        return "job %d on %s(%d) by %s: state:%s queue:%s job_department:%s " \
+               "job_acct:%s %s/%s/%s" % \
                ( self.sched_id,
                  self.account.cluster.name,
                  self.nbcpu,
                  self.account.user.login,
                  self.state,
                  self.queue,
+                 self.job_department,
                  self.job_acct,
                  submission,
                  start,
@@ -163,6 +166,7 @@ class Job(object):
                                   job_state,
                                   job_queue,
                                   job_account,
+                                  job_department,
                                   job_submission,
                                   job_start,
                                   job_end,
@@ -170,7 +174,7 @@ class Job(object):
                                   userhpc_id,
                                   project_id,
                                   business_code )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING job_id
               """
 
@@ -191,6 +195,7 @@ class Job(object):
                    self.state,
                    self.queue,
                    self.job_acct,
+                   self.job_department,
                    self.submission,
                    self.start,
                    self.end,
@@ -202,7 +207,7 @@ class Job(object):
         #print db.cur.mogrify(req, params)
         db.execute(req, params)
         self.job_id = db.cur.fetchone()[0]
-        
+
     def update(self, db):
         """Update Job sched_id, nbcpu, name, state, queue, submission, start and
            end in database. Raises HPCStatsRuntimeError if self.job_id is None.
@@ -221,6 +226,7 @@ class Job(object):
                        job_state = %s,
                        job_queue = %s,
                        job_account = %s,
+                       job_department = %s,
                        job_submission = %s,
                        job_start = %s,
                        job_end = %s
@@ -232,6 +238,7 @@ class Job(object):
                    self.state,
                    self.queue,
                    self.job_acct,
+                   self.job_department,
                    self.submission,
                    self.start,
                    self.end,
