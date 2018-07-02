@@ -1,0 +1,2 @@
+-- Modify job table to add new job_department column
+ALTER TABLE Job ADD COLUMN job_department character varying(30);
