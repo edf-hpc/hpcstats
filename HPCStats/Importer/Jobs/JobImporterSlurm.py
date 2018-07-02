@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2011-2015 EDF SA
+# Copyright (C) 2011-2018 EDF SA
 # Contact:
 #       CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
 #       1, Avenue du General de Gaulle
@@ -337,6 +337,11 @@ class JobImporterSlurm(JobImporter):
                     self.log.warn(Errors.E_J0001, msg)
                 self.nb_excluded_jobs += 1
                 continue
+            user = self.app.users.find_user(searched_user)
+            if user is None:
+                msg = "user %s not found in loaded users" % (login)
+                raise HPCStatsSourceError(msg)
+            job_department = user.department
 
             wckey = row[16]
 
@@ -385,8 +390,8 @@ class JobImporterSlurm(JobImporter):
                             self.log.warn(Errors.E_J0004, msg)
 
             job = Job(account, project, business, sched_id, str(batch_id),
-                      name, nbcpu, state, queue, job_acct, submission, start,
-                      end)
+                      name, nbcpu, state, queue, job_acct, job_department,
+                      submission, start, end)
             self.jobs.append(job)
 
             if nodelist is not None:
