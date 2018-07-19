@@ -178,6 +178,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         business1 = Business('business1', 'business description 1')
 
         self.app.arch.nodes = [ node1, node2 ]
+        self.app.users.users = [ user1 ]
         self.app.users.accounts = [ account1 ]
         self.app.projects.projects = [ project1 ]
         self.app.business.businesses = [ business1 ]
