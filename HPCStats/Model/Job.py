@@ -41,6 +41,7 @@ Schema of the ``Job`` table in HPCStats database:
       job_state      character varying(50) NOT NULL,
       job_queue      character varying(50),
       job_account    character varying(50),
+      job_department character varying(30),
       job_submission timestamp NOT NULL,
       job_start      timestamp,
       job_end        timestamp,
