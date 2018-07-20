@@ -1,3 +1,19 @@
+hpcstats (1.6.0) unstable; urgency=medium
+
+  [ Thomas HAMEL ]
+  * db: Add a job_department column to job in schema
+  * debian: add column to job table in postinst
+  * Model:Job Add department
+  * Importer:Jobs Set department for slurm job
+  * doc update db diagram for job_department column
+
+  [ Rémi Palancher ]
+  * Add department field in Job model docstring
+  * Initialize users in job importer tests
+  * Catch source error at cluster level
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Fri, 20 Jul 2018 10:28:46 +0200
+
 hpcstats (1.5.1) unstable; urgency=medium
 
   * Add new build-dep on sphinx RTD theme
