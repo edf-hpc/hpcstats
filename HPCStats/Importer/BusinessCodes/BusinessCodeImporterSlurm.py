@@ -31,6 +31,8 @@
    This module import business codes from wckeys in Slurm accouting database.
 """
 
+import logging
+logger = logging.getLogger(__name__)
 import MySQLdb
 import _mysql_exceptions
 from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
@@ -110,13 +112,18 @@ class BusinessCodeImporterSlurm(BusinessCodeImporter):
 
     def load(self):
         """Connects to all known Slurm databases to extract business codes
-           from jobs wckeys. Raises HPCStatsSourceError in case of error.
+           from jobs wckeys. If a cluster raises a HPCStatsSourceError, it
+           prints an error and continues with the next one.
         """
 
         self.businesses = []
 
         for cluster in self.clusters_db.keys():
-            self.load_cluster(cluster)
+            try:
+                self.load_cluster(cluster)
+            except HPCStatsSourceError, err:
+                logger.error("Error with cluster %s: %s", cluster, err)
+
 
     def load_cluster(self, cluster):
         """Connect to cluster Slurm database to extract business codes from

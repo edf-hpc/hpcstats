@@ -31,6 +31,8 @@
    This module import projects from wckeys in Slurm accouting database.
 """
 
+import logging
+logger = logging.getLogger(__name__)
 import MySQLdb
 import _mysql_exceptions
 from HPCStats.Errors.Registry import HPCStatsErrorsRegistry as Errors
@@ -116,7 +118,8 @@ class ProjectImporterSlurm(ProjectImporter):
 
     def load(self):
         """Connects to all known Slurm databases to extract project codes
-           in jobs wckeys. Raises HPCStatsSourceError in case of error.
+           in jobs wckeys. If a cluster raises a HPCStatsSourceError, it
+           prints an error and continues with the next one.
         """
 
         self.domains = []
@@ -127,7 +130,11 @@ class ProjectImporterSlurm(ProjectImporter):
         self.domains.append(self.default_domain)
 
         for cluster in self.clusters_db.keys():
-            self.load_cluster(cluster)
+            try:
+                self.load_cluster(cluster)
+            except HPCStatsSourceError, err:
+                logger.error("Error with cluster %s: %s", cluster, err)
+
 
     def load_cluster(self, cluster):
         """Connect to cluster Slurm database to extract project codes from

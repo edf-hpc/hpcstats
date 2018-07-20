@@ -32,7 +32,7 @@
 import logging
 logger = logging.getLogger(__name__)
 
-from HPCStats.Exceptions import HPCStatsRuntimeError
+from HPCStats.Exceptions import HPCStatsRuntimeError, HPCStatsSourceError
 from HPCStats.CLI.HPCStatsApp import HPCStatsApp
 from HPCStats.Importer.Jobs.JobImporterFactory import JobImporterFactory
 from HPCStats.Importer.Users.UserImporterFactory import UserImporterFactory
@@ -90,7 +90,11 @@ class HPCStatsImporter(HPCStatsApp):
             clusters = [ self.cluster_name ]
 
         for cluster_name in clusters:
-            self.import_cluster_data(db, cluster_name)
+            try:
+                self.import_cluster_data(db, cluster_name)
+            except HPCStatsSourceError, err:
+                logger.error("Error while importing data from cluster %s: %s",
+                             cluster_name, err)
 
         db.commit()
         db.unbind()
