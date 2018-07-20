@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Model Package &mdash; HPCStats 1.4.0 documentation</title>
+  <title>Model Package &mdash; HPCStats 1.6.0 documentation</title>
   
 
   
@@ -28,7 +28,7 @@
   
 
   
-    <link rel="top" title="HPCStats 1.4.0 documentation" href="../index.html"/>
+    <link rel="top" title="HPCStats 1.6.0 documentation" href="../index.html"/>
         <link rel="up" title="HPCStats Package" href="HPCStats.html"/>
         <link rel="next" title="Tests Package" href="HPCStats.Tests.html"/>
         <link rel="prev" title="Log Package" href="HPCStats.Log.html"/> 
@@ -523,6 +523,7 @@ it raises HPCStatsRuntimeError.</p>
   <span class="n">job_state</span>      <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
   <span class="n">job_queue</span>      <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
   <span class="n">job_account</span>    <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+  <span class="n">job_department</span> <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
   <span class="n">job_submission</span> <span class="k">timestamp</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
   <span class="n">job_start</span>      <span class="k">timestamp</span><span class="p">,</span>
   <span class="n">job_end</span>        <span class="k">timestamp</span><span class="p">,</span>
@@ -537,7 +538,7 @@ it raises HPCStatsRuntimeError.</p>
 </div>
 <dl class="class">
 <dt id="HPCStats.Model.Job.Job">
-<em class="property">class </em><tt class="descclassname">HPCStats.Model.Job.</tt><tt class="descname">Job</tt><big>(</big><em>account</em>, <em>project</em>, <em>business</em>, <em>sched_id</em>, <em>batch_id</em>, <em>name</em>, <em>nbcpu</em>, <em>state</em>, <em>queue</em>, <em>job_acct</em>, <em>submission</em>, <em>start</em>, <em>end</em>, <em>job_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Job.Job" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">HPCStats.Model.Job.</tt><tt class="descname">Job</tt><big>(</big><em>account</em>, <em>project</em>, <em>business</em>, <em>sched_id</em>, <em>batch_id</em>, <em>name</em>, <em>nbcpu</em>, <em>state</em>, <em>queue</em>, <em>job_acct</em>, <em>job_department</em>, <em>submission</em>, <em>start</em>, <em>end</em>, <em>job_id=None</em><big>)</big><a class="headerlink" href="#HPCStats.Model.Job.Job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Model class for the Cluster table.</p>
 <dl class="method">
@@ -793,7 +794,7 @@ Raises HPCStatsRuntimeError is user_id is None.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2017, EDF CCN-HPC.
+        &copy; Copyright 2015-2018, EDF CCN-HPC.
     </p>
   </div>
 
@@ -813,7 +814,7 @@ Raises HPCStatsRuntimeError is user_id is None.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.4.0',
+            VERSION:'1.6.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

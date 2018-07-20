@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Projects Package &mdash; HPCStats 1.4.0 documentation</title>
+  <title>Projects Package &mdash; HPCStats 1.6.0 documentation</title>
   
 
   
@@ -28,7 +28,7 @@
   
 
   
-    <link rel="top" title="HPCStats 1.4.0 documentation" href="../index.html"/>
+    <link rel="top" title="HPCStats 1.6.0 documentation" href="../index.html"/>
         <link rel="up" title="Importer Package" href="HPCStats.Importer.html"/>
         <link rel="next" title="Users Package" href="HPCStats.Importer.Users.html"/>
         <link rel="prev" title="Jobs Package" href="HPCStats.Importer.Jobs.html"/> 
@@ -296,7 +296,8 @@ accordingly.</p>
 <dt id="HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.load">
 <tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#HPCStats.Importer.Projects.ProjectImporterSlurm.ProjectImporterSlurm.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connects to all known Slurm databases to extract project codes
-in jobs wckeys. Raises HPCStatsSourceError in case of error.</p>
+in jobs wckeys. If a cluster raises a HPCStatsSourceError, it
+prints an error and continues with the next one.</p>
 </dd></dl>
 
 <dl class="method">
@@ -347,7 +348,7 @@ domain and we must not alter these information.</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2017, EDF CCN-HPC.
+        &copy; Copyright 2015-2018, EDF CCN-HPC.
     </p>
   </div>
 
@@ -367,7 +368,7 @@ domain and we must not alter these information.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.4.0',
+            VERSION:'1.6.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
