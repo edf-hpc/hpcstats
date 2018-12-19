@@ -1,3 +1,10 @@
+hpcstats (1.6.1) unstable; urgency=medium
+
+  * tests: use native mock_open()
+  * Just log warning when job node is unknown
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Wed, 19 Dec 2018 15:13:24 +0100
+
 hpcstats (1.6.0) unstable; urgency=medium
 
   [ Thomas HAMEL ]
