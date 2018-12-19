@@ -409,15 +409,13 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
 
     @mock.patch("%s.MySQLdb" % (module), mock_mysqldb())
     def test_load_node_not_found(self):
-        """JobImporterSlurm.load() raises exception when node not found."""
+        """JobImporterSlurm.load() does not create runs when node not found."""
 
         self.load_app()
         self.app.arch.nodes = [ ]
-
-        self.assertRaisesRegexp(
-               HPCStatsSourceError,
-               "unable to find node node1 for job 0 in loaded nodes",
-               self.importer.load)
+        self.importer.load()
+        job = self.importer.jobs[0]
+        self.assertEquals(len(job.runs), 0)
 
     def test_job_partition(self):
         """JobImporterSlurm.job_partition() must return correct partition for

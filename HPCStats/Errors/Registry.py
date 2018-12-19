@@ -57,6 +57,8 @@ class HPCStatsErrorsRegistry(object):
                                        "code")
     E_J0005 = HPCStatsError('E_J0005', "Unable to define job partition based "
                                        "on job nodes list")
+    E_J0006 = HPCStatsError('E_J0006', "Unable to find job node in loaded "
+                                       "architecture")
 
     # users importers errors
     E_U0001 = HPCStatsError('E_U0001', "User is member of the users group in "

@@ -419,13 +419,12 @@ class JobImporterSlurm(JobImporter):
                                  None, None, None, None, None)
             node = self.app.arch.find_node(searched_node)
             if node is None:
-                raise HPCStatsSourceError(
-                        "unable to find node %s for job %s in " \
-                        "loaded nodes" \
-                          % (nodename, job.batch_id))
-
-            run = Run(self.cluster, node, job)
-            job.runs.append(run)
+                self.log.warn(Errors.E_J0006,
+                              "unable to find node %s for job %s in loaded " \
+                              "nodes", nodename, job.batch_id)
+            else:
+                run = Run(self.cluster, node, job)
+                job.runs.append(run)
 
     def job_partition(self, job_id, partitions_str, nodelist):
         """Return one partition name depending on the partition field and the

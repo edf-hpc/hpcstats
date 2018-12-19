@@ -200,6 +200,10 @@ associated connectors annd their corresponding reasons:
 |                |                                     | the partition of a job based on its |
 |                |                                     | node list.                          |
 +----------------+-------------------------------------+-------------------------------------+
+| ``E_J0006``    | :py:mod:`JobImporterSlurm`          | The importer is unable to find a    |
+|                |                                     | node allocated to the job in loaded |
+|                |                                     | architecture.                       |
++----------------+-------------------------------------+-------------------------------------+
 | ``E_U0001``    | :py:mod:`UserImporterLdap`          | A user is member of a cluster users |
 |                |                                     | group but has no user entry in the  |
 |                |                                     | LDAP directory.                     |
