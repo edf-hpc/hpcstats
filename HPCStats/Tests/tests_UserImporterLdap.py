@@ -48,7 +48,6 @@ import HPCStats.Tests.Mocks.MockLdap as MockLdap # for LDAP_REQS
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
 from HPCStats.Tests.Mocks.Conf import MockConf
 from HPCStats.Tests.Mocks.App import MockApp
-from HPCStats.Tests.Mocks.Utils import mock_open
 
 CONFIG = {
   'hpcstatsdb': {
@@ -128,7 +127,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         aliases = "testAlong testA\n" \
                   "testBlong testB\n"
 
-        m_open = mock_open(data=StringIO(aliases))
+        m_open = mock.mock_open(read_data=aliases)
         with mock.patch("%s.open" % (module), m_open, create=True):
             self.importer.load_groups_alias()
 
@@ -140,7 +139,7 @@ class TestsUserImporterLdap(HPCStatsTestCase):
         wrong_aliases = ["testAlong", "testBlong testB fail\n",
                          "test:fail", "test;epic"]
         for wrong_alias in wrong_aliases:
-            m_open = mock_open(data=StringIO(wrong_alias))
+            m_open = mock.mock_open(read_data=wrong_alias)
             with mock.patch("%s.open" % (module), m_open, create=True):
                 self.assertRaisesRegexp(
                     HPCStatsSourceError,

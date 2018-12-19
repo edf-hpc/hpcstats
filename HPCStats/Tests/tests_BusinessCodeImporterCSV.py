@@ -37,7 +37,6 @@ from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.Model.Cluster import Cluster
 from HPCStats.Model.Business import Business
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
-from HPCStats.Tests.Mocks.Utils import mock_open
 import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
 from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2, init_reqs
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
@@ -84,7 +83,8 @@ class TestsBusinessCodeImporterCSVLoad(HPCStatsTestCase):
 
         csv = "code1;business description 1"
 
-        m_open = mock_open(data=StringIO(csv))
+        m_open = mock.mock_open(read_data=csv)
+        m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
         with mock.patch("%s.open" % (module), m_open, create=True):
             self.importer.load()
 
@@ -102,7 +102,8 @@ class TestsBusinessCodeImporterCSVLoad(HPCStatsTestCase):
         csv = "code1;business description 1\n" \
               "code2;business description 2\n"
 
-        m_open = mock_open(data=StringIO(csv))
+        m_open = mock.mock_open(read_data=csv)
+        m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
         with mock.patch("%s.open" % (module), m_open, create=True):
             self.importer.load()
 
@@ -128,7 +129,8 @@ class TestsBusinessCodeImporterCSVLoad(HPCStatsTestCase):
                  "line;with;3_separators"]
 
         for csv in csvs:
-            m_open = mock_open(data=StringIO(csv))
+            m_open = mock.mock_open(read_data=csv)
+            m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
             with mock.patch("%s.open" % (module), m_open, create=True):
                 self.assertRaisesRegexp(
                        HPCStatsSourceError,
@@ -147,7 +149,8 @@ class TestsBusinessCodeImporterCSVLoad(HPCStatsTestCase):
         for code in codes:
             csv = "%s;business description 1" % code
 
-            m_open = mock_open(data=StringIO(csv))
+            m_open = mock.mock_open(read_data=csv)
+            m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
             with mock.patch("%s.open" % (module), m_open, create=True):
                 self.assertRaisesRegexp(
                        HPCStatsSourceError,
@@ -165,7 +168,8 @@ class TestsBusinessCodeImporterCSVLoad(HPCStatsTestCase):
         for desc in descs:
             csv = "code1;%s" % desc
 
-            m_open = mock_open(data=StringIO(csv))
+            m_open = mock.mock_open(read_data=csv)
+            m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
             with mock.patch("%s.open" % (module), m_open, create=True):
                 self.importer.load()
                 self.assertIsNone(self.importer.businesses[0].description)

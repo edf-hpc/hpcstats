@@ -37,7 +37,6 @@ from HPCStats.Conf.HPCStatsConf import HPCStatsConf
 from HPCStats.Model.Domain import Domain
 from HPCStats.Model.Project import Project
 from HPCStats.Tests.Mocks.MockConfigParser import MockConfigParser
-from HPCStats.Tests.Mocks.Utils import mock_open
 import HPCStats.Tests.Mocks.MockPg2 as MockPg2 # for PG_REQS
 from HPCStats.Tests.Mocks.MockPg2 import mock_psycopg2
 from HPCStats.Tests.Utils import HPCStatsTestCase, loadtestcase
@@ -84,7 +83,8 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
         csv = "code1;project description 1;" \
               "[dom1] domain name 1;[sect1] sector name 1"
 
-        m_open = mock_open(data=StringIO(csv))
+        m_open = mock.mock_open(read_data=csv)
+        m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
         with mock.patch("%s.open" % (module), m_open, create=True):
             self.importer.load()
 
@@ -106,7 +106,8 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
               "code2;project description 2;" \
               "[dom2] domain name 2;[sect2] sector name 2\n"
 
-        m_open = mock_open(data=StringIO(csv))
+        m_open = mock.mock_open(read_data=csv)
+        m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
         with mock.patch("%s.open" % (module), m_open, create=True):
             self.importer.load()
 
@@ -131,7 +132,8 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
         csv = "code1;project description 1;" \
               "domain name 1;[sect1] sector name 1"
 
-        m_open = mock_open(data=StringIO(csv))
+        m_open = mock.mock_open(read_data=csv)
+        m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
         with mock.patch("%s.open" % (module), m_open, create=True):
             self.assertRaisesRegexp(
                    HPCStatsSourceError,
@@ -150,7 +152,8 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
             csv = "code1;project description 1;" \
                   "[%s] domain name 1;[sect1] sector name 1" % (key)
 
-            m_open = mock_open(data=StringIO(csv))
+            m_open = mock.mock_open(read_data=csv)
+            m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
             with mock.patch("%s.open" % (module), m_open, create=True):
                 self.assertRaisesRegexp(
                        HPCStatsSourceError,
@@ -169,7 +172,8 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
             csv = "code1;project description 1;" \
                   "[dom1] %s;[sect1] sector name 1" % (name)
 
-            m_open = mock_open(data=StringIO(csv))
+            m_open = mock.mock_open(read_data=csv)
+            m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
             with mock.patch("%s.open" % (module), m_open, create=True):
                 self.assertRaisesRegexp(
                        HPCStatsSourceError,
@@ -193,7 +197,8 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
               "code4;project description 4;" \
               "[dom2] domain name 2;[sect3] sector name 3\n"
 
-        m_open = mock_open(data=StringIO(csv))
+        m_open = mock.mock_open(read_data=csv)
+        m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
         with mock.patch("%s.open" % (module), m_open, create=True):
             self.importer.load()
 
@@ -221,7 +226,8 @@ class TestsProjectImporterCSVLoad(HPCStatsTestCase):
               "code1;project description 2;" \
               "[dom1] domain name 1;[sect1] sector name 1\n"
 
-        m_open = mock_open(data=StringIO(csv))
+        m_open = mock.mock_open(read_data=csv)
+        m_open.return_value.__iter__ = lambda self: iter(self.readline, '')
         with mock.patch("%s.open" % (module), m_open, create=True):
             self.assertRaisesRegexp(
                    HPCStatsSourceError,
