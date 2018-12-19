@@ -5,16 +5,16 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation Guide &mdash; HPCStats 1.6.0 documentation</title>
+  <title>Installation Guide &mdash; HPCStats 1.6.1 documentation</title>
   
 
   
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -28,12 +28,17 @@
   
 
   
-    <link rel="top" title="HPCStats 1.6.0 documentation" href="index.html"/>
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="HPCStats 1.6.1 documentation" href="index.html"/>
         <link rel="next" title="Configuration" href="configuration.html"/>
         <link rel="prev" title="Architecture" href="architecture.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -43,60 +48,72 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        <a href="index.html" class="fa fa-home"> HPCStats</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> HPCStats
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.6.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#database">Database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#server">Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#agents">Agents</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#error-management">Error management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#from-sources">From sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hpcstats-server">HPCStats server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hpcstats-agents">HPCStats agents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fsusage-agent">FSUsage agent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#jobstats-agent">Jobstats agent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#jobstats-launcher">Jobstats launcher</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Installation Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#from-sources">From sources</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#from-debian-packages">From Debian packages</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html#hpcstats-server">HPCStats server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html#agents-and-launcher">Agents and launcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#from-debian-packages">From Debian packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">HPCStats server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">HPCStats agents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#synopsis">Synopsis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#actions">Actions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#global-options">Global options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#import-options">Import options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#check-options">Check options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#modify-options">Modify options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#report-options">Report options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#examples">Examples</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/HPCStats.html">HPCStats Package</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -111,86 +128,95 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
     <li>Installation Guide</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/installation.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/installation.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="installation-guide">
 <h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Permalink to this headline">¶</a></h1>
 <p>HPCStats is only supported on GNU/Linux systems. The installation must be
-performed with <tt class="docutils literal"><span class="pre">root</span></tt> user.</p>
+performed with <code class="docutils literal"><span class="pre">root</span></code> user.</p>
 <div class="section" id="from-sources">
 <h2>From sources<a class="headerlink" href="#from-sources" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="hpcstats-server">
 <h3>HPCStats server<a class="headerlink" href="#hpcstats-server" title="Permalink to this headline">¶</a></h3>
-<p>First, install Python packaging system <tt class="docutils literal"><span class="pre">setuptools</span></tt> on the system. It is
+<p>First, install Python packaging system <code class="docutils literal"><span class="pre">setuptools</span></code> on the system. It is
 probably available through the packaging system of your distribution. For
 example, on Debian/Ubuntu:</p>
-<div class="highlight-python"><div class="highlight"><pre>apt-get install python-setuptools
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">setuptools</span>
 </pre></div>
 </div>
 <p>Then, download the source of HPCStats from the Git source code repository:</p>
-<div class="highlight-python"><div class="highlight"><pre>wget https://github.com/edf-hpc/hpcstats/archive/master.tar.gz
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">edf</span><span class="o">-</span><span class="n">hpc</span><span class="o">/</span><span class="n">hpcstats</span><span class="o">/</span><span class="n">archive</span><span class="o">/</span><span class="n">master</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
 </pre></div>
 </div>
 <p>Then, extract the sources and run the following command to install HPCStats
 with all its dependencies:</p>
-<div class="highlight-python"><div class="highlight"><pre>python setup.py install
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
 <p>The command actually installs both HPCStats server component itself and all its
 Python modules dependencies.</p>
 <p>Install PostgreSQL server. It is probably available through the packaging
 system of your distribution. For example, on Debian/Ubuntu:</p>
-<div class="highlight-python"><div class="highlight"><pre>apt-get install postgresql-server
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">postgresql</span><span class="o">-</span><span class="n">server</span>
 </pre></div>
 </div>
 <p>Please note that HPCStats requires PostgreSQL version &gt;= 9.0.</p>
-<p>Create <tt class="docutils literal"><span class="pre">hpcstats</span></tt> system user. For example, on Debian/Ubuntu:</p>
-<div class="highlight-python"><div class="highlight"><pre>adduser --system hpcstats --no-create-home --shell=/bin/sh
+<p>Create <code class="docutils literal"><span class="pre">hpcstats</span></code> system user. For example, on Debian/Ubuntu:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">adduser</span> <span class="o">--</span><span class="n">system</span> <span class="n">hpcstats</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">create</span><span class="o">-</span><span class="n">home</span> <span class="o">--</span><span class="n">shell</span><span class="o">=/</span><span class="nb">bin</span><span class="o">/</span><span class="n">sh</span>
 </pre></div>
 </div>
-<p>The <tt class="docutils literal"><span class="pre">--shell=/bin/sh</span></tt> parameter is needed to run shell commands easily using
+<p>The <code class="docutils literal"><span class="pre">--shell=/bin/sh</span></code> parameter is needed to run shell commands easily using
 this system user account.</p>
-<p>Create the <tt class="docutils literal"><span class="pre">hpcstats</span></tt> PostgreSQL user/role and set its password:</p>
-<div class="highlight-python"><div class="highlight"><pre>su postgres -c &#39;createuser --no-createdb --no-superuser --no-createrole hpcstats&#39;
-su postgres -c &quot;psql -c \&quot;ALTER ROLE hpcstats WITH PASSWORD &#39;hpcstats&#39;;\&quot;&quot;
+<p>Create the <code class="docutils literal"><span class="pre">hpcstats</span></code> PostgreSQL user/role and set its password:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="n">postgres</span> <span class="o">-</span><span class="n">c</span> <span class="s1">&#39;createuser --no-createdb --no-superuser --no-createrole hpcstats&#39;</span>
+<span class="n">su</span> <span class="n">postgres</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;psql -c </span><span class="se">\&quot;</span><span class="s2">ALTER ROLE hpcstats WITH PASSWORD &#39;hpcstats&#39;;</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
-<p>Then, create the PostgreSQL database and set <tt class="docutils literal"><span class="pre">hpcstats</span></tt> as its owner:</p>
-<div class="highlight-python"><div class="highlight"><pre>su postgres -c &#39;createdb -O hpcstats hpcstatsdb&#39;
+<p>Then, create the PostgreSQL database and set <code class="docutils literal"><span class="pre">hpcstats</span></code> as its owner:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="n">postgres</span> <span class="o">-</span><span class="n">c</span> <span class="s1">&#39;createdb -O hpcstats hpcstatsdb&#39;</span>
 </pre></div>
 </div>
 <p>Finally, create the tables and constraints of this database using the SQL
 script distributed with HPCStats source code:</p>
-<div class="highlight-python"><div class="highlight"><pre>su hpcstats -c &quot;psql hpcstatsdb &lt; db/hpcstats.psql&quot;
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="n">hpcstats</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;psql hpcstatsdb &lt; db/hpcstats.psql&quot;</span>
 </pre></div>
 </div>
 <p>HPCStats is then ready to be configured and run! Please refer to the dedicated
-<a class="reference internal" href="configuration.html#configuration"><em>Configuration</em></a> section for all information about the configuration files
+<a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a> section for all information about the configuration files
 of HPCStats.</p>
 <p>For regular and automatic update of production data in HPCStats database, you
 may want to create a cronjob for automatically running HPCStats importer
 application for all clusters. Here is an example of such cronjob, in file
-<tt class="file docutils literal"><span class="pre">/etc/cron.d/hpcstats</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre>0 5 * * * hpcstats hpcstats --batch-mode import --cluster=all
+<code class="file docutils literal"><span class="pre">/etc/cron.d/hpcstats</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mi">5</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">hpcstats</span> <span class="n">hpcstats</span> <span class="o">--</span><span class="n">batch</span><span class="o">-</span><span class="n">mode</span> <span class="kn">import</span> <span class="o">--</span><span class="n">cluster</span><span class="o">=</span><span class="nb">all</span>
 </pre></div>
 </div>
 <p>To receive the complete output of the cronjob runs by email, you can also set
-the <tt class="docutils literal"><span class="pre">MAILTO</span></tt> variable. You may need to configure the local MTA to relay
+the <code class="docutils literal"><span class="pre">MAILTO</span></code> variable. You may need to configure the local MTA to relay
 emails to a external <em>smart</em> relay. For example, on Debian/Ubuntu, run:</p>
-<div class="highlight-python"><div class="highlight"><pre>dpkg-reconfigure exim4-config
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dpkg</span><span class="o">-</span><span class="n">reconfigure</span> <span class="n">exim4</span><span class="o">-</span><span class="n">config</span>
 </pre></div>
 </div>
 </div>
@@ -198,55 +224,55 @@ emails to a external <em>smart</em> relay. For example, on Debian/Ubuntu, run:</
 <h3>HPCStats agents<a class="headerlink" href="#hpcstats-agents" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="fsusage-agent">
 <h4>FSUsage agent<a class="headerlink" href="#fsusage-agent" title="Permalink to this headline">¶</a></h4>
-<p>To install the <tt class="docutils literal"><span class="pre">fsusage</span></tt> agent on a supercomputer login node, install the
+<p>To install the <code class="docutils literal"><span class="pre">fsusage</span></code> agent on a supercomputer login node, install the
 script:</p>
-<div class="highlight-python"><div class="highlight"><pre>install contribs/fsusage /usr/local/bin/fsusage
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">install</span> <span class="n">contribs</span><span class="o">/</span><span class="n">fsusage</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">fsusage</span>
 </pre></div>
 </div>
 <p>Install the configuration file:</p>
-<div class="highlight-python"><div class="highlight"><pre>mkdir /etc/hpcstats
-install conf/fsusage.conf /etc/hpcstats/fsusage.conf
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hpcstats</span>
+<span class="n">install</span> <span class="n">conf</span><span class="o">/</span><span class="n">fsusage</span><span class="o">.</span><span class="n">conf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hpcstats</span><span class="o">/</span><span class="n">fsusage</span><span class="o">.</span><span class="n">conf</span>
 </pre></div>
 </div>
-<p>Install the cronjob, in file <tt class="file docutils literal"><span class="pre">/etc/cron.d/hpcstats-fsusage</span></tt>, for example
+<p>Install the cronjob, in file <code class="file docutils literal"><span class="pre">/etc/cron.d/hpcstats-fsusage</span></code>, for example
 to run every nights at 1AM:</p>
-<div class="highlight-python"><div class="highlight"><pre>0 1 * * * hpcstats /usr/local/bin/fsusage
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">hpcstats</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">fsusage</span>
 </pre></div>
 </div>
-<p>Finally, proceed with the <a class="reference internal" href="configuration.html#configuration-fsusage-agent"><em>FSUsage agent</em></a> configuration.</p>
+<p>Finally, proceed with the <a class="reference internal" href="configuration.html#configuration-fsusage-agent"><span class="std std-ref">FSUsage agent</span></a> configuration.</p>
 </div>
 <div class="section" id="jobstats-agent">
 <h4>Jobstats agent<a class="headerlink" href="#jobstats-agent" title="Permalink to this headline">¶</a></h4>
-<p>To install the <tt class="docutils literal"><span class="pre">jobstats</span></tt> agent on a supercomputer login node, install the
+<p>To install the <code class="docutils literal"><span class="pre">jobstats</span></code> agent on a supercomputer login node, install the
 script:</p>
-<div class="highlight-python"><div class="highlight"><pre>install contribs/jobstats /usr/local/bin/jobstats
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">install</span> <span class="n">contribs</span><span class="o">/</span><span class="n">jobstats</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jobstats</span>
 </pre></div>
 </div>
 <p>Install the configuration file:</p>
-<div class="highlight-python"><div class="highlight"><pre>mkdir /etc/hpcstats
-install conf/jobstats.conf /etc/hpcstats/jobstats.conf
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hpcstats</span>
+<span class="n">install</span> <span class="n">conf</span><span class="o">/</span><span class="n">jobstats</span><span class="o">.</span><span class="n">conf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hpcstats</span><span class="o">/</span><span class="n">jobstats</span><span class="o">.</span><span class="n">conf</span>
 </pre></div>
 </div>
-<p>Finally, proceed with the <a class="reference internal" href="configuration.html#configuration-jobstats-agent"><em>JobStats agent</em></a> configuration.</p>
+<p>Finally, proceed with the <a class="reference internal" href="configuration.html#configuration-jobstats-agent"><span class="std std-ref">JobStats agent</span></a> configuration.</p>
 </div>
 <div class="section" id="jobstats-launcher">
 <h4>Jobstats launcher<a class="headerlink" href="#jobstats-launcher" title="Permalink to this headline">¶</a></h4>
-<p>To install the <tt class="docutils literal"><span class="pre">jobstats</span></tt> launcher on a supercomputer login node, install the
+<p>To install the <code class="docutils literal"><span class="pre">jobstats</span></code> launcher on a supercomputer login node, install the
 script:</p>
-<div class="highlight-python"><div class="highlight"><pre>install contribs/launch-jobstats /usr/local/bin/launch-jobstats
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">install</span> <span class="n">contribs</span><span class="o">/</span><span class="n">launch</span><span class="o">-</span><span class="n">jobstats</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">launch</span><span class="o">-</span><span class="n">jobstats</span>
 </pre></div>
 </div>
 <p>Install the configuration file:</p>
-<div class="highlight-python"><div class="highlight"><pre>mkdir /etc/hpcstats
-install conf/launcher.conf /etc/hpcstats/launcher.conf
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hpcstats</span>
+<span class="n">install</span> <span class="n">conf</span><span class="o">/</span><span class="n">launcher</span><span class="o">.</span><span class="n">conf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hpcstats</span><span class="o">/</span><span class="n">launcher</span><span class="o">.</span><span class="n">conf</span>
 </pre></div>
 </div>
-<p>Install the cronjob, in file <tt class="file docutils literal"><span class="pre">/etc/cron.d/hpcstats-launcher</span></tt>, for example
+<p>Install the cronjob, in file <code class="file docutils literal"><span class="pre">/etc/cron.d/hpcstats-launcher</span></code>, for example
 to run every nights at 1AM:</p>
-<div class="highlight-python"><div class="highlight"><pre>0 1 * * * hpcstats /usr/local/bin/launch-jobstats
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">hpcstats</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">launch</span><span class="o">-</span><span class="n">jobstats</span>
 </pre></div>
 </div>
-<p>Finally, proceed with the <a class="reference internal" href="configuration.html#configuration-jobstats-launcher"><em>JobStats launcher</em></a> configuration.</p>
+<p>Finally, proceed with the <a class="reference internal" href="configuration.html#configuration-jobstats-launcher"><span class="std std-ref">JobStats launcher</span></a> configuration.</p>
 </div>
 </div>
 </div>
@@ -256,48 +282,49 @@ to run every nights at 1AM:</p>
 <h3>HPCStats server<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Once the HPCStats packages are hosted in your internal Debian repositories,
 installing HPCStats server is only a matter of:</p>
-<div class="highlight-python"><div class="highlight"><pre>apt-get install hpcstats
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">hpcstats</span>
 </pre></div>
 </div>
 <p>The package automatically creates the system user, the cronjob, the PostgreSQL
 user and the database. HPCStats is then ready to be configured and run! Please
-refer to the dedicated <a class="reference internal" href="configuration.html#configuration"><em>Configuration</em></a> section for all information about
+refer to the dedicated <a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a> section for all information about
 the configuration files of HPCStats.</p>
 </div>
 <div class="section" id="id2">
 <h3>HPCStats agents<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<p>To install the <tt class="docutils literal"><span class="pre">fsusage</span></tt> agent on a supercomputer login node, just run:</p>
-<div class="highlight-python"><div class="highlight"><pre>apt-get install hpcstats-fsusage-agent
+<p>To install the <code class="docutils literal"><span class="pre">fsusage</span></code> agent on a supercomputer login node, just run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">hpcstats</span><span class="o">-</span><span class="n">fsusage</span><span class="o">-</span><span class="n">agent</span>
 </pre></div>
 </div>
-<p>Then, you just have to proceed to the <a class="reference internal" href="configuration.html#configuration-fsusage-agent"><em>FSUsage agent</em></a>
+<p>Then, you just have to proceed to the <a class="reference internal" href="configuration.html#configuration-fsusage-agent"><span class="std std-ref">FSUsage agent</span></a>
 configuration.</p>
-<p>To install the <tt class="docutils literal"><span class="pre">jobstat</span></tt> agent on a supercomputer login node, just run:</p>
-<div class="highlight-python"><div class="highlight"><pre>apt-get install hpcstats-jobstat-agent
+<p>To install the <code class="docutils literal"><span class="pre">jobstat</span></code> agent on a supercomputer login node, just run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">hpcstats</span><span class="o">-</span><span class="n">jobstat</span><span class="o">-</span><span class="n">agent</span>
 </pre></div>
 </div>
-<p>Then, you just have to proceed to the <a class="reference internal" href="configuration.html#configuration-jobstats-agent"><em>JobStats agent</em></a>
+<p>Then, you just have to proceed to the <a class="reference internal" href="configuration.html#configuration-jobstats-agent"><span class="std std-ref">JobStats agent</span></a>
 configuration.</p>
-<p>To install the <tt class="docutils literal"><span class="pre">jobstat</span></tt> launcher on the HPCStats server, just run:</p>
-<div class="highlight-python"><div class="highlight"><pre>apt-get install hpcstats-jobstat-launcher
+<p>To install the <code class="docutils literal"><span class="pre">jobstat</span></code> launcher on the HPCStats server, just run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">hpcstats</span><span class="o">-</span><span class="n">jobstat</span><span class="o">-</span><span class="n">launcher</span>
 </pre></div>
 </div>
-<p>Then, you just have to proceed to the <a class="reference internal" href="configuration.html#configuration-jobstats-launcher"><em>JobStats launcher</em></a>
+<p>Then, you just have to proceed to the <a class="reference internal" href="configuration.html#configuration-jobstats-launcher"><span class="std std-ref">JobStats launcher</span></a>
 configuration.</p>
 </div>
 </div>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="configuration.html" class="btn btn-neutral float-right" title="Configuration"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="configuration.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="architecture.html" class="btn btn-neutral" title="Architecture"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="architecture.html" class="btn btn-neutral" title="Architecture" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -307,11 +334,13 @@ configuration.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015-2018, EDF CCN-HPC.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
+
         </div>
       </div>
 
@@ -326,7 +355,7 @@ configuration.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.6.0',
+            VERSION:'1.6.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

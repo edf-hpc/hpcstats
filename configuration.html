@@ -5,16 +5,16 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration &mdash; HPCStats 1.6.0 documentation</title>
+  <title>Configuration &mdash; HPCStats 1.6.1 documentation</title>
   
 
   
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -28,12 +28,17 @@
   
 
   
-    <link rel="top" title="HPCStats 1.6.0 documentation" href="index.html"/>
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="HPCStats 1.6.1 documentation" href="index.html"/>
         <link rel="next" title="Usage guide" href="usage.html"/>
         <link rel="prev" title="Installation Guide" href="installation.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -43,60 +48,64 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        <a href="index.html" class="fa fa-home"> HPCStats</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> HPCStats
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.6.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#database">Database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#server">Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#agents">Agents</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#error-management">Error management</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-debian-packages">From Debian packages</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Configuration</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#hpcstats-server">HPCStats server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#agents-and-launcher">Agents and launcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#agents-and-launcher">Agents and launcher</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fsusage-agent">FSUsage agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jobstats-agent">JobStats agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jobstats-launcher">JobStats launcher</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#synopsis">Synopsis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#actions">Actions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#global-options">Global options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#import-options">Import options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#check-options">Check options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#modify-options">Modify options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#report-options">Report options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#examples">Examples</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/HPCStats.html">HPCStats Package</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -111,379 +120,388 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
     <li>Configuration</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/configuration.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/configuration.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="configuration">
 <span id="id1"></span><h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
 <p>All the configuration files of the HPCStats components are formatted like an
-INI file with sections between square brakets (<tt class="docutils literal"><span class="pre">[]</span></tt>) and parameter/value
-pairs separated by an equal sign (<tt class="docutils literal"><span class="pre">=</span></tt>).</p>
+INI file with sections between square brakets (<code class="docutils literal"><span class="pre">[]</span></code>) and parameter/value
+pairs separated by an equal sign (<code class="docutils literal"><span class="pre">=</span></code>).</p>
 <p>The various sections and parameters of these files are fully documented in the
 following sub-sections.</p>
 <div class="section" id="hpcstats-server">
 <span id="configuration-server"></span><h2>HPCStats server<a class="headerlink" href="#hpcstats-server" title="Permalink to this headline">¶</a></h2>
 <p>The configuration file of the HPCStats server component is located at
-<tt class="file docutils literal"><span class="pre">/etc/hpcstats/hpcstats.conf</span></tt>.</p>
-<p>The first section is <tt class="docutils literal"><span class="pre">clusters</span></tt> (<em>required</em>). It must contain the following
+<code class="file docutils literal"><span class="pre">/etc/hpcstats/hpcstats.conf</span></code>.</p>
+<p>The first section is <code class="docutils literal"><span class="pre">clusters</span></code> (<em>required</em>). It must contain the following
 parameter:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">clusters</span></tt> (<em>required</em>): a list of cluster name separated by commas (<tt class="docutils literal"><span class="pre">,</span></tt>)
+<li><code class="docutils literal"><span class="pre">clusters</span></code> (<em>required</em>): a list of cluster name separated by commas (<code class="docutils literal"><span class="pre">,</span></code>)
 The list is then considered as the official list of clusters supported by
 HPCStats server component.</li>
 </ul>
-<p>The <tt class="docutils literal"><span class="pre">hpcstatsdb</span></tt> section (<em>required</em>) contains all the parameters to access
+<p>The <code class="docutils literal"><span class="pre">hpcstatsdb</span></code> section (<em>required</em>) contains all the parameters to access
 the central PostgreSQL HPCStats database. It must contain the following
 parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">hostname</span></tt> (<em>required</em>): The network hostname and the IP address of the
+<li><code class="docutils literal"><span class="pre">hostname</span></code> (<em>required</em>): The network hostname and the IP address of the
 PostgreSQL server.</li>
-<li><tt class="docutils literal"><span class="pre">dbname</span></tt> (<em>required</em>): The name of the database.</li>
-<li><tt class="docutils literal"><span class="pre">port</span></tt> (<em>required</em>): The TCP port listened by PostgreSQL server for
+<li><code class="docutils literal"><span class="pre">dbname</span></code> (<em>required</em>): The name of the database.</li>
+<li><code class="docutils literal"><span class="pre">port</span></code> (<em>required</em>): The TCP port listened by PostgreSQL server for
 incoming connections (Note: default TCP port of PostgreSQL is 5432).</li>
-<li><tt class="docutils literal"><span class="pre">user</span></tt> (<em>required</em>): The user name to authenticate to PostgreSQL server.</li>
-<li><tt class="docutils literal"><span class="pre">password</span></tt> (<em>required</em>): The password to authenticate to PostgreSQL server.</li>
+<li><code class="docutils literal"><span class="pre">user</span></code> (<em>required</em>): The user name to authenticate to PostgreSQL server.</li>
+<li><code class="docutils literal"><span class="pre">password</span></code> (<em>required</em>): The password to authenticate to PostgreSQL server.</li>
 </ul>
-<p>The <tt class="docutils literal"><span class="pre">constraints</span></tt> section (<em>optional</em>) has several parameters that control
+<p>The <code class="docutils literal"><span class="pre">constraints</span></code> section (<em>optional</em>) has several parameters that control
 how HPCStats should behave when importing production data from sources that do
 not strictely respect all constraints required by the HPCStats database schema.
 It can contain the following parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">strict_user_membership</span></tt>: This parameter controls how HPCStats
-<tt class="xref py py-class docutils literal"><span class="pre">UserImporterLdap</span></tt> connector should behave when a user is a member
+<li><code class="docutils literal"><span class="pre">strict_user_membership</span></code>: This parameter controls how HPCStats
+<code class="xref py py-class docutils literal"><span class="pre">UserImporterLdap</span></code> connector should behave when a user is a member
 of the group in LDAP directory but has no account in this LDAP directory. If
-set to <tt class="docutils literal"><span class="pre">True</span></tt> (<em>default</em>), HPCStats will fail (and stop running) when such
-incoherency is encountered. If set to <tt class="docutils literal"><span class="pre">False</span></tt>, HPCStats will simply just
+set to <code class="docutils literal"><span class="pre">True</span></code> (<em>default</em>), HPCStats will fail (and stop running) when such
+incoherency is encountered. If set to <code class="docutils literal"><span class="pre">False</span></code>, HPCStats will simply just
 print a warning message, discard this user and keep running.</li>
-<li><tt class="docutils literal"><span class="pre">strict_job_project_binding</span></tt>: This parameter controls how HPCStats Job
+<li><code class="docutils literal"><span class="pre">strict_job_project_binding</span></code>: This parameter controls how HPCStats Job
 importers category should behave when a job is linked to a project that has
-not been loaded by Project importer category previously. If set to <tt class="docutils literal"><span class="pre">True</span></tt>
-(<em>default</em>), HPCStats will fail (and stop running). If set to <tt class="docutils literal"><span class="pre">False</span></tt>,
+not been loaded by Project importer category previously. If set to <code class="docutils literal"><span class="pre">True</span></code>
+(<em>default</em>), HPCStats will fail (and stop running). If set to <code class="docutils literal"><span class="pre">False</span></code>,
 HPCStats will just print a warning message and set project reference to
-<tt class="docutils literal"><span class="pre">NULL</span></tt> in the <tt class="docutils literal"><span class="pre">Job</span></tt> table of the HPCStats database.</li>
-<li><tt class="docutils literal"><span class="pre">strict_job_businesscode_binding</span></tt>: This parameter is basically the same as
-<tt class="docutils literal"><span class="pre">strict_job_project_binding</span></tt> but for the Business codes. The possible
-values are <tt class="docutils literal"><span class="pre">True</span></tt> (<em>default</em>) and <tt class="docutils literal"><span class="pre">False</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">strict_job_account_binding</span></tt>: This parameter controls how HPCStats Job
+<code class="docutils literal"><span class="pre">NULL</span></code> in the <code class="docutils literal"><span class="pre">Job</span></code> table of the HPCStats database.</li>
+<li><code class="docutils literal"><span class="pre">strict_job_businesscode_binding</span></code>: This parameter is basically the same as
+<code class="docutils literal"><span class="pre">strict_job_project_binding</span></code> but for the Business codes. The possible
+values are <code class="docutils literal"><span class="pre">True</span></code> (<em>default</em>) and <code class="docutils literal"><span class="pre">False</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">strict_job_account_binding</span></code>: This parameter controls how HPCStats Job
 importer category should behave when importing a job submitted by an account
-unknown by the User importer category. When set to <tt class="docutils literal"><span class="pre">True</span></tt> (<em>default</em>),
+unknown by the User importer category. When set to <code class="docutils literal"><span class="pre">True</span></code> (<em>default</em>),
 HPCStats will fail (and stop running) when such job is encountered. If set to
-<tt class="docutils literal"><span class="pre">False</span></tt>, HPCStats will just print a warning message and skip the job.</li>
-<li><tt class="docutils literal"><span class="pre">strict_job_wckey_format</span></tt>: This parameter controls how
-<tt class="xref py py-class docutils literal"><span class="pre">JobImporterSlurm</span></tt> connector should behave when importing a job
-with a badly formatted <em>wckey</em>. If set to <tt class="docutils literal"><span class="pre">True</span></tt> (<em>default</em>), HPCStats will
-fail (and stop running) when such job is encountered. If set to <tt class="docutils literal"><span class="pre">False</span></tt>,
+<code class="docutils literal"><span class="pre">False</span></code>, HPCStats will just print a warning message and skip the job.</li>
+<li><code class="docutils literal"><span class="pre">strict_job_wckey_format</span></code>: This parameter controls how
+<code class="xref py py-class docutils literal"><span class="pre">JobImporterSlurm</span></code> connector should behave when importing a job
+with a badly formatted <em>wckey</em>. If set to <code class="docutils literal"><span class="pre">True</span></code> (<em>default</em>), HPCStats will
+fail (and stop running) when such job is encountered. If set to <code class="docutils literal"><span class="pre">False</span></code>,
 HPCStats will just print a warning message and ignore the <em>wckey</em>.</li>
-<li><tt class="docutils literal"><span class="pre">ignored_errors</span></tt> (<em>optional</em>): A comma separated list of errors codes to
+<li><code class="docutils literal"><span class="pre">ignored_errors</span></code> (<em>optional</em>): A comma separated list of errors codes to
 ignore. If encountered during the importation process, these errors will be
 reported as debug messages instead of warnings. All possible error codes are
-available in table <a class="reference internal" href="architecture.html#architecture-error-management"><em>Error management</em></a>.</li>
+available in table <a class="reference internal" href="architecture.html#architecture-error-management"><span class="std std-ref">Error management</span></a>.</li>
 </ul>
-<p>If the <tt class="docutils literal"><span class="pre">constraints</span></tt> section is missing, default values are assumed for all
+<p>If the <code class="docutils literal"><span class="pre">constraints</span></code> section is missing, default values are assumed for all
 parameters.</p>
-<p>The <tt class="docutils literal"><span class="pre">globals</span></tt> section (<em>optional</em>) defines which connectors must be used for
+<p>The <code class="docutils literal"><span class="pre">globals</span></code> section (<em>optional</em>) defines which connectors must be used for
 projects and business importer categories. It can contain the following
 parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">business</span></tt> (<em>optional</em>): Possible values are <tt class="docutils literal"><span class="pre">dummy</span></tt> (<em>default</em>), <tt class="docutils literal"><span class="pre">csv</span></tt>
-and <tt class="docutils literal"><span class="pre">slurm</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">projects</span></tt> (<em>optional</em>): Possible values are <tt class="docutils literal"><span class="pre">dummy</span></tt> (<em>default</em>), <tt class="docutils literal"><span class="pre">csv</span></tt>
-and <tt class="docutils literal"><span class="pre">slurm</span></tt>.</li>
+<li><code class="docutils literal"><span class="pre">business</span></code> (<em>optional</em>): Possible values are <code class="docutils literal"><span class="pre">dummy</span></code> (<em>default</em>), <code class="docutils literal"><span class="pre">csv</span></code>
+and <code class="docutils literal"><span class="pre">slurm</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">projects</span></code> (<em>optional</em>): Possible values are <code class="docutils literal"><span class="pre">dummy</span></code> (<em>default</em>), <code class="docutils literal"><span class="pre">csv</span></code>
+and <code class="docutils literal"><span class="pre">slurm</span></code>.</li>
 </ul>
-<p>If the <tt class="docutils literal"><span class="pre">globals</span></tt> section is missing, default values are assumed for all
+<p>If the <code class="docutils literal"><span class="pre">globals</span></code> section is missing, default values are assumed for all
 parameters.</p>
-<p>If the <tt class="docutils literal"><span class="pre">business</span></tt> parameter is set to <tt class="docutils literal"><span class="pre">csv</span></tt>, then the <tt class="docutils literal"><span class="pre">business</span></tt> section
+<p>If the <code class="docutils literal"><span class="pre">business</span></code> parameter is set to <code class="docutils literal"><span class="pre">csv</span></code>, then the <code class="docutils literal"><span class="pre">business</span></code> section
 (<em>optional</em>) must be present with this parameter:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">file</span></tt> (<em>optional</em>): The absolute path to the business codes CSV file.</li>
+<li><code class="docutils literal"><span class="pre">file</span></code> (<em>optional</em>): The absolute path to the business codes CSV file.</li>
 </ul>
-<p>If the <tt class="docutils literal"><span class="pre">projects</span></tt> parameter is set to <tt class="docutils literal"><span class="pre">csv</span></tt> or <tt class="docutils literal"><span class="pre">slurm</span></tt>, then the
-<tt class="docutils literal"><span class="pre">projects</span></tt> section (<em>optional</em>) must be present with these parameters:</p>
+<p>If the <code class="docutils literal"><span class="pre">projects</span></code> parameter is set to <code class="docutils literal"><span class="pre">csv</span></code> or <code class="docutils literal"><span class="pre">slurm</span></code>, then the
+<code class="docutils literal"><span class="pre">projects</span></code> section (<em>optional</em>) must be present with these parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">file</span></tt> (<em>optional</em>): for <tt class="xref py py-class docutils literal"><span class="pre">ProjectImporterCSV</span></tt> connector, it is
+<li><code class="docutils literal"><span class="pre">file</span></code> (<em>optional</em>): for <code class="xref py py-class docutils literal"><span class="pre">ProjectImporterCSV</span></code> connector, it is
 the absolute path to the projects CSV file.</li>
-<li><tt class="docutils literal"><span class="pre">default_domain_key</span></tt> (<em>optional</em>): for <tt class="xref py py-class docutils literal"><span class="pre">ProjectImporterSlurm</span></tt>
+<li><code class="docutils literal"><span class="pre">default_domain_key</span></code> (<em>optional</em>): for <code class="xref py py-class docutils literal"><span class="pre">ProjectImporterSlurm</span></code>
 connector, the key of the default domain associated to created projects.</li>
-<li><tt class="docutils literal"><span class="pre">default_domain_name</span></tt> (<em>optional</em>): for <tt class="xref py py-class docutils literal"><span class="pre">ProjectImporterSlurm</span></tt>
+<li><code class="docutils literal"><span class="pre">default_domain_name</span></code> (<em>optional</em>): for <code class="xref py py-class docutils literal"><span class="pre">ProjectImporterSlurm</span></code>
 connector, the name of the default domain associated to created projects.</li>
 </ul>
 <p>The configuration file must also contain one section per cluster declared in
-the <tt class="docutils literal"><span class="pre">clusters</span></tt> parameter list. The section must be the cluster name. These
+the <code class="docutils literal"><span class="pre">clusters</span></code> parameter list. The section must be the cluster name. These
 sections must contain the following parameters to specify which connectors must
 be used by HPCStats for each importer category on these clusters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">architecture</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">archfile</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">users</span></tt> (<em>required</em>): The possible values are <tt class="docutils literal"><span class="pre">ldap</span></tt> and <tt class="docutils literal"><span class="pre">ldap+slurm</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">fsusage</span></tt> (<em>required</em>): Possible values are <tt class="docutils literal"><span class="pre">dummy</span></tt> and <tt class="docutils literal"><span class="pre">ssh</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">events</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">slurm</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">jobs</span></tt> (<em>required</em>): The only possible value is <tt class="docutils literal"><span class="pre">slurm</span></tt>.</li>
+<li><code class="docutils literal"><span class="pre">architecture</span></code> (<em>required</em>): The only possible value is <code class="docutils literal"><span class="pre">archfile</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">users</span></code> (<em>required</em>): The possible values are <code class="docutils literal"><span class="pre">ldap</span></code> and <code class="docutils literal"><span class="pre">ldap+slurm</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">fsusage</span></code> (<em>required</em>): Possible values are <code class="docutils literal"><span class="pre">dummy</span></code> and <code class="docutils literal"><span class="pre">ssh</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">events</span></code> (<em>required</em>): The only possible value is <code class="docutils literal"><span class="pre">slurm</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">jobs</span></code> (<em>required</em>): The only possible value is <code class="docutils literal"><span class="pre">slurm</span></code>.</li>
 </ul>
 <p>Then, the other sections depend on the connectors used for the cluster.</p>
-<p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/archfile</span></tt> section (<em>optional</em>) is required by
-<tt class="xref py py-class docutils literal"><span class="pre">ArchitectureImporterArchfile</span></tt> connector. It must contains the
+<p>The <code class="docutils literal"><span class="pre">&lt;cluster&gt;/archfile</span></code> section (<em>optional</em>) is required by
+<code class="xref py py-class docutils literal"><span class="pre">ArchitectureImporterArchfile</span></code> connector. It must contains the
 following parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">file</span></tt> (<em>required</em>): The absolute path to the architecture file which
+<li><code class="docutils literal"><span class="pre">file</span></code> (<em>required</em>): The absolute path to the architecture file which
 which description the component of the cluster.</li>
 </ul>
-<p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/ldap</span></tt> section (<em>optional</em>) is required by
-<tt class="xref py py-class docutils literal"><span class="pre">UserImporterLdap</span></tt> and <tt class="xref py py-class docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt> connectors.
+<p>The <code class="docutils literal"><span class="pre">&lt;cluster&gt;/ldap</span></code> section (<em>optional</em>) is required by
+<code class="xref py py-class docutils literal"><span class="pre">UserImporterLdap</span></code> and <code class="xref py py-class docutils literal"><span class="pre">UserImporterLdapSlurm</span></code> connectors.
 It must contains the following parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">url</span></tt> (<em>required</em>): the URL to connect to the LDAP server with its protocol
-and eventually the TCP port. <em>Ex:</em> <tt class="docutils literal"><span class="pre">ldaps://ldap.company.tld/</span></tt> or
-<tt class="docutils literal"><span class="pre">ldap://ldap.company.tld:636/</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">dn</span></tt> (<em>required</em>): The distinguished name of the user for binding the LDAP
+<li><code class="docutils literal"><span class="pre">url</span></code> (<em>required</em>): the URL to connect to the LDAP server with its protocol
+and eventually the TCP port. <em>Ex:</em> <code class="docutils literal"><span class="pre">ldaps://ldap.company.tld/</span></code> or
+<code class="docutils literal"><span class="pre">ldap://ldap.company.tld:636/</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">dn</span></code> (<em>required</em>): The distinguished name of the user for binding the LDAP
 server.</li>
-<li><tt class="docutils literal"><span class="pre">phash</span></tt> (<em>required</em>): The hashed and salted password of <tt class="docutils literal"><span class="pre">dn</span></tt> for binding
+<li><code class="docutils literal"><span class="pre">phash</span></code> (<em>required</em>): The hashed and salted password of <code class="docutils literal"><span class="pre">dn</span></code> for binding
 the LDAP server.</li>
-<li><tt class="docutils literal"><span class="pre">cert</span></tt> (<em>optional</em>): The absolute path to the CA certificate to check LDAP
-server certificate. Default is <tt class="docutils literal"><span class="pre">None</span></tt> with means it checks the server
+<li><code class="docutils literal"><span class="pre">cert</span></code> (<em>optional</em>): The absolute path to the CA certificate to check LDAP
+server certificate. Default is <code class="docutils literal"><span class="pre">None</span></code> with means it checks the server
 certificate against all CA certificates available on the system.</li>
-<li><tt class="docutils literal"><span class="pre">basedn</span></tt> (<em>required</em>): The base distinguished name to look for groups and
-users in the LDAP directory tree. <em>Ex:</em> <tt class="docutils literal"><span class="pre">dc=company,dc=tld</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">rdn_people</span></tt> (<em>optional</em>) The relative distinguished name of the subtree to
-search users. Default is <tt class="docutils literal"><span class="pre">ou=people</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">rdn_groups</span></tt> (<em>optional</em>): The relative distinguished name of the subtree
-to search groups. Default is <tt class="docutils literal"><span class="pre">ou=groups</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">group</span></tt> (<em>DEPRECATED</em>): The name of the group of users of the cluster.
-Should be replaced by <tt class="docutils literal"><span class="pre">groups</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">groups</span></tt> (<em>required</em>): A comma separated list of group of users of the
-cluster. For compatibility reasons, can be ommited if <tt class="docutils literal"><span class="pre">group</span></tt> is set.</li>
-<li><tt class="docutils literal"><span class="pre">group_dpt_search</span></tt> (<em>required</em>): The regular expression to restrict the
+<li><code class="docutils literal"><span class="pre">basedn</span></code> (<em>required</em>): The base distinguished name to look for groups and
+users in the LDAP directory tree. <em>Ex:</em> <code class="docutils literal"><span class="pre">dc=company,dc=tld</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">rdn_people</span></code> (<em>optional</em>) The relative distinguished name of the subtree to
+search users. Default is <code class="docutils literal"><span class="pre">ou=people</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">rdn_groups</span></code> (<em>optional</em>): The relative distinguished name of the subtree
+to search groups. Default is <code class="docutils literal"><span class="pre">ou=groups</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">group</span></code> (<em>DEPRECATED</em>): The name of the group of users of the cluster.
+Should be replaced by <code class="docutils literal"><span class="pre">groups</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">groups</span></code> (<em>required</em>): A comma separated list of group of users of the
+cluster. For compatibility reasons, can be ommited if <code class="docutils literal"><span class="pre">group</span></code> is set.</li>
+<li><code class="docutils literal"><span class="pre">group_dpt_search</span></code> (<em>required</em>): The regular expression to restrict the
 search of users secondary groups to find their department.</li>
-<li><tt class="docutils literal"><span class="pre">group_dpt_regexp</span></tt> (<em>required</em>): The regular expression to extract the
+<li><code class="docutils literal"><span class="pre">group_dpt_regexp</span></code> (<em>required</em>): The regular expression to extract the
 department name of the user out of a group name. <em>Ex:</em>
-<tt class="docutils literal"><span class="pre">cn=(.+)-dp-(.+),ou.*</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">default_subdir</span></tt> (<em>optional</em>): The default subdirection assigned to users
+<code class="docutils literal"><span class="pre">cn=(.+)-dp-(.+),ou.*</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">default_subdir</span></code> (<em>optional</em>): The default subdirection assigned to users
 whose real department cannot be defined based on their groups memberships.
 This default subdirection is concatenated to the name of the user primary
-group. Default is <tt class="docutils literal"><span class="pre">unknown</span></tt>.</li>
-<li><tt class="docutils literal"><span class="pre">groups_alias_file</span></tt> (<em>optional</em>): The absolute path to a file which defines
+group. Default is <code class="docutils literal"><span class="pre">unknown</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">groups_alias_file</span></code> (<em>optional</em>): The absolute path to a file which defines
 aliases to primary group names. With these aliases, it is possible to
 substitute the primary group name with a more appropriate direction name in
 the resulting user department name. The file must be formatted with one alias
 per line, each alias being the primary group name and the alias separated
-with a whitespace (<em>ex:</em> <tt class="docutils literal"><span class="pre">group_name</span> <span class="pre">alias</span></tt>). If this parameter is not
+with a whitespace (<em>ex:</em> <code class="docutils literal"><span class="pre">group_name</span> <span class="pre">alias</span></code>). If this parameter is not
 defined, there is no aliasing involved.</li>
 </ul>
-<p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/slurm</span></tt> section (<em>optional</em>) is required by
-<tt class="xref py py-class docutils literal"><span class="pre">ProjectImporterSlurm</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></tt>,
-<tt class="xref py py-class docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">EventImporterSlurm</span></tt> and
-<tt class="xref py py-class docutils literal"><span class="pre">JobImporterSlurm</span></tt> connectors. It must contains the following
+<p>The <code class="docutils literal"><span class="pre">&lt;cluster&gt;/slurm</span></code> section (<em>optional</em>) is required by
+<code class="xref py py-class docutils literal"><span class="pre">ProjectImporterSlurm</span></code>, <code class="xref py py-class docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></code>,
+<code class="xref py py-class docutils literal"><span class="pre">UserImporterLdapSlurm</span></code>, <code class="xref py py-class docutils literal"><span class="pre">EventImporterSlurm</span></code> and
+<code class="xref py py-class docutils literal"><span class="pre">JobImporterSlurm</span></code> connectors. It must contains the following
 parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">host</span></tt> (<em>required</em>): The network hostname or the IP address of the SlurmDBD
+<li><code class="docutils literal"><span class="pre">host</span></code> (<em>required</em>): The network hostname or the IP address of the SlurmDBD
 MySQL (or MariaDB) server.</li>
-<li><tt class="docutils literal"><span class="pre">name</span></tt> (<em>required</em>): The name of MySQL database that contains the SlurmDBD
-accounting (hint: value is probably <tt class="docutils literal"><span class="pre">slurm_acct_db</span></tt>).</li>
-<li><tt class="docutils literal"><span class="pre">user</span></tt> (<em>required</em>): The name of the user to authenticate on MySQL server.</li>
-<li><tt class="docutils literal"><span class="pre">password</span></tt> (<em>optional</em>): The password of the user to authenticate on MySQL
+<li><code class="docutils literal"><span class="pre">name</span></code> (<em>required</em>): The name of MySQL database that contains the SlurmDBD
+accounting (hint: value is probably <code class="docutils literal"><span class="pre">slurm_acct_db</span></code>).</li>
+<li><code class="docutils literal"><span class="pre">user</span></code> (<em>required</em>): The name of the user to authenticate on MySQL server.</li>
+<li><code class="docutils literal"><span class="pre">password</span></code> (<em>optional</em>): The password of the user to authenticate on MySQL
 server. Default is None, <em>ie.</em> no password.</li>
-<li><tt class="docutils literal"><span class="pre">window_size</span></tt> (<em>optional</em>): The size of the window of loaded jobs. When
-this parameter is set to a value <tt class="docutils literal"><span class="pre">N</span></tt> above <tt class="docutils literal"><span class="pre">0</span></tt>, the new jobs will be
-loaded by <tt class="xref py py-class docutils literal"><span class="pre">JobImporterSlurm</span></tt> in windowed mode, <tt class="docutils literal"><span class="pre">N</span></tt> jobs at a
-time, until there are no jobs to load anymore. If set to <tt class="docutils literal"><span class="pre">0</span></tt> (<em>default</em>),
+<li><code class="docutils literal"><span class="pre">window_size</span></code> (<em>optional</em>): The size of the window of loaded jobs. When
+this parameter is set to a value <code class="docutils literal"><span class="pre">N</span></code> above <code class="docutils literal"><span class="pre">0</span></code>, the new jobs will be
+loaded by <code class="xref py py-class docutils literal"><span class="pre">JobImporterSlurm</span></code> in windowed mode, <code class="docutils literal"><span class="pre">N</span></code> jobs at a
+time, until there are no jobs to load anymore. If set to <code class="docutils literal"><span class="pre">0</span></code> (<em>default</em>),
 all jobs will be loaded at once and this can lead to a lot of memory
 consumption when there too many jobs. It is recommended to set this value
 to avoid memory over-consumption during jobs import.</li>
-<li><tt class="docutils literal"><span class="pre">prefix</span></tt> (<em>optional</em>): The prefix in SlurmDBD database table names. Default
+<li><code class="docutils literal"><span class="pre">prefix</span></code> (<em>optional</em>): The prefix in SlurmDBD database table names. Default
 value is the cluster name. This parameter might be usefull only in some
 corner-cases when someone wants the cluster name in HPCStats to be different
 from the Slurm cluster name.</li>
-<li><tt class="docutils literal"><span class="pre">partitions</span></tt> (<em>optional</em>): List of comma separated Slurm partitions whose
+<li><code class="docutils literal"><span class="pre">partitions</span></code> (<em>optional</em>): List of comma separated Slurm partitions whose
 imported data (jobs, projects, business codes, etc) are restricted to. Data
 on other partitions are ignored by HPCStats for this cluster. By default,
 HPCStats imports data from all Slurm partitions of the cluster without any
 restriction.</li>
 </ul>
-<p>The <tt class="docutils literal"><span class="pre">&lt;cluster&gt;/fsusage</span></tt> section (<em>optional</em>) is required by
-<tt class="xref py py-class docutils literal"><span class="pre">FSUsageImporterSSH</span></tt> connector. It must contains the following
+<p>The <code class="docutils literal"><span class="pre">&lt;cluster&gt;/fsusage</span></code> section (<em>optional</em>) is required by
+<code class="xref py py-class docutils literal"><span class="pre">FSUsageImporterSSH</span></code> connector. It must contains the following
 parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">host</span></tt> (<em>required</em>): The network hostname or the IP address of the cluster
-node on which the <tt class="docutils literal"><span class="pre">fsusage</span></tt> runs and where the HPCStats should connect to.</li>
-<li><tt class="docutils literal"><span class="pre">name</span></tt> (<em>required</em>): The user name to authenticate on the remote cluster
+<li><code class="docutils literal"><span class="pre">host</span></code> (<em>required</em>): The network hostname or the IP address of the cluster
+node on which the <code class="docutils literal"><span class="pre">fsusage</span></code> runs and where the HPCStats should connect to.</li>
+<li><code class="docutils literal"><span class="pre">name</span></code> (<em>required</em>): The user name to authenticate on the remote cluster
 node.</li>
-<li><tt class="docutils literal"><span class="pre">privkey</span></tt> (<em>required</em>): The absolute path to the SSH private key file to
+<li><code class="docutils literal"><span class="pre">privkey</span></code> (<em>required</em>): The absolute path to the SSH private key file to
 authenticate on the remote cluster node.</li>
-<li><tt class="docutils literal"><span class="pre">file</span></tt> (<em>required</em>): The absolute path of the remote CSV file to read and
+<li><code class="docutils literal"><span class="pre">file</span></code> (<em>required</em>): The absolute path of the remote CSV file to read and
 parse for new filesystem usage metrics.</li>
-<li><tt class="docutils literal"><span class="pre">timestamp_fmt</span></tt> (<em>optional</em>): The format of the timestamps written in the
-CSV file.  Default value is <tt class="docutils literal"><span class="pre">%Y-%m-%dT%H:%M:%S.%fZ</span></tt>.</li>
+<li><code class="docutils literal"><span class="pre">timestamp_fmt</span></code> (<em>optional</em>): The format of the timestamps written in the
+CSV file.  Default value is <code class="docutils literal"><span class="pre">%Y-%m-%dT%H:%M:%S.%fZ</span></code>.</li>
 </ul>
 <p>All sections and parameters on the HPCStats server component configuration file
 have been covered. Here is complete annoted configuration file example with 2
 clusters <em>cluster1</em> and <em>cluster2</em>:</p>
-<div class="highlight-python"><div class="highlight"><pre># Example of hpcstats.conf
-# Most of the default values can be change and have to be adpated
-# This file is not meant to be a ready to work one you might have to tune it
-###############################################################################
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Example of hpcstats.conf</span>
+<span class="c1"># Most of the default values can be change and have to be adpated</span>
+<span class="c1"># This file is not meant to be a ready to work one you might have to tune it</span>
+<span class="c1">###############################################################################</span>
 
-[clusters]
-clusters = cluster1,cluster2
+<span class="p">[</span><span class="n">clusters</span><span class="p">]</span>
+<span class="n">clusters</span> <span class="o">=</span> <span class="n">cluster1</span><span class="p">,</span><span class="n">cluster2</span>
 
-[hpcstatsdb]
-hostname = localhost
-dbname = hpcstatsdb
-port = 5432
-user = &lt;myuser&gt;
-password = &lt;password&gt;
+<span class="p">[</span><span class="n">hpcstatsdb</span><span class="p">]</span>
+<span class="n">hostname</span> <span class="o">=</span> <span class="n">localhost</span>
+<span class="n">dbname</span> <span class="o">=</span> <span class="n">hpcstatsdb</span>
+<span class="n">port</span> <span class="o">=</span> <span class="mi">5432</span>
+<span class="n">user</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">myuser</span><span class="o">&gt;</span>
+<span class="n">password</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">password</span><span class="o">&gt;</span>
 
-# Importer constraints
-###############################################################################
-[constraints]
-# This parameter specifies how hpcstats should behave when a user is a member
-# of the group in LDAP directory but has not an account in this LDAP directory.
-# If set to True (default value), hpcstats will fail (and stop running) when
-# such error is encountered. If set to False, hpcstats will simply print a
-# warning message, ignore this user and keep running.
-strict_user_membership=True
+<span class="c1"># Importer constraints</span>
+<span class="c1">###############################################################################</span>
+<span class="p">[</span><span class="n">constraints</span><span class="p">]</span>
+<span class="c1"># This parameter specifies how hpcstats should behave when a user is a member</span>
+<span class="c1"># of the group in LDAP directory but has not an account in this LDAP directory.</span>
+<span class="c1"># If set to True (default value), hpcstats will fail (and stop running) when</span>
+<span class="c1"># such error is encountered. If set to False, hpcstats will simply print a</span>
+<span class="c1"># warning message, ignore this user and keep running.</span>
+<span class="n">strict_user_membership</span><span class="o">=</span><span class="kc">True</span>
 
-# These parameters define whether hpcstats should either fail or just print an
-# error if an imported job is linked to a projet (or respectively a business
-# code) that has not been loaded by ProjectImporter (and BusinessCodeImporter)
-# previously. If set to True (default value), hpcstats will fail (and stop
-# running). Else hpstats will just print a warning and will set project and
-# business references to NULL in HPCStatsDB.
-strict_job_project_binding=True
-strict_job_businesscode_binding=True
+<span class="c1"># These parameters define whether hpcstats should either fail or just print an</span>
+<span class="c1"># error if an imported job is linked to a projet (or respectively a business</span>
+<span class="c1"># code) that has not been loaded by ProjectImporter (and BusinessCodeImporter)</span>
+<span class="c1"># previously. If set to True (default value), hpcstats will fail (and stop</span>
+<span class="c1"># running). Else hpstats will just print a warning and will set project and</span>
+<span class="c1"># business references to NULL in HPCStatsDB.</span>
+<span class="n">strict_job_project_binding</span><span class="o">=</span><span class="kc">True</span>
+<span class="n">strict_job_businesscode_binding</span><span class="o">=</span><span class="kc">True</span>
 
-# This parameter controls how hpcstats should behave when a loaded job was
-# submitted by an account that has not been loaded by UserImporter. When, set
-# to True, hpcstats will fail (and stop running) when such job is encountered.
-# Else, hpcstats will just print a warning message and skip the job. Default
-# value is True.
-strict_job_account_binding=True
+<span class="c1"># This parameter controls how hpcstats should behave when a loaded job was</span>
+<span class="c1"># submitted by an account that has not been loaded by UserImporter. When, set</span>
+<span class="c1"># to True, hpcstats will fail (and stop running) when such job is encountered.</span>
+<span class="c1"># Else, hpcstats will just print a warning message and skip the job. Default</span>
+<span class="c1"># value is True.</span>
+<span class="n">strict_job_account_binding</span><span class="o">=</span><span class="kc">True</span>
 
-# This parameter controls if hpcstats should fail or just print an error when
-# a job loaded by JobImporterSlurm has a wckey in a wrong format. When set to
-# True (default) hpcstats will fail, when set to False hpcstats will simply
-# print an error message.
-strict_job_wckey_format=True
+<span class="c1"># This parameter controls if hpcstats should fail or just print an error when</span>
+<span class="c1"># a job loaded by JobImporterSlurm has a wckey in a wrong format. When set to</span>
+<span class="c1"># True (default) hpcstats will fail, when set to False hpcstats will simply</span>
+<span class="c1"># print an error message.</span>
+<span class="n">strict_job_wckey_format</span><span class="o">=</span><span class="kc">True</span>
 
-# Comma-separated list of errors to ignore during the importation process
-#ignored_errors =
+<span class="c1"># Comma-separated list of errors to ignore during the importation process</span>
+<span class="c1">#ignored_errors =</span>
 
-# Global parameters
-###############################################################################
+<span class="c1"># Global parameters</span>
+<span class="c1">###############################################################################</span>
 
-[globals]
-business = csv
-projects = slurm
+<span class="p">[</span><span class="nb">globals</span><span class="p">]</span>
+<span class="n">business</span> <span class="o">=</span> <span class="n">csv</span>
+<span class="n">projects</span> <span class="o">=</span> <span class="n">slurm</span>
 
-[business]
-file = &lt;absolute path to CSV file&gt;
+<span class="p">[</span><span class="n">business</span><span class="p">]</span>
+<span class="n">file</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">absolute</span> <span class="n">path</span> <span class="n">to</span> <span class="n">CSV</span> <span class="n">file</span><span class="o">&gt;</span>
 
-[projects]
-default_domain_key = dft
-default_domain_name = Default domain
+<span class="p">[</span><span class="n">projects</span><span class="p">]</span>
+<span class="n">default_domain_key</span> <span class="o">=</span> <span class="n">dft</span>
+<span class="n">default_domain_name</span> <span class="o">=</span> <span class="n">Default</span> <span class="n">domain</span>
 
-# Cluster 1
-###############################################################################
-[cluster1]
-architecture = archfile
-users = ldap
-fsusage = ssh
-events = slurm
-jobs = slurm
+<span class="c1"># Cluster 1</span>
+<span class="c1">###############################################################################</span>
+<span class="p">[</span><span class="n">cluster1</span><span class="p">]</span>
+<span class="n">architecture</span> <span class="o">=</span> <span class="n">archfile</span>
+<span class="n">users</span> <span class="o">=</span> <span class="n">ldap</span>
+<span class="n">fsusage</span> <span class="o">=</span> <span class="n">ssh</span>
+<span class="n">events</span> <span class="o">=</span> <span class="n">slurm</span>
+<span class="n">jobs</span> <span class="o">=</span> <span class="n">slurm</span>
 
-[cluster1/archfile]
-file = /path/to/archfile
+<span class="p">[</span><span class="n">cluster1</span><span class="o">/</span><span class="n">archfile</span><span class="p">]</span>
+<span class="n">file</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">archfile</span>
 
-[cluster1/ldap]
-url = ldaps://&lt;ldapuri&gt;/
-dn = &lt;dn&gt;
-basedn = &lt;basedn&gt;
-rdn_people = ou=people
-rdn_groups = ou=groups
-phash = &lt;password&gt;
-cert = /path/to/cert
-groups = &lt;group1&gt;,&lt;group2&gt;
-group_dpt_search = *dp*
-group_dpt_regexp = cn=(\w+)-dp-(\w+),ou=.*
-# If the department cannot be defined based on user groups membership, it is
-# defined based on the user primary group in LDAP directory and this default
-# subdirection.
-#default_subdir = unknown
-# Optional alias file to associate group names to the organization directions
-# for department names based on users primary group name.
-#groups_alias_file = /etc/hpcstats/groups.alias
+<span class="p">[</span><span class="n">cluster1</span><span class="o">/</span><span class="n">ldap</span><span class="p">]</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">ldaps</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">ldapuri</span><span class="o">&gt;/</span>
+<span class="n">dn</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">dn</span><span class="o">&gt;</span>
+<span class="n">basedn</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">basedn</span><span class="o">&gt;</span>
+<span class="n">rdn_people</span> <span class="o">=</span> <span class="n">ou</span><span class="o">=</span><span class="n">people</span>
+<span class="n">rdn_groups</span> <span class="o">=</span> <span class="n">ou</span><span class="o">=</span><span class="n">groups</span>
+<span class="n">phash</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">password</span><span class="o">&gt;</span>
+<span class="n">cert</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">cert</span>
+<span class="n">groups</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">group1</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">group2</span><span class="o">&gt;</span>
+<span class="n">group_dpt_search</span> <span class="o">=</span> <span class="o">*</span><span class="n">dp</span><span class="o">*</span>
+<span class="n">group_dpt_regexp</span> <span class="o">=</span> <span class="n">cn</span><span class="o">=</span><span class="p">(</span>\<span class="n">w</span><span class="o">+</span><span class="p">)</span><span class="o">-</span><span class="n">dp</span><span class="o">-</span><span class="p">(</span>\<span class="n">w</span><span class="o">+</span><span class="p">),</span><span class="n">ou</span><span class="o">=.*</span>
+<span class="c1"># If the department cannot be defined based on user groups membership, it is</span>
+<span class="c1"># defined based on the user primary group in LDAP directory and this default</span>
+<span class="c1"># subdirection.</span>
+<span class="c1">#default_subdir = unknown</span>
+<span class="c1"># Optional alias file to associate group names to the organization directions</span>
+<span class="c1"># for department names based on users primary group name.</span>
+<span class="c1">#groups_alias_file = /etc/hpcstats/groups.alias</span>
 
 
-[cluster1/slurm]
-host = &lt;slurm_mysql_db_ip&gt;
-name = slurm_acct_db
-user = slurm
-password = &lt;slurmpasswd&gt;
-# When this parameter is set to a value N above 0, the new jobs will be
-# loaded by JobImporterSlurm in windowed mode, N jobs at a time, until there
-# are no jobs to load anymore. If set to 0 (default value), all jobs will be
-# loaded at once and this can lead to a lot of memory consumption when there
-# too many jobs. It is recommended to set this value to limit memory
-# consumption during jobs import.
-window_size = 1000
-# SlurmDBD clusters specific table names prefix. Default is cluster name.
-# prefix = cluster
-# Optionally restrict imported data from slurm (jobs, events, projects) to a
-# specific list of slurm partitions of a cluster. The list is comma separated.
-# partitions = compute,graphics
+<span class="p">[</span><span class="n">cluster1</span><span class="o">/</span><span class="n">slurm</span><span class="p">]</span>
+<span class="n">host</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">slurm_mysql_db_ip</span><span class="o">&gt;</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">slurm_acct_db</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">slurm</span>
+<span class="n">password</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">slurmpasswd</span><span class="o">&gt;</span>
+<span class="c1"># When this parameter is set to a value N above 0, the new jobs will be</span>
+<span class="c1"># loaded by JobImporterSlurm in windowed mode, N jobs at a time, until there</span>
+<span class="c1"># are no jobs to load anymore. If set to 0 (default value), all jobs will be</span>
+<span class="c1"># loaded at once and this can lead to a lot of memory consumption when there</span>
+<span class="c1"># too many jobs. It is recommended to set this value to limit memory</span>
+<span class="c1"># consumption during jobs import.</span>
+<span class="n">window_size</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="c1"># SlurmDBD clusters specific table names prefix. Default is cluster name.</span>
+<span class="c1"># prefix = cluster</span>
+<span class="c1"># Optionally restrict imported data from slurm (jobs, events, projects) to a</span>
+<span class="c1"># specific list of slurm partitions of a cluster. The list is comma separated.</span>
+<span class="c1"># partitions = compute,graphics</span>
 
-[cluster1/fsusage]
-host = host IP
-name = username
-file = &lt;absolute path to CSV file&gt;
-# The format of the timestamp to parse in remote log file.
-# Default value is: %Y-%m-%dT%H:%M:%S.%fZ
-timestamp_fmt = %Y-%m-%dT%H:%M:%S.%fZ
+<span class="p">[</span><span class="n">cluster1</span><span class="o">/</span><span class="n">fsusage</span><span class="p">]</span>
+<span class="n">host</span> <span class="o">=</span> <span class="n">host</span> <span class="n">IP</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">username</span>
+<span class="n">file</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">absolute</span> <span class="n">path</span> <span class="n">to</span> <span class="n">CSV</span> <span class="n">file</span><span class="o">&gt;</span>
+<span class="c1"># The format of the timestamp to parse in remote log file.</span>
+<span class="c1"># Default value is: %Y-%m-%dT%H:%M:%S.%fZ</span>
+<span class="n">timestamp_fmt</span> <span class="o">=</span> <span class="o">%</span><span class="n">Y</span><span class="o">-%</span><span class="n">m</span><span class="o">-%</span><span class="n">dT</span><span class="o">%</span><span class="n">H</span><span class="p">:</span><span class="o">%</span><span class="n">M</span><span class="p">:</span><span class="o">%</span><span class="n">S</span><span class="o">.%</span><span class="n">fZ</span>
 
-# Cluster2
-###############################################################################
-[cluster2]
-architecture = archfile
-users = ldap
-fsusage = ssh
-events = slurm
-jobs = slurm
+<span class="c1"># Cluster2</span>
+<span class="c1">###############################################################################</span>
+<span class="p">[</span><span class="n">cluster2</span><span class="p">]</span>
+<span class="n">architecture</span> <span class="o">=</span> <span class="n">archfile</span>
+<span class="n">users</span> <span class="o">=</span> <span class="n">ldap</span>
+<span class="n">fsusage</span> <span class="o">=</span> <span class="n">ssh</span>
+<span class="n">events</span> <span class="o">=</span> <span class="n">slurm</span>
+<span class="n">jobs</span> <span class="o">=</span> <span class="n">slurm</span>
 
-[cluster2/archfile]
-file = /path/to/archfile
+<span class="p">[</span><span class="n">cluster2</span><span class="o">/</span><span class="n">archfile</span><span class="p">]</span>
+<span class="n">file</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">archfile</span>
 
-[cluster2/ldap]
-url = ldaps://&lt;ldapuri&gt;/
-dn = &lt;dn&gt;
-basedn = &lt;basedn&gt;
-phash = &lt;password&gt;
-groups = &lt;group1&gt;
-group_dpt_search = *dp*
-group_dpt_regexp = cn=(.+)-dp-(.+),ou.*
-# If the department cannot be defined based on user groups membership, it is
-# defined based on the user primary group in LDAP directory and this default
-# subdirection.
-# default_subdir = unknown
+<span class="p">[</span><span class="n">cluster2</span><span class="o">/</span><span class="n">ldap</span><span class="p">]</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">ldaps</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">ldapuri</span><span class="o">&gt;/</span>
+<span class="n">dn</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">dn</span><span class="o">&gt;</span>
+<span class="n">basedn</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">basedn</span><span class="o">&gt;</span>
+<span class="n">phash</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">password</span><span class="o">&gt;</span>
+<span class="n">groups</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">group1</span><span class="o">&gt;</span>
+<span class="n">group_dpt_search</span> <span class="o">=</span> <span class="o">*</span><span class="n">dp</span><span class="o">*</span>
+<span class="n">group_dpt_regexp</span> <span class="o">=</span> <span class="n">cn</span><span class="o">=</span><span class="p">(</span><span class="o">.+</span><span class="p">)</span><span class="o">-</span><span class="n">dp</span><span class="o">-</span><span class="p">(</span><span class="o">.+</span><span class="p">),</span><span class="n">ou</span><span class="o">.*</span>
+<span class="c1"># If the department cannot be defined based on user groups membership, it is</span>
+<span class="c1"># defined based on the user primary group in LDAP directory and this default</span>
+<span class="c1"># subdirection.</span>
+<span class="c1"># default_subdir = unknown</span>
 
-[cluster2/slurm]
-host = &lt;slurm_mysql_db_ip&gt;
-name = slurm_acct_db
-user = slurm
-password = &lt;slurmpasswd&gt;
+<span class="p">[</span><span class="n">cluster2</span><span class="o">/</span><span class="n">slurm</span><span class="p">]</span>
+<span class="n">host</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">slurm_mysql_db_ip</span><span class="o">&gt;</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">slurm_acct_db</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">slurm</span>
+<span class="n">password</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">slurmpasswd</span><span class="o">&gt;</span>
 
-[cluster2/fsusage]
-host = host IP
-name = username
-file = &lt;absolute path to CSV file&gt;
+<span class="p">[</span><span class="n">cluster2</span><span class="o">/</span><span class="n">fsusage</span><span class="p">]</span>
+<span class="n">host</span> <span class="o">=</span> <span class="n">host</span> <span class="n">IP</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">username</span>
+<span class="n">file</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">absolute</span> <span class="n">path</span> <span class="n">to</span> <span class="n">CSV</span> <span class="n">file</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 </div>
@@ -492,119 +510,119 @@ file = &lt;absolute path to CSV file&gt;
 <div class="section" id="fsusage-agent">
 <span id="configuration-fsusage-agent"></span><h3>FSUsage agent<a class="headerlink" href="#fsusage-agent" title="Permalink to this headline">¶</a></h3>
 <p>The configuration file of the <strong class="command">fsusage</strong> agent is located at
-<tt class="file docutils literal"><span class="pre">/etc/hpcstats/fsusage.conf</span></tt>.</p>
-<p>This file contains only one <tt class="docutils literal"><span class="pre">global</span></tt> section (<em>required</em>) with the following
+<code class="file docutils literal"><span class="pre">/etc/hpcstats/fsusage.conf</span></code>.</p>
+<p>This file contains only one <code class="docutils literal"><span class="pre">global</span></code> section (<em>required</em>) with the following
 parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">fs</span></tt> (<em>required</em>): The list separated by commas (<tt class="docutils literal"><span class="pre">,</span></tt>) of the mount points
+<li><code class="docutils literal"><span class="pre">fs</span></code> (<em>required</em>): The list separated by commas (<code class="docutils literal"><span class="pre">,</span></code>) of the mount points
 of the filesystem to monitor.</li>
-<li><tt class="docutils literal"><span class="pre">csv</span></tt> (<em>required</em>): The absolute path of the CSV file where the file system
+<li><code class="docutils literal"><span class="pre">csv</span></code> (<em>required</em>): The absolute path of the CSV file where the file system
 usage rates are recorded.</li>
-<li><tt class="docutils literal"><span class="pre">maxsize</span></tt> (<em>required</em>): the maximum size in MB of the CSV file. When this
+<li><code class="docutils literal"><span class="pre">maxsize</span></code> (<em>required</em>): the maximum size in MB of the CSV file. When this
 size is reached, the <strong class="command">fsusage</strong> agent remove the first two third of
 the file to significantly reduce its size.</li>
 </ul>
 <p>Here is complete annoted HPCStats <strong class="command">fsusage</strong> agent configuration file
 example:</p>
-<div class="highlight-python"><div class="highlight"><pre>[global]
-fs=/home,/scratch
-csv=/var/lib/hpcstats/fsusage.csv
-maxsize=2
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="k">global</span><span class="p">]</span>
+<span class="n">fs</span><span class="o">=/</span><span class="n">home</span><span class="p">,</span><span class="o">/</span><span class="n">scratch</span>
+<span class="n">csv</span><span class="o">=/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">hpcstats</span><span class="o">/</span><span class="n">fsusage</span><span class="o">.</span><span class="n">csv</span>
+<span class="n">maxsize</span><span class="o">=</span><span class="mi">2</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="jobstats-agent">
 <span id="configuration-jobstats-agent"></span><h3>JobStats agent<a class="headerlink" href="#jobstats-agent" title="Permalink to this headline">¶</a></h3>
 <p>The configuration file of the <strong class="command">jobstats</strong> agent is located at
-<tt class="file docutils literal"><span class="pre">/etc/hpcstats/jobstats.conf</span></tt>.</p>
-<p>This file contains a <tt class="docutils literal"><span class="pre">global</span></tt> section (<em>required</em>) with the following
+<code class="file docutils literal"><span class="pre">/etc/hpcstats/jobstats.conf</span></code>.</p>
+<p>This file contains a <code class="docutils literal"><span class="pre">global</span></code> section (<em>required</em>) with the following
 parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">tpl</span></tt> (<em>required</em>): The absolute path of the source template job submission
+<li><code class="docutils literal"><span class="pre">tpl</span></code> (<em>required</em>): The absolute path of the source template job submission
 script.</li>
-<li><tt class="docutils literal"><span class="pre">script</span></tt> (<em>required</em>): The absolute path of the output generated job
+<li><code class="docutils literal"><span class="pre">script</span></code> (<em>required</em>): The absolute path of the output generated job
 submission script.</li>
-<li><tt class="docutils literal"><span class="pre">subcmd</span></tt> (<em>required</em>): The command to use for submitting the jobs. <em>Ex:</em>
+<li><code class="docutils literal"><span class="pre">subcmd</span></code> (<em>required</em>): The command to use for submitting the jobs. <em>Ex:</em>
 <strong class="command">sbatch</strong>.</li>
 </ul>
-<p>Then, the file must also contain a <tt class="docutils literal"><span class="pre">vars</span></tt> section (<em>required</em>). This section
+<p>Then, the file must also contain a <code class="docutils literal"><span class="pre">vars</span></code> section (<em>required</em>). This section
 contains all the variables used in the template job submission script:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">name</span></tt> (<em>required</em>): The name of the jobs.</li>
-<li><tt class="docutils literal"><span class="pre">ntasks</span></tt> (<em>required</em>): The number of CPU allocated for the jobs.</li>
-<li><tt class="docutils literal"><span class="pre">error</span></tt> (<em>required</em>): The absolute path of the error output logging file.</li>
-<li><tt class="docutils literal"><span class="pre">output</span></tt> (<em>required</em>): The absolute path of the standard output logging
+<li><code class="docutils literal"><span class="pre">name</span></code> (<em>required</em>): The name of the jobs.</li>
+<li><code class="docutils literal"><span class="pre">ntasks</span></code> (<em>required</em>): The number of CPU allocated for the jobs.</li>
+<li><code class="docutils literal"><span class="pre">error</span></code> (<em>required</em>): The absolute path of the error output logging file.</li>
+<li><code class="docutils literal"><span class="pre">output</span></code> (<em>required</em>): The absolute path of the standard output logging
 file.</li>
-<li><tt class="docutils literal"><span class="pre">time</span></tt> (<em>required</em>): The maximum running time of the jobs (in minutes).</li>
-<li><tt class="docutils literal"><span class="pre">partition</span></tt> (<em>required</em>): The name of the partition in which the jobs will be
+<li><code class="docutils literal"><span class="pre">time</span></code> (<em>required</em>): The maximum running time of the jobs (in minutes).</li>
+<li><code class="docutils literal"><span class="pre">partition</span></code> (<em>required</em>): The name of the partition in which the jobs will be
 submitted.</li>
-<li><tt class="docutils literal"><span class="pre">qos</span></tt> (<em>required</em>): The name of the QOS in which the jobs will be submitted.</li>
-<li><tt class="docutils literal"><span class="pre">wckey</span></tt> (<em>required</em>): The wckey of the jobs.</li>
-<li><tt class="docutils literal"><span class="pre">fs</span></tt> (<em>required</em>): The list of separated by white spaces of filesystems
+<li><code class="docutils literal"><span class="pre">qos</span></code> (<em>required</em>): The name of the QOS in which the jobs will be submitted.</li>
+<li><code class="docutils literal"><span class="pre">wckey</span></code> (<em>required</em>): The wckey of the jobs.</li>
+<li><code class="docutils literal"><span class="pre">fs</span></code> (<em>required</em>): The list of separated by white spaces of filesystems
 mountpoints to check in the jobs.</li>
-<li><tt class="docutils literal"><span class="pre">log</span></tt> (<em>required</em>): The absolute path of the file where all check results
+<li><code class="docutils literal"><span class="pre">log</span></code> (<em>required</em>): The absolute path of the file where all check results
 will be recorded.</li>
 </ul>
 <p>Here is complete annoted HPCStats <strong class="command">jobstats</strong> agent configuration file
 example:</p>
-<div class="highlight-python"><div class="highlight"><pre>[global]
-tpl=/usr/share/hpcstats/bin/jobstats.tpl.sh
-script=/tmp/jobstats.sh
-subcmd=sbatch
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="k">global</span><span class="p">]</span>
+<span class="n">tpl</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">hpcstats</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jobstats</span><span class="o">.</span><span class="n">tpl</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">script</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">jobstats</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">subcmd</span><span class="o">=</span><span class="n">sbatch</span>
 
-[vars]
-name=STATS
-ntasks=1
-error=/tmp/jobstats.err.log
-output=/tmp/jobstats.out.log
-partition=cn
-time=5
-qos=dsp-ap-hpcstats
-wckey=dsp:hpcstats
-fs=/home /scratch
-log=/tmp/jobstats.log
+<span class="p">[</span><span class="nb">vars</span><span class="p">]</span>
+<span class="n">name</span><span class="o">=</span><span class="n">STATS</span>
+<span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">error</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">jobstats</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">log</span>
+<span class="n">output</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">jobstats</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">log</span>
+<span class="n">partition</span><span class="o">=</span><span class="n">cn</span>
+<span class="n">time</span><span class="o">=</span><span class="mi">5</span>
+<span class="n">qos</span><span class="o">=</span><span class="n">dsp</span><span class="o">-</span><span class="n">ap</span><span class="o">-</span><span class="n">hpcstats</span>
+<span class="n">wckey</span><span class="o">=</span><span class="n">dsp</span><span class="p">:</span><span class="n">hpcstats</span>
+<span class="n">fs</span><span class="o">=/</span><span class="n">home</span> <span class="o">/</span><span class="n">scratch</span>
+<span class="n">log</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">jobstats</span><span class="o">.</span><span class="n">log</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="jobstats-launcher">
 <span id="configuration-jobstats-launcher"></span><h3>JobStats launcher<a class="headerlink" href="#jobstats-launcher" title="Permalink to this headline">¶</a></h3>
 <p>The configuration file of the <strong class="command">jobstats</strong> launcher is located at
-<tt class="file docutils literal"><span class="pre">/etc/hpcstats/launcher.conf</span></tt>.</p>
-<p>This file contains a <tt class="docutils literal"><span class="pre">global</span></tt> section (<em>required</em>) with the following
+<code class="file docutils literal"><span class="pre">/etc/hpcstats/launcher.conf</span></code>.</p>
+<p>This file contains a <code class="docutils literal"><span class="pre">global</span></code> section (<em>required</em>) with the following
 parameter:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">clusters</span></tt> (<em>required</em>): a list of cluster name separated by commas
-(<tt class="docutils literal"><span class="pre">,</span></tt>).</li>
+<li><code class="docutils literal"><span class="pre">clusters</span></code> (<em>required</em>): a list of cluster name separated by commas
+(<code class="docutils literal"><span class="pre">,</span></code>).</li>
 </ul>
 <p>Then, for each cluster present in the list, a dedicated section must be
 present, named after the cluster name. These sections must contain the
 following parameters:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">frontend</span></tt> (<em>required</em>): The network hostname or the IP address of the
+<li><code class="docutils literal"><span class="pre">frontend</span></code> (<em>required</em>): The network hostname or the IP address of the
 cluster frontend on which the launcher should connect to launch the
 <strong class="command">jobstats</strong> agent.</li>
-<li><tt class="docutils literal"><span class="pre">user</span></tt> (<em>required</em>): The user name to authenticate on the remote cluster
+<li><code class="docutils literal"><span class="pre">user</span></code> (<em>required</em>): The user name to authenticate on the remote cluster
 frontend node.</li>
-<li><tt class="docutils literal"><span class="pre">privkey</span></tt> (<em>required</em>): The absolute path to the SSH private key file to
+<li><code class="docutils literal"><span class="pre">privkey</span></code> (<em>required</em>): The absolute path to the SSH private key file to
 authenticate on the remote cluster frontend node.</li>
-<li><tt class="docutils literal"><span class="pre">script</span></tt> (<em>required</em>): The absolute path to the <strong class="command">jobstats</strong> agent.</li>
+<li><code class="docutils literal"><span class="pre">script</span></code> (<em>required</em>): The absolute path to the <strong class="command">jobstats</strong> agent.</li>
 </ul>
 <p>Here is complete annoted HPCStats <strong class="command">jobstats</strong> launcher configuration
 file example:</p>
-<div class="highlight-python"><div class="highlight"><pre>[global]
-clusters=cluster1,cluster2
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="k">global</span><span class="p">]</span>
+<span class="n">clusters</span><span class="o">=</span><span class="n">cluster1</span><span class="p">,</span><span class="n">cluster2</span>
 
-[cluster1]
-user=hpcstats
-frontend=frontend.cluster1.company.tld
-privkey=/home/hpcstats/.ssh/id_rsa
-script=/usr/share/hpcstats/jobstats
+<span class="p">[</span><span class="n">cluster1</span><span class="p">]</span>
+<span class="n">user</span><span class="o">=</span><span class="n">hpcstats</span>
+<span class="n">frontend</span><span class="o">=</span><span class="n">frontend</span><span class="o">.</span><span class="n">cluster1</span><span class="o">.</span><span class="n">company</span><span class="o">.</span><span class="n">tld</span>
+<span class="n">privkey</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">hpcstats</span><span class="o">/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span>
+<span class="n">script</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">hpcstats</span><span class="o">/</span><span class="n">jobstats</span>
 
-[cluster2]
-user=hpcstats
-frontend=frontend.cluster2.company.tld
-privkey=/home/hpcstats/.ssh/id_rsa
-script=/usr/share/hpcstats/jobstats
+<span class="p">[</span><span class="n">cluster2</span><span class="p">]</span>
+<span class="n">user</span><span class="o">=</span><span class="n">hpcstats</span>
+<span class="n">frontend</span><span class="o">=</span><span class="n">frontend</span><span class="o">.</span><span class="n">cluster2</span><span class="o">.</span><span class="n">company</span><span class="o">.</span><span class="n">tld</span>
+<span class="n">privkey</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">hpcstats</span><span class="o">/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span>
+<span class="n">script</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">hpcstats</span><span class="o">/</span><span class="n">jobstats</span>
 </pre></div>
 </div>
 </div>
@@ -612,15 +630,16 @@ script=/usr/share/hpcstats/jobstats
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="usage.html" class="btn btn-neutral float-right" title="Usage guide"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage guide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="installation.html" class="btn btn-neutral" title="Installation Guide"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral" title="Installation Guide" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -630,11 +649,13 @@ script=/usr/share/hpcstats/jobstats
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015-2018, EDF CCN-HPC.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
+
         </div>
       </div>
 
@@ -649,7 +670,7 @@ script=/usr/share/hpcstats/jobstats
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.6.0',
+            VERSION:'1.6.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

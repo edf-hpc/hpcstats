@@ -5,16 +5,16 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Architecture &mdash; HPCStats 1.6.0 documentation</title>
+  <title>Architecture &mdash; HPCStats 1.6.1 documentation</title>
   
 
   
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -28,12 +28,17 @@
   
 
   
-    <link rel="top" title="HPCStats 1.6.0 documentation" href="index.html"/>
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="HPCStats 1.6.1 documentation" href="index.html"/>
         <link rel="next" title="Installation Guide" href="installation.html"/>
         <link rel="prev" title="Introduction" href="introduction.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -43,60 +48,61 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        <a href="index.html" class="fa fa-home"> HPCStats</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> HPCStats
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.6.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Architecture</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#database">Database</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#server">Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#agents">Agents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#error-management">Error management</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-debian-packages">From Debian packages</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html#hpcstats-server">HPCStats server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html#agents-and-launcher">Agents and launcher</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#synopsis">Synopsis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#actions">Actions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#global-options">Global options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#import-options">Import options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#check-options">Check options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#modify-options">Modify options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#report-options">Report options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/HPCStats.html">HPCStats Package</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -111,20 +117,29 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
     <li>Architecture</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/architecture.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/architecture.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="architecture">
 <span id="id1"></span><h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h1>
@@ -139,9 +154,9 @@ are described with full details in the following sub-sections.</p>
 <p>All production data imported by HPCStats are structured and hosted in a
 relational SQL database using <a class="reference external" href="http://www.postgresql.org/">PostgreSQL</a> 9+ RDBMS. The following figure
 represents the UML class diagram of the HPCStats database:</p>
-<img src="_images/db_diagram.svg" /><p>The database is designed to store the data coming from multiple supercomputers
+<img alt="_images/db_diagram.svg" src="_images/db_diagram.svg" /><p>The database is designed to store the data coming from multiple supercomputers
 (or clusters). Therefore, most tables are linked, directly or not, to the
-<tt class="docutils literal"><span class="pre">Cluster</span></tt> table (<tt class="docutils literal"><span class="pre">Jobs</span></tt>, <tt class="docutils literal"><span class="pre">Filesystems</span></tt>, etc). The notable exceptions are:</p>
+<code class="docutils literal"><span class="pre">Cluster</span></code> table (<code class="docutils literal"><span class="pre">Jobs</span></code>, <code class="docutils literal"><span class="pre">Filesystems</span></code>, etc). The notable exceptions are:</p>
 <ul class="simple">
 <li>The projects, domains and business codes because they are transversal to all
 clusters.</li>
@@ -153,21 +168,21 @@ per cluster.</li>
 <h2>Server<a class="headerlink" href="#server" title="Permalink to this headline">¶</a></h2>
 <p>The following diagrams represents the software architecture of the base of
 HPCStats server component:</p>
-<img src="_images/architecture_app.svg" /><p>Whole server component is management by the HPCStats launcher. This launcher
+<img alt="_images/architecture_app.svg" src="_images/architecture_app.svg" /><p>Whole server component is management by the HPCStats launcher. This launcher
 sequentially instanciates the following objects:</p>
 <ul class="simple">
-<li>The <strong>Argument parser</strong> (class <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsArgumentParser</span></tt>): It parses
+<li>The <strong>Argument parser</strong> (class <code class="xref py py-class docutils literal"><span class="pre">HPCStatsArgumentParser</span></code>): It parses
 the arguments given in the command line of the <strong class="command">hpcstats</strong> command
 and checks their coherency and correctness.</li>
-<li>The <strong>Configuration handler</strong> (class <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsConf</span></tt>): It reads the
-main HPCStats <a class="reference internal" href="configuration.html#configuration-server"><em>configuration file</em></a> and gives an
+<li>The <strong>Configuration handler</strong> (class <code class="xref py py-class docutils literal"><span class="pre">HPCStatsConf</span></code>): It reads the
+main HPCStats <a class="reference internal" href="configuration.html#configuration-server"><span class="std std-ref">configuration file</span></a> and gives an
 abstraction for the other classes to access configuration parameters.</li>
-<li>The <strong>Application</strong> (class <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsApp</span></tt>): The actual application
+<li>The <strong>Application</strong> (class <code class="xref py py-class docutils literal"><span class="pre">HPCStatsApp</span></code>): The actual application
 to run.</li>
 </ul>
 <p>HPCStats server component has multiple applications that are available to
 users. The launched application depends on the action parameter given in the
-command line (please refer to the <a class="reference internal" href="usage.html#usage"><em>Usage guide</em></a> for details). The available
+command line (please refer to the <a class="reference internal" href="usage.html#usage"><span class="std std-ref">Usage guide</span></a> for details). The available
 applications are:</p>
 <ul class="simple">
 <li><strong>Importer application</strong>: Extract raw production data from various sources,
@@ -182,7 +197,7 @@ statistics with data in HPCStats database.</li>
 <p>The <em>Importer</em> application is the original, main and most complex application
 of HPCStats server component. This diagrams gives on overview of this
 application architecture:</p>
-<img src="_images/architecture_importer_app.svg" /><p>The Importer application is divided into several importer <em>categories</em>. Each
+<img alt="_images/architecture_importer_app.svg" src="_images/architecture_importer_app.svg" /><p>The Importer application is divided into several importer <em>categories</em>. Each
 category has multiple implementations called <em>connectors</em>. These connectors
 instanciate the model classes to manipulate the HPCStats database content.</p>
 <p>Each category of importer is responsible of filling one or more tables of the
@@ -202,91 +217,91 @@ are summarised in the following table:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">Project</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">Project</span></code></td>
 <td><ul class="first last simple">
-<li><tt class="docutils literal"><span class="pre">Project</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">Domain</span></tt></li>
+<li><code class="docutils literal"><span class="pre">Project</span></code></li>
+<li><code class="docutils literal"><span class="pre">Domain</span></code></li>
 </ul>
 </td>
 <td><ul class="first last simple">
-<li><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterCSV</span></tt></li>
-<li><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterSlurm</span></tt></li>
-<li><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterDummy</span></tt></li>
-</ul>
-</td>
-</tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">BusinessCode</span></tt></td>
-<td><ul class="first last simple">
-<li><tt class="docutils literal"><span class="pre">Business</span></tt></li>
-</ul>
-</td>
-<td><ul class="first last simple">
-<li><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterCSV</span></tt></li>
-<li><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></tt></li>
-<li><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterDummy</span></tt></li>
+<li><code class="xref py py-mod docutils literal"><span class="pre">ProjectImporterCSV</span></code></li>
+<li><code class="xref py py-mod docutils literal"><span class="pre">ProjectImporterSlurm</span></code></li>
+<li><code class="xref py py-mod docutils literal"><span class="pre">ProjectImporterDummy</span></code></li>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">Architecture</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">BusinessCode</span></code></td>
 <td><ul class="first last simple">
-<li><tt class="docutils literal"><span class="pre">Cluster</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">Node</span></tt></li>
+<li><code class="docutils literal"><span class="pre">Business</span></code></li>
 </ul>
 </td>
 <td><ul class="first last simple">
-<li><tt class="xref py py-mod docutils literal"><span class="pre">ArchitectureImporterArchfile</span></tt></li>
-</ul>
-</td>
-</tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">User</span></tt></td>
-<td><ul class="first last simple">
-<li><tt class="docutils literal"><span class="pre">Userhpc</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">Account</span></tt></li>
-</ul>
-</td>
-<td><ul class="first last simple">
-<li><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt></li>
-<li><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt></li>
+<li><code class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterCSV</span></code></li>
+<li><code class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></code></li>
+<li><code class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterDummy</span></code></li>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">Job</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">Architecture</span></code></td>
 <td><ul class="first last simple">
-<li><tt class="docutils literal"><span class="pre">Job</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">Run</span></tt></li>
+<li><code class="docutils literal"><span class="pre">Cluster</span></code></li>
+<li><code class="docutils literal"><span class="pre">Node</span></code></li>
 </ul>
 </td>
 <td><ul class="first last simple">
-<li><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></li>
-</ul>
-</td>
-</tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">FSUsage</span></tt></td>
-<td><ul class="first last simple">
-<li><tt class="docutils literal"><span class="pre">filesystem</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">fsusage</span></tt></li>
-</ul>
-</td>
-<td><ul class="first last simple">
-<li><tt class="xref py py-mod docutils literal"><span class="pre">FSUsageImporterSSH</span></tt></li>
-<li><tt class="xref py py-mod docutils literal"><span class="pre">FSUsageImporterDummy</span></tt></li>
+<li><code class="xref py py-mod docutils literal"><span class="pre">ArchitectureImporterArchfile</span></code></li>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">Event</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">User</span></code></td>
 <td><ul class="first last simple">
-<li><tt class="docutils literal"><span class="pre">Event</span></tt></li>
+<li><code class="docutils literal"><span class="pre">Userhpc</span></code></li>
+<li><code class="docutils literal"><span class="pre">Account</span></code></li>
 </ul>
 </td>
 <td><ul class="first last simple">
-<li><tt class="xref py py-mod docutils literal"><span class="pre">EventImporterSlurm</span></tt></li>
+<li><code class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></code></li>
+<li><code class="xref py py-mod docutils literal"><span class="pre">UserImporterLdapSlurm</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">Job</span></code></td>
+<td><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">Job</span></code></li>
+<li><code class="docutils literal"><span class="pre">Run</span></code></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><code class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">FSUsage</span></code></td>
+<td><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">filesystem</span></code></li>
+<li><code class="docutils literal"><span class="pre">fsusage</span></code></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><code class="xref py py-mod docutils literal"><span class="pre">FSUsageImporterSSH</span></code></li>
+<li><code class="xref py py-mod docutils literal"><span class="pre">FSUsageImporterDummy</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">Event</span></code></td>
+<td><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">Event</span></code></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><code class="xref py py-mod docutils literal"><span class="pre">EventImporterSlurm</span></code></li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
 <p>The inner working of each connector is explained with all details in the
-<a class="reference internal" href="api/modules.html"><em>API reference</em></a>.</p>
+<a class="reference internal" href="api/modules.html"><span class="doc">API reference</span></a>.</p>
 </div>
 <div class="section" id="agents">
 <h2>Agents<a class="headerlink" href="#agents" title="Permalink to this headline">¶</a></h2>
@@ -295,15 +310,15 @@ measurement from users standpoint and shared filesystem usage rate. Those
 metrics are hard to track from a remote server. Therefore, for such purpose,
 some agents and a launcher components have been designed.</p>
 <p>The following diagram illustrate the deployed architecture of these components:</p>
-<img src="_images/arch_agents_launcher.svg" /><ul class="simple">
-<li><tt class="docutils literal"><span class="pre">fsusage</span></tt> agent can be installed on login nodes, and then launched
+<img alt="_images/arch_agents_launcher.svg" src="_images/arch_agents_launcher.svg" /><ul class="simple">
+<li><code class="docutils literal"><span class="pre">fsusage</span></code> agent can be installed on login nodes, and then launched
 periodically by a cronjob to log constantly the filesystems usage rate in a
 CSV file. This CSV file is then read through an SSH connection and parsed by
-<tt class="xref py py-class docutils literal"><span class="pre">FSUsageImporterSSH</span></tt> connector to fill the HPCStats database.</li>
-<li><tt class="docutils literal"><span class="pre">jobstats</span></tt> agent can also be installed on login nodes. It generates a job
+<code class="xref py py-class docutils literal"><span class="pre">FSUsageImporterSSH</span></code> connector to fill the HPCStats database.</li>
+<li><code class="docutils literal"><span class="pre">jobstats</span></code> agent can also be installed on login nodes. It generates a job
 submission script and submit it to the job scheduler.</li>
-<li><tt class="docutils literal"><span class="pre">launcher</span></tt> is a program, installed on the central HPCStats server node that
-connects to the login nodes using SSH to trigger the <tt class="docutils literal"><span class="pre">jobstats</span></tt> agent from
+<li><code class="docutils literal"><span class="pre">launcher</span></code> is a program, installed on the central HPCStats server node that
+connects to the login nodes using SSH to trigger the <code class="docutils literal"><span class="pre">jobstats</span></code> agent from
 outside the supercomputer. The data generated by these fake jobs are then
 stored in job scheduler accounting system and gathered by Job importers
 category.</li>
@@ -318,20 +333,20 @@ long as it encounters errors in the data sources. All these errors are handled
 by an error management framework. This framework controls which errors must be
 reported to users or not, according to a configuration parameter.</p>
 <p>The following diagram illustrates the architecture of the framework:</p>
-<img src="_images/arch_error_mgt_framework.svg" /><p>All the errors reported by the Importer applications are actually
-<tt class="xref py py-class docutils literal"><span class="pre">HPCStatsError</span></tt> objects.</p>
+<img alt="_images/arch_error_mgt_framework.svg" src="_images/arch_error_mgt_framework.svg" /><p>All the errors reported by the Importer applications are actually
+<code class="xref py py-class docutils literal"><span class="pre">HPCStatsError</span></code> objects.</p>
 <p>All the connectors classes indirectly inherit from the abstract
-<tt class="xref py py-class docutils literal"><span class="pre">Importer</span></tt> class. This class initializes its <tt class="docutils literal"><span class="pre">log</span></tt> attributes with
-an instance of the specific <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsLogger</span></tt> class. Additionnaly to
+<code class="xref py py-class docutils literal"><span class="pre">Importer</span></code> class. This class initializes its <code class="docutils literal"><span class="pre">log</span></code> attributes with
+an instance of the specific <code class="xref py py-class docutils literal"><span class="pre">HPCStatsLogger</span></code> class. Additionnaly to
 all the standard methods of its parent class, the standard Python Logger, this
-class also has a <tt class="docutils literal"><span class="pre">warn()</span></tt> method used all through the connectors classes to
-report <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsError</span></tt>.</p>
-<p>The <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsErrorMgr</span></tt> refers to the configuration to establish a set
+class also has a <code class="docutils literal"><span class="pre">warn()</span></code> method used all through the connectors classes to
+report <code class="xref py py-class docutils literal"><span class="pre">HPCStatsError</span></code>.</p>
+<p>The <code class="xref py py-class docutils literal"><span class="pre">HPCStatsErrorMgr</span></code> refers to the configuration to establish a set
 of errors to ignore. Then, the logger relies on this manager to define how to
 handle the errors. If the error must be reported, a warning message is sent.
 On the opposite, if the error must be ignored, it is just sent as a debug
 message not visible to users in most cases.</p>
-<p>The <tt class="xref py py-class docutils literal"><span class="pre">HPCStatsErrorsRegistry</span></tt> contains the list of all errors the
+<p>The <code class="xref py py-class docutils literal"><span class="pre">HPCStatsErrorsRegistry</span></code> contains the list of all errors the
 Importer application may report. This registry is used in connector classes to
 report the errors and by the error manager to check validity of ignored errors
 specified in configuration.</p>
@@ -350,82 +365,88 @@ associated connectors annd their corresponding reasons:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_B0001</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">E_B0001</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">BusinessCodeImporterSlurm</span></code></td>
 <td>The format of a wckey in SlurmDBD
 is not valid.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_P0001</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">ProjectImporterSlurm</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">E_P0001</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">ProjectImporterSlurm</span></code></td>
 <td>The format of a wckey in SlurmDBD
 is not valid.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_J0001</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">E_J0001</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></code></td>
 <td>Account associated to a job is
 unknown to the user importer.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_J0002</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">E_J0002</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></code></td>
 <td>The format of a wckey in SlurmDBD
 is not valid.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_J0003</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">E_J0003</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></code></td>
 <td>The project associated to a job is
 unknown to the project importer.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_J0004</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">E_J0004</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></code></td>
 <td>The business code associated to a
 job is unknown to the business
 codes importer.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_J0005</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">E_J0005</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></code></td>
 <td>The importer is unable to define
 the partition of a job based on its
 node list.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_U0001</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">E_J0006</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">JobImporterSlurm</span></code></td>
+<td>The importer is unable to find a
+node allocated to the job in loaded
+architecture.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">E_U0001</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></code></td>
 <td>A user is member of a cluster users
 group but has no user entry in the
 LDAP directory.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_U0002</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">E_U0002</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></code></td>
 <td>Some attributes are missing in an
 LDAP user entry.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_U0003</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">E_U0003</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></code></td>
 <td>The importer is unable to determine
 the department of a user based on
 its groups membership.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_U0004</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdapSlurm</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">E_U0004</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">UserImporterLdapSlurm</span></code></td>
 <td>A user has been found in SlurmDBD
 but does not have entry in LDAP
 directory. This is probably an old
 user account that has been deleted
 from the LDAP directory.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_U0005</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">E_U0005</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></code></td>
 <td>The configuration file still uses
 the deprecated configuration
 parameter <cite>group</cite> instead of
 <cite>groups</cite>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">E_U0006</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">E_U0006</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">UserImporterLdap</span></code></td>
 <td>The primary group of a user does
 not exist in the LDAP directory.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">E_E0001</span></tt></td>
-<td><tt class="xref py py-mod docutils literal"><span class="pre">EventImporterSlurm</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">E_E0001</span></code></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">EventImporterSlurm</span></code></td>
 <td>An event has been found in SlurmDBD
 on a node unknown in cluster
 architecture.</td>
@@ -436,15 +457,16 @@ architecture.</td>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation Guide"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="introduction.html" class="btn btn-neutral" title="Introduction"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="introduction.html" class="btn btn-neutral" title="Introduction" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -454,11 +476,13 @@ architecture.</td>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015-2018, EDF CCN-HPC.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
+
         </div>
       </div>
 
@@ -473,7 +497,7 @@ architecture.</td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.6.0',
+            VERSION:'1.6.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

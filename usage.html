@@ -5,16 +5,16 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Usage guide &mdash; HPCStats 1.6.0 documentation</title>
+  <title>Usage guide &mdash; HPCStats 1.6.1 documentation</title>
   
 
   
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -28,12 +28,17 @@
   
 
   
-    <link rel="top" title="HPCStats 1.6.0 documentation" href="index.html"/>
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="HPCStats 1.6.1 documentation" href="index.html"/>
         <link rel="next" title="API reference" href="api/modules.html"/>
         <link rel="prev" title="Configuration" href="configuration.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -43,40 +48,48 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        <a href="index.html" class="fa fa-home"> HPCStats</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> HPCStats
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.6.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#database">Database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#server">Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#agents">Agents</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#error-management">Error management</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-debian-packages">From Debian packages</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html#hpcstats-server">HPCStats server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html#agents-and-launcher">Agents and launcher</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Usage guide</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#actions">Actions</a></li>
@@ -88,15 +101,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/HPCStats.html">HPCStats Package</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -111,20 +122,29 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
     <li>Usage guide</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/usage.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/usage.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="usage-guide">
 <span id="usage"></span><h1>Usage guide<a class="headerlink" href="#usage-guide" title="Permalink to this headline">¶</a></h1>
@@ -273,7 +293,7 @@ project.</td></tr>
 </tbody>
 </table>
 </div></blockquote>
-<p>Please refer to <a class="reference internal" href="#examples"><em>Examples</em></a> section to see the possible combinations of the
+<p>Please refer to <a class="reference internal" href="#examples"><span class="std std-ref">Examples</span></a> section to see the possible combinations of the
 parameters.</p>
 </div>
 <div class="section" id="report-options">
@@ -312,46 +332,47 @@ generated.</td></tr>
 <div class="section" id="examples">
 <span id="id1"></span><h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>Import production data of supercomputer HPC-A:</p>
-<div class="highlight-python"><div class="highlight"><pre>hpcstats import --cluster=HPC-A
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hpcstats</span> <span class="kn">import</span> <span class="o">--</span><span class="n">cluster</span><span class="o">=</span><span class="n">HPC</span><span class="o">-</span><span class="n">A</span>
 </pre></div>
 </div>
 <p>Import production data of all supercomputers:</p>
-<div class="highlight-python"><div class="highlight"><pre>hpcstats import --cluster=all
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hpcstats</span> <span class="kn">import</span> <span class="o">--</span><span class="n">cluster</span><span class="o">=</span><span class="nb">all</span>
 </pre></div>
 </div>
 <p>Check supercomputer HPC-B data sources availablity:</p>
-<div class="highlight-python"><div class="highlight"><pre>hpcstats check --cluster=HPC-B
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hpcstats</span> <span class="n">check</span> <span class="o">--</span><span class="n">cluster</span><span class="o">=</span><span class="n">HPC</span><span class="o">-</span><span class="n">B</span>
 </pre></div>
 </div>
 <p>Set new description to business code B1:</p>
-<div class="highlight-python"><div class="highlight"><pre>hpcstats modify --business-code=B1 --set-description=&#39;new description B1&#39;
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hpcstats</span> <span class="n">modify</span> <span class="o">--</span><span class="n">business</span><span class="o">-</span><span class="n">code</span><span class="o">=</span><span class="n">B1</span> <span class="o">--</span><span class="nb">set</span><span class="o">-</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;new description B1&#39;</span>
 </pre></div>
 </div>
 <p>Set new description to project P1:</p>
-<div class="highlight-python"><div class="highlight"><pre>hpcstats modify --project-code=P1 --set-description=&#39;new description P1&#39;
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hpcstats</span> <span class="n">modify</span> <span class="o">--</span><span class="n">project</span><span class="o">-</span><span class="n">code</span><span class="o">=</span><span class="n">P1</span> <span class="o">--</span><span class="nb">set</span><span class="o">-</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;new description P1&#39;</span>
 </pre></div>
 </div>
 <p>Set new domain D1 to project P1:</p>
-<div class="highlight-python"><div class="highlight"><pre>hpcstats modify --project-code=P1 --set-domain=D1
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hpcstats</span> <span class="n">modify</span> <span class="o">--</span><span class="n">project</span><span class="o">-</span><span class="n">code</span><span class="o">=</span><span class="n">P1</span> <span class="o">--</span><span class="nb">set</span><span class="o">-</span><span class="n">domain</span><span class="o">=</span><span class="n">D1</span>
 </pre></div>
 </div>
 <p>Set create new domain D2:</p>
-<div class="highlight-python"><div class="highlight"><pre>hpcstats modify --new-domain=D2 --domain-name=&#39;domain name D2&#39;
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hpcstats</span> <span class="n">modify</span> <span class="o">--</span><span class="n">new</span><span class="o">-</span><span class="n">domain</span><span class="o">=</span><span class="n">D2</span> <span class="o">--</span><span class="n">domain</span><span class="o">-</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;domain name D2&#39;</span>
 </pre></div>
 </div>
 </div>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="api/modules.html" class="btn btn-neutral float-right" title="API reference"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="api/modules.html" class="btn btn-neutral float-right" title="API reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="configuration.html" class="btn btn-neutral" title="Configuration"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="configuration.html" class="btn btn-neutral" title="Configuration" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -361,11 +382,13 @@ generated.</td></tr>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015-2018, EDF CCN-HPC.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
+
         </div>
       </div>
 
@@ -380,7 +403,7 @@ generated.</td></tr>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.6.0',
+            VERSION:'1.6.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

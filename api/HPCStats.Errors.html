@@ -5,16 +5,16 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Errors Package &mdash; HPCStats 1.6.0 documentation</title>
+  <title>Errors Package &mdash; HPCStats 1.6.1 documentation</title>
   
 
   
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -28,13 +28,18 @@
   
 
   
-    <link rel="top" title="HPCStats 1.6.0 documentation" href="../index.html"/>
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="HPCStats 1.6.1 documentation" href="../index.html"/>
         <link rel="up" title="HPCStats Package" href="HPCStats.html"/>
         <link rel="next" title="Finder Package" href="HPCStats.Finder.html"/>
         <link rel="prev" title="DB Package" href="HPCStats.DB.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -44,60 +49,74 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> HPCStats</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> HPCStats
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.6.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../architecture.html#database">Database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../architecture.html#server">Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../architecture.html#agents">Agents</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../architecture.html#error-management">Error management</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#from-sources">From sources</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#from-debian-packages">From Debian packages</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#hpcstats-server">HPCStats server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#agents-and-launcher">Agents and launcher</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../usage.html#synopsis">Synopsis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage.html#actions">Actions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage.html#global-options">Global options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage.html#import-options">Import options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage.html#check-options">Check options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage.html#modify-options">Modify options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage.html#report-options">Report options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage.html#examples">Examples</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">API reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="HPCStats.html">HPCStats Package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="HPCStats.html">HPCStats Package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="HPCStats.html#module-HPCStats.Exceptions"><code class="docutils literal"><span class="pre">Exceptions</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="HPCStats.html#module-HPCStats.Utils"><code class="docutils literal"><span class="pre">Utils</span></code> Module</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="HPCStats.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="HPCStats.CLI.html">CLI Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="HPCStats.Conf.html">Conf Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="HPCStats.DB.html">DB Package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Errors Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="HPCStats.Finder.html">Finder Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="HPCStats.Importer.html">Importer Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="HPCStats.Log.html">Log Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="HPCStats.Model.html">Model Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="HPCStats.Tests.html">Tests Package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -112,7 +131,13 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
@@ -123,132 +148,140 @@
     <li>Errors Package</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/api/HPCStats.Errors.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/api/HPCStats.Errors.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="errors-package">
 <h1>Errors Package<a class="headerlink" href="#errors-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-HPCStats.Errors.Error">
-<span id="error-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Error</span></tt> Module<a class="headerlink" href="#module-HPCStats.Errors.Error" title="Permalink to this headline">¶</a></h2>
+<span id="error-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">Error</span></code> Module<a class="headerlink" href="#module-HPCStats.Errors.Error" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="HPCStats.Errors.Error.HPCStatsError">
-<em class="property">class </em><tt class="descclassname">HPCStats.Errors.Error.</tt><tt class="descname">HPCStatsError</tt><big>(</big><em>code</em>, <em>reason</em><big>)</big><a class="headerlink" href="#HPCStats.Errors.Error.HPCStatsError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">HPCStats.Errors.Error.</code><code class="descname">HPCStatsError</code><span class="sig-paren">(</span><em>code</em>, <em>reason</em><span class="sig-paren">)</span><a class="headerlink" href="#HPCStats.Errors.Error.HPCStatsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-HPCStats.Errors.Mgr">
-<span id="mgr-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Mgr</span></tt> Module<a class="headerlink" href="#module-HPCStats.Errors.Mgr" title="Permalink to this headline">¶</a></h2>
+<span id="mgr-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">Mgr</span></code> Module<a class="headerlink" href="#module-HPCStats.Errors.Mgr" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="HPCStats.Errors.Mgr.HPCStatsErrorMgr">
-<em class="property">class </em><tt class="descclassname">HPCStats.Errors.Mgr.</tt><tt class="descname">HPCStatsErrorMgr</tt><big>(</big><em>conf</em><big>)</big><a class="headerlink" href="#HPCStats.Errors.Mgr.HPCStatsErrorMgr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">HPCStats.Errors.Mgr.</code><code class="descname">HPCStatsErrorMgr</code><span class="sig-paren">(</span><em>conf</em><span class="sig-paren">)</span><a class="headerlink" href="#HPCStats.Errors.Mgr.HPCStatsErrorMgr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-HPCStats.Errors.Registry">
-<span id="registry-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">Registry</span></tt> Module<a class="headerlink" href="#module-HPCStats.Errors.Registry" title="Permalink to this headline">¶</a></h2>
+<span id="registry-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">Registry</span></code> Module<a class="headerlink" href="#module-HPCStats.Errors.Registry" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry">
-<em class="property">class </em><tt class="descclassname">HPCStats.Errors.Registry.</tt><tt class="descname">HPCStatsErrorsRegistry</tt><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">HPCStats.Errors.Registry.</code><code class="descname">HPCStatsErrorsRegistry</code><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class contains the full list of HPCStatsError that may occur when
 running the Importer application.</p>
 <p>When adding new errors in this registry, please mind to also update the
 table in doc/architecture.rst in the documentation.</p>
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_B0001">
-<tt class="descname">E_B0001</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61b0e50&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_B0001" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_B0001</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_B0001" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_E0001">
-<tt class="descname">E_E0001</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61ca1d0&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_E0001" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_E0001</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_E0001" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0001">
-<tt class="descname">E_J0001</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61b0ed0&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0001" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_J0001</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0001" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0002">
-<tt class="descname">E_J0002</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61b0f10&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0002" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_J0002</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0002" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0003">
-<tt class="descname">E_J0003</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61b0f50&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0003" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_J0003</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0003" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0004">
-<tt class="descname">E_J0004</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61b0f90&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0004" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_J0004</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0004" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0005">
-<tt class="descname">E_J0005</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61b0fd0&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0005" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_J0005</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0005" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0006">
+<code class="descname">E_J0006</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_J0006" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_P0001">
-<tt class="descname">E_P0001</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61b0e90&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_P0001" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_P0001</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_P0001" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_T0001">
-<tt class="descname">E_T0001</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61b0d90&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_T0001" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_T0001</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_T0001" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_T0002">
-<tt class="descname">E_T0002</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61b0e10&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_T0002" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_T0002</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_T0002" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0001">
-<tt class="descname">E_U0001</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61ca050&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0001" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_U0001</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0001" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0002">
-<tt class="descname">E_U0002</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61ca090&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0002" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_U0002</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0002" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0003">
-<tt class="descname">E_U0003</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61ca0d0&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0003" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_U0003</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0003" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0004">
-<tt class="descname">E_U0004</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61ca110&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0004" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_U0004</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0004" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0005">
-<tt class="descname">E_U0005</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61ca150&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0005" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_U0005</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0005" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0006">
-<tt class="descname">E_U0006</tt><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object at 0x7feba61ca190&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0006" title="Permalink to this definition">¶</a></dt>
+<code class="descname">E_U0006</code><em class="property"> = &lt;HPCStats.Errors.Error.HPCStatsError object&gt;</em><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.E_U0006" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="classmethod">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.is_valid">
-<em class="property">classmethod </em><tt class="descname">is_valid</tt><big>(</big><em>error_s</em><big>)</big><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.is_valid" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_valid</code><span class="sig-paren">(</span><em>error_s</em><span class="sig-paren">)</span><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.is_valid" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="classmethod">
 <dt id="HPCStats.Errors.Registry.HPCStatsErrorsRegistry.to_error">
-<em class="property">classmethod </em><tt class="descname">to_error</tt><big>(</big><em>error_s</em><big>)</big><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.to_error" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">to_error</code><span class="sig-paren">(</span><em>error_s</em><span class="sig-paren">)</span><a class="headerlink" href="#HPCStats.Errors.Registry.HPCStatsErrorsRegistry.to_error" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -257,15 +290,16 @@ table in doc/architecture.rst in the documentation.</p>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="HPCStats.Finder.html" class="btn btn-neutral float-right" title="Finder Package"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="HPCStats.Finder.html" class="btn btn-neutral float-right" title="Finder Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="HPCStats.DB.html" class="btn btn-neutral" title="DB Package"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="HPCStats.DB.html" class="btn btn-neutral" title="DB Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -275,11 +309,13 @@ table in doc/architecture.rst in the documentation.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015-2018, EDF CCN-HPC.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
+
         </div>
       </div>
 
@@ -294,7 +330,7 @@ table in doc/architecture.rst in the documentation.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.6.0',
+            VERSION:'1.6.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
