@@ -349,7 +349,7 @@
          id="tspan3902"
          x="197.33334"
          y="370.51965"
-         style="font-size:10.66666698px;line-height:1.25;font-family:sans-serif;stroke-width:1.06666672">job_name : VARCHAR(200)</tspan></text>
+         style="font-size:10.66666698px;line-height:1.25;font-family:sans-serif;stroke-width:1.06666672">job_name : TEXT</tspan></text>
     <text
        id="text3904"
        y="391.853"

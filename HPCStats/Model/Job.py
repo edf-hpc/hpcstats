@@ -37,7 +37,7 @@ Schema of the ``Job`` table in HPCStats database:
       job_sched_id   integer NOT NULL,
       job_batch_id   character varying(30) NOT NULL,
       job_nbCpu      integer NOT NULL,
-      job_name       character varying(200),
+      job_name       text,
       job_state      character varying(50) NOT NULL,
       job_queue      character varying(50),
       job_account    character varying(50),

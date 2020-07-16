@@ -1,0 +1,2 @@
+-- Modify job table to extend job_name column
+ALTER TABLE Job ALTER COLUMN job_name TYPE text;

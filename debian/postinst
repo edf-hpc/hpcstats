@@ -49,6 +49,13 @@ case "$1" in
             su hpcstats -c "\
                 psql hpcstatsdb < /usr/share/hpcstats/db/migrations/002_add_job_department.psql"
         fi
+        # test if job table must be upgraded with longer job_name field starting with
+        # HPCStats v1.6.2
+        if ! $(su hpcstats -c "psql hpcstatsdb -c '\d Job'" | grep job_name | grep -q text); then
+            echo "Upgrading DB schema to extend job name column"
+            su hpcstats -c "\
+                psql hpcstatsdb < /usr/share/hpcstats/db/migrations/003_extend_job_name.psql"
+        fi
 
     ;;
 
