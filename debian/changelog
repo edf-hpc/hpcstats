@@ -1,3 +1,12 @@
+hpcstats (1.6.2) unstable; urgency=medium
+
+  [ Frédéric Ballan ]
+  * Add check for empty remote fsusage CSV file
+  * Permanent job_name field extension
+  * Add walltime in Job table
+
+ -- Frédéric Ballan <frederic-externe.ballan@edf.fr>  Thu, 16 Jul 2020 16:39:26 +0200
+
 hpcstats (1.6.1) unstable; urgency=medium
 
   * tests: use native mock_open()
