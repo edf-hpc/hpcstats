@@ -88,9 +88,9 @@ class FSUsageImporterSSH(FSUsageImporter):
         return ssh
 
     def check(self):
-        """Check if remote SSH server is available for connections and if the
-           remote CSV file can be opened. Raises HPCStatsSourceError in case of
-           problem.
+        """Check if the remote SSH server is available for connections, if
+           the remote CSV file can be opened and is not empty.
+           Raises HPCStatsSourceError in case of problem.
         """
         ssh = self.connect_ssh()
         try:
@@ -100,11 +100,15 @@ class FSUsageImporterSSH(FSUsageImporter):
                     "Error while opening SFTP connection: %s" \
                       % (err))
         try:
-            sftp.open(self.fsfile, 'r')
+            sftpfile = sftp.open(self.fsfile, 'r')
         except IOError, err:
             raise HPCStatsSourceError( \
                     "Error while opening file %s by SFTP: %s" \
                       % (self.fsfile, err))
+        if sftpfile.readline() == "":
+            raise HPCStatsSourceError( \
+                    "Remote file %s is empty" \
+                      % (self.fsfile))
         sftp.close()
         ssh.close()
 
