@@ -242,6 +242,7 @@ class JobImporterSlurm(JobImporter):
                        time_submit,
                        time_start,
                        time_end,
+                       timelimit,
                        nodes_alloc,
                        %s,
                        job.partition,
@@ -301,27 +302,33 @@ class JobImporterSlurm(JobImporter):
             if start is None and end is not None:
                 start = end
 
-            name = row[15]
-            if old_schema is True:
-                nbcpu = row[8]
+            wall_t = row[7]
+            if wall_t == 0:
+                walltime = None
             else:
-                nbcpu = extract_tres_cpu(row[8])
+                walltime = str(wall_t)
+
+            name = row[16]
+            if old_schema is True:
+                nbcpu = row[9]
+            else:
+                nbcpu = extract_tres_cpu(row[9])
                 if nbcpu == -1:
                     raise HPCStatsSourceError( \
                             "unable to extract cpus_alloc from job tres")
 
-            state = JobImporterSlurm.get_job_state_from_slurm_state(row[12])
+            state = JobImporterSlurm.get_job_state_from_slurm_state(row[13])
 
-            nodelist = row[13]
+            nodelist = row[14]
             if nodelist == "(null)" or nodelist == "None assigned" :
                 nodelist = None
 
-            partition = self.job_partition(sched_id, row[9], nodelist)
-            qos = row[10]
+            partition = self.job_partition(sched_id, row[10], nodelist)
+            qos = row[11]
             queue = "%s-%s" % (partition, qos)
-            job_acct = row[11]
+            job_acct = row[12]
 
-            login = row[14]
+            login = row[15]
 
             searched_user = User(login, None, None, None)
             searched_account = Account(searched_user, self.cluster,
@@ -343,7 +350,7 @@ class JobImporterSlurm(JobImporter):
                 raise HPCStatsSourceError(msg)
             job_department = user.department
 
-            wckey = row[16]
+            wckey = row[17]
 
             # empty wckey must be considered as None
             if wckey == '':
@@ -391,7 +398,7 @@ class JobImporterSlurm(JobImporter):
 
             job = Job(account, project, business, sched_id, str(batch_id),
                       name, nbcpu, state, queue, job_acct, job_department,
-                      submission, start, end)
+                      submission, start, end, walltime)
             self.jobs.append(job)
 
             if nodelist is not None:

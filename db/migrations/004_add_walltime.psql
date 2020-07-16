@@ -1,0 +1,2 @@
+-- Modify job table to add new walltime column
+ALTER TABLE Job ADD COLUMN job_walltime interval;

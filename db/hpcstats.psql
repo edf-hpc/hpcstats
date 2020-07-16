@@ -33,6 +33,7 @@ CREATE TABLE Job(
         job_submission timestamp NOT NULL,
         job_start      timestamp,
         job_end        timestamp,
+        job_walltime   interval,
         userhpc_id     integer NOT NULL,
         cluster_id     integer NOT NULL,
         project_id     integer,

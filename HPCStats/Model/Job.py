@@ -45,6 +45,7 @@ Schema of the ``Job`` table in HPCStats database:
       job_submission timestamp NOT NULL,
       job_start      timestamp,
       job_end        timestamp,
+      job_walltime   interval,
       userhpc_id     integer NOT NULL,
       cluster_id     integer NOT NULL,
       project_id     integer NOT NULL,
@@ -65,7 +66,7 @@ class Job(object):
 
     def __init__( self, account, project, business, sched_id, batch_id, name,
                   nbcpu, state, queue, job_acct, job_department,
-                  submission, start, end, job_id=None):
+                  submission, start, end, walltime, job_id=None):
 
         self.job_id = job_id
         self.sched_id = sched_id # user interface ID
@@ -80,6 +81,7 @@ class Job(object):
         self.submission = submission
         self.start = start
         self.end = end
+        self.walltime = walltime
 
         self.account = account
         self.project = project
@@ -101,7 +103,7 @@ class Job(object):
             end = self.end.strftime('%Y-%m-%d %H:%M:%S')
 
         return "job %d on %s(%d) by %s: state:%s queue:%s job_department:%s " \
-               "job_acct:%s %s/%s/%s" % \
+               "job_acct:%s %s/%s/%s walltime:%ss" % \
                ( self.sched_id,
                  self.account.cluster.name,
                  self.nbcpu,
@@ -112,7 +114,8 @@ class Job(object):
                  self.job_acct,
                  submission,
                  start,
-                 end )
+                 end,
+                 self.walltime )
 
     def find(self, db):
         """Search the Job in the database based on its sched_id and cluster. If
@@ -171,11 +174,12 @@ class Job(object):
                                   job_submission,
                                   job_start,
                                   job_end,
+                                  job_walltime,
                                   cluster_id,
                                   userhpc_id,
                                   project_id,
                                   business_code )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING job_id
               """
 
@@ -200,6 +204,7 @@ class Job(object):
                    self.submission,
                    self.start,
                    self.end,
+                   self.walltime,
                    self.account.cluster.cluster_id,
                    self.account.user.user_id,
                    project_id,
@@ -210,8 +215,9 @@ class Job(object):
         self.job_id = db.cur.fetchone()[0]
 
     def update(self, db):
-        """Update Job sched_id, nbcpu, name, state, queue, submission, start and
-           end in database. Raises HPCStatsRuntimeError if self.job_id is None.
+        """Update Job sched_id, nbcpu, name, state, queue, account, department,
+           submission, start, end and walltime in database.
+           Raises HPCStatsRuntimeError if self.job_id is None.
         """
 
         if self.job_id is None:
@@ -230,7 +236,8 @@ class Job(object):
                        job_department = %s,
                        job_submission = %s,
                        job_start = %s,
-                       job_end = %s
+                       job_end = %s,
+                       job_walltime = %s
                  WHERE job_id = %s
               """
         params = ( self.sched_id,
@@ -243,6 +250,7 @@ class Job(object):
                    self.submission,
                    self.start,
                    self.end,
+                   self.walltime,
                    self.job_id )
 
         #print db.cur.mogrify(req, params)

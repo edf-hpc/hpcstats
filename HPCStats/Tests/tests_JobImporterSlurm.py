@@ -76,6 +76,7 @@ MockMySQLdb.MY_REQS['get_jobs_after_batchid'] = {
                 "time_submit, " \
                 "time_start, " \
                 "time_end, " \
+                "timelimit, " \
                 "nodes_alloc, " \
                 "(cpus_alloc|tres_alloc), " \
                 "job.partition, " \
@@ -104,6 +105,7 @@ MockMySQLdb.MY_REQS['get_jobs_after_batchid_w_parts'] = {
                 "time_submit, " \
                 "time_start, " \
                 "time_end, " \
+                "timelimit, " \
                 "nodes_alloc, " \
                 "(cpus_alloc|tres_alloc), " \
                 "job.partition, " \
@@ -185,13 +187,13 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
 
         MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'] = \
           [
-            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
+            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts, '03:59:59',
               2, '1=4', 'partition1', 'qos1', 'job_acct1', 1, 'node[1-2]',
               'user1', 'job1', 'project1:business1' ],
           ]
         MockMySQLdb.MY_REQS['get_jobs_after_batchid_w_parts']['res'] = \
           [
-            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts,
+            [ 0, 0, 1000, 1000, j1_submit_ts, j1_start_ts, j1_end_ts, '03:59:59',
               2, '1=8', 'partition1', 'qos1', 'job_acct1', 1, 'node[1-2]',
               'user1', 'job2', 'project1:business1' ],
           ]
@@ -267,7 +269,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
         MockMySQLdb.MY_REQS['job_table_cols']['res'] = \
           [ [ 'cpus_alloc', ] , ]
         # replace TRES '1=4' by cpus_alloc 4
-        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][8] = 4
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][9] = 4
 
         self.importer.load()
 
@@ -346,7 +348,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
 
         self.load_app()
 
-        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][8] = '0=0'
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][9] = '0=0'
         self.assertRaisesRegexp(
                HPCStatsSourceError,
                "unable to extract cpus_alloc from job tres",
@@ -360,7 +362,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
 
         self.load_app()
 
-        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][16] = 'fail'
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][17] = 'fail'
 
         self.assertRaisesRegexp(
                HPCStatsSourceError,
@@ -399,7 +401,7 @@ class TestsJobImporterSlurm(HPCStatsTestCase):
 
         self.load_app()
 
-        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][13] = \
+        MockMySQLdb.MY_REQS['get_jobs_after_batchid']['res'][0][14] = \
           'nodelistfail[5-4]'
 
         self.assertRaisesRegexp(

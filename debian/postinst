@@ -56,6 +56,13 @@ case "$1" in
             su hpcstats -c "\
                 psql hpcstatsdb < /usr/share/hpcstats/db/migrations/003_extend_job_name.psql"
         fi
+        # test if job table must be upgraded with walltime field coming with
+        # HPCStats v1.6.2
+        if ! $(su hpcstats -c "psql hpcstatsdb -c '\d Job'" | grep -q walltime); then
+            echo "Upgrading DB schema to add job walltime column"
+            su hpcstats -c "\
+                psql hpcstatsdb < /usr/share/hpcstats/db/migrations/004_add_walltime.psql"
+        fi
 
     ;;
 
