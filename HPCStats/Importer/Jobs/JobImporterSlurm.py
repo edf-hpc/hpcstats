@@ -305,6 +305,8 @@ class JobImporterSlurm(JobImporter):
             wall_t = row[7]
             if wall_t == 0:
                 walltime = None
+            elif wall_t >= 2147483648:
+                walltime = "-1"
             else:
                 walltime = str(wall_t)
 
