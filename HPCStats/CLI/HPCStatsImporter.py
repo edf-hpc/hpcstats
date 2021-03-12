@@ -38,6 +38,7 @@ from HPCStats.Importer.Jobs.JobImporterFactory import JobImporterFactory
 from HPCStats.Importer.Users.UserImporterFactory import UserImporterFactory
 from HPCStats.Importer.Architectures.ArchitectureImporterFactory import ArchitectureImporterFactory
 from HPCStats.Importer.Events.EventImporterFactory import EventImporterFactory
+from HPCStats.Importer.FSQuota.FSQuotaImporterFactory import FSQuotaImporterFactory
 from HPCStats.Importer.FSUsage.FSUsageImporterFactory import FSUsageImporterFactory
 from HPCStats.Importer.BusinessCodes.BusinessCodeImporterFactory import BusinessCodeImporterFactory
 from HPCStats.Importer.Projects.ProjectImporterFactory import ProjectImporterFactory
@@ -134,6 +135,12 @@ class HPCStatsImporter(HPCStatsApp):
           FSUsageImporterFactory.factory(self, db, self.conf, cluster)
         self.fsusage.load()
         self.fsusage.update()
+
+        logger.info("updating filesystem quota for cluster %s", cluster.name)
+        self.fsquota = \
+          FSQuotaImporterFactory.factory(self, db, self.conf, cluster)
+        self.fsquota.load()
+        self.fsquota.update()
 
         logger.info("updating events for cluster %s", cluster.name)
         self.events = \
