@@ -1,0 +1,18 @@
+-- Create the fsquota table
+CREATE TABLE fsquota(
+        fsquota_time   timestamp NOT NULL,
+        fsquota_name          character varying(30) NOT NULL,
+        fsquota_block_KB       bigint NOT NULL,
+        fsquota_block_quota    bigint NOT NULL,
+        fsquota_block_limit    bigint NOT NULL,
+        fsquota_block_in_doubt bigint NOT NULL,
+        fsquota_block_grace    character varying(30) NOT NULL,
+        fsquota_file_files     bigint NOT NULL,
+        fsquota_file_quota     bigint NOT NULL,
+        fsquota_file_limit     bigint NOT NULL,
+        fsquota_file_in_doubt  bigint NOT NULL,
+        fsquota_file_grace     character varying(30) NOT NULL,
+        filesystem_id  integer NOT NULL,
+        cluster_id     integer NOT NULL,
+        CONSTRAINT fsquota_pkey PRIMARY KEY (fsquota_time, filesystem_id, cluster_id, fsquota_name)
+);

@@ -115,6 +115,24 @@ CREATE TABLE filesystem(
         CONSTRAINT filesystem_unique UNIQUE (filesystem_name, cluster_id)
 );
 
+CREATE TABLE fsquota(
+        fsquota_time   timestamp NOT NULL,
+        fsquota_name          character varying(30) NOT NULL,
+        fsquota_block_KB       bigint NOT NULL,
+        fsquota_block_quota    bigint NOT NULL,
+        fsquota_block_limit    bigint NOT NULL,
+        fsquota_block_in_doubt bigint NOT NULL,
+        fsquota_block_grace    character varying(30) NOT NULL,
+        fsquota_file_files     bigint NOT NULL,
+        fsquota_file_quota     bigint NOT NULL,
+        fsquota_file_limit     bigint NOT NULL,
+        fsquota_file_in_doubt  bigint NOT NULL,
+        fsquota_file_grace     character varying(30) NOT NULL,
+        filesystem_id  integer NOT NULL,
+        cluster_id     integer NOT NULL,
+        CONSTRAINT fsquota_pkey PRIMARY KEY (fsquota_time, filesystem_id, cluster_id, fsquota_name)
+);
+
 CREATE TABLE fsusage(
         fsusage_time   timestamp NOT NULL,
         fsusage_usage  real NOT NULL,
@@ -137,5 +155,7 @@ ALTER TABLE ONLY Node ADD CONSTRAINT FK_Node_cluster_id FOREIGN KEY (cluster_id)
 ALTER TABLE ONLY Event ADD CONSTRAINT FK_Event_node_id FOREIGN KEY (node_id, cluster_id) REFERENCES Node(node_id, cluster_id);
 ALTER TABLE ONLY Project ADD CONSTRAINT FK_Project_domain_id FOREIGN KEY (domain_id) REFERENCES Domain(domain_id);
 ALTER TABLE ONLY filesystem ADD CONSTRAINT FK_filesystem_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
+ALTER TABLE ONLY fsquota ADD CONSTRAINT FK_fsquota_filesystem_id FOREIGN KEY (filesystem_id, cluster_id) REFERENCES filesystem(filesystem_id, cluster_id);
+ALTER TABLE ONLY fsquota ADD CONSTRAINT FK_fsquota_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
 ALTER TABLE ONLY fsusage ADD CONSTRAINT FK_fsusage_filesystem_id FOREIGN KEY (filesystem_id, cluster_id) REFERENCES filesystem(filesystem_id, cluster_id);
 ALTER TABLE ONLY fsusage ADD CONSTRAINT FK_fsusage_cluster_id FOREIGN KEY (cluster_id) REFERENCES Cluster(cluster_id);
