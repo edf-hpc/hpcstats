@@ -1,0 +1,156 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2011-2015 EDF SA
+# Contact:
+#       CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
+#       1, Avenue du General de Gaulle
+#       92140 Clamart
+#
+# Authors: CCN - HPC <dsp-cspit-ccn-hpc@edf.fr>
+#
+# This file is part of HPCStats.
+#
+# HPCStats is free software: you can redistribute in and/or
+# modify it under the terms of the GNU General Public License,
+# version 2, as published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with HPCStats. If not, see
+# <http://www.gnu.org/licenses/>.
+#
+# On Calibre systems, the complete text of the GNU General
+# Public License can be found in `/usr/share/common-licenses/GPL'.
+
+import ConfigParser
+import logging
+import logging.handlers
+import os
+import sys
+import csv
+from datetime import datetime
+import subprocess   
+
+logger = None
+conf = None
+
+def init_logger():
+    """Initialize logger to syslog with proper format"""
+
+    global logger
+
+    logger = logging.getLogger('hpcstats')
+    logger.setLevel(logging.INFO)
+    handler = logging.handlers.SysLogHandler(address='/dev/log') #logging.StreamHandler()
+    formatter = logging.Formatter('%(name)s: %(levelname)s: %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+def read_conf():
+    """Read configuration file of the script"""
+
+    global logger
+    global conf
+
+    conf_file = '/etc/hpcstats/fsquota.conf'
+    if not os.path.exists(conf_file):
+        logger.critical("configuration file %s does not exist", conf_file)
+        sys.exit(1)
+    conf = ConfigParser.ConfigParser()
+    conf.read(conf_file)
+
+def truncate(fpath, maxsize):
+    """Truncate first third of the file if its size is over maxsize MB"""
+
+    # if CSV file does not exist yet, just leave
+    if not os.path.exists(fpath):
+        return
+
+    statinfo = os.stat(fpath)
+    size = statinfo.st_size
+    if size > maxsize * 1024**2:
+        lines = open(fpath).readlines()
+        # remove first third of the file
+        nb_lines = len(lines)/3
+        open(fpath, 'w+').writelines(lines[nb_lines:-1])
+
+def parse_mm_output(output, ignore_headers=[]):
+    result_map = {}
+    results = []
+    for line in output.splitlines():
+        l = line.strip().split(':')
+        _type = l[1]
+        if l[2] == 'HEADER':
+            if _type not in result_map:
+                result_map[_type] = {}
+            for idx, h in enumerate(l):
+                if h in ignore_headers:
+                    continue
+                if not h:
+                    continue
+                if h == _type:
+                    continue
+                result_map[_type][h] = idx
+        else:
+            result = {}
+            result['type'] = _type
+            for h, idx in result_map[_type].items():
+                if len(l) <= idx:
+                    continue
+                val = l[idx]
+                if val.lstrip("-").isdigit():
+                    v = int(val)
+                else:
+                    try:
+                        v = float(val)
+                    except ValueError:
+                        v = val
+                result[h] = v
+            results.append(result)
+    return results
+
+def main():
+    """Main function of the script"""
+
+    init_logger()
+    read_conf()
+
+    fs_s = conf.get('global','fs')
+    filesystems = fs_s.split(',')
+    csv_fpath = conf.get('global','csv')
+    maxsize = conf.getint('global','maxsize')
+    now = datetime.now().isoformat()
+
+    truncate(csv_fpath, maxsize)
+
+    old_mask = os.umask(0o22) # if 0o77 on front
+    with open(csv_fpath, 'a+') as csv_file:
+        csv_writer = csv.writer(csv_file, delimiter=',',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for fs in filesystems:
+            try:
+                process = subprocess.Popen(["/usr/lpp/mmfs/bin/mmrepquota","-u","-Y",fs],
+                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                s_out, s_err = process.communicate()
+                if process.returncode != 0:
+                    logger.error("error while running mmrepquota on %s: %s", fs, s_err)
+                else:
+                    results = parse_mm_output(s_out, ['mmdf', 'HEADER', 'version', 'reserved'])
+                    for result in results:
+                        #cols = row.split()
+                        if result['quotaType'] == 'USR':
+                            #cols.remove('|')
+                            csv_writer.writerow([now]+[result['name'],result['filesetname'],result['quotaType'],
+                                result['blockUsage'],result['blockQuota'],result['blockLimit'],result['blockInDoubt'],result['blockGrace'],
+                                result['filesUsage'],result['filesQuota'],result['filesLimit'],result['filesInDoubt'],result['filesGrace']])
+            except OSError, err:
+                logger.error("OSError while running mmrepquota on %s: %s", fs, err)
+    os.umask(old_mask)
+
+if __name__ == '__main__':
+    main()
