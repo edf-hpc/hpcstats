@@ -81,11 +81,3 @@ Mocks Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`Utils` Module
--------------------
-
-.. automodule:: HPCStats.Tests.Mocks.Utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-

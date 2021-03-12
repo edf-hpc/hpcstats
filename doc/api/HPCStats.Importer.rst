@@ -25,6 +25,7 @@ Subpackages
     HPCStats.Importer.Architectures
     HPCStats.Importer.BusinessCodes
     HPCStats.Importer.Events
+    HPCStats.Importer.FSQuota
     HPCStats.Importer.FSUsage
     HPCStats.Importer.Jobs
     HPCStats.Importer.Projects

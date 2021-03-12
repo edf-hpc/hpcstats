@@ -77,6 +77,26 @@ emails to a external *smart* relay. For example, on Debian/Ubuntu, run::
 HPCStats agents
 ---------------
 
+FSQuota agent
+^^^^^^^^^^^^^
+
+To install the ``fsquota`` agent on a supercomputer login node, install the
+script::
+
+    install contribs/fsquota /usr/local/bin/fsquota
+
+Install the configuration file::
+
+    mkdir /etc/hpcstats
+    install conf/fsquota.conf /etc/hpcstats/fsquota.conf
+
+Install the cronjob, in file :file:`/etc/cron.d/hpcstats-fsquota`, for example
+to run every nights at 2AM::
+
+    0 2 * * * hpcstats /usr/local/bin/fsquota
+
+Finally, proceed with the :ref:`configuration_fsquota-agent` configuration.
+
 FSUsage agent
 ^^^^^^^^^^^^^
 

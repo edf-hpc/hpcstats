@@ -194,6 +194,21 @@ parameters:
   HPCStats imports data from all Slurm partitions of the cluster without any
   restriction.
 
+The ``<cluster>/fsquota`` section (*optional*) is required by
+:py:class:`FSQuotaImporterSSH` connector. It must contains the following
+parameters:
+
+* ``host`` (*required*): The network hostname or the IP address of the cluster
+  node on which the ``fsquota`` runs and where the HPCStats should connect to.
+* ``name`` (*required*): The user name to authenticate on the remote cluster
+  node.
+* ``privkey`` (*required*): The absolute path to the SSH private key file to
+  authenticate on the remote cluster node.
+* ``file`` (*required*): The absolute path of the remote CSV file to read and
+  parse for new filesystem quota metrics.
+* ``timestamp_fmt`` (*optional*): The format of the timestamps written in the
+  CSV file.  Default value is ``%Y-%m-%dT%H:%M:%S.%fZ``.
+
 The ``<cluster>/fsusage`` section (*optional*) is required by
 :py:class:`FSUsageImporterSSH` connector. It must contains the following
 parameters:
@@ -218,6 +233,31 @@ clusters *cluster1* and *cluster2*:
 
 Agents and launcher
 ===================
+
+.. _configuration_fsquota-agent:
+
+FSQuota agent
+-------------
+
+The configuration file of the :command:`fsquota` agent is located at
+:file:`/etc/hpcstats/fsquota.conf`.
+
+This file contains only one ``global`` section (*required*) with the following
+parameters:
+
+* ``fs`` (*required*): The list separated by commas (``,``) of the mount points
+  of the filesystem to monitor.
+* ``csv`` (*required*): The absolute path of the CSV file where the file system
+  quota rates are recorded.
+* ``maxsize`` (*required*): the maximum size in MB of the CSV file. When this
+  size is reached, the :command:`fsquota` agent remove the first two third of
+  the file to significantly reduce its size.
+
+Here is complete annoted HPCStats :command:`fsquota` agent configuration file
+example:
+
+.. include:: ../conf/fsquota.conf
+   :literal:
 
 .. _configuration_fsusage-agent:
 

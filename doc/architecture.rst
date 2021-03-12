@@ -100,6 +100,9 @@ are summarised in the following table:
 | ``Job``          | * ``Job``               | * :py:mod:`JobImporterSlurm`             |
 |                  | * ``Run``               |                                          |
 +------------------+-------------------------+------------------------------------------+
+| ``FSQuota``      | * ``filesystem``        | * :py:mod:`FSQuotaImporterSSH`           |
+|                  | * ``fsquota``           | * :py:mod:`FSQuotaImporterDummy`         |
++------------------+-------------------------+------------------------------------------+
 | ``FSUsage``      | * ``filesystem``        | * :py:mod:`FSUsageImporterSSH`           |
 |                  | * ``fsusage``           | * :py:mod:`FSUsageImporterDummy`         |
 +------------------+-------------------------+------------------------------------------+
@@ -121,6 +124,10 @@ The following diagram illustrate the deployed architecture of these components:
 
 .. image:: _static/arch_agents_launcher.*
 
+* ``fsquota`` agent can be installed on login nodes, and then launched
+  periodically by a cronjob to log the filesystems quota usage rate in a
+  CSV file. This CSV file is then read through an SSH connection and parsed by
+  :py:class:`FSQuotaImporterSSH` connector to fill the HPCStats database.
 * ``fsusage`` agent can be installed on login nodes, and then launched
   periodically by a cronjob to log constantly the filesystems usage rate in a
   CSV file. This CSV file is then read through an SSH connection and parsed by

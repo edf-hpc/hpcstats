@@ -41,6 +41,14 @@ Model Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`FSQuota` Module
+---------------------
+
+.. automodule:: HPCStats.Model.FSQuota
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`FSUsage` Module
 ---------------------
 
