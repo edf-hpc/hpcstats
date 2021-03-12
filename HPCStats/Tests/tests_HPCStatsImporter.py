@@ -82,6 +82,7 @@ class TestsHPCStatsImporter(HPCStatsTestCase):
     @mock.patch("HPCStats.DB.HPCStatsDB.psycopg2", mock_psycopg2())
     @mock.patch("HPCStats.Importer.Jobs.JobImporterFactory.JobImporterSlurm")
     @mock.patch("HPCStats.Importer.Events.EventImporterFactory.EventImporterSlurm")
+    @mock.patch("HPCStats.Importer.FSQuota.FSQuotaImporterFactory.FSQuotaImporterSSH")
     @mock.patch("HPCStats.Importer.FSUsage.FSUsageImporterFactory.FSUsageImporterSSH")
     @mock.patch("HPCStats.Importer.Users.UserImporterFactory.UserImporterLdap")
     @mock.patch("HPCStats.Importer.Architectures.ArchitectureImporterFactory.ArchitectureImporterArchfile")
