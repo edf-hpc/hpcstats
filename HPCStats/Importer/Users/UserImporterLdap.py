@@ -393,6 +393,12 @@ class UserImporterLdap(UserImporter):
             if match:
                 m_groups = match.groups()
                 direction = m_groups[0]
+                # Use alias if defined
+                if self.groups_alias.has_key(direction):
+                    alias = self.groups_alias[direction]
+                    self.log.debug("Using alias %s for department %s",
+                                alias, direction)
+                    direction = alias
                 subdirection = m_groups[1]
                 department = direction + '-' + subdirection
                 break
