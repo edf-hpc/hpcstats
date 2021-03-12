@@ -63,6 +63,13 @@ case "$1" in
             su hpcstats -c "\
                 psql hpcstatsdb < /usr/share/hpcstats/db/migrations/004_add_walltime.psql"
         fi
+        # test if fsquota table must be created for the fsquota agent coming with
+        # HPCStats v1.6.3
+        if ! $(su hpcstats -c "psql hpcstatsdb -c '\dt'" | grep -q fsquota); then
+            echo "Upgrading DB schema to add fsquota table"
+            su hpcstats -c "\
+                psql hpcstatsdb < /usr/share/hpcstats/db/migrations/005_table_fsquota.psql"
+        fi
 
     ;;
 
