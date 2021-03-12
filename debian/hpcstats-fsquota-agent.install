@@ -1,0 +1,2 @@
+contribs/fsquota /usr/share/hpcstats/bin
+conf/fsquota.conf etc/hpcstats
