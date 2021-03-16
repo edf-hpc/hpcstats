@@ -1,3 +1,21 @@
+hpcstats (1.6.3) unstable; urgency=medium
+
+  * Correct handling of unlimited walltime
+  * Expand optional primary group aliasing feature
+  * Add fsquota agent main script
+  * Add fsquota table
+  * Add fsquota model
+  * Add fsquota configuration
+  * Add fsquota importer
+  * Add fsquota source check and importing
+  * Add fsquota agent packaging
+  * Add fsquota test mock
+  * Documentation update
+  * Add fsquota table on install
+  * Fix Lintian error in postinst scripts
+
+ -- Frédéric Ballan <frederic-externe.ballan@edf.fr>  Tue, 16 Mar 2021 11:51:25 +0100
+
 hpcstats (1.6.2) unstable; urgency=medium
 
   [ Frédéric Ballan ]
