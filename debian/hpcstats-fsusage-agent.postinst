@@ -20,7 +20,7 @@ case "$1" in
     configure)
         # if the system user does not exist, create it
         if [ ! $(id -u hpcstats 2>/dev/null) ]; then
-            adduser --quiet --system --shell=/bin/sh --no-create-home hpcstats
+            adduser --quiet --system --shell=/bin/sh --no-create-home --home /nonexistent hpcstats
         fi
 	chown hpcstats /var/lib/hpcstats
     ;;
