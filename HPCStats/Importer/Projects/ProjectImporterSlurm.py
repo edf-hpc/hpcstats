@@ -132,7 +132,7 @@ class ProjectImporterSlurm(ProjectImporter):
         for cluster in self.clusters_db.keys():
             try:
                 self.load_cluster(cluster)
-            except HPCStatsSourceError, err:
+            except HPCStatsSourceError as err:
                 logger.error("Error with cluster %s: %s", cluster, err)
 
 

@@ -61,7 +61,7 @@ class MockLdapConn(object):
 
     def search_s(self, req_dn, flag, req_search, attrs):
 
-        print "LDAP_REQS: " + str(LDAP_REQS)
+        print ("LDAP_REQS: " + str(LDAP_REQS))
         for req in LDAP_REQS.keys():
             (dn, search) =  LDAP_REQS[req]['req']
             print("req   : %s/%s" % (dn, search))

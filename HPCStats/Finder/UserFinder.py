@@ -67,12 +67,12 @@ class UserFinder():
                          deletion_date = row[5] )
 
         elif nb_rows == 0:
-           raise UserWarning, ("no user found with uid %d \
+           raise UserWarning ("no user found with uid %d \
                                 on cluster %s" % \
                                 ( uid,
                                   cluster_name ) )
         else:
-           raise UserWarning, ("incorrect number of results (%d) for uid \
+           raise UserWarning ("incorrect number of results (%d) for uid \
                                 %s on cluster %s" % \
                                 ( nb_rows,
                                   uid,

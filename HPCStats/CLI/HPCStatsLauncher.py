@@ -59,7 +59,7 @@ class HPCStatsLauncher(object):
             parser = HPCStatsArgumentParser('hpcstats')
             parser.add_args()
             args = parser.parse_args()
-        except HPCStatsArgumentException, err:
+        except HPCStatsArgumentException as err:
             logger.error("Argument Error: %s", err)
             self.exit()
 
@@ -67,7 +67,7 @@ class HPCStatsLauncher(object):
         # TODO: load locale output of the environment
         try:
             locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
-        except locale.Error, err:
+        except locale.Error as err:
             logger.error("Error while setting locale: %s", err)
             self.exit()
 
@@ -120,7 +120,7 @@ class HPCStatsLauncher(object):
 
         try:
             conf.read()
-        except HPCStatsConfigurationException, err:
+        except HPCStatsConfigurationException as err:
             logger.error("Configuration Error: %s", err)
             self.exit()
 
@@ -152,16 +152,16 @@ class HPCStatsLauncher(object):
 
         try:
             self.app.run()
-        except HPCStatsConfigurationException, err:
+        except HPCStatsConfigurationException as err:
             logger.error("Configuration Error: %s", err)
             self.exit()
-        except HPCStatsDBIntegrityError, err:
+        except HPCStatsDBIntegrityError as err:
             logger.error("DB Integrity Error: %s", err)
             self.exit()
-        except HPCStatsSourceError, err:
+        except HPCStatsSourceError as err:
             logger.error("Source Error: %s", err)
             self.exit()
-        except HPCStatsRuntimeError, err:
+        except HPCStatsRuntimeError as err:
             logger.error("Runtime Error: %s", err)
             self.exit()
 
