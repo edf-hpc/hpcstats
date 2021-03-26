@@ -93,7 +93,7 @@ class HPCStatsImporter(HPCStatsApp):
         for cluster_name in clusters:
             try:
                 self.import_cluster_data(db, cluster_name)
-            except HPCStatsSourceError, err:
+            except HPCStatsSourceError as err:
                 logger.error("Error while importing data from cluster %s: %s",
                              cluster_name, err)
 

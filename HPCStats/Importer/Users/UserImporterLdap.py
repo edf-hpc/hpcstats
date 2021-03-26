@@ -115,7 +115,7 @@ class UserImporterLdap(UserImporter):
         try:
             self.ldap_conn = ldap.initialize(self._ldapurl)
             self.ldap_conn.simple_bind(self._ldapdn, self.ldap_password)
-        except ldap.SERVER_DOWN, err:
+        except ldap.SERVER_DOWN as err:
             raise HPCStatsSourceError( \
                     "unable to connect to LDAP server: %s" % (err))
 
