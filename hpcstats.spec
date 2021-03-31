@@ -59,7 +59,8 @@ python3 setup.py install --prefix=%{_prefix} --root=%{buildroot}
 
 %files
 %doc README.md
-%{python3_sitelib}
+%{python3_sitelib}/HPCStats/*
+%{python3_sitelib}/*%{name}*.egg-info
 %config %{_bindir}/hpcstats
 %config %{_sysconfdir}/%{name}/%{name}.conf
 %config %{_sysconfdir}/%{name}/architecture.conf
@@ -74,8 +75,8 @@ This agent is typically installed on HPC cluster frontend. It provides all files
 
 %files -n hpcstats-jobstats-agent
 %config %{_sysconfdir}/%{name}/jobstats.conf
-%config %{_datadir}/%{name}/bin/jobstats.tpl.sh
-%config %{_datadir}/%{name}/bin/jobstats
+%{_datadir}/%{name}/bin/jobstats.tpl.sh
+%{_datadir}/%{name}/bin/jobstats
 
 %package -n hpcstats-jobstats-launcher
 Summary: Jobstat launcher of HPC cluster usage accounting software 
@@ -87,7 +88,7 @@ The component launches the jobstats agent on all configured HPC cluster frontend
 
 %files -n hpcstats-jobstats-launcher
 %config %{_sysconfdir}/%{name}/launcher.conf
-%config %{_datadir}/%{name}/bin/launch-jobstats
+%{_datadir}/%{name}/bin/launch-jobstats
 
 %package -n hpcstats-fsusage-agent
 Summary: FSUsage agent of HPC cluster usage accounting software 
@@ -98,7 +99,7 @@ This agent is typically installed on HPC cluster frontend to log in a CSV file t
 
 %files -n hpcstats-fsusage-agent
 %config %{_sysconfdir}/%{name}/fsusage.conf
-%config %{_datadir}/%{name}/bin/fsusage
+%{_datadir}/%{name}/bin/fsusage
 
 %package -n hpcstats-utils
 Summary: Various utilities of HPC cluster usage accounting software 
@@ -112,8 +113,8 @@ Set of various utilities for HPCStats accounting software:
    - script to add Domains
 
 %files -n hpcstats-utils
-%config %{_datadir}/%{name}/bin/encode-password
-%config %{_datadir}/%{name}/bin/sync-hpcstats-slurm-job-accounts
+%{_datadir}/%{name}/bin/encode-password
+%{_datadir}/%{name}/bin/sync-hpcstats-slurm-job-accounts
 
 
 %changelog
