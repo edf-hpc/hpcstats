@@ -1,5 +1,5 @@
 Name:		hpcstats		
-Version:	1.6.3	
+Version:	1.6.4
 Release:	1%{?dist}.edf
 Summary:	HPC cluster usage accounting and reporting software	
 
@@ -31,9 +31,9 @@ CFLAGS="%{optflags}" python3 setup.py build
 install -d %{buildroot}%{_datadir}/%{name}
 install -d %{buildroot}%{_sysconfdir}/%{name}
 install -d %{buildroot}%{_datadir}/%{name}/bin
-install -d %{buildroot}/%{_datadir}/%{name}/db
+install -d %{buildroot}%{_datadir}/%{name}/db
 
-cp -r db/* %{buildroot}/%{_datadir}/%{name}/db
+cp -r db/* %{buildroot}%{_datadir}/%{name}/db
 
 cp conf/hpcstats.conf %{buildroot}%{_sysconfdir}/%{name}
 cp conf/architecture.conf %{buildroot}%{_sysconfdir}/%{name}
@@ -42,6 +42,8 @@ cp conf/architecture.conf %{buildroot}%{_sysconfdir}/%{name}
 install contribs/fsusage %{buildroot}%{_datadir}/%{name}/bin
 cp conf/fsusage.conf %{buildroot}%{_sysconfdir}/%{name}
 
+install contribs/fsquota %{buildroot}%{_datadir}/%{name}/bin
+cp conf/fsquota.conf %{buildroot}%{_sysconfdir}/%{name}
 
 install contribs/jobstats %{buildroot}%{_datadir}/%{name}/bin
 install contribs/jobstats.tpl.sh %{buildroot}%{_datadir}/%{name}/bin
@@ -59,9 +61,9 @@ python3 setup.py install --prefix=%{_prefix} --root=%{buildroot}
 
 %files
 %doc README.md
-%{python3_sitelib}/HPCStats/*
-%{python3_sitelib}/*%{name}*.egg-info
-%config %{_bindir}/hpcstats
+/usr/lib/python3.*/site-packages/HPCStats/*
+/usr/lib/python3.*/site-packages/*%{name}*.egg-info
+%{_bindir}/hpcstats
 %config %{_sysconfdir}/%{name}/%{name}.conf
 %config %{_sysconfdir}/%{name}/architecture.conf
 %config %{_datadir}/%{name}/db/*
@@ -101,6 +103,17 @@ This agent is typically installed on HPC cluster frontend to log in a CSV file t
 %config %{_sysconfdir}/%{name}/fsusage.conf
 %{_datadir}/%{name}/bin/fsusage
 
+%package -n hpcstats-fsquota-agent
+Summary: FSQuota agent of HPC cluster usage accounting software
+Requires: python3
+
+%description -n hpcstats-fsquota-agent
+This agent is typically installed on HPC cluster frontend to log in a CSV file the detailed usage and quota per user of file systems.
+
+%files -n hpcstats-fsquota-agent
+%config %{_sysconfdir}/%{name}/fsquota.conf
+%{_datadir}/%{name}/bin/fsquota
+
 %package -n hpcstats-utils
 Summary: Various utilities of HPC cluster usage accounting software 
 Requires: python3
@@ -118,5 +131,7 @@ Set of various utilities for HPCStats accounting software:
 
 
 %changelog
+* Fri Apr 09 2021 Nilce BOUSSAMBA <nilce-externe.boussamba@edf.fr>
+- add package hpcstats-fsquota-agent
 * Thu Mar 18 2021 Nilce BOUSSAMBA <nilce-externe.boussamba@edf.fr>
 - first rpm package
