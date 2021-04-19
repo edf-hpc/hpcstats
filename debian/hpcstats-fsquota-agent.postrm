@@ -1,5 +1,5 @@
 #!/bin/sh
-# postrm script for hpcstats
+# postrm script for hpcstats-fsquota-agent
 #
 # see: dh_installdeb(1)
 
@@ -22,7 +22,8 @@ case "$1" in
     purge)
         # delete the system user
         if [ ! -e /usr/bin/hpcstats \
-             -a ! -e /usr/share/hpcstats/bin/launch-jobstats ] ; then 
+             -a ! -e /usr/share/hpcstats/bin/fsusage \
+             -a ! -e /usr/share/hpcstats/bin/jobstats ] ; then 
             # delete the system user
             deluser hpcstats
             rm -rf /var/lib/hpcstats

@@ -1,5 +1,5 @@
 #!/bin/sh
-# postrm script for slurm-llnl
+# postrm script for hpcstats-jobstats-launcher
 #
 # see: dh_installdeb(1)
 
@@ -20,8 +20,7 @@ set -e
 
 case "$1" in
     purge)
-        if [ ! -e /usr/bin/hpcstats \
-             -a ! -e /usr/share/hpcstats/bin/fsusage ] ; then 
+        if [ ! -e /usr/bin/hpcstats ] ; then 
             # delete the system user
             deluser hpcstats
         fi

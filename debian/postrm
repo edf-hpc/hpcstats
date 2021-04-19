@@ -1,5 +1,5 @@
 #!/bin/sh
-# postrm script for slurm-llnl
+# postrm script for hpcstats
 #
 # see: dh_installdeb(1)
 
@@ -29,7 +29,7 @@ case "$1" in
             su - postgres -c 'dropuser hpcstats'
         fi
         # delete the system user
-        if [ ! -e /usr/share/hpcstats/bin/fsusage \
+        if [ ! -e /usr/bin/hpcstats \
              -a ! -e /usr/share/hpcstats/bin/launch-jobstats ] ; then 
             # delete the system user
             deluser hpcstats
