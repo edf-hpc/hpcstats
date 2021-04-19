@@ -1,1 +1,1 @@
-0 0 * * * hpcstats /usr/share/hpcstats/bin/fsquota
+0 0 * * * root /usr/share/hpcstats/bin/fsquota
