@@ -50,6 +50,17 @@ Description: Jobstat launcher of HPC cluster usage accounting software
  The component launches the jobstats agent on all configured HPC
  cluster frontends.
 
+Package: hpcstats-fsquota-agent
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python:Depends},
+ python,
+ adduser
+Description: FSQuota agent of HPC cluster usage accounting software
+ This agent is typically installed on HPC cluster frontend to log in
+ a CSV file the detailed usage and quota per user of file systems.
+
 Package: hpcstats-fsusage-agent
 Architecture: all
 Depends:
