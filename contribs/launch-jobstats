@@ -29,7 +29,7 @@
 
 import sys
 import os
-import ConfigParser
+import configparser
 import logging
 import logging.handlers
 import paramiko
@@ -60,7 +60,7 @@ def read_conf():
     if not os.path.exists(conf_file):
         logger.critical("configuration file %s does not exist", conf_file)
         sys.exit(1)
-    conf = ConfigParser.ConfigParser()
+    conf = configparser.ConfigParser()
     conf.read(conf_file)
 
 def ssh_launch(user, frontend, privkey, script):
@@ -72,13 +72,13 @@ def ssh_launch(user, frontend, privkey, script):
         ssh.connect(frontend, username=user, key_filename=privkey)
         stdin, stdout, stderr = ssh.exec_command(script)
         ssh.close()
-    except gaierror, err:
+    except gaierror as err:
         logger.critical("socket error on SSH connect to %s: %s",
                         frontend, str(err))
-    except IOError, err:
+    except IOError as err:
         logger.critical("IO error on SSH connect to %s: %s",
                         frontend, str(err))
-    except paramiko.AuthenticationException, err:
+    except paramiko.AuthenticationException as err:
         logger.critical("authentication error on SSH connect to %s: %s",
                         frontend, str(err))
 

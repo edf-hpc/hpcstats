@@ -27,7 +27,7 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import ConfigParser
+import configparser
 import subprocess
 from string import Template
 
@@ -39,7 +39,7 @@ def read_conf():
     global conf
 
     conf_file = '/etc/hpcstats/jobstats.conf'
-    conf = ConfigParser.ConfigParser()
+    conf = configparser.ConfigParser()
     conf.read(conf_file)
 
 def main():

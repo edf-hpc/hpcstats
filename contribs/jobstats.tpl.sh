@@ -11,7 +11,7 @@
 # Slurm batch script to test batch scheduler availability and
 # some FS access.
 
-LOG_FILE=${log}
+LOG_FILE="${log}"
 FSLIST="${fs}"
 
 set -e
