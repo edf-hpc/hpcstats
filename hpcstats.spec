@@ -87,7 +87,7 @@ case "$arg" in
     configure)
         # if the system user does not exist, create it
         if [ ! $(id -u hpcstats 2>/dev/null) ]; then
-            adduser --system --shell=/bin/sh --no-create-home --home /nonexistent hpcstats
+            adduser --system --shell=/bin/false --no-create-home --home /nonexistent hpcstats
         fi
         # if the PostgreSQL user does not exist, create it
         if ! $(su postgres -c 'psql -c "\du"' 2>/dev/null | grep -q hpcstats); then
