@@ -140,11 +140,11 @@ class HPCStatsReporter(HPCStatsApp):
                                default_filters=['decode.utf8'],
                                encoding_errors='ignore'
                              )
-        print mytemplate.render( cluster=cluster,
-                                 step=self.interval,
-                                 results=results,
-                                 userstats_global=userstats_global,
-                                 groupstats_global=groupstats_global)
+        print ( mytemplate.render( cluster=cluster,
+                                   step=self.interval,
+                                   results=results,
+                                   userstats_global=userstats_global,
+                                   groupstats_global=groupstats_global) )
 
     def get_interval_begin_end(self, tmp_datetime):
         """This function aims to calculate the exacts beginning and end of the

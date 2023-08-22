@@ -65,7 +65,7 @@ class HPCStatsDB(object):
                      % (self.database)
         try:
             self._conn = psycopg2.connect(conn_str)
-        except psycopg2.OperationalError, err:
+        except psycopg2.OperationalError as err:
             raise HPCStatsRuntimeError( \
                     "Error while trying to connect on HPCStats DB: %s" \
                       % (err))
@@ -82,7 +82,7 @@ class HPCStatsDB(object):
         except ( psycopg2.DataError,
                  psycopg2.ProgrammingError,
                  psycopg2.IntegrityError,
-                 psycopg2.OperationalError ), err:
+                 psycopg2.OperationalError ) as err:
             raise HPCStatsDBIntegrityError( \
                     "error while executing request '%s': %s" \
                       % (self.cur.mogrify(req, params), err))

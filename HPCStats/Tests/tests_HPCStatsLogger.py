@@ -67,7 +67,7 @@ class TestsHPCStatsLogger(HPCStatsTestCase):
         self.logger.warn(Errors.E_T0001, "error 2 %s", 'test')
         self.assertIn('TestsHPCStatsLogger: ERROR E_T0001: error 2 test',
                       self.handler.messages['warning'])
-        print self.handler.messages
+        print (self.handler.messages)
         self.assertEquals(len(self.handler.messages['debug']), 0)
         self.handler.reset()
 

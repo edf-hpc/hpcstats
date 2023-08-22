@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2011-2015 EDF SA
@@ -27,7 +27,7 @@
 # On Calibre systems, the complete text of the GNU General
 # Public License can be found in `/usr/share/common-licenses/GPL'.
 
-import ConfigParser
+import configparser
 import logging
 import logging.handlers
 import os
@@ -61,7 +61,7 @@ def read_conf():
     if not os.path.exists(conf_file):
         logger.critical("configuration file %s does not exist", conf_file)
         sys.exit(1)
-    conf = ConfigParser.ConfigParser()
+    conf = configparser.ConfigParser()
     conf.read(conf_file)
 
 def truncate(fpath, maxsize):
@@ -148,7 +148,7 @@ def main():
                             csv_writer.writerow([now]+[result['name'],result['filesetname'],result['quotaType'],
                                 result['blockUsage'],result['blockQuota'],result['blockLimit'],result['blockInDoubt'],result['blockGrace'],
                                 result['filesUsage'],result['filesQuota'],result['filesLimit'],result['filesInDoubt'],result['filesGrace']])
-            except OSError, err:
+            except OSError as err:
                 logger.error("OSError while running mmrepquota on %s: %s", fs, err)
     os.umask(old_mask)
 

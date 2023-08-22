@@ -95,13 +95,13 @@ class FSUsageImporterSSH(FSUsageImporter):
         ssh = self.connect_ssh()
         try:
             sftp = ssh.open_sftp()
-        except paramiko.SFTPError, err:
+        except paramiko.SFTPError as err:
             raise HPCStatsSourceError( \
                     "Error while opening SFTP connection: %s" \
                       % (err))
         try:
             sftpfile = sftp.open(self.fsfile, 'r')
-        except IOError, err:
+        except IOError as err:
             raise HPCStatsSourceError( \
                     "Error while opening file %s by SFTP: %s" \
                       % (self.fsfile, err))
@@ -128,7 +128,7 @@ class FSUsageImporterSSH(FSUsageImporter):
         # temporary file and then read/parse this local file.
         try:
             sftp = ssh.open_sftp()
-        except paramiko.SFTPError, err:
+        except paramiko.SFTPError as err:
             raise HPCStatsSourceError( \
                     "Error while opening SFTP connection: %s" \
                       % (err))
@@ -139,7 +139,7 @@ class FSUsageImporterSSH(FSUsageImporter):
         # download file through SFTP
         try:
             sftp.get(self.fsfile, tmp_fpath)
-        except IOError, err:
+        except IOError as err:
             raise HPCStatsSourceError( \
                     "Error while downloading file %s by SFTP: %s" \
                       % (self.fsfile, err))
@@ -154,7 +154,7 @@ class FSUsageImporterSSH(FSUsageImporter):
                 mountpoint = row[0]
                 try:
                     logtime = datetime.strptime(row[1], self.timestamp_fmt)
-                except ValueError, err:
+                except ValueError as err:
                     raise HPCStatsSourceError( \
                             "error while parsing log time: %s" % (err))
                 bpercent = float(row[2])
