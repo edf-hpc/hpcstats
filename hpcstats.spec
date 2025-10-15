@@ -1,5 +1,5 @@
 Name:		hpcstats		
-Version:	1.6.6
+Version:	1.6.7
 Release:	1%{?dist}.edf
 Summary:	HPC cluster usage accounting and reporting software	
 
@@ -398,6 +398,8 @@ Set of various utilities for HPCStats accounting software:
 
 
 %changelog
+* Wed Apr 28 2021 Nilce BOUSSAMBA <nilce-externe.boussamba@edf.fr>
+- modify post-{install,rm} scripts to make sure purging an agent without delete hpcstats user
 * Fri Apr 16 2021 Nilce BOUSSAMBA <nilce-externe.boussamba@edf.fr>
 - add post-{install,rm} scripts for hpcstats
 * Wed Apr 14 2021 Nilce BOUSSAMBA <nilce-externe.boussamba@edf.fr>

@@ -5,7 +5,7 @@ import os
 from setuptools import setup, find_packages
 
 
-VERSION='1.6.3'
+VERSION='1.6.7'
 
 setup(name='hpcstats',
       version=VERSION,
