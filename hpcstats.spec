@@ -1,7 +1,7 @@
-Name:    hpcstats		
+Name:    hpcstats
 Version: 1.6.7
 Release: 1%{?dist}.edf
-Summary: HPC cluster usage accounting and reporting software	
+Summary: HPC cluster usage accounting and reporting software
 
 License: Proprietary
 URL:     http://github.com/edf-hpc/hpcstats
@@ -278,7 +278,7 @@ case "$arg" in
         if [ ! $(id -u hpcstats 2>/dev/null) ]; then
             adduser --system --shell=/bin/sh --no-create-home --home /nonexistent hpcstats
         fi
-	chown hpcstats /var/lib/hpcstats
+        chown hpcstats /var/lib/hpcstats
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
@@ -341,7 +341,7 @@ case "$arg" in
         if [ ! $(id -u hpcstats 2>/dev/null) ]; then
             adduser --system --shell=/bin/sh --no-create-home --home /nonexistent hpcstats # --uid 100-999
         fi
-	    chown hpcstats /var/lib/hpcstats
+        chown hpcstats /var/lib/hpcstats
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
