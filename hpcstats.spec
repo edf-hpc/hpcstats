@@ -59,9 +59,9 @@ install contribs/encode-password %{buildroot}%{_datadir}/%{name}/bin
 install contribs/sync-hpcstats-slurm-job-accounts %{buildroot}%{_datadir}/%{name}/bin
 
 install cron/cron.d %{buildroot}%{_sysconfdir}/cron.d/%{name}
-install cron/hpcstats-fsquota-agent.cron.d %{buildroot}%{_sysconfdir}/cron.d
-install cron/hpcstats-fsusage-agent.cron.d %{buildroot}%{_sysconfdir}/cron.d
-install cron/hpcstats-jobstats-launcher.cron.d %{buildroot}%{_sysconfdir}/cron.d
+install cron/hpcstats-fsquota-agent %{buildroot}%{_sysconfdir}/cron.d
+install cron/hpcstats-fsusage-agent %{buildroot}%{_sysconfdir}/cron.d
+install cron/hpcstats-jobstats-launcher %{buildroot}%{_sysconfdir}/cron.d
 
 
 python3 setup.py install --prefix=%{_prefix} --root=%{buildroot}
