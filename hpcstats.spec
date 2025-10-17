@@ -206,7 +206,7 @@ The component launches the jobstats agent on all configured HPC cluster frontend
 %files -n hpcstats-jobstats-launcher
 %config %{_sysconfdir}/%{name}/launcher.conf
 %{_datadir}/%{name}/bin/launch-jobstats
-%{_sysconfdir}/cron.d/hpcstats-jobstats-launcher.cron.d
+%{_sysconfdir}/cron.d/hpcstats-jobstats-launcher
 
 %post -n hpcstats-jobstats-launcher
 #!/bin/sh
@@ -266,7 +266,7 @@ This agent is typically installed on HPC cluster frontend to log in a CSV file t
 %files -n hpcstats-fsusage-agent
 %config %{_sysconfdir}/%{name}/fsusage.conf
 %{_datadir}/%{name}/bin/fsusage
-%{_sysconfdir}/cron.d/hpcstats-fsusage-agent.cron.d
+%{_sysconfdir}/cron.d/hpcstats-fsusage-agent
 %dir %{_sharedstatedir}/%{name}
 
 %post -n hpcstats-fsusage-agent
@@ -329,7 +329,7 @@ This agent is typically installed on HPC cluster frontend to log in a CSV file t
 %files -n hpcstats-fsquota-agent
 %config %{_sysconfdir}/%{name}/fsquota.conf
 %{_datadir}/%{name}/bin/fsquota
-%{_sysconfdir}/cron.d/hpcstats-fsquota-agent.cron.d
+%{_sysconfdir}/cron.d/hpcstats-fsquota-agent
 %dir %{_sharedstatedir}/%{name}
 
 %post -n hpcstats-fsquota-agent
