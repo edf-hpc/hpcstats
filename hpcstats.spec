@@ -1,15 +1,15 @@
-Name:		hpcstats		
-Version:	1.6.7
-Release:	1%{?dist}.edf
-Summary:	HPC cluster usage accounting and reporting software	
+Name:    hpcstats		
+Version: 1.6.7
+Release: 1%{?dist}.edf
+Summary: HPC cluster usage accounting and reporting software	
 
-License:	Proprietary
-URL:		http://github.com/edf-hpc/hpcstats
-Source0:	%{name}-%{version}.tar.gz
+License: Proprietary
+URL:     http://github.com/edf-hpc/hpcstats
+Source0: %{name}-%{version}.tar.gz
 
-BuildRequires:	python3-setuptools
-BuildRequires:	python3-sphinx
-BuildRequires:	python3-sphinx_rtd_theme
+BuildRequires: python3-setuptools
+BuildRequires: python3-sphinx
+BuildRequires: python3-sphinx_rtd_theme
 Requires: rpm-cron
 Requires: postgresql
 
